@@ -180,3 +180,39 @@ def preProcessAnatomy(anatomy, text):
             extr = extr.replace(direction+anatomy, dir_list[direction]+anatomy)
     return extr[1:] # removes the space we added originally 
 
+def infer_icd10_cm_v2(data: str, med_cond, diagnosis, symptoms):
+    """
+    :data type: string to pass through Comprehend Medical icd10_cm
+    :med_cond type: List[]
+    :diagnosis type: List[]
+    :symptoms type: List[]
+    """
+    icd10_result = compr_m.infer_icd10_cm(Text=data)
+    for resp in icd10_result['Entities']:
+        if resp['Score'] > 0.5: 
+            resp_str = resp['Text']
+            # first check Attributes
+            for attr in resp['Attributes']: 
+                if attr['Score'] > 0.5: 
+                    if attr['Type'] == 'ACUITY': 
+                        resp_str = f'{attr["Text"]}' + ' ' + resp_str
+                    else: 
+                        resp_str = resp_str + ' ' + f'{attr["Text"]}'
+            for trait in resp['Traits']:
+                category = ''
+                if trait['Score'] > 0.5: 
+                    if trait['Name'] == 'NEGATION': 
+                        category = 'NEG'
+                        break #don't save anything for negation 
+                    elif trait['Name'] == 'SYMPTOM': 
+                        category = 'SYMP'
+                    elif trait['Name'] == 'DIAGN':
+                        category = 'DIAGN'
+            # add our response string to corresponding list 
+            if not category: 
+                med_cond.append(resp_str)
+            elif category == 'SYMP': 
+                symptoms.append(resp_str)
+            elif category == 'DIAGN':
+                diagnosis.append(resp_str)
+    
