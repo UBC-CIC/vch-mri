@@ -7,110 +7,6 @@ import pandas as pd
 compr = boto3.client(service_name='comprehend')
 compr_m = boto3.client(service_name='comprehendmedical')
 
-def find_all_entities(data):
-    if isinstance(data, str): 
-        if not data: 
-            return [] 
-        # print("-- Entities --")
-        result = compr_m.detect_entities_v2(Text=data)
-        # for resp in result['Entities']:
-            # print(resp)
-        return result['Entities']
-    else:
-        return []
-
-def infer_icd10_cm(data):
-    if isinstance(data, str):
-        try: 
-            # print("-- ICD10_CM --")
-            result = compr_m.infer_icd10_cm(Text=data)
-            ret_list = []
-            for resp in result['Entities']: 
-                # print(resp)
-                if resp['Score'] > 0.5: 
-                    resp_dict = {resp['Text']: {}}
-                    get_traits(resp, resp_dict[resp['Text']])
-                    get_attributes(resp, resp_dict[resp['Text']])             
-                    ret_list.append(resp_dict)        
-            return ret_list
-        except: 
-            return []
-    else: 
-        return []
-
-def get_traits(entity, response_dict):
-    try:
-        for entity_trait in entity['Traits']:
-            if entity_trait['Score'] > 0.5: 
-                if 'Traits' in response_dict: 
-                    response_dict['Traits'].append(f'{entity_trait["Name"]}')
-                else: 
-                    response_dict['Traits'] = [f'{entity_trait["Name"]}']
-    except: 
-        return 
-
-def get_attributes(entity, response_dict):
-    try: 
-        for entity_attr in entity['Attributes']:
-            if entity_attr['Score'] > 0.5:
-                attr_dict = {'Type': f'{entity_attr["Type"]}', 'Text': f'{entity_attr["Text"]}'}
-                get_traits(entity_attr, attr_dict)
-                if 'Attributes' in response_dict: 
-                    response_dict['Attributes'].append(attr_dict)
-                else: 
-                    response_dict['Attributes'] = [attr_dict]
-    except: 
-        return 
-
-def find_entities(data):
-    if isinstance(data, str):
-        if not data: 
-            return []
-        result = compr_m.detect_entities_v2(Text=data)        
-        ret_list = []
-        # print("-- Key Phrases --")
-        for resp in result['Entities']:
-            # print(resp)
-            if resp['Score'] > 0.5: 
-                resp_dict = {resp['Text']: {}}
-                get_traits(resp, resp_dict[resp['Text']])
-                get_attributes(resp, resp_dict[resp['Text']])
-                ret_list.append(resp_dict)
-        return ret_list 
-    else:
-        return []
-
-def find_relevant_phrases(data, icd10cm_list, anatomy_list):
-    """
-    Finds key phrases that contain either 
-    :icdm10cm_list type: List(Dict)
-    :anatomy_list type: List(String)
-    """
-    if isinstance(data, str):
-        if not data: 
-            return []
-        result = compr.detect_key_phrases(Text=data, LanguageCode='en')
-        ret_list = []
-        # print("-- Key Phrases --")
-        for resp in result['KeyPhrases']:
-            placed = False
-            # print(resp) 
-            if resp['Score'] > 0.5: 
-                for result in icd10cm_list: 
-                    [(k,v)] = result.items()
-                    if contains_word(k, resp['Text']):
-                        ret_list.append(resp['Text'])
-                        placed = True
-                        break 
-                if not placed: 
-                    for result in anatomy_list: 
-                        if contains_word(result, resp['Text']):
-                            ret_list.append(resp['Text'])
-                            break
-        return ret_list
-    else:
-        return []
-
 def convert2CM(height):
     if not isinstance(height, str):
         return 0
@@ -174,39 +70,49 @@ def preProcessAnatomy(anatomy, text):
         ' R ': ' right ', 
         ' r ': ' right ',
     }
-    extr = ' '+text # Accounts for cases such as text="L anatomy" 
     for direction in dir_list: 
-        if f'{direction}' in f'{extr}': 
-            extr = extr.replace(direction+anatomy, dir_list[direction]+anatomy)
-    return extr[1:] # removes the space we added originally 
+        if contains_word(direction,text): 
+            text = text.replace(direction+anatomy, dir_list[direction]+anatomy)
+    return text 
 
-def infer_icd10_cm_v2(data: str, med_cond, diagnosis, symptoms):
+def find_all_entities(data: str):
+    if not data: 
+        return [] 
+    # print("-- Entities --")
+    result = compr_m.detect_entities_v2(Text=data)
+    # for resp in result['Entities']:
+        # print(resp)
+    return result['Entities']
+    
+def infer_icd10_cm(data: str, med_cond, diagnosis, symptoms):
     """
     :data type: string to pass through Comprehend Medical icd10_cm
     :med_cond type: List[]
     :diagnosis type: List[]
     :symptoms type: List[]
     """
+    if not data: 
+        return 
     icd10_result = compr_m.infer_icd10_cm(Text=data)
     for resp in icd10_result['Entities']:
         if resp['Score'] > 0.5: 
             resp_str = resp['Text']
+            category = ''
             # first check Attributes
             for attr in resp['Attributes']: 
                 if attr['Score'] > 0.5: 
                     if attr['Type'] == 'ACUITY': 
                         resp_str = f'{attr["Text"]}' + ' ' + resp_str
-                    else: 
+                    elif attr['Type'] == 'SYSTEM_ORGAN_SITE': 
                         resp_str = resp_str + ' ' + f'{attr["Text"]}'
             for trait in resp['Traits']:
-                category = ''
                 if trait['Score'] > 0.5: 
                     if trait['Name'] == 'NEGATION': 
                         category = 'NEG'
                         break #don't save anything for negation 
                     elif trait['Name'] == 'SYMPTOM': 
                         category = 'SYMP'
-                    elif trait['Name'] == 'DIAGN':
+                    elif trait['Name'] == 'DIAGNOSIS':
                         category = 'DIAGN'
             # add our response string to corresponding list 
             if not category: 
@@ -215,4 +121,45 @@ def infer_icd10_cm_v2(data: str, med_cond, diagnosis, symptoms):
                 symptoms.append(resp_str)
             elif category == 'DIAGN':
                 diagnosis.append(resp_str)
+
+def find_key_phrases(data:str, key_phrases, icd10cm_list, anatomy_list):
+    """
+    :data type: string to pass through Comprehend Detect Key Phrases 
+    :key_phrases type: List[] 
+    :icd10cm_list type: List[]
+    :anatomy_list type: List[]
+    """
+    if not data: 
+        return 
+    kp_result = compr.detect_key_phrases(Text=data, LanguageCode='en')
+    for resp in kp_result['KeyPhrases']:
+        placed = False
+        if resp['Score'] > 0.5: 
+            for icd10cm in icd10cm_list: 
+                if contains_word(icd10cm, resp['Text']):
+                    key_phrases.append(resp['Text'])
+                    placed = True
+                    break 
+                elif contains_word(resp['Text'], icd10cm):
+                    key_phrases.append(resp['Text'])
+                    placed = True
+                    break
+            if not placed: 
+                for anatomy in anatomy_list: 
+                    if contains_word(anatomy, resp['Text']):
+                        key_phrases.append(resp['Text'])
+                        break
+
+def find_entities(data: str): 
+    if not data: 
+        return []
+    result = compr_m.detect_entities_v2(Text=data)        
+    # print("-- Key Phrases --")
+    for resp in result['Entities']:
+        # print(resp)
+        if resp['Score'] > 0.5: 
+                resp_dict = {resp['Text']: {}}
+                # get_traits(resp, resp_dict[resp['Text']])
+                # get_attributes(resp, resp_dict[resp['Text']])
+                # ret_list.append(resp_dict)
     
