@@ -3,9 +3,13 @@ from datetime import datetime, date
 import re
 import string
 import pandas as pd
+from spellchecker import SpellChecker 
 
 compr = boto3.client(service_name='comprehend')
 compr_m = boto3.client(service_name='comprehendmedical')
+
+spell = SpellChecker() 
+spell.word_frequency.load_text_file('./wordbank.txt')
 
 def convert2CM(height):
     if not isinstance(height, str):
@@ -63,6 +67,25 @@ def preProcessText(col):
     extr = col.str.replace('\s+', ' ', regex=True)
     return extr 
 
+def checkSpelling(text: str):
+    words = spell.split_words(text)
+    return ' '.join([spell.correction(word) for word in words])
+    # ret_string = ''
+    # for word in words: 
+    #     ret_string = ret_string + ' ' + spell.correction(word)
+    # return ret_string
+
+def anatomySpelling(text: str):
+    words = spell.split_words(text)
+    word_list = []
+    for word in words: 
+        if word == 'MRI': 
+            continue
+        else: 
+            word_list.append(word)
+    return ' '.join(word_list)
+
+
 def preProcessAnatomy(anatomy, text):
     dir_list = {
         ' L ': ' left ', 
@@ -83,7 +106,7 @@ def find_all_entities(data: str):
     # for resp in result['Entities']:
         # print(resp)
     return result['Entities']
-    
+
 def infer_icd10_cm(data: str, med_cond, diagnosis, symptoms):
     """
     :data type: string to pass through Comprehend Medical icd10_cm
@@ -116,10 +139,13 @@ def infer_icd10_cm(data: str, med_cond, diagnosis, symptoms):
                         category = 'DIAGN'
             # add our response string to corresponding list 
             if not category: 
+                resp_str = checkSpelling(resp_str)
                 med_cond.append(resp_str)
             elif category == 'SYMP': 
+                resp_str = checkSpelling(resp_str)
                 symptoms.append(resp_str)
             elif category == 'DIAGN':
+                resp_str = checkSpelling(resp_str)
                 diagnosis.append(resp_str)
 
 def find_key_phrases(data:str, key_phrases, icd10cm_list, anatomy_list):
@@ -137,28 +163,31 @@ def find_key_phrases(data:str, key_phrases, icd10cm_list, anatomy_list):
         if resp['Score'] > 0.5: 
             for icd10cm in icd10cm_list: 
                 if contains_word(icd10cm, resp['Text']):
-                    key_phrases.append(resp['Text'])
+                    resp_str = checkSpelling(resp['Text'])
+                    key_phrases.append(resp_str)
                     placed = True
                     break 
                 elif contains_word(resp['Text'], icd10cm):
-                    key_phrases.append(resp['Text'])
+                    resp_str = checkSpelling(resp['Text'])
+                    key_phrases.append(resp_str)
                     placed = True
                     break
             if not placed: 
                 for anatomy in anatomy_list: 
                     if contains_word(anatomy, resp['Text']):
-                        key_phrases.append(resp['Text'])
+                        resp_str = checkSpelling(resp['Text'])
+                        key_phrases.append(resp_str)
                         break
 
-def find_entities(data: str): 
-    if not data: 
-        return []
-    result = compr_m.detect_entities_v2(Text=data)        
-    # print("-- Key Phrases --")
-    for resp in result['Entities']:
-        # print(resp)
-        if resp['Score'] > 0.5: 
-                resp_dict = {resp['Text']: {}}
+# def find_entities(data: str): 
+#     if not data: 
+#         return []
+#     result = compr_m.detect_entities_v2(Text=data)        
+#     # print("-- Key Phrases --")
+#     for resp in result['Entities']:
+#         # print(resp)
+#         if resp['Score'] > 0.5: 
+#                 resp_dict = {resp['Text']: {}}
                 # get_traits(resp, resp_dict[resp['Text']])
                 # get_attributes(resp, resp_dict[resp['Text']])
                 # ret_list.append(resp_dict)

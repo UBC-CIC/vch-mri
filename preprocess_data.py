@@ -12,7 +12,7 @@ start = time.time()
 # s3_output_path = "s3://{}/{}".format(s3_bucket, prefix)
 
 # data_df = pd.read_csv(s3_data_path).dropna(how='all')
-data_df = pd.read_csv('sample.csv').dropna(how='all').head(n=100)
+data_df = pd.read_csv('sample.csv').dropna(how='all').head(n=10)
 # Format columns that don't need comprehend medical and preprocess the text 
 data_df['age'] = data_df['DOB \r\n(yyyy-mm-dd)'].apply(dob2age)
 data_df['height'] = data_df['Height \r\n(eg: ft.in)'] + \
@@ -42,7 +42,8 @@ for row in range(len(formatted_df.index)):
     symptoms = []
     key_phrases = []
     # Parse the Exam Requested Column into Comprehend Medical to find Anatomy Entities
-    mri_reason = f'{data_df["Exam Requested"][row]}'.replace('MRI','') # Comprehend Medical sometimes combines anatomy + MRI together
+    # mri_reason = checkSpelling(f'{data_df["Exam Requested"][row]}'.replace('MRI','')) # Comprehend Medical sometimes combines anatomy + MRI together
+    mri_reason = anatomySpelling(f'{data_df["Exam Requested"][row]}')
     temp_json = find_all_entities(mri_reason)
     directioned_anatomy = f'{data_df["Reason for Exam/Relevant Clinical History"][row]}'
     
@@ -69,6 +70,6 @@ for row in range(len(formatted_df.index)):
     formatted_df['symptoms'][row] = symptoms
     formatted_df['phrases'][row] = key_phrases
 
-formatted_df.to_json('output/output.json', orient='index')
+formatted_df.to_json('output/mridata5.json', orient='index')
 
 print( f'---{time.time()-start}---')
