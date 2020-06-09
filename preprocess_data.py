@@ -70,6 +70,6 @@ for row in range(len(formatted_df.index)):
     formatted_df['symptoms'][row] = symptoms
     formatted_df['phrases'][row] = key_phrases
 
-formatted_df.to_json('output/mridata5.json', orient='index')
+formatted_df.to_json('sample_output.json', orient='index')
 
 print( f'---{time.time()-start}---')

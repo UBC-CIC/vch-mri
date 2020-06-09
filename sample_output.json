@@ -1,0 +1,2224 @@
+{
+    "0": {
+        "Req # CIO": "151695",
+        "height": 168.0,
+        "weight": 78.0,
+        "Sex": "M",
+        "age": 50,
+        "Preferred MRI Site": "RH",
+        "Radiologist Priority": "P3",
+        "medical_condition": [
+            "lump ankle"
+        ],
+        "diagnosis": [],
+        "anatomy": [
+            "ankle"
+        ],
+        "symptoms": [],
+        "phrases": [
+            "lump",
+            "anterior ankle"
+        ],
+        "followup": false
+    },
+    "1": {
+        "Req # CIO": "129999",
+        "height": 178.0,
+        "weight": 0.0,
+        "Sex": "M",
+        "age": 60,
+        "Preferred MRI Site": "RH",
+        "Radiologist Priority": "P4",
+        "medical_condition": [
+            "chronic groin pain"
+        ],
+        "diagnosis": [],
+        "anatomy": [
+            "hip"
+        ],
+        "symptoms": [
+            "unable to walk hip"
+        ],
+        "phrases": [
+            "right hip",
+            "hip pathology"
+        ],
+        "followup": false
+    },
+    "2": {
+        "Req # CIO": null,
+        "height": 0.0,
+        "weight": 0.0,
+        "Sex": "F",
+        "age": 71,
+        "Preferred MRI Site": "VGH",
+        "Radiologist Priority": "P2",
+        "medical_condition": [],
+        "diagnosis": [],
+        "anatomy": [
+            "hip"
+        ],
+        "symptoms": [],
+        "phrases": [],
+        "followup": false
+    },
+    "3": {
+        "Req # CIO": "134203",
+        "height": 182.0,
+        "weight": 74.8,
+        "Sex": "M",
+        "age": 68,
+        "Preferred MRI Site": null,
+        "Radiologist Priority": "P2",
+        "medical_condition": [],
+        "diagnosis": [
+            "hip fracture",
+            "pain"
+        ],
+        "anatomy": [
+            "hip"
+        ],
+        "symptoms": [],
+        "phrases": [
+            "dr munk asap previous orif hip fracture",
+            "ongoing anterior pain"
+        ],
+        "followup": false
+    },
+    "4": {
+        "Req # CIO": "156374",
+        "height": 167.0,
+        "weight": 78.0,
+        "Sex": "F",
+        "age": 75,
+        "Preferred MRI Site": "VGH",
+        "Radiologist Priority": "P4",
+        "medical_condition": [
+            "swelling malleoli peroneal tendon",
+            "swelling peroneal tendon"
+        ],
+        "diagnosis": [
+            "joint effusion",
+            "tenosynovitis"
+        ],
+        "anatomy": [
+            "ankle"
+        ],
+        "symptoms": [],
+        "phrases": [
+            "joint effusion"
+        ],
+        "followup": false
+    },
+    "5": {
+        "Req # CIO": "159638",
+        "height": 178.0,
+        "weight": 75.0,
+        "Sex": "F",
+        "age": 47,
+        "Preferred MRI Site": "UBCH",
+        "Radiologist Priority": "P3",
+        "medical_condition": [
+            "tenderness base of 5th mt"
+        ],
+        "diagnosis": [
+            "capsular revulsion",
+            "syndesmosis injury"
+        ],
+        "anatomy": [
+            "ankle",
+            "base of 5th metatarsal"
+        ],
+        "symptoms": [],
+        "phrases": [
+            "ankle",
+            "8 lateral ankle pain",
+            "tenderness",
+            "base",
+            "syndesmosis injury"
+        ],
+        "followup": false
+    },
+    "6": {
+        "Req # CIO": "163232",
+        "height": null,
+        "weight": 73.481904,
+        "Sex": "F",
+        "age": 59,
+        "Preferred MRI Site": "VGH",
+        "Radiologist Priority": "P4",
+        "medical_condition": [
+            "pain",
+            "pain calcareous",
+            "irregularity"
+        ],
+        "diagnosis": [],
+        "anatomy": [],
+        "symptoms": [],
+        "phrases": [
+            "pain",
+            "some irregularity"
+        ],
+        "followup": false
+    },
+    "7": {
+        "Req # CIO": "141736",
+        "height": 167.64,
+        "weight": 77.11064,
+        "Sex": "M",
+        "age": 59,
+        "Preferred MRI Site": "RH",
+        "Radiologist Priority": "P4",
+        "medical_condition": [],
+        "diagnosis": [
+            "tendonitis tibialis posterior",
+            "impingement"
+        ],
+        "anatomy": [
+            "ankle",
+            "foot",
+            "tibialis posterior"
+        ],
+        "symptoms": [],
+        "phrases": [
+            "impingement"
+        ],
+        "followup": false
+    },
+    "8": {
+        "Req # CIO": "142943",
+        "height": 151.0,
+        "weight": 46.0,
+        "Sex": "F",
+        "age": 48,
+        "Preferred MRI Site": "RH",
+        "Radiologist Priority": "P4",
+        "medical_condition": [
+            "pain",
+            "tendonitis"
+        ],
+        "diagnosis": [],
+        "anatomy": [
+            "wrist"
+        ],
+        "symptoms": [],
+        "phrases": [
+            "pain"
+        ],
+        "followup": false
+    },
+    "9": {
+        "Req # CIO": "139609",
+        "height": 162.56,
+        "weight": 78.017824,
+        "Sex": "F",
+        "age": 73,
+        "Preferred MRI Site": null,
+        "Radiologist Priority": "P4",
+        "medical_condition": [],
+        "diagnosis": [
+            "pain"
+        ],
+        "anatomy": [
+            "foot",
+            "ankle"
+        ],
+        "symptoms": [
+            "persistant pain posterior tibialis tendon"
+        ],
+        "phrases": [
+            "persistant pain",
+            "pain"
+        ],
+        "followup": false
+    },
+    "10": {
+        "Req # CIO": null,
+        "height": null,
+        "weight": 46.0,
+        "Sex": "F",
+        "age": 78,
+        "Preferred MRI Site": "VGH",
+        "Radiologist Priority": "P3",
+        "medical_condition": [],
+        "diagnosis": [
+            "intracardiac lymphoma"
+        ],
+        "anatomy": [
+            "heart"
+        ],
+        "symptoms": [],
+        "phrases": [
+            "intracardiac"
+        ],
+        "followup": false
+    },
+    "11": {
+        "Req # CIO": "140359",
+        "height": 160.0,
+        "weight": 53.5,
+        "Sex": "F",
+        "age": 71,
+        "Preferred MRI Site": "UBCH",
+        "Radiologist Priority": "P4",
+        "medical_condition": [],
+        "diagnosis": [
+            "chronic wrist pain lunar sided",
+            "fcc tear"
+        ],
+        "anatomy": [
+            "wrist"
+        ],
+        "symptoms": [],
+        "phrases": [
+            "wrist pain"
+        ],
+        "followup": false
+    },
+    "12": {
+        "Req # CIO": "124652",
+        "height": 172.7,
+        "weight": 67.3,
+        "Sex": "F",
+        "age": 60,
+        "Preferred MRI Site": "Other",
+        "Radiologist Priority": "P3",
+        "medical_condition": [
+            "fall",
+            "damage to gluten muscles",
+            "tear"
+        ],
+        "diagnosis": [
+            "injury lotus region",
+            "tear it"
+        ],
+        "anatomy": [
+            "gluteus muscles",
+            "hack quadratus lumborum"
+        ],
+        "symptoms": [
+            "brushing",
+            "swelling"
+        ],
+        "phrases": [
+            "injury",
+            "fall"
+        ],
+        "followup": false
+    },
+    "13": {
+        "Req # CIO": "134728",
+        "height": 178.0,
+        "weight": 97.3,
+        "Sex": "F",
+        "age": 67,
+        "Preferred MRI Site": null,
+        "Radiologist Priority": "P3",
+        "medical_condition": [],
+        "diagnosis": [],
+        "anatomy": [],
+        "symptoms": [],
+        "phrases": [],
+        "followup": false
+    },
+    "14": {
+        "Req # CIO": null,
+        "height": 158.0,
+        "weight": 49.89512,
+        "Sex": "F",
+        "age": 65,
+        "Preferred MRI Site": "RH",
+        "Radiologist Priority": "P1",
+        "medical_condition": [],
+        "diagnosis": [],
+        "anatomy": [
+            "hip"
+        ],
+        "symptoms": [
+            "hip pain",
+            "non emulating"
+        ],
+        "phrases": [
+            "hip pain"
+        ],
+        "followup": false
+    },
+    "15": {
+        "Req # CIO": "127661",
+        "height": 163.0,
+        "weight": 62.0,
+        "Sex": "F",
+        "age": 56,
+        "Preferred MRI Site": "VGH",
+        "Radiologist Priority": "P3",
+        "medical_condition": [
+            "mass"
+        ],
+        "diagnosis": [],
+        "anatomy": [],
+        "symptoms": [],
+        "phrases": [
+            "x2 3x2x3 atrial mass"
+        ],
+        "followup": false
+    },
+    "16": {
+        "Req # CIO": "137025",
+        "height": 149.86,
+        "weight": 48.987936,
+        "Sex": "F",
+        "age": 80,
+        "Preferred MRI Site": null,
+        "Radiologist Priority": "P2",
+        "medical_condition": [],
+        "diagnosis": [
+            "thymoma"
+        ],
+        "anatomy": [],
+        "symptoms": [],
+        "phrases": [],
+        "followup": false
+    },
+    "17": {
+        "Req # CIO": "162919",
+        "height": 157.48,
+        "weight": 65.77084,
+        "Sex": "F",
+        "age": 47,
+        "Preferred MRI Site": null,
+        "Radiologist Priority": "P4",
+        "medical_condition": [],
+        "diagnosis": [],
+        "anatomy": [
+            "ankle"
+        ],
+        "symptoms": [
+            "constant pain"
+        ],
+        "phrases": [
+            "pain"
+        ],
+        "followup": false
+    },
+    "18": {
+        "Req # CIO": "122912",
+        "height": 0.0,
+        "weight": 71.0,
+        "Sex": "M",
+        "age": 59,
+        "Preferred MRI Site": null,
+        "Radiologist Priority": "P2",
+        "medical_condition": [],
+        "diagnosis": [],
+        "anatomy": [],
+        "symptoms": [],
+        "phrases": [],
+        "followup": false
+    },
+    "19": {
+        "Req # CIO": "137824",
+        "height": 180.0,
+        "weight": 90.0,
+        "Sex": "M",
+        "age": 72,
+        "Preferred MRI Site": "RH",
+        "Radiologist Priority": "P4",
+        "medical_condition": [
+            "fall"
+        ],
+        "diagnosis": [
+            "shoulder weakness shoulder",
+            "weakness c5 c6"
+        ],
+        "anatomy": [
+            "cervial spine",
+            "brachial plexus"
+        ],
+        "symptoms": [],
+        "phrases": [
+            "fall"
+        ],
+        "followup": false
+    },
+    "20": {
+        "Req # CIO": "136738",
+        "height": 170.0,
+        "weight": 64.54,
+        "Sex": "M",
+        "age": 69,
+        "Preferred MRI Site": null,
+        "Radiologist Priority": "P4",
+        "medical_condition": [],
+        "diagnosis": [
+            "lymphoma"
+        ],
+        "anatomy": [
+            "chest"
+        ],
+        "symptoms": [],
+        "phrases": [],
+        "followup": false
+    },
+    "21": {
+        "Req # CIO": "160933",
+        "height": 178.0,
+        "weight": 70.0,
+        "Sex": "M",
+        "age": 41,
+        "Preferred MRI Site": "VGH",
+        "Radiologist Priority": "P2",
+        "medical_condition": [],
+        "diagnosis": [],
+        "anatomy": [],
+        "symptoms": [],
+        "phrases": [],
+        "followup": false
+    },
+    "22": {
+        "Req # CIO": "147842",
+        "height": 180.34,
+        "weight": 77.11064,
+        "Sex": "M",
+        "age": 60,
+        "Preferred MRI Site": "VGH",
+        "Radiologist Priority": "P2",
+        "medical_condition": [],
+        "diagnosis": [
+            "lymphoma",
+            "mass",
+            "cyst rv",
+            "mass"
+        ],
+        "anatomy": [],
+        "symptoms": [],
+        "phrases": [
+            "known lymphoma"
+        ],
+        "followup": false
+    },
+    "23": {
+        "Req # CIO": "162911",
+        "height": 171.0,
+        "weight": 76.0,
+        "Sex": "M",
+        "age": 64,
+        "Preferred MRI Site": "UBCH",
+        "Radiologist Priority": "P3",
+        "medical_condition": [],
+        "diagnosis": [],
+        "anatomy": [
+            "neck",
+            "back"
+        ],
+        "symptoms": [],
+        "phrases": [],
+        "followup": false
+    },
+    "24": {
+        "Req # CIO": "130750",
+        "height": 135.0,
+        "weight": 54.8,
+        "Sex": "F",
+        "age": 80,
+        "Preferred MRI Site": "RH",
+        "Radiologist Priority": "P4",
+        "medical_condition": [],
+        "diagnosis": [],
+        "anatomy": [
+            "ankles"
+        ],
+        "symptoms": [],
+        "phrases": [],
+        "followup": false
+    },
+    "25": {
+        "Req # CIO": "135821",
+        "height": 157.48,
+        "weight": 61.688512,
+        "Sex": "F",
+        "age": 49,
+        "Preferred MRI Site": "RH",
+        "Radiologist Priority": "P4",
+        "medical_condition": [],
+        "diagnosis": [
+            "ma groin thigh knee"
+        ],
+        "anatomy": [
+            "hip"
+        ],
+        "symptoms": [
+            "persistant pain thigh knee"
+        ],
+        "phrases": [],
+        "followup": false
+    },
+    "26": {
+        "Req # CIO": "164302",
+        "height": 163.0,
+        "weight": 53.0,
+        "Sex": "F",
+        "age": 56,
+        "Preferred MRI Site": "VGH",
+        "Radiologist Priority": "P4",
+        "medical_condition": [
+            "calcaneal tubercle",
+            "edema calcaneal fat"
+        ],
+        "diagnosis": [
+            "calcaneal foot pain",
+            "calcaneal planar spurs",
+            "spur calcaneal fat"
+        ],
+        "anatomy": [
+            "foot"
+        ],
+        "symptoms": [],
+        "phrases": [
+            "calcaneal foot pain",
+            "medical calcaneal tubercle",
+            "edema",
+            "spur"
+        ],
+        "followup": false
+    },
+    "27": {
+        "Req # CIO": "155198",
+        "height": 152.0,
+        "weight": 58.3,
+        "Sex": "F",
+        "age": 58,
+        "Preferred MRI Site": null,
+        "Radiologist Priority": "P3",
+        "medical_condition": [
+            "pain bone hips"
+        ],
+        "diagnosis": [],
+        "anatomy": [
+            "hip",
+            "joint",
+            "breast"
+        ],
+        "symptoms": [],
+        "phrases": [
+            "pain r hip bone scan"
+        ],
+        "followup": false
+    },
+    "28": {
+        "Req # CIO": "112707",
+        "height": 0.0,
+        "weight": 83.460928,
+        "Sex": "M",
+        "age": 65,
+        "Preferred MRI Site": null,
+        "Radiologist Priority": "P3",
+        "medical_condition": [],
+        "diagnosis": [
+            "hen",
+            "dyslipdemia",
+            "hypothyroidism"
+        ],
+        "anatomy": [
+            "chest",
+            "chest",
+            "soft tissue"
+        ],
+        "symptoms": [],
+        "phrases": [],
+        "followup": false
+    },
+    "29": {
+        "Req # CIO": "151564",
+        "height": 177.0,
+        "weight": 60.0,
+        "Sex": "M",
+        "age": 51,
+        "Preferred MRI Site": "RH",
+        "Radiologist Priority": "P3",
+        "medical_condition": [
+            "snapping extensor tendons"
+        ],
+        "diagnosis": [],
+        "anatomy": [
+            "ankle"
+        ],
+        "symptoms": [],
+        "phrases": [
+            "extensor tendons"
+        ],
+        "followup": false
+    },
+    "30": {
+        "Req # CIO": "139014",
+        "height": 170.0,
+        "weight": 100.0,
+        "Sex": "F",
+        "age": 53,
+        "Preferred MRI Site": "RH",
+        "Radiologist Priority": "P4",
+        "medical_condition": [
+            "chronic pain ankle",
+            "tenderness fibula fib ligaments"
+        ],
+        "diagnosis": [],
+        "anatomy": [
+            "ankle"
+        ],
+        "symptoms": [
+            "tenderness ankle"
+        ],
+        "phrases": [
+            "tenderness",
+            "left ankle"
+        ],
+        "followup": false
+    },
+    "31": {
+        "Req # CIO": "140342",
+        "height": 152.4,
+        "weight": 69.4,
+        "Sex": "F",
+        "age": 60,
+        "Preferred MRI Site": null,
+        "Radiologist Priority": "P4",
+        "medical_condition": [],
+        "diagnosis": [],
+        "anatomy": [
+            "hip"
+        ],
+        "symptoms": [
+            "pain"
+        ],
+        "phrases": [
+            "pain"
+        ],
+        "followup": false
+    },
+    "32": {
+        "Req # CIO": "125693",
+        "height": 171.0,
+        "weight": 60.0,
+        "Sex": "F",
+        "age": 60,
+        "Preferred MRI Site": "RH",
+        "Radiologist Priority": "P4",
+        "medical_condition": [
+            "achilles tendon pain",
+            "pain",
+            "pain insertion of planar fascia",
+            "achilles tendon integrity",
+            "tendinopathy findings achilles tendon",
+            "edema calcaneal region"
+        ],
+        "diagnosis": [],
+        "anatomy": [
+            "achillies tendons"
+        ],
+        "symptoms": [
+            "limited function",
+            "calcaneal pain insertion of planar fascia"
+        ],
+        "phrases": [
+            "achilles tendon pain",
+            "limited function pain debilitating",
+            "calcaneal pain",
+            "the left and pain",
+            "insertion"
+        ],
+        "followup": false
+    },
+    "33": {
+        "Req # CIO": null,
+        "height": null,
+        "weight": 61.0,
+        "Sex": "M",
+        "age": 65,
+        "Preferred MRI Site": "VGH",
+        "Radiologist Priority": "P1",
+        "medical_condition": [],
+        "diagnosis": [
+            "esophageal duplication cyst",
+            "lesions"
+        ],
+        "anatomy": [],
+        "symptoms": [],
+        "phrases": [],
+        "followup": false
+    },
+    "34": {
+        "Req # CIO": "158947",
+        "height": 0.0,
+        "weight": 0.0,
+        "Sex": "F",
+        "age": 70,
+        "Preferred MRI Site": "UBCH",
+        "Radiologist Priority": "P3",
+        "medical_condition": [
+            "mass shoulder paraspinal thoracic area"
+        ],
+        "diagnosis": [],
+        "anatomy": [
+            "thorax"
+        ],
+        "symptoms": [],
+        "phrases": [
+            "paraspinal thoracic area"
+        ],
+        "followup": false
+    },
+    "35": {
+        "Req # CIO": null,
+        "height": 0.0,
+        "weight": 0.0,
+        "Sex": "F",
+        "age": 50,
+        "Preferred MRI Site": "VGH",
+        "Radiologist Priority": "P2",
+        "medical_condition": [],
+        "diagnosis": [],
+        "anatomy": [
+            "neck"
+        ],
+        "symptoms": [],
+        "phrases": [
+            "neck"
+        ],
+        "followup": false
+    },
+    "36": {
+        "Req # CIO": null,
+        "height": null,
+        "weight": 49.89512,
+        "Sex": "F",
+        "age": 48,
+        "Preferred MRI Site": null,
+        "Radiologist Priority": "P4",
+        "medical_condition": [
+            "labrum"
+        ],
+        "diagnosis": [
+            "hip impingement",
+            "sclerosis femoral head"
+        ],
+        "anatomy": [
+            "hip"
+        ],
+        "symptoms": [],
+        "phrases": [
+            "f eith right hip impingement",
+            "femoral head",
+            "labrum"
+        ],
+        "followup": false
+    },
+    "37": {
+        "Req # CIO": "133269",
+        "height": 0.0,
+        "weight": 0.0,
+        "Sex": "M",
+        "age": 81,
+        "Preferred MRI Site": null,
+        "Radiologist Priority": "P3",
+        "medical_condition": [],
+        "diagnosis": [],
+        "anatomy": [
+            "chest wall"
+        ],
+        "symptoms": [],
+        "phrases": [],
+        "followup": false
+    },
+    "38": {
+        "Req # CIO": "142605",
+        "height": 181.6,
+        "weight": 104.0,
+        "Sex": "F",
+        "age": 56,
+        "Preferred MRI Site": "VGH",
+        "Radiologist Priority": null,
+        "medical_condition": [],
+        "diagnosis": [
+            "villonoduar synovitis"
+        ],
+        "anatomy": [
+            "ankle"
+        ],
+        "symptoms": [],
+        "phrases": [],
+        "followup": false
+    },
+    "39": {
+        "Req # CIO": "160382",
+        "height": 156.0,
+        "weight": 68.0,
+        "Sex": "M",
+        "age": 36,
+        "Preferred MRI Site": "VGH",
+        "Radiologist Priority": "P4",
+        "medical_condition": [
+            "pain"
+        ],
+        "diagnosis": [
+            "pain ent",
+            "pseudotumor",
+            "groin pain"
+        ],
+        "anatomy": [
+            "hip",
+            "pelvis"
+        ],
+        "symptoms": [],
+        "phrases": [],
+        "followup": false
+    },
+    "40": {
+        "Req # CIO": "114069",
+        "height": 170.0,
+        "weight": 70.0,
+        "Sex": "F",
+        "age": 45,
+        "Preferred MRI Site": null,
+        "Radiologist Priority": "P4",
+        "medical_condition": [],
+        "diagnosis": [],
+        "anatomy": [
+            "ankle"
+        ],
+        "symptoms": [
+            "leg pain ankle",
+            "swelling leg ankle"
+        ],
+        "phrases": [
+            "the ankle"
+        ],
+        "followup": false
+    },
+    "41": {
+        "Req # CIO": null,
+        "height": 0.0,
+        "weight": 0.0,
+        "Sex": "M",
+        "age": 38,
+        "Preferred MRI Site": "VGH",
+        "Radiologist Priority": null,
+        "medical_condition": [],
+        "diagnosis": [
+            "marian s syndrome",
+            "chronic aortic dissection"
+        ],
+        "anatomy": [
+            "arota chest",
+            "abdomen",
+            "iliacs"
+        ],
+        "symptoms": [],
+        "phrases": [
+            "syndrome"
+        ],
+        "followup": false
+    },
+    "42": {
+        "Req # CIO": "19639",
+        "height": 186.0,
+        "weight": 110.0,
+        "Sex": "M",
+        "age": 43,
+        "Preferred MRI Site": "RH",
+        "Radiologist Priority": "P4",
+        "medical_condition": [],
+        "diagnosis": [
+            "persistent inguinal hip pain",
+            "labral tear"
+        ],
+        "anatomy": [
+            "hip"
+        ],
+        "symptoms": [],
+        "phrases": [
+            "persistent r inguinal hip pain"
+        ],
+        "followup": false
+    },
+    "43": {
+        "Req # CIO": "106610",
+        "height": 0.0,
+        "weight": 0.0,
+        "Sex": "M",
+        "age": 73,
+        "Preferred MRI Site": null,
+        "Radiologist Priority": "P3",
+        "medical_condition": [],
+        "diagnosis": [
+            "lesion",
+            "ischemic injury",
+            "carditis"
+        ],
+        "anatomy": [],
+        "symptoms": [],
+        "phrases": [
+            "40 lesion"
+        ],
+        "followup": false
+    },
+    "44": {
+        "Req # CIO": "156190",
+        "height": null,
+        "weight": 85.0,
+        "Sex": "M",
+        "age": 63,
+        "Preferred MRI Site": null,
+        "Radiologist Priority": "P3",
+        "medical_condition": [],
+        "diagnosis": [
+            "injury",
+            "inflammation",
+            "nodule achilles"
+        ],
+        "anatomy": [
+            "ankle"
+        ],
+        "symptoms": [
+            "persistent pain achilles tendon",
+            "persistent pain"
+        ],
+        "phrases": [
+            "achilles",
+            "injury",
+            "normal but persistent pain and inflammation"
+        ],
+        "followup": false
+    },
+    "45": {
+        "Req # CIO": "154596",
+        "height": 175.0,
+        "weight": 65.0,
+        "Sex": "F",
+        "age": 45,
+        "Preferred MRI Site": "VGH",
+        "Radiologist Priority": "P3",
+        "medical_condition": [
+            "damage"
+        ],
+        "diagnosis": [
+            "over 10 years every 6 months lasting 2 weeks inflammation",
+            "bony erosions",
+            "inflammatory arthritis"
+        ],
+        "anatomy": [
+            "wrist",
+            "hand"
+        ],
+        "symptoms": [
+            "reduced rom",
+            "pain wrist joints"
+        ],
+        "phrases": [
+            "wrist and hand",
+            "2 weeks",
+            "every 6 months",
+            "over 10 years",
+            "left wrist",
+            "inflammatory arthritis"
+        ],
+        "followup": false
+    },
+    "46": {
+        "Req # CIO": null,
+        "height": 193.04,
+        "weight": 95.25,
+        "Sex": "M",
+        "age": 54,
+        "Preferred MRI Site": null,
+        "Radiologist Priority": "P4",
+        "medical_condition": [
+            "neurogenic to symptoms"
+        ],
+        "diagnosis": [
+            "testicular atrophy"
+        ],
+        "anatomy": [
+            "braqchial plexus"
+        ],
+        "symptoms": [],
+        "phrases": [],
+        "followup": false
+    },
+    "47": {
+        "Req # CIO": "96339",
+        "height": 193.04,
+        "weight": 95.25,
+        "Sex": "M",
+        "age": 54,
+        "Preferred MRI Site": null,
+        "Radiologist Priority": "P4",
+        "medical_condition": [
+            "hand discoloration",
+            "swelling hand arm"
+        ],
+        "diagnosis": [],
+        "anatomy": [
+            "arm"
+        ],
+        "symptoms": [],
+        "phrases": [
+            "hand discoloration",
+            "arm swelling"
+        ],
+        "followup": false
+    },
+    "48": {
+        "Req # CIO": "103492",
+        "height": 198.0,
+        "weight": 136.0,
+        "Sex": "M",
+        "age": 370,
+        "Preferred MRI Site": "VGH",
+        "Radiologist Priority": "P3",
+        "medical_condition": [],
+        "diagnosis": [],
+        "anatomy": [],
+        "symptoms": [],
+        "phrases": [],
+        "followup": false
+    },
+    "49": {
+        "Req # CIO": "151770",
+        "height": 173.5,
+        "weight": 83.6,
+        "Sex": "M",
+        "age": 50,
+        "Preferred MRI Site": "VGH",
+        "Radiologist Priority": "P2",
+        "medical_condition": [],
+        "diagnosis": [
+            "leukemia",
+            "chronic gvhd",
+            "hip pain",
+            "vascular necrosis"
+        ],
+        "anatomy": [
+            "hips"
+        ],
+        "symptoms": [],
+        "phrases": [
+            "leukemia",
+            "bilateral hip pain"
+        ],
+        "followup": false
+    },
+    "50": {
+        "Req # CIO": "135019",
+        "height": 170.0,
+        "weight": 76.0,
+        "Sex": "F",
+        "age": 49,
+        "Preferred MRI Site": null,
+        "Radiologist Priority": "P4",
+        "medical_condition": [
+            "pain wrist"
+        ],
+        "diagnosis": [],
+        "anatomy": [
+            "wrist"
+        ],
+        "symptoms": [],
+        "phrases": [
+            "pain",
+            "right wrist"
+        ],
+        "followup": false
+    },
+    "51": {
+        "Req # CIO": "156185",
+        "height": 149.86,
+        "weight": 70.30676,
+        "Sex": "F",
+        "age": 57,
+        "Preferred MRI Site": null,
+        "Radiologist Priority": "P4",
+        "medical_condition": [],
+        "diagnosis": [
+            "ankle instability"
+        ],
+        "anatomy": [
+            "foot",
+            "ankle"
+        ],
+        "symptoms": [],
+        "phrases": [
+            "ankle instability"
+        ],
+        "followup": false
+    },
+    "52": {
+        "Req # CIO": "143763",
+        "height": 163.0,
+        "weight": 68.0,
+        "Sex": "M",
+        "age": 54,
+        "Preferred MRI Site": null,
+        "Radiologist Priority": "P3",
+        "medical_condition": [
+            "oa"
+        ],
+        "diagnosis": [],
+        "anatomy": [
+            "ankle"
+        ],
+        "symptoms": [],
+        "phrases": [
+            "ankle"
+        ],
+        "followup": false
+    },
+    "53": {
+        "Req # CIO": "155747",
+        "height": 173.0,
+        "weight": 68.0,
+        "Sex": "F",
+        "age": 50,
+        "Preferred MRI Site": "UBCH",
+        "Radiologist Priority": "P3",
+        "medical_condition": [],
+        "diagnosis": [
+            "achilles rupture",
+            "tendons"
+        ],
+        "anatomy": [
+            "foot"
+        ],
+        "symptoms": [],
+        "phrases": [],
+        "followup": false
+    },
+    "54": {
+        "Req # CIO": "106125",
+        "height": 159.5,
+        "weight": 65.0,
+        "Sex": "F",
+        "age": 60,
+        "Preferred MRI Site": null,
+        "Radiologist Priority": "P3",
+        "medical_condition": [],
+        "diagnosis": [
+            "lipomatous tumor ankle"
+        ],
+        "anatomy": [
+            "ankle"
+        ],
+        "symptoms": [],
+        "phrases": [
+            "left ankle"
+        ],
+        "followup": false
+    },
+    "55": {
+        "Req # CIO": "121827",
+        "height": 165.0,
+        "weight": 86.18248,
+        "Sex": "M",
+        "age": 45,
+        "Preferred MRI Site": null,
+        "Radiologist Priority": "P4",
+        "medical_condition": [],
+        "diagnosis": [
+            "labral tear",
+            "loose body os acetabulare reaction"
+        ],
+        "anatomy": [
+            "hip"
+        ],
+        "symptoms": [],
+        "phrases": [],
+        "followup": false
+    },
+    "56": {
+        "Req # CIO": "122606",
+        "height": 157.48,
+        "weight": 73.935496,
+        "Sex": "F",
+        "age": 67,
+        "Preferred MRI Site": "UBCH",
+        "Radiologist Priority": "P4",
+        "medical_condition": [],
+        "diagnosis": [],
+        "anatomy": [
+            "c spine",
+            "brachial plexus"
+        ],
+        "symptoms": [
+            "fall",
+            "weakness c5 6 trunk shoulder"
+        ],
+        "phrases": [],
+        "followup": false
+    },
+    "57": {
+        "Req # CIO": "158843",
+        "height": 160.02,
+        "weight": 77.11064,
+        "Sex": "f",
+        "age": 62,
+        "Preferred MRI Site": "UBCH",
+        "Radiologist Priority": "P3",
+        "medical_condition": [
+            "mass ankle",
+            "mass ankle"
+        ],
+        "diagnosis": [],
+        "anatomy": [
+            "ankle"
+        ],
+        "symptoms": [],
+        "phrases": [
+            "r lateral ankle"
+        ],
+        "followup": false
+    },
+    "58": {
+        "Req # CIO": "131946",
+        "height": 185.0,
+        "weight": 71.0,
+        "Sex": "M",
+        "age": 26,
+        "Preferred MRI Site": "RH",
+        "Radiologist Priority": "P4",
+        "medical_condition": [],
+        "diagnosis": [
+            "ligaments injury"
+        ],
+        "anatomy": [
+            "wrist"
+        ],
+        "symptoms": [
+            "persistent pain"
+        ],
+        "phrases": [
+            "persistent pain",
+            "ligaments injury"
+        ],
+        "followup": false
+    },
+    "59": {
+        "Req # CIO": "131196",
+        "height": 177.8,
+        "weight": 99.79024,
+        "Sex": "M",
+        "age": 55,
+        "Preferred MRI Site": null,
+        "Radiologist Priority": "P4",
+        "medical_condition": [
+            "instability"
+        ],
+        "diagnosis": [
+            "chronic hip pain",
+            "did"
+        ],
+        "anatomy": [
+            "hip"
+        ],
+        "symptoms": [],
+        "phrases": [
+            "chronic right hip pain"
+        ],
+        "followup": false
+    },
+    "60": {
+        "Req # CIO": "158585",
+        "height": 181.0,
+        "weight": 85.0,
+        "Sex": "M",
+        "age": 54,
+        "Preferred MRI Site": "UBCH",
+        "Radiologist Priority": "P3",
+        "medical_condition": [
+            "swollen achilles"
+        ],
+        "diagnosis": [],
+        "anatomy": [
+            "achilles"
+        ],
+        "symptoms": [],
+        "phrases": [
+            "achilles"
+        ],
+        "followup": false
+    },
+    "61": {
+        "Req # CIO": "117377",
+        "height": 185.0,
+        "weight": 56.0,
+        "Sex": "M",
+        "age": 54,
+        "Preferred MRI Site": "RH",
+        "Radiologist Priority": "P3",
+        "medical_condition": [],
+        "diagnosis": [
+            "hand weakness",
+            "motorcycle accident",
+            "degenerative changes",
+            "branchial plexus injury"
+        ],
+        "anatomy": [
+            "c spine",
+            "brachial plexus"
+        ],
+        "symptoms": [],
+        "phrases": [
+            "right hand weakness",
+            "a motorcycle accident",
+            "multilevel degenerative changes"
+        ],
+        "followup": false
+    },
+    "62": {
+        "Req # CIO": "120091",
+        "height": 170.18,
+        "weight": 68.945984,
+        "Sex": "F",
+        "age": 52,
+        "Preferred MRI Site": "UBCH",
+        "Radiologist Priority": "P4",
+        "medical_condition": [
+            "bony prominence femur head"
+        ],
+        "diagnosis": [
+            "labour tear"
+        ],
+        "anatomy": [
+            "hip"
+        ],
+        "symptoms": [
+            "hip pain"
+        ],
+        "phrases": [
+            "worsening r hip pain",
+            "bony prominence"
+        ],
+        "followup": false
+    },
+    "63": {
+        "Req # CIO": null,
+        "height": 176.0,
+        "weight": 65.0,
+        "Sex": "M",
+        "age": 37,
+        "Preferred MRI Site": "UBCH",
+        "Radiologist Priority": "P4",
+        "medical_condition": [
+            "swelling",
+            "tenderness",
+            "swelling"
+        ],
+        "diagnosis": [
+            "ligament tear injury"
+        ],
+        "anatomy": [
+            "ankle"
+        ],
+        "symptoms": [],
+        "phrases": [
+            "r o ligament tear injury"
+        ],
+        "followup": false
+    },
+    "64": {
+        "Req # CIO": "81119",
+        "height": 167.64,
+        "weight": 70.760352,
+        "Sex": "F",
+        "age": 69,
+        "Preferred MRI Site": null,
+        "Radiologist Priority": "P4",
+        "medical_condition": [],
+        "diagnosis": [],
+        "anatomy": [],
+        "symptoms": [],
+        "phrases": [],
+        "followup": false
+    },
+    "65": {
+        "Req # CIO": "58962",
+        "height": 0.0,
+        "weight": 121.0,
+        "Sex": "M",
+        "age": 51,
+        "Preferred MRI Site": null,
+        "Radiologist Priority": "P3",
+        "medical_condition": [],
+        "diagnosis": [
+            "chef",
+            "obesity"
+        ],
+        "anatomy": [],
+        "symptoms": [],
+        "phrases": [],
+        "followup": false
+    },
+    "66": {
+        "Req # CIO": null,
+        "height": 149.86,
+        "weight": 44.0,
+        "Sex": "F",
+        "age": 57,
+        "Preferred MRI Site": "VGH",
+        "Radiologist Priority": "P2",
+        "medical_condition": [
+            "holm",
+            "scar burden"
+        ],
+        "diagnosis": [
+            "syncope",
+            "rectal hypertrophy"
+        ],
+        "anatomy": [
+            "heart"
+        ],
+        "symptoms": [],
+        "phrases": [
+            "holm and syncope"
+        ],
+        "followup": false
+    },
+    "67": {
+        "Req # CIO": "118553",
+        "height": 157.0,
+        "weight": 58.0,
+        "Sex": "F",
+        "age": 60,
+        "Preferred MRI Site": "VGH",
+        "Radiologist Priority": "P3",
+        "medical_condition": [],
+        "diagnosis": [],
+        "anatomy": [],
+        "symptoms": [],
+        "phrases": [],
+        "followup": false
+    },
+    "68": {
+        "Req # CIO": "134418",
+        "height": 192.02,
+        "weight": 81.65,
+        "Sex": "M",
+        "age": 33,
+        "Preferred MRI Site": "UBCH",
+        "Radiologist Priority": "P4",
+        "medical_condition": [
+            "instability wrist carpal bone",
+            "vasovagl reaction"
+        ],
+        "diagnosis": [],
+        "anatomy": [
+            "wrist"
+        ],
+        "symptoms": [],
+        "phrases": [
+            "right wrist",
+            "a vasovagl reaction"
+        ],
+        "followup": false
+    },
+    "69": {
+        "Req # CIO": "120777",
+        "height": 155.5,
+        "weight": 96.0,
+        "Sex": "F",
+        "age": 53,
+        "Preferred MRI Site": null,
+        "Radiologist Priority": "P4",
+        "medical_condition": [
+            "obese",
+            "pain"
+        ],
+        "diagnosis": [],
+        "anatomy": [
+            "hip",
+            "pelvis",
+            "spine"
+        ],
+        "symptoms": [
+            "persistant pain hip"
+        ],
+        "phrases": [
+            "persistant pain",
+            "rt hip"
+        ],
+        "followup": false
+    },
+    "70": {
+        "Req # CIO": "155661",
+        "height": 170.18,
+        "weight": 83.91452,
+        "Sex": "F",
+        "age": 34,
+        "Preferred MRI Site": "UBCH",
+        "Radiologist Priority": "P3",
+        "medical_condition": [],
+        "diagnosis": [
+            "ankle sprain"
+        ],
+        "anatomy": [
+            "ankle",
+            "foot"
+        ],
+        "symptoms": [
+            "sensation of instability"
+        ],
+        "phrases": [
+            "ankle sprain",
+            "sensation"
+        ],
+        "followup": false
+    },
+    "71": {
+        "Req # CIO": "145206",
+        "height": 157.0,
+        "weight": 53.5,
+        "Sex": "F",
+        "age": 46,
+        "Preferred MRI Site": "UBCH",
+        "Radiologist Priority": "P4",
+        "medical_condition": [],
+        "diagnosis": [
+            "hip pain",
+            "labral tear"
+        ],
+        "anatomy": [
+            "hip"
+        ],
+        "symptoms": [],
+        "phrases": [
+            "of l hip pain"
+        ],
+        "followup": false
+    },
+    "72": {
+        "Req # CIO": "148368",
+        "height": 91.0,
+        "weight": 183.0,
+        "Sex": "M",
+        "age": 56,
+        "Preferred MRI Site": null,
+        "Radiologist Priority": "P2",
+        "medical_condition": [
+            "lch"
+        ],
+        "diagnosis": [
+            "dynamic lot obstruction",
+            "mistral leaflet tissue chordal"
+        ],
+        "anatomy": [],
+        "symptoms": [],
+        "phrases": [],
+        "followup": false
+    },
+    "73": {
+        "Req # CIO": "132355",
+        "height": 82.8,
+        "weight": 74.8,
+        "Sex": "M",
+        "age": 56,
+        "Preferred MRI Site": "UBCH",
+        "Radiologist Priority": "P4",
+        "medical_condition": [
+            "ankle pain",
+            "hurts"
+        ],
+        "diagnosis": [],
+        "anatomy": [
+            "ankle"
+        ],
+        "symptoms": [],
+        "phrases": [
+            "ankle pain"
+        ],
+        "followup": false
+    },
+    "74": {
+        "Req # CIO": "151966",
+        "height": 180.0,
+        "weight": 115.0,
+        "Sex": "M",
+        "age": 59,
+        "Preferred MRI Site": "VGH",
+        "Radiologist Priority": "P4",
+        "medical_condition": [],
+        "diagnosis": [
+            "pain"
+        ],
+        "anatomy": [
+            "ankle"
+        ],
+        "symptoms": [],
+        "phrases": [
+            "6 mo pain"
+        ],
+        "followup": false
+    },
+    "75": {
+        "Req # CIO": "59831",
+        "height": 168.0,
+        "weight": 64.0,
+        "Sex": "F",
+        "age": 55,
+        "Preferred MRI Site": null,
+        "Radiologist Priority": "P4",
+        "medical_condition": [
+            "pain ip"
+        ],
+        "diagnosis": [],
+        "anatomy": [
+            "hip"
+        ],
+        "symptoms": [],
+        "phrases": [],
+        "followup": false
+    },
+    "76": {
+        "Req # CIO": "144071",
+        "height": 180.34,
+        "weight": 97.52228,
+        "Sex": "M",
+        "age": 60,
+        "Preferred MRI Site": null,
+        "Radiologist Priority": "P2",
+        "medical_condition": [],
+        "diagnosis": [],
+        "anatomy": [],
+        "symptoms": [],
+        "phrases": [],
+        "followup": false
+    },
+    "77": {
+        "Req # CIO": "144108",
+        "height": null,
+        "weight": 61.23492,
+        "Sex": "M",
+        "age": 63,
+        "Preferred MRI Site": null,
+        "Radiologist Priority": "P3",
+        "medical_condition": [],
+        "diagnosis": [
+            "branchial plexopathy",
+            "branchial ileitis"
+        ],
+        "anatomy": [
+            "cervical spine",
+            "brachial plexi"
+        ],
+        "symptoms": [],
+        "phrases": [],
+        "followup": false
+    },
+    "78": {
+        "Req # CIO": "140443",
+        "height": null,
+        "weight": 74.84268,
+        "Sex": "F",
+        "age": 62,
+        "Preferred MRI Site": null,
+        "Radiologist Priority": "P4",
+        "medical_condition": [],
+        "diagnosis": [],
+        "anatomy": [
+            "wrist"
+        ],
+        "symptoms": [],
+        "phrases": [],
+        "followup": false
+    },
+    "79": {
+        "Req # CIO": null,
+        "height": 0.0,
+        "weight": 0.0,
+        "Sex": "M",
+        "age": 81,
+        "Preferred MRI Site": "VGH",
+        "Radiologist Priority": "P2",
+        "medical_condition": [
+            "pain",
+            "edema marrow",
+            "fall"
+        ],
+        "diagnosis": [],
+        "anatomy": [
+            "hip"
+        ],
+        "symptoms": [],
+        "phrases": [
+            "pain"
+        ],
+        "followup": false
+    },
+    "80": {
+        "Req # CIO": "128245",
+        "height": 170.0,
+        "weight": 70.0,
+        "Sex": "M",
+        "age": 53,
+        "Preferred MRI Site": "UBCH",
+        "Radiologist Priority": "P4",
+        "medical_condition": [],
+        "diagnosis": [
+            "neuropathy",
+            "trial tunnel syndrome",
+            "soft tissue mass achilles tendon"
+        ],
+        "anatomy": [
+            "ankle",
+            "foot"
+        ],
+        "symptoms": [],
+        "phrases": [
+            "query compressive neuropathy"
+        ],
+        "followup": false
+    },
+    "81": {
+        "Req # CIO": "29629",
+        "height": null,
+        "weight": 81.64656,
+        "Sex": "F",
+        "age": 54,
+        "Preferred MRI Site": "UBCH",
+        "Radiologist Priority": "P4",
+        "medical_condition": [
+            "tender talocalcaneal area",
+            "swelling talocalcaneal area ankle",
+            "disruption"
+        ],
+        "diagnosis": [
+            "traumatic injury hand"
+        ],
+        "anatomy": [
+            "ankles"
+        ],
+        "symptoms": [],
+        "phrases": [
+            "hand",
+            "traumatic injury"
+        ],
+        "followup": false
+    },
+    "82": {
+        "Req # CIO": "131486",
+        "height": 155.0,
+        "weight": 88.0,
+        "Sex": "F",
+        "age": 52,
+        "Preferred MRI Site": "UBCH",
+        "Radiologist Priority": "P4",
+        "medical_condition": [],
+        "diagnosis": [
+            "muscle tear scapula",
+            "injury rib costovertebral joint"
+        ],
+        "anatomy": [
+            "back",
+            "scapular region"
+        ],
+        "symptoms": [
+            "pain scapula"
+        ],
+        "phrases": [
+            "muscle tear"
+        ],
+        "followup": false
+    },
+    "83": {
+        "Req # CIO": "139750",
+        "height": 149.3,
+        "weight": 63.5,
+        "Sex": "F",
+        "age": 78,
+        "Preferred MRI Site": null,
+        "Radiologist Priority": "P4",
+        "medical_condition": [
+            "limited rom hip"
+        ],
+        "diagnosis": [
+            "lumbosacral radiculopathy",
+            "bony hypertrophy l5 s1"
+        ],
+        "anatomy": [
+            "hip",
+            "lumbar spine"
+        ],
+        "symptoms": [],
+        "phrases": [
+            "lumbar spine surgery",
+            "r hip esp",
+            "re hip vs lumbar spine pathology",
+            "hip x ray"
+        ],
+        "followup": false
+    },
+    "84": {
+        "Req # CIO": "96961",
+        "height": 152.4,
+        "weight": 47.62716,
+        "Sex": "F",
+        "age": 82,
+        "Preferred MRI Site": "RH",
+        "Radiologist Priority": "P4",
+        "medical_condition": [
+            "pain ankle",
+            "crops"
+        ],
+        "diagnosis": [],
+        "anatomy": [
+            "ankle"
+        ],
+        "symptoms": [],
+        "phrases": [
+            "pain",
+            "ankle"
+        ],
+        "followup": false
+    },
+    "85": {
+        "Req # CIO": "116766",
+        "height": 0.0,
+        "weight": 0.0,
+        "Sex": "F",
+        "age": 70,
+        "Preferred MRI Site": "UBCH",
+        "Radiologist Priority": "P4",
+        "medical_condition": [
+            "pain back hip"
+        ],
+        "diagnosis": [
+            "ma"
+        ],
+        "anatomy": [
+            "lumbar spine",
+            "hip"
+        ],
+        "symptoms": [],
+        "phrases": [],
+        "followup": false
+    },
+    "86": {
+        "Req # CIO": "127543",
+        "height": 161.29,
+        "weight": 79.38,
+        "Sex": "F",
+        "age": 57,
+        "Preferred MRI Site": "VGH",
+        "Radiologist Priority": "P4",
+        "medical_condition": [],
+        "diagnosis": [],
+        "anatomy": [
+            "mrv subclavian vessel"
+        ],
+        "symptoms": [],
+        "phrases": [],
+        "followup": false
+    },
+    "87": {
+        "Req # CIO": "127577",
+        "height": 161.29,
+        "weight": 79.38,
+        "Sex": "F",
+        "age": 57,
+        "Preferred MRI Site": "VGH",
+        "Radiologist Priority": "P3",
+        "medical_condition": [],
+        "diagnosis": [],
+        "anatomy": [
+            "cervical spine"
+        ],
+        "symptoms": [],
+        "phrases": [],
+        "followup": false
+    },
+    "88": {
+        "Req # CIO": "113567",
+        "height": 172.72,
+        "weight": 102.0582,
+        "Sex": "F",
+        "age": 46,
+        "Preferred MRI Site": "RH",
+        "Radiologist Priority": "P4",
+        "medical_condition": [
+            "swelling digits"
+        ],
+        "diagnosis": [
+            "injury hand",
+            "fracture"
+        ],
+        "anatomy": [
+            "hand",
+            "wrist"
+        ],
+        "symptoms": [],
+        "phrases": [
+            "hand",
+            "digits"
+        ],
+        "followup": false
+    },
+    "89": {
+        "Req # CIO": "99594",
+        "height": 156.0,
+        "weight": 54.5,
+        "Sex": "F",
+        "age": 61,
+        "Preferred MRI Site": "VGH",
+        "Radiologist Priority": "P3",
+        "medical_condition": [],
+        "diagnosis": [],
+        "anatomy": [],
+        "symptoms": [],
+        "phrases": [],
+        "followup": false
+    },
+    "90": {
+        "Req # CIO": "97694",
+        "height": 188.0,
+        "weight": 158.0,
+        "Sex": "M",
+        "age": 54,
+        "Preferred MRI Site": null,
+        "Radiologist Priority": "P4",
+        "medical_condition": [],
+        "diagnosis": [
+            "hindfoot pain",
+            "peroneal tendinitis"
+        ],
+        "anatomy": [
+            "ankle"
+        ],
+        "symptoms": [],
+        "phrases": [
+            "bilateral hindfoot pain"
+        ],
+        "followup": false
+    },
+    "91": {
+        "Req # CIO": null,
+        "height": 0.0,
+        "weight": 0.0,
+        "Sex": "F",
+        "age": 80,
+        "Preferred MRI Site": "VGH",
+        "Radiologist Priority": "P2",
+        "medical_condition": [],
+        "diagnosis": [
+            "cardiac deaths",
+            "syncope"
+        ],
+        "anatomy": [
+            "heart"
+        ],
+        "symptoms": [],
+        "phrases": [
+            "cardiac deaths spinal surgery"
+        ],
+        "followup": false
+    },
+    "92": {
+        "Req # CIO": "75850",
+        "height": 162.56,
+        "weight": 70.760352,
+        "Sex": "F",
+        "age": 48,
+        "Preferred MRI Site": "RH",
+        "Radiologist Priority": "P4",
+        "medical_condition": [
+            "discomfort",
+            "appropriate compensation"
+        ],
+        "diagnosis": [
+            "madducci syndrome limb",
+            "articular hip pain",
+            "acetabular dysplasia",
+            "chondropathy"
+        ],
+        "anatomy": [
+            "hip"
+        ],
+        "symptoms": [
+            "weight loss"
+        ],
+        "phrases": [
+            "intra articular hip pain",
+            "2 to 7 10 discomfort",
+            "weight loss",
+            "appropriate compensation",
+            "possible low borderline acetabular dysplasia"
+        ],
+        "followup": false
+    },
+    "93": {
+        "Req # CIO": "121503",
+        "height": 162.56,
+        "weight": 0.0,
+        "Sex": "F",
+        "age": 59,
+        "Preferred MRI Site": "RH",
+        "Radiologist Priority": "P4",
+        "medical_condition": [
+            "stiffness"
+        ],
+        "diagnosis": [
+            "hip pain"
+        ],
+        "anatomy": [
+            "hip"
+        ],
+        "symptoms": [],
+        "phrases": [],
+        "followup": false
+    },
+    "94": {
+        "Req # CIO": "154721",
+        "height": 154.0,
+        "weight": 66.0,
+        "Sex": "F",
+        "age": 34,
+        "Preferred MRI Site": null,
+        "Radiologist Priority": "P3",
+        "medical_condition": [
+            "limitation",
+            "thickening"
+        ],
+        "diagnosis": [
+            "de guerlain s tenosynovitis"
+        ],
+        "anatomy": [
+            "wrist",
+            "hand"
+        ],
+        "symptoms": [
+            "pain"
+        ],
+        "phrases": [
+            "tenosynovitis",
+            "pain and limitation",
+            "1 thickening soft tissue abnormally"
+        ],
+        "followup": false
+    },
+    "95": {
+        "Req # CIO": null,
+        "height": 182.88,
+        "weight": 89.357624,
+        "Sex": "M",
+        "age": 53,
+        "Preferred MRI Site": "RH",
+        "Radiologist Priority": "P3",
+        "medical_condition": [],
+        "diagnosis": [
+            "tenosynovitis",
+            "synovitis"
+        ],
+        "anatomy": [
+            "foot",
+            "ankle"
+        ],
+        "symptoms": [
+            "acute pain toe"
+        ],
+        "phrases": [
+            "tenosynovitis",
+            "synovitis",
+            "ankle and toe swelling and pain"
+        ],
+        "followup": false
+    },
+    "96": {
+        "Req # CIO": "125397",
+        "height": 164.5,
+        "weight": 98.6,
+        "Sex": "F",
+        "age": 38,
+        "Preferred MRI Site": "RH",
+        "Radiologist Priority": "P4",
+        "medical_condition": [],
+        "diagnosis": [
+            "persistent workplace injury",
+            "achilles bursts"
+        ],
+        "anatomy": [
+            "ankle",
+            "foot"
+        ],
+        "symptoms": [
+            "persistent ankle pain"
+        ],
+        "phrases": [
+            "persistent r ankle pain"
+        ],
+        "followup": false
+    },
+    "97": {
+        "Req # CIO": "104541",
+        "height": 162.56,
+        "weight": 79.3786,
+        "Sex": "F",
+        "age": 70,
+        "Preferred MRI Site": "RH",
+        "Radiologist Priority": "P4",
+        "medical_condition": [],
+        "diagnosis": [
+            "chronic ma",
+            "hip pain"
+        ],
+        "anatomy": [
+            "hip"
+        ],
+        "symptoms": [],
+        "phrases": [
+            "hip pain"
+        ],
+        "followup": false
+    },
+    "98": {
+        "Req # CIO": "100347",
+        "height": null,
+        "weight": 83.91452,
+        "Sex": "F",
+        "age": 62,
+        "Preferred MRI Site": "UBCH",
+        "Radiologist Priority": "P4",
+        "medical_condition": [],
+        "diagnosis": [
+            "lumbar radiculopathy back l2 l3"
+        ],
+        "anatomy": [
+            "lumbar",
+            "hip"
+        ],
+        "symptoms": [
+            "difficulty walking"
+        ],
+        "phrases": [
+            "severe lumbar",
+            "difficulty walking"
+        ],
+        "followup": false
+    },
+    "99": {
+        "Req # CIO": "153154",
+        "height": 159.0,
+        "weight": 74.7,
+        "Sex": "F",
+        "age": 66,
+        "Preferred MRI Site": null,
+        "Radiologist Priority": "P2",
+        "medical_condition": [],
+        "diagnosis": [
+            "hip pain",
+            "neurosis"
+        ],
+        "anatomy": [
+            "hip"
+        ],
+        "symptoms": [],
+        "phrases": [
+            "r hip pain vase neurosis"
+        ],
+        "followup": false
+    }
+}
