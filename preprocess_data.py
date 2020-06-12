@@ -26,13 +26,14 @@ data_df['Reason for Exam/Relevant Clinical History'] = preProcessText(data_df['R
 data_df['Spine'] = preProcessText(data_df['Appropriateness Checklist - Spine'])
 data_df['Hip & Knee'] = preProcessText(data_df['Appropriateness Checklist - Hip & Knee'])
 
+# New Dataframe with
 formatted_df = data_df[['Req # CIO', 'height', 'weight', 'Sex','age', 'Preferred MRI Site', 'Radiologist Priority']]
 formatted_df['medical_condition'] = ''
 formatted_df['diagnosis'] = ''
 formatted_df['anatomy'] = ''
 formatted_df['symptoms'] = ''
 formatted_df['phrases'] = ''
-formatted_df['followup'] = False
+formatted_df['other_info'] = ''
 
 for row in range(len(formatted_df.index)):
     print("row is :", row)
@@ -41,6 +42,8 @@ for row in range(len(formatted_df.index)):
     diagnosis = [] 
     symptoms = []
     key_phrases = []
+    other_info = []
+    
     # Parse the Exam Requested Column into Comprehend Medical to find Anatomy Entities
     # mri_reason = checkSpelling(f'{data_df["Exam Requested"][row]}'.replace('MRI','')) # Comprehend Medical sometimes combines anatomy + MRI together
     mri_reason = anatomySpelling(f'{data_df["Exam Requested"][row]}')
@@ -61,14 +64,14 @@ for row in range(len(formatted_df.index)):
         
     infer_icd10_cm(directioned_anatomy, medical_conditions, diagnosis, symptoms)
     find_key_phrases(directioned_anatomy, key_phrases, medical_conditions+diagnosis+symptoms, anatomy_list)
-    # Check if we have followup in the reason for exam column 
-    if('followup' in directioned_anatomy or 'Followup' in directioned_anatomy): 
-        formatted_df['followup'][row] = True
+    find_additional_info(directioned_anatomy, other_info)    
+
     formatted_df['anatomy'][row] = anatomy_list    
     formatted_df['medical_condition'][row] = medical_conditions
     formatted_df['diagnosis'][row] = diagnosis
     formatted_df['symptoms'][row] = symptoms
     formatted_df['phrases'][row] = key_phrases
+    formatted_df['other_info'][row] = other_info
 
 formatted_df.to_json('sample_output.json', orient='index')
 

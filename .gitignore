@@ -4,3 +4,4 @@ sagemaker_code
 output/
 split.py
 sandbox/
+database.ini

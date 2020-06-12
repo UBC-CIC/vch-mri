@@ -65,6 +65,7 @@ def preProcessText(col):
     extr = col.str.replace(reponct, ' ', regex=True)
     extr = col.str.replace('[^0-9a-zA-Z ]+', '', regex=True)
     extr = col.str.replace('\s+', ' ', regex=True)
+    extr = col.str.lower()
     return extr 
 
 def checkSpelling(text: str):
@@ -79,24 +80,34 @@ def anatomySpelling(text: str):
     words = spell.split_words(text)
     word_list = []
     for word in words: 
-        if word == 'MRI': 
+        if word == 'mri': 
             continue
         else: 
-            word_list.append(word)
+            word_list.append(spell.correction(word))
     return ' '.join(word_list)
-
 
 def preProcessAnatomy(anatomy, text):
     dir_list = {
-        ' L ': ' left ', 
-        ' l ': ' left ', 
-        ' R ': ' right ', 
-        ' r ': ' right ',
+        'l': 'left', 
+        'r': 'right',
     }
     for direction in dir_list: 
         if contains_word(direction,text): 
             text = text.replace(direction+anatomy, dir_list[direction]+anatomy)
     return text 
+
+def find_additional_info(text:str, info_list): 
+    """
+    Will append history and hx seperately, need to format it so this will become standardized? 
+    """
+    i_list = [
+        'followup', 
+        'history',
+        'hx',
+    ]
+    for i in i_list: 
+        if contains_word(i, text):
+            info_list.append(i)
 
 def find_all_entities(data: str):
     if not data: 
