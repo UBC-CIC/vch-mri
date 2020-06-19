@@ -1,11 +1,15 @@
 # PHSA MRI CODE 
 
 ## Preprocessing Data 
-- __preprocess_data.py__: Main python script to preprocess MRI data 
-- __preprocess_helper.py__: Helper functions 
-- __sample_output.json__: Sample JSON output for first 100 rows of data 
+- [preprocess_data.py](preprocess_data.py): Main python script to preprocess MRI data 
+- [preprocess_helper.py](preprocess_helper.py): Helper functions 
+- [sample_output.json](sample_output.json): Sample JSON output for first 100 rows of data of sample.csv
+- To create a sample_output.json, in the terminal run `python preprocess_data.py`
 
 ## Generating P-Value 
-- __init_db.sql__: Script to re-initialize database (wipes out any previous data!) 
-- __rules.py__: Main python script to obtain the priority value 
-- __config.py__: Connecting to the postgres database
+- [init_db.sql](init_db.sql): Script to re-initialize database (wipes out any previous data!) 
+- [rules.py](rules.py): Main python script to obtain the priority value 
+- [update_weights.py](update_weights.py): Creates weighted tokens in the database for the descriptions found in mri_rules
+- [config.py](config.py): Connecting to the postgres database
+- To initialize the database, run the init_db.sql script in the terminal using `psql -U {username} -h {host} -f init_db.sql`. _Note this does assume you have a database named rules._
+- To update the weighted rule tokens, run `pythone update_weights` in the terminal 

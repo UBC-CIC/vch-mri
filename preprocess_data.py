@@ -12,7 +12,7 @@ start = time.time()
 # s3_output_path = "s3://{}/{}".format(s3_bucket, prefix)
 
 # data_df = pd.read_csv(s3_data_path).dropna(how='all')
-data_df = pd.read_csv('sample.csv').dropna(how='all').head(n=10)
+data_df = pd.read_csv('./csv/sample.csv').dropna(how='all').head(n=10)
 # Format columns that don't need comprehend medical and preprocess the text 
 data_df['age'] = data_df['DOB \r\n(yyyy-mm-dd)'].apply(dob2age)
 data_df['height'] = data_df['Height \r\n(eg: ft.in)'] + \
