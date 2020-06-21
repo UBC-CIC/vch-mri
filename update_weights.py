@@ -9,8 +9,8 @@ def getKeywords(cur, weight_type:str):
     :weight_type str: Weight of either A, B, C, or D (descending weights)\n
     :return list: List of all words with corresponding weight 
     """
-    command = """SELECT word FROM word_weights WHERE weight ='%s'"""
-    cur.execute(command % weight_type)
+    command = """SELECT word FROM word_weights WHERE weight =%s"""
+    cur.execute(command, (weight_type,))
     ret = cur.fetchall()
     key_list = [] 
     for val in ret: 
@@ -58,12 +58,12 @@ def runUpdateWeights():
         lemex_b = createLemexes(getKeywords(cur, 'B'))
         lemex_c = createLemexes(getKeywords(cur, 'C'))
         lemex_d = createLemexes(getKeywords(cur, 'D'))
-        setweight_a = create_setWeight('to_tsvector(text_val)', 'A', lemex_a)
-        setweight_b = create_setWeight('to_tsvector(text_val)', 'B', lemex_b)
-        setweight_c = create_setWeight('to_tsvector(text_val)', 'C', lemex_c)
-        setweight_d = create_setWeight('to_tsvector(text_val)', 'D', lemex_d)
+        setweight_a = create_setWeight('to_tsvector(descrp)', 'A', lemex_a)
+        setweight_b = create_setWeight('to_tsvector(descrp)', 'B', lemex_b)
+        setweight_c = create_setWeight('to_tsvector(descrp)', 'C', lemex_c)
+        setweight_d = create_setWeight('to_tsvector(descrp)', 'D', lemex_d)
         list_weights = [setweight_a, setweight_b, setweight_c, setweight_d]
-        updateWeights(cur, 'mri_rules', 'weighted_tokens', list_weights)
+        updateWeights(cur, 'mri_rules', 'descrpWeightedTk', list_weights)
         # close communication with the PostgreSQL database server
         cur.close()
         # commit the changes

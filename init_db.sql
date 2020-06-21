@@ -7,12 +7,12 @@ DROP TABLE IF EXISTS word_weights;
 
 CREATE TABLE IF NOT EXISTS mri_rules ( 
     id SERIAL PRIMARY KEY, 
-    body_part VARCHAR(32) NOT NULL, 
-    body_tokens TSVECTOR, 
-    text_val TEXT, 
-    weighted_tokens TSVECTOR, 
+    bodyPart VARCHAR(32) NOT NULL, 
+    bodyTk TSVECTOR, 
+    descrp TEXT, 
+    descrpWeightedTk TSVECTOR, 
     priority VARCHAR(3),
-    created_on TIMESTAMP
+    dateModified TIMESTAMP
 ); 
 
 CREATE TABLE IF NOT EXISTS data_results ( 
@@ -27,9 +27,10 @@ CREATE TABLE IF NOT EXISTS word_weights(
     word VARCHAR(32) PRIMARY KEY, 
     weight VARCHAR(1)
 );
+
 -- SELECT * FROM mri_rules; 
 
-INSERT INTO mri_rules(body_part, text_val, priority) VALUES 
+INSERT INTO mri_rules(bodyPart, descrp, priority) VALUES 
 ('abdomen', 'Abscesses', '3A'),
 ('abdomen', 'Adrenal mass', '3B'),
 ('abdomen', 'Aneurysm (Brain and Angio)', '4'),
@@ -51,7 +52,7 @@ INSERT INTO mri_rules(body_part, text_val, priority) VALUES
 ('abdomen', 'SBFT  Chrohns (unless clinically Warrants sooner)', '4'),
 ('abdomen', 'Staging of new cancer', '3A');
 
-INSERT INTO mri_rules(body_part, text_val, priority) VALUES 
+INSERT INTO mri_rules(bodyPart, descrp, priority) VALUES 
 ('angio', 'Acute carotid or aortic dissection (CT equivocal)', '1'),
 ('angio', 'Critical / high grade ICA stenosis symptom', '2'),
 ('angio', 'Glomus Tumor Carotids', '3C'),
@@ -62,12 +63,12 @@ INSERT INTO mri_rules(body_part, text_val, priority) VALUES
 ('angio', 'Renal artery stenosis', '4'),
 ('angio', 'Screen Circle of Willis', '4');
 
-INSERT INTO mri_rules(body_part, text_val, priority) VALUES 
+INSERT INTO mri_rules(bodyPart, descrp, priority) VALUES 
 ('aortic arch and branches', 'Aneurysm (confirmed, enlarging, Preop) F/U Routine)', 'RAD'),
 ('aortic arch and branches', 'Coarctation', 'RAD'),
 ('aortic arch and branches', 'Vascular Abnormalities', 'RAD');
 
-INSERT INTO mri_rules(body_part, text_val, priority) VALUES 
+INSERT INTO mri_rules(bodyPart, descrp, priority) VALUES 
 ('brain / head', 'Acoustic neuroma Known', '4'),
 ('brain / head', 'Acoustic neuroma Query ',  '3C'),
 ('brain / head', 'Acute stroke (CT preferred as initial investigation)',  '1'),
@@ -124,18 +125,18 @@ INSERT INTO mri_rules(body_part, text_val, priority) VALUES
 ('brain / head', 'TMJ RJH only', '4'),
 ('brain / head', 'TMJ (lockedthen semi urgent 3A) RJH only', '3A');
 
-INSERT INTO mri_rules(body_part, text_val, priority) VALUES 
+INSERT INTO mri_rules(bodyPart, descrp, priority) VALUES 
 ('breast', 'Breast implants Usually looking for a leak', '4'),
 ('breast', 'Breast residual/recurrent disease post Tx','3A'),
 ('breast', 'Characterization soft tissue mass likely benign (lipoma)', '3B'),
 ('breast', 'Metastatic workup', '3A'),
 ('breast', 'Workup of new breast carcinoma', '2');
 
-INSERT INTO mri_rules(body_part, text_val, priority) VALUES 
+INSERT INTO mri_rules(bodyPart, descrp, priority) VALUES 
 ('cardiac', 'cardiac ARVD', '2'),
 ('cardiac', 'cardiac viability assessment or mass', '2');
 
-INSERT INTO mri_rules(body_part, text_val, priority) VALUES 
+INSERT INTO mri_rules(bodyPart, descrp, priority) VALUES 
 ('chest', 'Characterization soft tissue masslikely benign (lipoma)', '3B'),
 ('chest', 'Metastatic workup', '3A'),
 ('chest', 'Pancoast tumour', '3A'),
@@ -143,13 +144,13 @@ INSERT INTO mri_rules(body_part, text_val, priority) VALUES
 ('chest', 'Preoperative assessment of possible mediastinal or chest wall invasion by tumour', '2'),
 ('chest', 'Staging of new cancer','3A');
 
-INSERT INTO mri_rules(body_part, text_val, priority) VALUES 
+INSERT INTO mri_rules(bodyPart, descrp, priority) VALUES 
 ('neck', 'Characterization soft tissue masslikely benign (lipoma)', '3B'),
 ('neck', 'Metastatic workup', '3A'),
 ('neck', 'Skull base and nasopharyngeal tumours, for further localization and surgical planning', '2'),
 ('neck', 'Staging of new cancer (thyroid)', '3A');
 
-INSERT INTO mri_rules(body_part, text_val, priority) VALUES 
+INSERT INTO mri_rules(bodyPart, descrp, priority) VALUES 
 ('pelvis', 'Anal Fistula', '4'), 
 ('pelvis', 'Cervical cancer follow up', '4'), 
 ('pelvis', 'Cervix Cancer staging', '3A'), 
@@ -163,7 +164,7 @@ INSERT INTO mri_rules(body_part, text_val, priority) VALUES
 ('pelvis', 'Rule out Seminoma (met)', '3A'), 
 ('pelvis', 'Staging of new cancer', '3A');
 
-INSERT INTO mri_rules(body_part, text_val, priority) VALUES
+INSERT INTO mri_rules(bodyPart, descrp, priority) VALUES
 ('spine', 'Acute osteomyelitis', '1'), 
 ('spine', 'Characterization soft tissue masslikely benign (lipoma)', '3B'), 
 ('spine', 'Chronic osteomyelitis', '2'), 
@@ -189,7 +190,7 @@ INSERT INTO mri_rules(body_part, text_val, priority) VALUES
 ('spine', 'Syrinx (follow up)', '4'), 
 ('spine', 'Urinary / bowel incontinence, HX that goes along with a Lumbar spine', '2');
 
-INSERT INTO mri_rules(body_part, text_val, priority) VALUES
+INSERT INTO mri_rules(bodyPart, descrp, priority) VALUES
 ('knee', 'ACL Tear (ortho ordered surigical)', '2'), 
 ('knee', 'ACL Tear (GP)', '4'),
 ('knee', 'Acute joint injury tendon rupture', '2'),
@@ -210,7 +211,7 @@ INSERT INTO mri_rules(body_part, text_val, priority) VALUES
 ('knee', 'Primary sarcoma of bone or soft tissue', '2'), 
 ('knee', 'Strong suspicion of avascular necrosis if plain film, Nuclear Medicine or CT inconclusive', '2');
 
-INSERT INTO mri_rules(body_part, text_val, priority) VALUES
+INSERT INTO mri_rules(bodyPart, descrp, priority) VALUES
 ('hip', 'Acute joint injury tendon rupture', '2'),
 ('hip', 'Acute osteomyelitis', '1'),
 ('hip', 'Brachail plexus', '4'),
@@ -226,7 +227,7 @@ INSERT INTO mri_rules(body_part, text_val, priority) VALUES
 ('hip', 'R/O occult fractures from ER: Hip', '2'), 
 ('hip', 'Strong suspicion of avascular necrosis if plain film, Nuclear Medicine or CT inconclusive', '2');
 
-INSERT INTO mri_rules(body_part, text_val, priority) VALUES
+INSERT INTO mri_rules(bodyPart, descrp, priority) VALUES
 ('shoulder', 'Acute joint injury tendon rupture', '2'),
 ('shoulder', 'Acute osteomyelitis', '1'),
 ('shoulder', 'Brachail plexus', '4'),
@@ -244,7 +245,7 @@ INSERT INTO mri_rules(body_part, text_val, priority) VALUES
 ('shoulder', 'Supraspinatus tendon', '4'), 
 ('shoulder', 'Strong suspicion of avascular necrosis if plain film, Nuclear Medicine or CT inconclusive', '2');
 
-INSERT INTO mri_rules(body_part, text_val, priority) VALUES
+INSERT INTO mri_rules(bodyPart, descrp, priority) VALUES
 ('wrist / hand', 'Acute joint injury tendon rupture', '2'),
 ('wrist / hand', 'Acute osteomyelitis', '1'),
 ('wrist / hand', 'Characterization soft tissue mass, likely benign (lipoma)', '3B'),
@@ -257,7 +258,7 @@ INSERT INTO mri_rules(body_part, text_val, priority) VALUES
 ('wrist / hand', 'TFCC (Traingular fibrocartilage complex) wrist tear','4'), 
 ('wrist / hand', 'Strong suspicion of avascular necrosis if plain film, Nuclear Medicine or CT inconclusive', '2');
 
-INSERT INTO mri_rules(body_part, text_val, priority) VALUES
+INSERT INTO mri_rules(bodyPart, descrp, priority) VALUES
 ('foot', 'Acute joint injury tendon rupture', '2'),
 ('foot', 'Acute osteomyelitis', '1'),
 ('foot', 'Characterization soft tissue mass, likely benign (lipoma)', '3B'),
@@ -269,7 +270,7 @@ INSERT INTO mri_rules(body_part, text_val, priority) VALUES
 ('foot', 'Primary sarcoma of bone or soft tissue', '2'), 
 ('foot', 'Strong suspicion of avascular necrosis if plain film, Nuclear Medicine or CT inconclusive', '2');
 
-INSERT INTO mri_rules(body_part, text_val, priority) VALUES
+INSERT INTO mri_rules(bodyPart, descrp, priority) VALUES
 ('c-spine', 'Acute joint injury tendon rupture', '2'),
 ('c-spine', 'Acute osteomyelitis', '1'),
 ('c-spine', 'Characterization soft tissue mass, likely benign (lipoma)', '3B'),
@@ -282,7 +283,7 @@ INSERT INTO mri_rules(body_part, text_val, priority) VALUES
 ('c-spine', 'Primary sarcoma of bone or soft tissue', '2'), 
 ('c-spine', 'Strong suspicion of avascular necrosis if plain film, Nuclear Medicine or CT inconclusive', '2');
 
-INSERT INTO mri_rules(body_part, text_val, priority) VALUES
+INSERT INTO mri_rules(bodyPart, descrp, priority) VALUES
 ('elbow', 'Acute joint injury tendon rupture', '2'),
 ('elbow', 'Acute osteomyelitis', '1'),
 ('elbow', 'Characterization soft tissue mass, likely benign (lipoma)', '3B'),
@@ -293,7 +294,7 @@ INSERT INTO mri_rules(body_part, text_val, priority) VALUES
 ('elbow', 'Primary sarcoma of bone or soft tissue', '2'), 
 ('elbow', 'Strong suspicion of avascular necrosis if plain film, Nuclear Medicine or CT inconclusive', '2');
 
-INSERT INTO mri_rules(body_part, text_val, priority) VALUES
+INSERT INTO mri_rules(bodyPart, descrp, priority) VALUES
 ('ankle', 'Acute joint injury/tendon rupture', '2'),
 ('ankle', 'Acute osteomyelitis', '1'),
 ('ankle', 'Characterization soft tissue mass, likely benign (lipoma)', '3B'),
@@ -305,11 +306,11 @@ INSERT INTO mri_rules(body_part, text_val, priority) VALUES
 ('ankle', 'Strong suspicion of avascular necrosis if plain film, Nuclear Medicine or CT inconclusive', '2');
 
 UPDATE mri_rules 
-SET body_tokens = to_tsvector(body_part);
+SET bodyTk = to_tsvector(bodyPart);
 
-\copy word_weights FROM 'C:\Users\jackhou\Documents\mri_project\mri_app\sandbox\a_keywords.csv' DELIMITER ',' CSV;
-\copy word_weights FROM 'C:\Users\jackhou\Documents\mri_project\mri_app\sandbox\b_keywords.csv' DELIMITER ',' CSV;
-\copy word_weights FROM 'C:\Users\jackhou\Documents\mri_project\mri_app\sandbox\connectors_keywords.csv' DELIMITER ',' CSV;
+\copy word_weights FROM 'C:\Users\jackhou\Documents\mri_project\mri_app\csv\a_keywords.csv' DELIMITER ',' CSV;
+\copy word_weights FROM 'C:\Users\jackhou\Documents\mri_project\mri_app\csv\b_keywords.csv' DELIMITER ',' CSV;
+\copy word_weights FROM 'C:\Users\jackhou\Documents\mri_project\mri_app\csv\connectors_keywords.csv' DELIMITER ',' CSV;
 
 UPDATE word_weights
 SET word = TRIM(word); 

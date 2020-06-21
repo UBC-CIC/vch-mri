@@ -1,39 +1,35 @@
 import psycopg2 
 from config import config 
 import json
+import time 
 
-# commands = """
-#     SELECT id, body_part, priority
-#     FROM mri_rules 
-#     WHERE body_part IN (%s)
-# """
-##--AND tokens @@ to_tsquery('%s')
+insert_cmd = """
+INSERT INTO data_results(cioId, info) VALUES 
+(%s, '%s');
+"""
 
-basic_cmd = """
-SELECT id, body_part, priority, weighted_tk, ts_rank_cd('{0.1, 0.2, 0.35, 1.0}',weighted_tk, query, 1) AS rank
-FROM test_rules, to_tsquery('%s') query 
-WHERE weighted_tk @@ query
+update_cmd = """
+UPDATE data_results 
+SET rulesid = r.id 
+FROM mri_rules r WHERE r.id = (
+SELECT id 
+FROM mri_rules, to_tsquery('%s') query 
+WHERE descrpWeightedTk @@ query
+"""
+
+update_cmd_end = """
+ORDER BY ts_rank_cd('{0.1, 0.2, 0.35, 1.0}',descrpWeightedTk, query, 1) DESC LIMIT 1)
+AND cioId = %s
+RETURNING r.id, r.priority;
 """
 
 ## diagnosis, phrases, symptoms, medical_conditions, phrases 
 
 ## other - followup, history, hx 
 
-
-## update count from rule_stats 
-## where id is ( )
-
-
-## select id, body_part, tokens, priority, ts_rank_cd( tokens, query, 1) AS rank
-## from mri_rules, to_tsquery('hip | fracture | pain | dr | munk | asap | previous | orif | ongoing | anterior') query
-## WHERE body_part LIKE 'hip'
-## AND tokens @@ query
-## ORDER BY rank DESC
-## LIMIT 5
-
 def searchAnatomy(data, cur):
     if not data["anatomy"]:
-        return basic_cmd
+        return ''
     else: 
         anatomy_list = []
         for val in data["anatomy"]: 
@@ -42,9 +38,8 @@ def searchAnatomy(data, cur):
             anatomy_list.append(val)
 
         body_parts = ' | '.join(anatomy_list)
-        anatomy_cmd = (basic_cmd+" AND body_tokens @@ to_tsquery(\'"+ body_parts + "\')")
-        #cur.execute(anatomy_cmd)
-        #return cur.fetchall()
+        # anatomy_cmd = (basic_cmd+" AND bodyTk @@ to_tsquery(\'"+ body_parts + "\')")
+        anatomy_cmd = 'AND bodyTk @@ to_tsquery(\''+body_parts+'\')'
         return anatomy_cmd 
 
 def searchText(cur, data, *data_keys):
@@ -65,21 +60,20 @@ def connect(data):
         conn = psycopg2.connect(**params)
         cur = conn.cursor()
         
-        # # create table one by one
-        # for command in commands:
-        #     cur.execute(command)
-        #     ret = cur.fetchall()
-        #     print(ret)
+        # insert into data_results one by one 
         for x, v in data.items():
-            command = searchAnatomy(v, cur)
-            #print(command)
-            n_command = searchText(cur, v, "anatomy", "medical_condition", "diagnosis", "symptoms", "phrases", "other_info")
-            final_command = (command % n_command) + ' ORDER BY rank DESC'
-            # print(final_command)
-            cur.execute(final_command)
-            ret=cur.fetchall()
-            print("for ", x, ": \n the ranking is ", ret)
-
+            anatomy_str  = searchAnatomy(v, cur)
+            info_str = searchText(cur, v, "anatomy", "medical_condition", "diagnosis", "symptoms", "phrases", "other_info")
+            if not anatomy_str:
+                command = (update_cmd % info_str) + (update_cmd_end % v["Req # CIO"])
+            else: 
+                command = (update_cmd % info_str) + anatomy_str + (update_cmd_end % v["Req # CIO"])
+            # print(command)
+            # print(basic_cmd_start % (v["Req # CIO"], json.dumps(v)))
+            cur.execute(insert_cmd % (v["Req # CIO"], json.dumps(v)))
+            cur.execute(command)
+            ret = cur.fetchall() 
+            print("For CIO ID: %s, With return of: %s" % (v["Req # CIO"], ret))
         # close communication with the PostgreSQL database server
         cur.close()
         # commit the changes
@@ -91,6 +85,8 @@ def connect(data):
             conn.close()
 
 if __name__ == '__main__':
-    with open('output/mridata6.json') as f: 
+    start = time.time()
+    with open('sample_output.json') as f: 
         data = json.load(f)
     connect(data)
+    print( f'---{time.time()-start}---')
