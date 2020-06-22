@@ -3,5 +3,5 @@ __pycache__/
 sagemaker_code
 output/
 split.py
-sandbox/
+dev/
 database.ini
