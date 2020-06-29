@@ -14,3 +14,6 @@
 - To initialize the database, run the init_db.sql script in the terminal using `psql -U {username} -h {host} -f init_db.sql`. _Note this does assume you have a database named rules._
 - To update the weighted rule tokens, run `python update_weights.py` in the terminal
 - To apply the rules and obtain a Rule ID + P-Value, run `python rules.py` in the terminal
+
+## Rule Database Analysis
+- [mri_sample_results.xlsx](/csv/mri_sample_results.xlsx): Form to P-Value Data

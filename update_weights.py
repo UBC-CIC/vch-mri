@@ -58,12 +58,12 @@ def runUpdateWeights():
         lemex_b = createLemexes(getKeywords(cur, 'B'))
         lemex_c = createLemexes(getKeywords(cur, 'C'))
         lemex_d = createLemexes(getKeywords(cur, 'D'))
-        setweight_a = create_setWeight('to_tsvector(descrp)', 'A', lemex_a)
-        setweight_b = create_setWeight('to_tsvector(descrp)', 'B', lemex_b)
-        setweight_c = create_setWeight('to_tsvector(descrp)', 'C', lemex_c)
-        setweight_d = create_setWeight('to_tsvector(descrp)', 'D', lemex_d)
+        setweight_a = create_setWeight('to_tsvector(info)', 'A', lemex_a)
+        setweight_b = create_setWeight('to_tsvector(info)', 'B', lemex_b)
+        setweight_c = create_setWeight('to_tsvector(info)', 'C', lemex_c)
+        setweight_d = create_setWeight('to_tsvector(info)', 'D', lemex_d)
         list_weights = [setweight_a, setweight_b, setweight_c, setweight_d]
-        updateWeights(cur, 'mri_rules', 'descrpWeightedTk', list_weights)
+        updateWeights(cur, 'mri_rules', 'info_weighted_tk', list_weights)
         # close communication with the PostgreSQL database server
         cur.close()
         # commit the changes

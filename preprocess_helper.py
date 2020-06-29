@@ -80,43 +80,49 @@ def anatomySpelling(text: str):
     words = spell.split_words(text)
     word_list = []
     for word in words: 
-        if word == 'mri': 
-            continue
-        else: 
-            word_list.append(spell.correction(word))
+        word_list.append(spell.correction(word))
     return ' '.join(word_list)
 
-def preProcessAnatomy(anatomy, text):
+def preProcessAnatomy(text):
     dir_list = {
         'l': 'left', 
         'r': 'right',
+        'L': 'left',
+        'R': 'right'
     }
+    temp_text = f' {text} '
     for direction in dir_list: 
         if contains_word(direction,text): 
-            text = text.replace(direction+anatomy, dir_list[direction]+anatomy)
-    return text 
+            temp_text = temp_text.replace(f' {direction} ', f' {dir_list[direction]} ')
+    return temp_text[1:len(temp_text)-1]
 
 def find_additional_info(text:str, info_list): 
     """
     Will append history and hx seperately, need to format it so this will become standardized? 
     """
-    i_list = [
-        'followup', 
-        'history',
-        'hx',
-    ]
-    for i in i_list: 
-        if contains_word(i, text):
-            info_list.append(i)
+    text_list = {
+        'followup': 'followup',
+        'history': 'history',
+        'hx': 'medical history',
+        '?': 'query',
+    }
+    for i in text_list: 
+        if f'{i}' in f'{text}':
+            info_list.append(text_list[i])
 
 def find_all_entities(data: str):
     if not data: 
         return [] 
     # print("-- Entities --")
-    result = compr_m.detect_entities_v2(Text=data)
-    # for resp in result['Entities']:
-        # print(resp)
-    return result['Entities']
+    try: 
+        result = compr_m.detect_entities_v2(Text=data)
+        # for resp in result['Entities']:
+            # print(resp)
+        return result['Entities']
+    except Exception as ex: 
+        template = "An exception of type {0} occurred. Arguments:\n{1!r}"
+        message = template.format(type(ex).__name__, ex.args)
+        print(message)
 
 def infer_icd10_cm(data: str, med_cond, diagnosis, symptoms):
     """
@@ -127,37 +133,42 @@ def infer_icd10_cm(data: str, med_cond, diagnosis, symptoms):
     """
     if not data: 
         return 
-    icd10_result = compr_m.infer_icd10_cm(Text=data)
-    for resp in icd10_result['Entities']:
-        if resp['Score'] > 0.5: 
-            resp_str = resp['Text']
-            category = ''
-            # first check Attributes
-            for attr in resp['Attributes']: 
-                if attr['Score'] > 0.5: 
-                    if attr['Type'] == 'ACUITY': 
-                        resp_str = f'{attr["Text"]}' + ' ' + resp_str
-                    elif attr['Type'] == 'SYSTEM_ORGAN_SITE': 
-                        resp_str = resp_str + ' ' + f'{attr["Text"]}'
-            for trait in resp['Traits']:
-                if trait['Score'] > 0.5: 
-                    if trait['Name'] == 'NEGATION': 
-                        category = 'NEG'
-                        break #don't save anything for negation 
-                    elif trait['Name'] == 'SYMPTOM': 
-                        category = 'SYMP'
-                    elif trait['Name'] == 'DIAGNOSIS':
-                        category = 'DIAGN'
-            # add our response string to corresponding list 
-            if not category: 
-                resp_str = checkSpelling(resp_str)
-                med_cond.append(resp_str)
-            elif category == 'SYMP': 
-                resp_str = checkSpelling(resp_str)
-                symptoms.append(resp_str)
-            elif category == 'DIAGN':
-                resp_str = checkSpelling(resp_str)
-                diagnosis.append(resp_str)
+    try: 
+        icd10_result = compr_m.infer_icd10_cm(Text=data)
+        for resp in icd10_result['Entities']:
+            if resp['Score'] > 0.5: 
+                resp_str = resp['Text']
+                category = ''
+                # first check Attributes
+                for attr in resp['Attributes']: 
+                    if attr['Score'] > 0.5: 
+                        if attr['Type'] == 'ACUITY' or attr['Type'] == 'DIRECTION': 
+                            resp_str = f'{attr["Text"]}' + ' ' + resp_str
+                        elif attr['Type'] == 'SYSTEM_ORGAN_SITE': 
+                            resp_str = resp_str + ' ' + f'{attr["Text"]}'
+                for trait in resp['Traits']:
+                    if trait['Score'] > 0.5: 
+                        if trait['Name'] == 'NEGATION': 
+                            category = 'NEG'
+                            break #don't save anything for negation 
+                        elif trait['Name'] == 'SYMPTOM': 
+                            category = 'SYMP'
+                        elif trait['Name'] == 'DIAGNOSIS':
+                            category = 'DIAGN'
+                # add our response string to corresponding list 
+                if not category: 
+                    resp_str = checkSpelling(resp_str)
+                    med_cond.append(resp_str)
+                elif category == 'SYMP': 
+                    resp_str = checkSpelling(resp_str)
+                    symptoms.append(resp_str)
+                elif category == 'DIAGN':
+                    resp_str = checkSpelling(resp_str)
+                    diagnosis.append(resp_str)
+    except Exception as ex: 
+        template = "An exception of type {0} occurred. Arguments:\n{1!r}"
+        message = template.format(type(ex).__name__, ex.args)
+        print(message)
 
 def find_key_phrases(data:str, key_phrases, icd10cm_list, anatomy_list):
     """
@@ -168,38 +179,30 @@ def find_key_phrases(data:str, key_phrases, icd10cm_list, anatomy_list):
     """
     if not data: 
         return 
-    kp_result = compr.detect_key_phrases(Text=data, LanguageCode='en')
-    for resp in kp_result['KeyPhrases']:
-        placed = False
-        if resp['Score'] > 0.5: 
-            for icd10cm in icd10cm_list: 
-                if contains_word(icd10cm, resp['Text']):
-                    resp_str = checkSpelling(resp['Text'])
-                    key_phrases.append(resp_str)
-                    placed = True
-                    break 
-                elif contains_word(resp['Text'], icd10cm):
-                    resp_str = checkSpelling(resp['Text'])
-                    key_phrases.append(resp_str)
-                    placed = True
-                    break
-            if not placed: 
-                for anatomy in anatomy_list: 
-                    if contains_word(anatomy, resp['Text']):
+    try: 
+        kp_result = compr.detect_key_phrases(Text=data, LanguageCode='en')
+        for resp in kp_result['KeyPhrases']:
+            placed = False
+            if resp['Score'] > 0.5: 
+                for icd10cm in icd10cm_list: 
+                    if contains_word(icd10cm, resp['Text']):
                         resp_str = checkSpelling(resp['Text'])
                         key_phrases.append(resp_str)
+                        placed = True
+                        break 
+                    elif contains_word(resp['Text'], icd10cm):
+                        resp_str = checkSpelling(resp['Text'])
+                        key_phrases.append(resp_str)
+                        placed = True
                         break
-
-# def find_entities(data: str): 
-#     if not data: 
-#         return []
-#     result = compr_m.detect_entities_v2(Text=data)        
-#     # print("-- Key Phrases --")
-#     for resp in result['Entities']:
-#         # print(resp)
-#         if resp['Score'] > 0.5: 
-#                 resp_dict = {resp['Text']: {}}
-                # get_traits(resp, resp_dict[resp['Text']])
-                # get_attributes(resp, resp_dict[resp['Text']])
-                # ret_list.append(resp_dict)
+                if not placed: 
+                    for anatomy in anatomy_list: 
+                        if contains_word(anatomy, resp['Text']):
+                            resp_str = checkSpelling(resp['Text'])
+                            key_phrases.append(resp_str)
+                            break
+    except Exception as ex: 
+        template = "An exception of type {0} occurred. Arguments:\n{1!r}"
+        message = template.format(type(ex).__name__, ex.args)
+        print(message)
     
