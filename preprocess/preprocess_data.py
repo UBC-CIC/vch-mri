@@ -5,14 +5,8 @@ import string
 import time 
 
 start = time.time() 
-# s3_bucket = 'cic-mri-data-bucket-test'
-# prefix = 'sagemaker/preprocess_data'
-# input_key = 'raw_data/may2020_data.csv'
-# s3_data_path = "s3://{}/{}".format(s3_bucket, input_key)
-# s3_output_path = "s3://{}/{}".format(s3_bucket, prefix)
 
-# data_df = pd.read_csv(s3_data_path).dropna(how='all')
-data_df = pd.read_csv('./csv/requisition_data.csv', skip_blank_lines=True)
+data_df = pd.read_csv('../csv/requisition_data.csv', skip_blank_lines=True)
 # Format columns that don't need comprehend medical and preprocess the text 
 data_df['CIO_ID'] = data_df['Req # CIO'].astype(int)
 data_df['age'] = data_df['DOB \r\n(yyyy-mm-dd)'].apply(dob2age)
@@ -46,12 +40,11 @@ for row in range(len(formatted_df.index)):
     other_info = []
     
     # Parse the Exam Requested Column into Comprehend Medical to find Anatomy Entities
-    # mri_reason = checkSpelling(f'{data_df["Exam Requested"][row]}'.replace('MRI','')) # Comprehend Medical sometimes combines anatomy + MRI together
     anatomy_json = find_all_entities(anatomySpelling(f'{data_df["Exam Requested"][row]}'))
     preprocessed_text = preProcessAnatomy(f'{data_df["Reason for Exam/Relevant Clinical History"][row]}')
     for obj in list(filter(lambda info_list: info_list['Category'] == 'ANATOMY' or info_list['Category'] == 'TEST_TREATMENT_PROCEDURE', anatomy_json)):
         # print("--Body Part Identified: ", obj['Text'])
-        anatomy = obj['Text'].lower()
+        anatomy = preProcessAnatomy(obj['Text'].lower())
         anatomy_list.append(anatomy)
         # if(contains_word('hip',anatomy) or contains_word('knee', anatomy)):
         #     # apply comprehend to knee/hip column
@@ -71,6 +64,6 @@ for row in range(len(formatted_df.index)):
     formatted_df['phrases'][row] = key_phrases
     formatted_df['other_info'][row] = other_info
 
-formatted_df.to_json('sample_output.json', orient='index')
+formatted_df.to_json('../sample_output.json', orient='index')
 
 print( f'---{time.time()-start}---')

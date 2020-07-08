@@ -223,7 +223,7 @@ INSERT INTO mri_rules(body_part, info, priority) VALUES
 ('hip', 'Characterization soft tissue mass, likely benign (lipoma)', 'P3B'),
 ('hip', 'Chronic joint pain', 'P4'),
 ('hip', 'Chronic Osteomyelitis', 'P2'),
-('hip', 'Hip Querym labral tear (arthrogram)', 'P4'),
+('hip', 'Hip Query labral tear (arthrogram)', 'P4'),
 ('hip', 'Joint Injury', 'P4'),
 ('hip', 'Labral tear query', 'P4'),
 ('hip', 'Metastatic workup', 'P3A'), 
@@ -318,3 +318,7 @@ SET bp_tk = to_tsvector(body_part);
 
 UPDATE word_weights
 SET word = TRIM(word); 
+
+CREATE INDEX info_weighted_idx 
+ON mri_rules 
+USING GIN (info_weighted_tk);

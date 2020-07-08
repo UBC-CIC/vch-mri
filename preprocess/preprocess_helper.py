@@ -71,10 +71,6 @@ def preProcessText(col):
 def checkSpelling(text: str):
     words = spell.split_words(text)
     return ' '.join([spell.correction(word) for word in words])
-    # ret_string = ''
-    # for word in words: 
-    #     ret_string = ret_string + ' ' + spell.correction(word)
-    # return ret_string
 
 def anatomySpelling(text: str):
     words = spell.split_words(text)
