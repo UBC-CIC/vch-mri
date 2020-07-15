@@ -2,6 +2,7 @@ import psycopg2
 from config import config 
 import json
 import time 
+import uuid 
 
 insert_cmd = """
 INSERT INTO data_results(id, info, init_priority) VALUES 
@@ -28,7 +29,7 @@ WHERE info_weighted_tk @@ query
 
 update_cmd_end = """
 ORDER BY ts_rank_cd('{0.1, 0.2, 0.4, 1.0}',info_weighted_tk, query, 1) DESC LIMIT 1)
-AND data_results.id = %s
+AND data_results.id = '%s'
 RETURNING r.id, r.priority;
 """
 
@@ -97,7 +98,7 @@ def connect(data):
 
 if __name__ == '__main__':
     start = time.time()
-    with open('../sample_output.json') as f: 
+    with open('./preprocess/sample_output.json') as f: 
         data = json.load(f)
     connect(data)
     print( f'---{time.time()-start}---')

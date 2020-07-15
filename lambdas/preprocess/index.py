@@ -6,6 +6,7 @@ import boto3
 import string
 import string
 import logging
+import uuid
 from datetime import datetime, date
 from spellchecker import SpellChecker 
 
@@ -13,6 +14,10 @@ logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 compr = boto3.client(service_name='comprehend')
 compr_m = boto3.client(service_name='comprehendmedical')
+lambda_client = boto3.client('lambda')
+
+RuleProcessingLambdaName = os.getenv('RULE_PROCESSING_LAMBDA')
+
 spell = SpellChecker() 
 
 def convert2CM(height):
@@ -217,18 +222,29 @@ def lambda_handler(event, context):
         logger.error( 'Missing parameters')
         return {'result': False, 'msg': 'Missing parameters' }
 
-    data_df = event['body']
+    #data_df = json.loads(event['body']) # use for postman tests
+    data_df = event['body'] # use for console tests
+    logger.info(data_df)
+    
+    if 'ReqCIO' not in data_df or not data_df['ReqCIO']:
+        data_df['CIO_ID'] = str(uuid.uuid4())
+    else: 
+        data_df['CIO_ID'] = (data_df['ReqCIO'])
+
+    if data_df['Radiologist Priority'].lower() == 'unidentified':
+        data_df['priority'] = 'U/I'
+    else: 
+        data_df['priority'] = data_df['Radiologist Priority']
+
     # Format columns that don't need comprehend medical and preprocess the text
-    data_df['CIO_ID'] = int(data_df['Req # CIO'])
-    data_df['age'] = dob2age(data_df['DOB \r\n(yyyy-mm-dd)'])
-    data_df['height'] = data_df['Height \r\n(eg: ft.in)'] + \
-        ' ' + data_df['INCH - CM']
-    data_df['weight'] = data_df['Weight'] + ' ' + data_df['KG - LBS']
-    data_df['priority'] = data_df['Radiologist Priority']
+    data_df['age'] = dob2age(data_df['DOB'])
+    data_df['height'] = data_df['Height'] + \
+        ' ' + data_df['inch-cm']
+    data_df['weight'] = data_df['Weight'] + ' ' + data_df['kg-lbs']
     data_df['height'] = convert2CM(data_df['height'])
     data_df['weight'] = convert2KG(data_df['weight'])
-    data_df['Exam Requested'] = preProcessText(data_df['Exam Requested (Free Text)'])
-    data_df['Reason for Exam/Relevant Clinical History'] = preProcessText(data_df['Reason for Exam/Relevant Clinical History (Free Text)'])
+    data_df['Exam Requested'] = preProcessText(data_df['Exam Requested'])
+    data_df['Reason for Exam/Relevant Clinical History'] = preProcessText(data_df['Reason for Exam'])
     # data_df['Spine'] = preProcessText(data_df['Appropriateness Checklist - Spine'])
     # data_df['Hip & Knee'] = preProcessText(data_df['Appropriateness Checklist - Hip & Knee'])
     
@@ -273,3 +289,18 @@ def lambda_handler(event, context):
     
     #formatted_df.to_json('sample_output.json', orient='index')
     print("output is: ", formatted_df)
+    
+    response = lambda_client.invoke(
+            FunctionName=RuleProcessingLambdaName,
+            InvocationType='RequestResponse',
+            Payload=json.dumps(formatted_df)
+        )
+        
+    data = json.loads(response['Payload'].read())
+        
+    response = { 
+        'result': data, 
+        'context': formatted_df
+    }
+    
+    return response

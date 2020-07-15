@@ -4,7 +4,7 @@
 - [preprocess_data.py](/preprocess/preprocess_data.py): Main python script to preprocess MRI data 
 - [preprocess_helper.py](/preprocess/preprocess_helper.py): Helper functions 
 - [sample_output.json](sample_output.json): Sample JSON output for first 100 rows of data of sample.csv
-- To create a sample_output.json, in the terminal run `python preprocess_data.py`
+- To create a sample_output.json, in the terminal run `python .\preprocess\preprocess_data.py`
 
 ## Generating P-Value 
 - [init_db.sql](init_db.sql): Script to re-initialize database (wipes out any previous data!) 
@@ -13,7 +13,7 @@
 - [config.py](/rule_processing/config.py): Connecting to the postgres database with a custome database.ini file 
 - To initialize the database, run the init_db.sql script in the terminal using `psql -U {username} -h {host} -f init_db.sql`. _Note this does assume you have a database named rules._
 - To update the weighted rule tokens, run `python update_weights.py` in the terminal
-- To apply the rules and obtain a Rule ID + P-Value, run `python rules.py` in the terminal
+- To apply the rules and obtain a Rule ID + P-Value, run `python .\rule_processing\rules.py` in the terminal
 
 ## Rule Database Analysis
-- [mri_sample_results.xlsx](/csv/mri_sample_results.xlsx): Form to P-Value Data
+- [Sample Result](/csv/mri_sample_results_0.2.xlsx): Form to P-Value Data (most recent)

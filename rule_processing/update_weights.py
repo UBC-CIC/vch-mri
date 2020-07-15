@@ -68,6 +68,7 @@ def runUpdateWeights():
         cur.close()
         # commit the changes
         conn.commit()
+        print("Weights Finished Updating")
     except (Exception, psycopg2.DatabaseError) as error:
         print(error)
     finally:

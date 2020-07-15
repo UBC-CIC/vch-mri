@@ -4,12 +4,23 @@ import re
 import string
 import pandas as pd
 from spellchecker import SpellChecker 
+import uuid 
 
 compr = boto3.client(service_name='comprehend')
 compr_m = boto3.client(service_name='comprehendmedical')
 
 spell = SpellChecker() 
-spell.word_frequency.load_text_file('./wordbank.txt')
+spell.word_frequency.load_text_file('./preprocess/wordbank.txt')
+
+def findId(val):
+    if val == '-1': 
+        return str(uuid.uuid4())
+    return val
+
+def findUnidentified(val):
+    if val.lower() == 'unidentified':
+        return 'U/I'
+    return val 
 
 def convert2CM(height):
     if not isinstance(height, str):

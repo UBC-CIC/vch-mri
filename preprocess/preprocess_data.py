@@ -6,9 +6,9 @@ import time
 
 start = time.time() 
 
-data_df = pd.read_csv('../csv/requisition_data.csv', skip_blank_lines=True)
+data_df = pd.read_csv('./csv/req_data_june.csv', skip_blank_lines=True).fillna({'Req # CIO': '-1'})
 # Format columns that don't need comprehend medical and preprocess the text 
-data_df['CIO_ID'] = data_df['Req # CIO'].astype(int)
+data_df['CIO_ID'] = data_df['Req # CIO']
 data_df['age'] = data_df['DOB \r\n(yyyy-mm-dd)'].apply(dob2age)
 data_df['height'] = data_df['Height \r\n(eg: ft.in)'] + \
     ' ' + data_df['INCH - CM']
@@ -23,12 +23,12 @@ data_df['Hip & Knee'] = preProcessText(data_df['Appropriateness Checklist - Hip 
 
 # New Dataframe with
 formatted_df = data_df[['CIO_ID', 'height', 'weight', 'Sex','age', 'Preferred MRI Site', 'priority']]
-formatted_df['medical_condition'] = ''
-formatted_df['diagnosis'] = ''
-formatted_df['anatomy'] = ''
-formatted_df['symptoms'] = ''
-formatted_df['phrases'] = ''
-formatted_df['other_info'] = ''
+formatted_df.loc[:,'medical_condition'] = ''
+formatted_df.loc[:,'diagnosis'] = ''
+formatted_df.loc[:,'anatomy'] = ''
+formatted_df.loc[:,'symptoms'] = ''
+formatted_df.loc[:,'phrases'] = ''
+formatted_df.loc[:,'other_info'] = ''
 
 for row in range(len(formatted_df.index)):
     print("row is :", row)
@@ -39,6 +39,11 @@ for row in range(len(formatted_df.index)):
     key_phrases = []
     other_info = []
     
+    # Create a UUID for CIO ID if there isn't one already 
+    formatted_df.loc[row,'CIO_ID'] = findId(formatted_df['CIO_ID'][row])
+    # Change Unidentified priority to code UND 
+    formatted_df.loc[row,'priority'] = findUnidentified(formatted_df['priority'][row])
+
     # Parse the Exam Requested Column into Comprehend Medical to find Anatomy Entities
     anatomy_json = find_all_entities(anatomySpelling(f'{data_df["Exam Requested"][row]}'))
     preprocessed_text = preProcessAnatomy(f'{data_df["Reason for Exam/Relevant Clinical History"][row]}')
@@ -64,6 +69,6 @@ for row in range(len(formatted_df.index)):
     formatted_df['phrases'][row] = key_phrases
     formatted_df['other_info'][row] = other_info
 
-formatted_df.to_json('../sample_output.json', orient='index')
+formatted_df.to_json('sample_output.json', orient='index')
 
 print( f'---{time.time()-start}---')
