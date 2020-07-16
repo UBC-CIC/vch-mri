@@ -216,14 +216,14 @@ def recursively_prune_dict_keys(obj, keep):
     else:
         return obj
 
-def lambda_handler(event, context):
+def handler(event, context):
     logger.info(event)
     if 'body' not in event:
         logger.error( 'Missing parameters')
         return {'result': False, 'msg': 'Missing parameters' }
 
-    #data_df = json.loads(event['body']) # use for postman tests
-    data_df = event['body'] # use for console tests
+    data_df = json.loads(event['body']) # use for postman tests
+    # data_df = event['body'] # use for console tests
     logger.info(data_df)
     
     if 'ReqCIO' not in data_df or not data_df['ReqCIO']:

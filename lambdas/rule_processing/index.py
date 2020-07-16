@@ -76,7 +76,7 @@ try:
 except (Exception, psycopg2.DatabaseError) as error:
     logger.info(error)
 
-def lambda_handler(event, context):
+def handler(event, context):
     logger.info(event)
     v = event
     with conn.cursor() as cur: 
