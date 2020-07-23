@@ -5,3 +5,4 @@ output/
 split.py
 dev/
 database.ini
+out.yaml

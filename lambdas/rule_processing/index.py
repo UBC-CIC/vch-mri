@@ -1,20 +1,11 @@
 import json
 import time 
-from configparser import ConfigParser
 import psycopg2 
 import logging
+import boto3
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
-
-def config():
-    db = {
-        "host": "mri-dev.cluster-cfp0qt1gjcdb.ca-central-1.rds.amazonaws.com",
-        "dbname": "rules",
-        "user": "postgres",
-        "password": ".Medicine01"
-    }
-    return db
     
 insert_cmd = """
 INSERT INTO data_results(id, info, init_priority) VALUES 
@@ -64,21 +55,45 @@ def searchText(data, *data_keys):
                 value_set.add(word)
     return (' | ').join(value_set)
 
-""" Connect to the PostgreSQL database server """
-try:
-    # read the connection parameters
-    params = config()
+def connect(): 
+    """
+    Connect to PostgreSQL
+    """
+    ssm = boto3.client('ssm')
+    p_dbserver = '/mri-phsa/dbserver'
+    p_dbname = '/mri-phsa/dbname'
+    p_dbuser = '/mri-phsa/dbuser'
+    p_dbpwd = '/mri-phsa/dbpwd'
+    logger.info("Grabbing Parameters")
+    params = ssm.get_parameters(
+        Names=[
+            p_dbserver, p_dbname, p_dbuser, p_dbpwd
+        ],
+        WithDecryption = True
+    )
+    if params['ResponseMetadata']['HTTPStatusCode'] != 200: 
+        print('ParameterStore Error: ', str(params['ResponseMetadata']['HTTPStatusCode']))
+        sys.exit(1)
+    logger.info("Finished Grabbing Parameters")
+
+    for p in params['Parameters']: 
+        if p['Name'] == p_dbserver:
+            dbserver = p['Value']
+        elif p['Name'] == p_dbname: 
+            dbname = p['Value']
+        elif p['Name'] == p_dbuser:
+            dbuser = p['Value']
+        elif p['Name'] == p_dbpwd:
+            dbpwd = p['Value']
     logger.info("Trying to connect to postgresql")
-    logger.info(params)
-    # connect to the PostgreSQL server
-    conn = psycopg2.connect(**params)
+    conn = psycopg2.connect(host=dbserver, dbname=dbname, user=dbuser, password=dbpwd)
     logger.info("Success, connected to PostgreSQL!")
-except (Exception, psycopg2.DatabaseError) as error:
-    logger.info(error)
+    return conn 
 
 def handler(event, context):
     logger.info(event)
     v = event
+    conn = connect() 
     with conn.cursor() as cur: 
         # insert into data_results one by one 
         if "anatomy" not in v.keys():

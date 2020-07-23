@@ -13,6 +13,9 @@ Parameters:
   SubnetId: 
     Type: String
     Default: subnet-03b34c526bb19ba7a
+  PrivateSubnetID: 
+    Type: String
+    Default: subnet-045a095cc1cc062ea
 
 Globals:
   Function:
@@ -26,49 +29,6 @@ Globals:
     #   - !Ref CoreLayer
 
 Resources:
-
-#   Bucket:
-#     Type: AWS::S3::Bucket
-#     Properties:
-#       LifecycleConfiguration:
-#         Rules:
-#           - Id: DeleteRecordsAfter2Days
-#             ExpirationInDays: 2
-#             Status: Enabled
-#             Prefix: "json-records"
-#           - Id: DeleteAthenaReportsAfter2Days
-#             ExpirationInDays: 2
-#             Status: Enabled
-#             Prefix: "twitter-ath-results"
-#           - Id: DeleteParquetAfter2Days
-#             ExpirationInDays: 2
-#             Status: Enabled
-#             Prefix: "parquet*"
-
-#   BucketParameter:
-#     Type: AWS::SSM::Parameter
-#     Properties:
-#       Name: /twitter-demo/bucket
-#       Type: String
-#       Value: !Ref Bucket
-#       Description: Bucket Name
-
-#   DdbImageTable: 
-#     Type: AWS::DynamoDB::Table
-#     Properties: 
-#       AttributeDefinitions: 
-#         - 
-#           AttributeName: "img_url"
-#           AttributeType: "S"
-#       KeySchema: 
-#         - 
-#           AttributeName: "img_url"
-#           KeyType: "HASH"
-#       BillingMode: PAY_PER_REQUEST
-#       TimeToLiveSpecification:
-#         AttributeName: expire_at
-#         Enabled: True
-
   AccessLogs:
     Type: AWS::Logs::LogGroup
 
@@ -85,9 +45,10 @@ Resources:
         AllowHeaders: 
           - "*"
         AllowMethods: 
-          - GET
-          - POST
+          - "*"
         AllowOrigins: 
+          - "*"
+        ExposeHeaders: 
           - "*"
 
   PreprocessLayer:
@@ -129,13 +90,21 @@ Resources:
               ThrottlingBurstLimit: 100
       Layers: 
         - !Ref PreprocessLayer
+        - !Ref RuleLayer
       Policies:
         - arn:aws:iam::aws:policy/AWSXrayWriteOnlyAccess
+        - arn:aws:iam::aws:policy/ComprehendFullAccess
+        - arn:aws:iam::aws:policy/ComprehendMedicalFullAccess
         - SSMParameterReadPolicy:
-            ParameterName: "mri"
+            ParameterName: "mri-phsa*"
         - LambdaInvokePolicy:
             FunctionName:
               !Ref RuleProcessing
+      VpcConfig: 
+        SecurityGroupIds: 
+          - !Ref SecurityGroupId 
+        SubnetIds:
+          - !Ref PrivateSubnetID
       Environment:
         Variables:
           RULE_PROCESSING_LAMBDA: !Ref RuleProcessing
@@ -148,149 +117,13 @@ Resources:
         - !Ref RuleLayer
       Policies:
         - SSMParameterReadPolicy:
-            ParameterName: "mri"
+            ParameterName: "mri-phsa*"
         - arn:aws:iam::aws:policy/AWSXrayWriteOnlyAccess
       VpcConfig: 
         SecurityGroupIds: 
           - !Ref SecurityGroupId 
         SubnetIds: 
-          - !Ref SubnetId
-      
-    #   Environment:
-    #     Variables:
-    #       Bucket: !Ref Bucket
-
-#   Rekognition:
-#     Type: AWS::Serverless::Function 
-#     Properties:
-#       CodeUri: ./lambdas/rekognition/   
-#       Environment:
-#         Variables:
-#           Bucket: !Ref Bucket
-#           CollectionId: !Ref CollectionId     
-#       Policies:
-#         - S3CrudPolicy:
-#             BucketName:
-#               !Ref Bucket
-#         - SSMParameterReadPolicy:
-#             ParameterName: "twitter-demo*"
-#         - arn:aws:iam::aws:policy/AmazonRekognitionFullAccess
-#         - arn:aws:iam::aws:policy/AWSXrayWriteOnlyAccess
-
-#   ProcessFaces:
-#     Type: AWS::Serverless::Function 
-#     Properties:
-#       CodeUri: ./lambdas/processfaces/
-#       Environment:
-#         Variables:
-#           Bucket: !Ref Bucket
-#           CollectionId: !Ref CollectionId
-#       Policies:
-#         - arn:aws:iam::aws:policy/AWSXrayWriteOnlyAccess
-#         - SSMParameterReadPolicy:
-#             ParameterName: "twitter-demo*"
-#         - FirehoseCrudPolicy:
-#             DeliveryStreamName: "*"        
-#         - ComprehendBasicAccessPolicy: {}
-#         - S3CrudPolicy:
-#             BucketName:
-#               !Ref Bucket
-#         - RekognitionFacesManagementPolicy:
-#             CollectionId:
-#                 !Ref CollectionId
-
-#   StateMachine:
-#     Type: AWS::StepFunctions::StateMachine
-#     Properties:
-#       DefinitionString:
-#         !Sub
-#           - |-
-#             {
-#               "Comment": "Twitter selfie state machine",
-#               "StartAt": "Rekognition",
-#               "States": {
-#                 "Rekognition": {
-#                   "Type": "Task",
-#                   "Resource": "${RunRekognitionArn}",
-#                   "Next": "RekErrorHandler"
-#                 },
-#                 "RekErrorHandler": {
-#                   "Type" : "Choice",
-#                   "Choices": [
-#                     {
-#                       "Variable": "$.result",
-#                       "StringEquals": "Succeed",
-#                       "Next": "ProcessFaces"
-#                     },
-#                     {
-#                       "Variable": "$.result",
-#                       "StringEquals": "Fail",
-#                       "Next": "FailState"
-#                     }
-#                   ],
-#                   "Default": "FailState"
-#                 },
-#                 "ProcessFaces": {
-#                   "Type": "Task",
-#                   "Resource": "${ProcessFacesArn}",
-#                   "Next": "FaceErrorHandler"
-#                 },
-#                 "FaceErrorHandler": {
-#                   "Type" : "Choice",
-#                   "Choices": [
-#                     {
-#                       "Variable": "$.result",
-#                       "StringEquals": "Succeed",
-#                       "Next": "SucceedState"
-#                     },
-#                     {
-#                       "Variable": "$.result",
-#                       "StringEquals": "Moderated",
-#                       "Next": "SucceedState"
-#                     },
-#                     {
-#                       "Variable": "$.result",
-#                       "StringEquals": "Fail",
-#                       "Next": "FailState"
-#                     }
-#                   ],
-#                   "Default": "FailState"
-#                 },
-#                 "FailState": {
-#                   "Type": "Fail",
-#                   "Error": "DefaultStateError",
-#                   "Cause": "No Matches!"
-#                 },
-#                 "SucceedState": {
-#                   "Type": "Succeed"
-#                 }
-#               }
-#             }
-#           - ProcessFacesArn: !GetAtt ProcessFaces.Arn
-#             RunRekognitionArn: !GetAtt Rekognition.Arn 
-#       RoleArn: !GetAtt [ StatesExecutionRole, Arn ]
-
-#   StatesExecutionRole:
-#     Type: "AWS::IAM::Role"
-#     Properties:
-#       AssumeRolePolicyDocument:
-#         Version: "2012-10-17"
-#         Statement:
-#           - Effect: "Allow"
-#             Principal:
-#               Service:
-#                 - !Sub states.${AWS::Region}.amazonaws.com
-#             Action: "sts:AssumeRole"
-#       Path: "/"
-#       Policies:
-#         - PolicyName: StatesExecutionPolicy
-#           PolicyDocument:
-#             Version: "2012-10-17"
-#             Statement:
-#               - Effect: Allow
-#                 Action:
-#                   - "lambda:InvokeFunction"
-#                 Resource: "*"
+          - !Ref PrivateSubnetID
 
 Outputs:
   Preprocess:

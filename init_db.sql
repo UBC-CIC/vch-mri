@@ -4,6 +4,9 @@
 DROP TABLE IF EXISTS data_results; 
 DROP TABLE IF EXISTS mri_rules; 
 DROP TABLE IF EXISTS word_weights; 
+DROP TABLE IF EXISTS conjunctions; 
+DROP TABLE IF EXISTS key_words;
+DROP TABLE IF EXISTS spellchecker; 
 
 CREATE TABLE IF NOT EXISTS mri_rules ( 
     id SERIAL PRIMARY KEY, 
@@ -30,6 +33,20 @@ CREATE TABLE IF NOT EXISTS data_results (
 CREATE TABLE IF NOT EXISTS word_weights (
     word VARCHAR(32) PRIMARY KEY, 
     weight VARCHAR(1)
+);
+
+CREATE TABLE IF NOT EXISTS conjunctions (
+    key VARCHAR(8) PRIMARY KEY, 
+    val VARCHAR(16)
+);
+
+CREATE TABLE IF NOT EXISTS key_words (
+    key VARCHAR(16) PRIMARY KEY,
+    val VARCHAR(16)
+);
+
+CREATE TABLE IF NOT EXISTS spellchecker(
+    word VARCHAR(32) PRIMARY KEY
 );
 
 -- SELECT * FROM mri_rules; 
@@ -322,3 +339,15 @@ SET word = TRIM(word);
 CREATE INDEX info_weighted_idx 
 ON mri_rules 
 USING GIN (info_weighted_tk);
+
+INSERT INTO conjunctions(key, val) VALUES
+('L', 'left'),
+('l', 'left'),
+('R', 'right'),
+('r', 'right');
+
+INSERT INTO key_words(key, val) VALUES
+('followup','followup'),
+('history','history'),
+('hx','medical history'),
+('?','query');

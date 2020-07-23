@@ -3,10 +3,11 @@ import pandas as pd
 from preprocess_helper import *
 import string 
 import time 
+import uuid 
 
 start = time.time() 
 
-data_df = pd.read_csv('./csv/req_data_june.csv', skip_blank_lines=True).fillna({'Req # CIO': '-1'})
+data_df = pd.read_csv('./csv/requisition_data.csv', skip_blank_lines=True).fillna({'Req # CIO': '-1'})
 # Format columns that don't need comprehend medical and preprocess the text 
 data_df['CIO_ID'] = data_df['Req # CIO']
 data_df['age'] = data_df['DOB \r\n(yyyy-mm-dd)'].apply(dob2age)
@@ -30,6 +31,12 @@ formatted_df.loc[:,'symptoms'] = ''
 formatted_df.loc[:,'phrases'] = ''
 formatted_df.loc[:,'other_info'] = ''
 
+# Obtain data from postgres 
+conn = connect() 
+conj_list = queryTable(conn, "conjunctions")
+keyword_list =queryTable(conn, "key_words")
+conn.close() 
+
 for row in range(len(formatted_df.index)):
     print("row is :", row)
     anatomy_list = []
@@ -40,16 +47,16 @@ for row in range(len(formatted_df.index)):
     other_info = []
     
     # Create a UUID for CIO ID if there isn't one already 
-    formatted_df.loc[row,'CIO_ID'] = findId(formatted_df['CIO_ID'][row])
-    # Change Unidentified priority to code UND 
-    formatted_df.loc[row,'priority'] = findUnidentified(formatted_df['priority'][row])
+    formatted_df.loc[row,'CIO_ID'] = findId(f'{formatted_df["CIO_ID"][row]}')
+    # Change Unidentified priority to code U/I 
+    formatted_df.loc[row,'priority'] = findUnidentified(f'{formatted_df["priority"][row]}')
 
     # Parse the Exam Requested Column into Comprehend Medical to find Anatomy Entities
     anatomy_json = find_all_entities(anatomySpelling(f'{data_df["Exam Requested"][row]}'))
-    preprocessed_text = preProcessAnatomy(f'{data_df["Reason for Exam/Relevant Clinical History"][row]}')
+    preprocessed_text = preProcessAnatomy(conj_list, f'{data_df["Reason for Exam/Relevant Clinical History"][row]}')
     for obj in list(filter(lambda info_list: info_list['Category'] == 'ANATOMY' or info_list['Category'] == 'TEST_TREATMENT_PROCEDURE', anatomy_json)):
         # print("--Body Part Identified: ", obj['Text'])
-        anatomy = preProcessAnatomy(obj['Text'].lower())
+        anatomy = preProcessAnatomy(conj_list, obj['Text'].lower())
         anatomy_list.append(anatomy)
         # if(contains_word('hip',anatomy) or contains_word('knee', anatomy)):
         #     # apply comprehend to knee/hip column
@@ -60,7 +67,7 @@ for row in range(len(formatted_df.index)):
     
     infer_icd10_cm(preprocessed_text, medical_conditions, diagnosis, symptoms)
     find_key_phrases(preprocessed_text, key_phrases, medical_conditions+diagnosis+symptoms, anatomy_list)
-    find_additional_info(preprocessed_text, other_info)    
+    find_additional_info(keyword_list, preprocessed_text, other_info)    
 
     formatted_df['anatomy'][row] = anatomy_list    
     formatted_df['medical_condition'][row] = medical_conditions
