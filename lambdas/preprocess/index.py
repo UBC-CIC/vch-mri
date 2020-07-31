@@ -11,6 +11,7 @@ from datetime import datetime, date
 from spellchecker import SpellChecker 
 import psycopg2 
 from psycopg2 import sql
+import postgresql
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
@@ -28,44 +29,11 @@ def queryTable(conn, table):
         cur.execute(sql.SQL(cmd).format(sql.Identifier(table)))
         return cur.fetchall()
 
-def connect(): 
-    """
-    Connect to PostgreSQL
-    """
-    ssm = boto3.client('ssm')
-    p_dbserver = '/mri-phsa/dbserver'
-    p_dbname = '/mri-phsa/dbname'
-    p_dbuser = '/mri-phsa/dbuser'
-    p_dbpwd = '/mri-phsa/dbpwd'
-    params = ssm.get_parameters(
-        Names=[
-            p_dbserver, p_dbname, p_dbuser, p_dbpwd
-        ],
-        WithDecryption = True
-    )
-    if params['ResponseMetadata']['HTTPStatusCode'] != 200: 
-        print('ParameterStore Error: ', str(params['ResponseMetadata']['HTTPStatusCode']))
-        sys.exit(1)
-    for p in params['Parameters']: 
-        if p['Name'] == p_dbserver:
-            dbserver = p['Value']
-        elif p['Name'] == p_dbname: 
-            dbname = p['Value']
-        elif p['Name'] == p_dbuser:
-            dbuser = p['Value']
-        elif p['Name'] == p_dbpwd:
-            dbpwd = p['Value']
-    logger.info("Trying to connect to postgresql")
-    conn = psycopg2.connect(host=dbserver, dbname=dbname, user=dbuser, password=dbpwd)
-    logger.info("Success, connected to PostgreSQL!")
-    return conn 
-
 spell = SpellChecker() 
-conn = connect() 
-conj_list = queryTable(conn, "conjunctions")
-keyword_list =queryTable(conn, "key_words")
-spelling_list = [x[0] for x in queryTable(conn, 'spellchecker')]
-conn.close()
+psql = postgresql.PostgreSQL()
+conj_list = queryTable(psql.conn, "conjunctions")
+spelling_list = [x[0] for x in queryTable(psql.conn, 'spellchecker')]
+psql.closeConn()
 # Add words to spell list 
 spell.word_frequency.load_words(spelling_list)
 
@@ -117,7 +85,7 @@ def preProcessText(col):
     Takes in a pandas.Series and preprocesses the text
     """
     reponct = re.compile('[%s]' % re.escape(string.punctuation))
-    rehtml = re.compile('<.*?>')
+    rehtml = re.compile('<.*>')
     extr = col.strip()
     extr = re.sub(rehtml, '', col)
     extr = re.sub(reponct, ' ', col)
@@ -137,17 +105,13 @@ def anatomySpelling(text: str):
         word_list.append(spell.correction(word))
     return ' '.join(word_list)
 
-def preProcessAnatomy(dir_list, text: str): 
+def replace_conjunctions(conj_list, text: str, info_list): 
     temp_text = f' {text} '
-    for direction in dir_list:
-        if contains_word(direction[0],text):
-            temp_text = temp_text.replace(f' {direction[0]} ', f' {direction[1]} ')
+    for conj in conj_list:
+        if contains_word(conj[0],text):
+            info_list.append(conj[1])
+            temp_text = temp_text.replace(f' {conj[0]} ', f' {conj[1]} ')
     return temp_text[1:len(temp_text)-1]
-
-def find_additional_info(key_list, text:str, info_list):
-    for i in key_list:
-        if f'{i[0]}' in f'{text}':
-            info_list.append(i[1])
 
 def find_all_entities(data: str):
     if not data:
@@ -300,10 +264,9 @@ def handler(event, context):
     other_info = []
     # Parse the Exam Requested Column into Comprehend Medical to find Anatomy Entities
     anatomy_json = find_all_entities(anatomySpelling(f'{data_df["Exam Requested"]}'))
-    preprocessed_text = preProcessAnatomy(conj_list, f'{data_df["Reason for Exam/Relevant Clinical History"]}')
-        
+    preprocessed_text = replace_conjunctions(conj_list,f'{data_df["Reason for Exam/Relevant Clinical History"]}',other_info)
+    print("Text is: ", preprocessed_text)
     for obj in list(filter(lambda info_list: info_list['Category'] == 'ANATOMY' or info_list['Category'] == 'TEST_TREATMENT_PROCEDURE', anatomy_json)):
-        anatomy = preProcessAnatomy(conj_list, obj['Text'].lower())
         anatomy_list.append(anatomy)
         # if(contains_word('hip',anatomy) or contains_word('knee', anatomy)):
         #     # apply comprehend to knee/hip column
@@ -313,7 +276,7 @@ def handler(event, context):
         #     formatted_df['Spine'][row] = find_entities(f'{data_df["Appropriateness Checklist - Spine"][row]}')
     infer_icd10_cm(preprocessed_text, medical_conditions, diagnosis, symptoms)
     find_key_phrases(preprocessed_text, key_phrases, medical_conditions+diagnosis+symptoms, anatomy_list)
-    find_additional_info(keyword_list, preprocessed_text, other_info)
+
     formatted_df['anatomy'] = anatomy_list
     formatted_df['medical_condition'] = medical_conditions
     formatted_df['diagnosis'] = diagnosis

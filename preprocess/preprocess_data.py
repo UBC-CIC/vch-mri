@@ -4,23 +4,27 @@ from preprocess_helper import *
 import string 
 import time 
 import uuid 
+import sys
+sys.path.append('.')
+from rule_processing import postgresql
 
 start = time.time() 
 
-data_df = pd.read_csv('./csv/requisition_data.csv', skip_blank_lines=True).fillna({'Req # CIO': '-1'})
+data_df = pd.read_csv('./csv/requisition_data_200.csv', skip_blank_lines=True).fillna({'Req # CIO': '-1'}).astype('object')
+print(data_df.dtypes)
 # Format columns that don't need comprehend medical and preprocess the text 
 data_df['CIO_ID'] = data_df['Req # CIO']
-data_df['age'] = data_df['DOB \r\n(yyyy-mm-dd)'].apply(dob2age)
+data_df['age'] = data_df['DOB \n(yyyy-mm-dd)'].apply(dob2age)
 data_df['height'] = data_df['Height \r\n(eg: ft.in)'] + \
     ' ' + data_df['INCH - CM']
-data_df['weight'] = data_df['Weight'] + ' ' + data_df['KG - LBS']
+data_df['weight'] = f'{data_df["Weight"]}' + ' ' + data_df['KG - LBS']
 data_df['priority'] = data_df['Radiologist Priority ']
 data_df['height'] = data_df['height'].apply(convert2CM)
 data_df['weight'] = data_df['weight'].apply(convert2KG)
 data_df['Exam Requested'] = preProcessText(data_df['Exam Requested (Free Text)'])
 data_df['Reason for Exam/Relevant Clinical History'] = preProcessText(data_df['Reason for Exam/Relevant Clinical History (Free Text)'])
-data_df['Spine'] = preProcessText(data_df['Appropriateness Checklist - Spine'])
 data_df['Hip & Knee'] = preProcessText(data_df['Appropriateness Checklist - Hip & Knee'])
+data_df['Spine'] = preProcessText(data_df['Appropriateness Checklist - Spine'])
 
 # New Dataframe with
 formatted_df = data_df[['CIO_ID', 'height', 'weight', 'Sex','age', 'Preferred MRI Site', 'priority']]
@@ -32,9 +36,8 @@ formatted_df.loc[:,'phrases'] = ''
 formatted_df.loc[:,'other_info'] = ''
 
 # Obtain data from postgres 
-conn = connect() 
+conn = postgresql.connect() 
 conj_list = queryTable(conn, "conjunctions")
-keyword_list =queryTable(conn, "key_words")
 conn.close() 
 
 for row in range(len(formatted_df.index)):
@@ -53,11 +56,9 @@ for row in range(len(formatted_df.index)):
 
     # Parse the Exam Requested Column into Comprehend Medical to find Anatomy Entities
     anatomy_json = find_all_entities(anatomySpelling(f'{data_df["Exam Requested"][row]}'))
-    preprocessed_text = preProcessAnatomy(conj_list, f'{data_df["Reason for Exam/Relevant Clinical History"][row]}')
+    preprocessed_text = replace_conjunctions(conj_list,f'{data_df["Reason for Exam/Relevant Clinical History"][row]}',other_info)
     for obj in list(filter(lambda info_list: info_list['Category'] == 'ANATOMY' or info_list['Category'] == 'TEST_TREATMENT_PROCEDURE', anatomy_json)):
-        # print("--Body Part Identified: ", obj['Text'])
-        anatomy = preProcessAnatomy(conj_list, obj['Text'].lower())
-        anatomy_list.append(anatomy)
+        anatomy_list.append(obj['Text'])
         # if(contains_word('hip',anatomy) or contains_word('knee', anatomy)):
         #     # apply comprehend to knee/hip column
         #     formatted_df['Hip & Knee'][row] = find_entities(f'{data_df["Hip & Knee"][row]}') 
@@ -67,7 +68,6 @@ for row in range(len(formatted_df.index)):
     
     infer_icd10_cm(preprocessed_text, medical_conditions, diagnosis, symptoms)
     find_key_phrases(preprocessed_text, key_phrases, medical_conditions+diagnosis+symptoms, anatomy_list)
-    find_additional_info(keyword_list, preprocessed_text, other_info)    
 
     formatted_df['anatomy'][row] = anatomy_list    
     formatted_df['medical_condition'][row] = medical_conditions

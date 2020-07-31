@@ -61,11 +61,22 @@ Resources:
           - python3.7
           - python3.6
         RetentionPolicy: Delete
-
-  RuleLayer:
+  
+  Psycopg2Layer:
       Type: AWS::Serverless::LayerVersion
       Properties:
         Description: Psycopg2 Library
+        ContentUri: ./layers/psycopg2.zip
+        CompatibleRuntimes:
+          - python3.8
+          - python3.7
+          - python3.6
+        RetentionPolicy: Delete
+  
+  PostgresLayer:
+      Type: AWS::Serverless::LayerVersion
+      Properties:
+        Description: Postgres Custom Functions
         ContentUri: ./layers/postgresql.zip
         CompatibleRuntimes:
           - python3.8
@@ -90,7 +101,8 @@ Resources:
               ThrottlingBurstLimit: 100
       Layers: 
         - !Ref PreprocessLayer
-        - !Ref RuleLayer
+        - !Ref Psycopg2Layer
+        - !Ref PostgresLayer
       Policies:
         - arn:aws:iam::aws:policy/AWSXrayWriteOnlyAccess
         - arn:aws:iam::aws:policy/ComprehendFullAccess
@@ -114,7 +126,8 @@ Resources:
     Properties:
       CodeUri: ./lambdas/rule_processing
       Layers: 
-        - !Ref RuleLayer
+        - !Ref Psycopg2Layer
+        - !Ref PostgresLayer
       Policies:
         - SSMParameterReadPolicy:
             ParameterName: "mri-phsa*"

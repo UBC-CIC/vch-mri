@@ -7,6 +7,9 @@ from spellchecker import SpellChecker
 import uuid 
 import psycopg2
 from psycopg2 import sql
+import sys
+sys.path.append('.')
+from rule_processing import postgresql
 
 def queryTable(conn, table):
     cmd = """
@@ -16,45 +19,10 @@ def queryTable(conn, table):
         cur.execute(sql.SQL(cmd).format(sql.Identifier(table)))
         return cur.fetchall()
 
-def connect(): 
-    """
-    Connect to PostgreSQL
-    """
-    ssm = boto3.client('ssm', region_name='ca-central-1')
-    p_dbserver = '/mri-phsa/dbserver'
-    p_dbname = '/mri-phsa/dbname'
-    p_dbuser = '/mri-phsa/dbuser'
-    p_dbpwd = '/mri-phsa/dbpwd'
-    params = ssm.get_parameters(
-        Names=[
-            p_dbserver, p_dbname, p_dbuser, p_dbpwd
-        ],
-        WithDecryption = True
-    )
-    if params['ResponseMetadata']['HTTPStatusCode'] != 200: 
-        print('ParameterStore Error: ', str(params['ResponseMetadata']['HTTPStatusCode']))
-        sys.exit(1)
-
-    for p in params['Parameters']: 
-        if p['Name'] == p_dbserver:
-            dbserver = p['Value']
-        elif p['Name'] == p_dbname: 
-            dbname = p['Value']
-        elif p['Name'] == p_dbuser:
-            dbuser = p['Value']
-        elif p['Name'] == p_dbpwd:
-            dbpwd = p['Value']
-    print("Trying to connect to postgresql")
-
-    conn = psycopg2.connect(host=dbserver, dbname=dbname, user=dbuser, password=dbpwd)
-    print("Success, connected to PostgreSQL!")
-    return conn 
-
-
 compr = boto3.client(service_name='comprehend')
 compr_m = boto3.client(service_name='comprehendmedical')
 spell = SpellChecker() 
-conn = connect() 
+conn = postgresql.connect()
 spelling_list = [x[0] for x in queryTable(conn, 'spellchecker')]
 print("Spelling List is:", spelling_list)
 conn.close()
@@ -119,13 +87,13 @@ def preProcessText(col):
     Takes in a pandas.Series and preprocesses the text 
     """
     reponct = re.compile('[%s]' % re.escape(string.punctuation))
-    rehtml = re.compile('<.*?>')
+    rehtml = re.compile('<.*>')
     extr = col.str.strip()
-    extr = col.str.replace(rehtml, '', regex=True)
-    extr = col.str.replace(reponct, ' ', regex=True)
-    extr = col.str.replace('[^0-9a-zA-Z ]+', '', regex=True)
-    extr = col.str.replace('\s+', ' ', regex=True)
-    extr = col.str.lower()
+    extr = extr.str.replace(rehtml, '', regex=True)
+    extr = extr.str.replace(reponct, ' ', regex=True)
+    extr = extr.str.replace('[^0-9a-zA-Z ]+', '', regex=True)
+    extr = extr.str.replace('\s+', ' ', regex=True)
+    extr = extr.str.lower()
     return extr 
 
 def checkSpelling(text: str):
@@ -139,26 +107,19 @@ def anatomySpelling(text: str):
         word_list.append(spell.correction(word))
     return ' '.join(word_list)
 
-def preProcessAnatomy(dir_list, text: str): 
+def replace_conjunctions(conj_list, text: str, info_list): 
     temp_text = f' {text} '
-    for direction in dir_list:
-        if contains_word(direction[0],text):
-            temp_text = temp_text.replace(f' {direction[0]} ', f' {direction[1]} ')
+    for conj in conj_list:
+        if contains_word(conj[0],text):
+            info_list.append(conj[1])
+            temp_text = temp_text.replace(f' {conj[0]} ', f' {conj[1]} ')
     return temp_text[1:len(temp_text)-1]
-
-def find_additional_info(key_list, text:str, info_list):
-    for i in key_list:
-        if f'{i[0]}' in f'{text}':
-            info_list.append(i[1])
 
 def find_all_entities(data: str):
     if not data: 
         return [] 
-    # print("-- Entities --")
     try: 
         result = compr_m.detect_entities_v2(Text=data)
-        # for resp in result['Entities']:
-            # print(resp)
         return result['Entities']
     except Exception as ex: 
         template = "An exception of type {0} occurred. Arguments:\n{1!r}"
@@ -177,18 +138,18 @@ def infer_icd10_cm(data: str, med_cond, diagnosis, symptoms):
     try: 
         icd10_result = compr_m.infer_icd10_cm(Text=data)
         for resp in icd10_result['Entities']:
-            if resp['Score'] > 0.5: 
+            if resp['Score'] > 0.4: 
                 resp_str = resp['Text']
                 category = ''
                 # first check Attributes
                 for attr in resp['Attributes']: 
-                    if attr['Score'] > 0.5: 
+                    if attr['Score'] > 0.4: 
                         if attr['Type'] == 'ACUITY' or attr['Type'] == 'DIRECTION': 
                             resp_str = f'{attr["Text"]}' + ' ' + resp_str
                         elif attr['Type'] == 'SYSTEM_ORGAN_SITE': 
                             resp_str = resp_str + ' ' + f'{attr["Text"]}'
                 for trait in resp['Traits']:
-                    if trait['Score'] > 0.5: 
+                    if trait['Score'] > 0.4: 
                         if trait['Name'] == 'NEGATION': 
                             category = 'NEG'
                             break #don't save anything for negation 
@@ -224,7 +185,7 @@ def find_key_phrases(data:str, key_phrases, icd10cm_list, anatomy_list):
         kp_result = compr.detect_key_phrases(Text=data, LanguageCode='en')
         for resp in kp_result['KeyPhrases']:
             placed = False
-            if resp['Score'] > 0.5: 
+            if resp['Score'] > 0.4: 
                 for icd10cm in icd10cm_list: 
                     if contains_word(icd10cm, resp['Text']):
                         resp_str = checkSpelling(resp['Text'])

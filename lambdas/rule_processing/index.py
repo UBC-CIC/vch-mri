@@ -3,6 +3,7 @@ import time
 import psycopg2 
 import logging
 import boto3
+import postgresql
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
@@ -26,7 +27,7 @@ UPDATE data_results
 SET rules_id = r.id , sys_priority = r.priority
 FROM mri_rules r WHERE r.id = (
 SELECT id
-FROM mri_rules, to_tsquery('%s') query 
+FROM mri_rules, to_tsquery('tst_search','%s') query 
 WHERE info_weighted_tk @@ query
 """
 
@@ -55,46 +56,11 @@ def searchText(data, *data_keys):
                 value_set.add(word)
     return (' | ').join(value_set)
 
-def connect(): 
-    """
-    Connect to PostgreSQL
-    """
-    ssm = boto3.client('ssm')
-    p_dbserver = '/mri-phsa/dbserver'
-    p_dbname = '/mri-phsa/dbname'
-    p_dbuser = '/mri-phsa/dbuser'
-    p_dbpwd = '/mri-phsa/dbpwd'
-    logger.info("Grabbing Parameters")
-    params = ssm.get_parameters(
-        Names=[
-            p_dbserver, p_dbname, p_dbuser, p_dbpwd
-        ],
-        WithDecryption = True
-    )
-    if params['ResponseMetadata']['HTTPStatusCode'] != 200: 
-        print('ParameterStore Error: ', str(params['ResponseMetadata']['HTTPStatusCode']))
-        sys.exit(1)
-    logger.info("Finished Grabbing Parameters")
-
-    for p in params['Parameters']: 
-        if p['Name'] == p_dbserver:
-            dbserver = p['Value']
-        elif p['Name'] == p_dbname: 
-            dbname = p['Value']
-        elif p['Name'] == p_dbuser:
-            dbuser = p['Value']
-        elif p['Name'] == p_dbpwd:
-            dbpwd = p['Value']
-    logger.info("Trying to connect to postgresql")
-    conn = psycopg2.connect(host=dbserver, dbname=dbname, user=dbuser, password=dbpwd)
-    logger.info("Success, connected to PostgreSQL!")
-    return conn 
-
 def handler(event, context):
     logger.info(event)
     v = event
-    conn = connect() 
-    with conn.cursor() as cur: 
+    psql = postgresql.PostgreSQL()
+    with psql.conn.cursor() as cur: 
         # insert into data_results one by one 
         if "anatomy" not in v.keys():
             # No anatomy found => sys_priority = P99
@@ -117,7 +83,7 @@ def handler(event, context):
             except psycopg2.IntegrityError:                    
                 logger.info("Exception: ", err)
         # commit the changes
-        conn.commit()
+        psql.conn.commit()
         return {"rule_id": ret[0][0], "priority": ret[0][1]}
 
 

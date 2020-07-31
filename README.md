@@ -1,13 +1,35 @@
 # PHSA MRI CODE 
 
-## Setup PostgreSQL
+## Setup PostgreSQL in EC2
+- Follow [these instructions](https://installvirtual.com/install-postgresql-10-on-amazon-ec2/) to download postgres onto EC2
+- To update the configuration for remote access of postgres: 
+```bash
+# Edit /var/lib/pgsql/data/postgresql.conf
+nano /var/lib/pgsql/data/postgresql.conf
+
+# Change the following line to listen to external requests
+listen_address='*'
+```
+```bash
+# Edit /var/lib/pgsql/data/pg_hba.conf
+nano /var/lib/pgsql/data/pg_hba.conf
+
+# Change the following line to allow IPv4 Connections for all 
+# IPv4 local connections:
+host    all             all             0.0.0.0/0               md5
+```
+```bash
+# Restart postgres
+systemctl restart postgresql
+```
+- On the AWS console, you'll need to add access to Postgres to the EC2 instance to the security group 
 - To initialize the database, run the init_db.sql script in the terminal using `psql -U <user> -h <host> -f init_db.sql`. _Note this does assume you have postgresql database named rules._
 - The functions expect the database keys to be stored on SSM Parameter Store. You can either use the AWS Console or the following AWS CLI commands: 
 ```bash
-aws ssm put-parameter --name /mri-phsa/dbserver --value <host> --type SecureString --overwrite
-aws ssm put-parameter --name /mri-phsa/dbname --value <database> --type SecureString --overwrite
-aws ssm put-parameter --name /mri-phsa/dbuser --value <user> --type SecureString --overwrite
-aws ssm put-parameter --name /mri-phsa/dbpwd --value <password> --type SecureString --overwrite
+aws ssm put-parameter --name /mri-phsa/dbserver_ec2 --value <host> --type SecureString --overwrite
+aws ssm put-parameter --name /mri-phsa/dbname_ec2 --value <database> --type SecureString --overwrite
+aws ssm put-parameter --name /mri-phsa/dbuser_ec2 --value <user> --type SecureString --overwrite
+aws ssm put-parameter --name /mri-phsa/dbpwd_ec2 --value <password> --type SecureString --overwrite
 ```
 
 ## Preprocessing
@@ -19,8 +41,8 @@ aws ssm put-parameter --name /mri-phsa/dbpwd --value <password> --type SecureStr
 ## Rule Processing 
 - [rules.py](/rule_processing/rules.py): Main python script to obtain the priority value 
 - [update_weights.py](/rule_processing/update_weights.py): Creates weighted tokens in the database for the descriptions found in mri_rules
-- [config.py](/rule_processing/config.py): Connecting to the postgres database with a custome database.ini file 
-- To update the weighted rule tokens, run `python update_weights.py` in the terminal
+- [postgresql.py](/rule_processing/postgresql.py): Connecting to the postgres database with a SSM parameter store =
+- To update the weighted rule tokens, run `python .\rules_processing\update_weights.py` in the terminal
 - To apply the rules and obtain a Rule ID + P-Value, run `python .\rule_processing\rules.py` in the terminal
 
 ## Lambdas
@@ -32,4 +54,4 @@ sam deploy --template-file out.yaml --capabilities CAPABILITY_IAM CAPABILITY_AUT
 ```
 
 ## Rule Database Analysis
-- [Sample Result](/csv/mri_sample_results_0.3.xlsx): Form to P-Value Data (most recent)
+- [Sample Result](/csv/mri_dataset_results_0730.xlsx): Form to P-Value Data (most recent)
