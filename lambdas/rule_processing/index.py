@@ -27,7 +27,7 @@ UPDATE data_results
 SET rules_id = r.id , sys_priority = r.priority
 FROM mri_rules r WHERE r.id = (
 SELECT id
-FROM mri_rules, to_tsquery('tst_search','%s') query 
+FROM mri_rules, to_tsquery('ths_search','%s') query 
 WHERE info_weighted_tk @@ query
 """
 
@@ -45,7 +45,7 @@ def searchAnatomy(data):
         anatomy_list.append(val)
 
     body_parts = ' | '.join(anatomy_list)
-    anatomy_cmd = 'AND bp_tk @@ to_tsquery(\''+body_parts+'\')'
+    anatomy_cmd = "AND bp_tk @@ to_tsquery('ths_search','%s')" % body_parts
     return anatomy_cmd 
 
 def searchText(data, *data_keys):
@@ -80,6 +80,8 @@ def handler(event, context):
                 ret = cur.fetchall() 
                 if not ret: 
                     cur.execute(update_sys_priority, ('P98', v["CIO_ID"]))
+                if v["priority"] == 'P5':
+                    cur.execute(update_sys_priority, (v["priority"], v["CIO_ID"]))
             except psycopg2.IntegrityError:                    
                 logger.info("Exception: ", err)
         # commit the changes

@@ -10,7 +10,7 @@ def connect():
     # p_dbname = '/mri-phsa/dbname'
     # p_dbuser = '/mri-phsa/dbuser'
     # p_dbpwd = '/mri-phsa/dbpwd'
-    p_dbserver = '/mri-phsa/dbserver_ec2'
+    p_dbserver = '/mri-phsa/dbserver_ec2_public'
     p_dbname = '/mri-phsa/dbname_ec2'
     p_dbuser = '/mri-phsa/dbuser_ec2'
     p_dbpwd = '/mri-phsa/dbpwd_ec2'

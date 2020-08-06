@@ -24,7 +24,6 @@ compr_m = boto3.client(service_name='comprehendmedical')
 spell = SpellChecker() 
 conn = postgresql.connect()
 spelling_list = [x[0] for x in queryTable(conn, 'spellchecker')]
-print("Spelling List is:", spelling_list)
 conn.close()
 # Add words to spell list 
 spell.word_frequency.load_words(spelling_list)
@@ -86,26 +85,19 @@ def preProcessText(col):
     """
     Takes in a pandas.Series and preprocesses the text 
     """
-    reponct = re.compile('[%s]' % re.escape(string.punctuation))
+    reponct = string.punctuation.replace("?","").replace("/","")
     rehtml = re.compile('<.*>')
     extr = col.str.strip()
     extr = extr.str.replace(rehtml, '', regex=True)
-    extr = extr.str.replace(reponct, ' ', regex=True)
-    extr = extr.str.replace('[^0-9a-zA-Z ]+', '', regex=True)
+    extr = extr.str.translate(str.maketrans('','',reponct))
+    extr = extr.str.replace('[^0-9a-zA-Z?/ ]+', '', regex=True)
     extr = extr.str.replace('\s+', ' ', regex=True)
     extr = extr.str.lower()
-    return extr 
-
+    return extr
+      
 def checkSpelling(text: str):
-    words = spell.split_words(text)
+    words = text.split()
     return ' '.join([spell.correction(word) for word in words])
-
-def anatomySpelling(text: str):
-    words = spell.split_words(text)
-    word_list = []
-    for word in words: 
-        word_list.append(spell.correction(word))
-    return ' '.join(word_list)
 
 def replace_conjunctions(conj_list, text: str, info_list): 
     temp_text = f' {text} '

@@ -11,7 +11,6 @@ from rule_processing import postgresql
 start = time.time() 
 
 data_df = pd.read_csv('./csv/requisition_data_200.csv', skip_blank_lines=True).fillna({'Req # CIO': '-1'}).astype('object')
-print(data_df.dtypes)
 # Format columns that don't need comprehend medical and preprocess the text 
 data_df['CIO_ID'] = data_df['Req # CIO']
 data_df['age'] = data_df['DOB \n(yyyy-mm-dd)'].apply(dob2age)
@@ -55,9 +54,9 @@ for row in range(len(formatted_df.index)):
     formatted_df.loc[row,'priority'] = findUnidentified(f'{formatted_df["priority"][row]}')
 
     # Parse the Exam Requested Column into Comprehend Medical to find Anatomy Entities
-    anatomy_json = find_all_entities(anatomySpelling(f'{data_df["Exam Requested"][row]}'))
+    anatomy_json = find_all_entities(checkSpelling(f'{data_df["Exam Requested"][row]}'))
     preprocessed_text = replace_conjunctions(conj_list,f'{data_df["Reason for Exam/Relevant Clinical History"][row]}',other_info)
-    for obj in list(filter(lambda info_list: info_list['Category'] == 'ANATOMY' or info_list['Category'] == 'TEST_TREATMENT_PROCEDURE', anatomy_json)):
+    for obj in list(filter(lambda info_list: info_list['Category'] == 'ANATOMY' or info_list['Category'] == 'TEST_TREATMENT_PROCEDURE' or info_list['Category'] == 'MEDICAL_CONDITION', anatomy_json)):
         anatomy_list.append(obj['Text'])
         # if(contains_word('hip',anatomy) or contains_word('knee', anatomy)):
         #     # apply comprehend to knee/hip column

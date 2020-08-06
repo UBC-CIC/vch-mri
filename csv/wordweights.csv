@@ -1,40 +1,56 @@
 abnormalities,B
+abscess,A
 acl,B
+acute,A
+acute fracture,A
 adenoma ,B
 adrenal,B
 aneurysm,B
 angio,B
 aortic,B
+appendix,A
 arachnoid,B
 arachnoiditis,B
 arteriovenus,B
 artery,B
 arthogram,B
+arthrogram,A
 arvd,B
 assessment,B
 assymetric,B
 ataxic,B
 atrophy,B
+avascular ,A
+avascular necrosis  ,A
+avn,A
 benign,B
 bone,B
 bowel,B
 brain,B
+breast ,A
+cancer ,A
+carcinoma ,A
 cardiac,B
 carotid,B
+cerebral,A
 cervix,B
 chiari,B
-chronic,B
+chronic,C
+claudication ,A
 clot,B
 cognitive,B
 compression,B
 concussion,B
 congential,B
+critical,A
 ct,B
 cyst,B
 dementia,B
 demyelination,B
+dissection,A
 emblization,B
 encephalatis,B
+encephalitis,A
 fetal,B
 fibrocartilage,B
 fibroid,B
@@ -42,12 +58,17 @@ fistula,B
 fnh,B
 follow,B
 foot,B
+fracture,A
+fractures,A
 glomus,B
 gp,B
 head,B
 hemangioma,B
+hemorrhage,A
 hepatic,B
 hernia,B
+high,A
+high grade,A
 hip,B
 history,B
 hx,B
@@ -57,12 +78,20 @@ impingement,B
 implants,B
 inguinal,B
 injury,B
+intracranial,A
+intracranial abscess,A
+intracranial hemorrhage,A
+intracranial neoplasm,A
+intracranial vascular lesion,A
 invading,B
 invasion,B
+ischemia,A
+ischemic,A
 joint,B
 knee,B
 known,B
 labral,B
+lesion,A
 lipoma,B
 liver,B
 locked,B
@@ -76,24 +105,34 @@ metastatic,B
 mortens,B
 mra,B
 mrcp,B
-ms,B
+ms,A
 myelopathy,B
 nasophrayngeal,B
+necrosis ,A
+neoplasm,A
 neuritis,B
 neurodegenerative,B
 neurofibroma,B
 neuroma,B
 neuropathy,B
 new,B
+new breast cancer ,A
+occult fracture ,A
 operative,B
 optic,B
 orthopedic,B
 osteochondromas,B
+osteomyelitis,A
 pain,B
 pancoast,B
 pancreas,B
 PIT,B
+pituitari,A
 pituitary,B
+planning ,A
+pre-,A
+pre-op,A
+preoperative,A
 prolactic,B
 prostate,B
 pulsatile,B
@@ -104,33 +143,45 @@ rectal,B
 renal,B
 retrocochlear,B
 rheumatology,B
+rotat,A
+rotator,A
 rupture,B
+sarcoma,A
 sbft,B
 scaphoid,B
 sciatica,B
-seizure,B
-seizures,B
+seizur,A
+seizure,A
+seizures,A
 semi,B
 seminoma,B
 si,B
+slap,A
 spinal,B
 spine,B
 staging,B
 stealth,B
+stenosis,A
+stroke,A
 supraspinatus,B
+surgical,A
+surgical planning,A
 suspected,B
 syndrome,B
-syrinx,B
+syrinx,A
 tear,B
 tendon,B
 tfcc,B
+thrombosis,A
 thyroid,B
-tinnitus,B
+tinnitus ,A
 tissue,B
 tmj,B
 tumour,B
 uae,B
 ultrasound,B
 uterine,B
+vascular ,A
+venous,A
 workup,B
 wrist,B

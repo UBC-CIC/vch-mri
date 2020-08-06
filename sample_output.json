@@ -42,7 +42,7 @@
         ],
         "symptoms": [],
         "phrases": [
-            "x2 3x2x3 atrial mass"
+            "2x23x2x3 atrial mass"
         ],
         "other_info": []
     },
@@ -59,10 +59,9 @@
         ],
         "diagnosis": [
             "calcaneal foot pain",
-            "calcaneal tubercle calcaneal planar spurs",
+            "calcaneal tubercle calcaneal plantar spurs",
             "edema calcaneal fat",
-            "spur calcaneal fat",
-            "partial tearing planar"
+            "partial tearing plantar"
         ],
         "anatomy": [
             "mri",
@@ -71,7 +70,7 @@
         "symptoms": [],
         "phrases": [
             "calcaneal foot pain",
-            "no trauma tender cakcaneal and medical calcaneal tubercle calcaneal planar spurs",
+            "no trauma tender cakcaneal and medical calcaneal tubercle calcaneal plantar spurs",
             "edema",
             "partial tearing"
         ],
@@ -89,7 +88,6 @@
         "priority": "nan",
         "medical_condition": [],
         "diagnosis": [
-            "marian s syndrome",
             "chronic aortic dissection"
         ],
         "anatomy": [
@@ -114,7 +112,7 @@
         ],
         "diagnosis": [
             "lateral right posterior mass ankle",
-            "right tumor nerve sheath"
+            "nerve sheath tumor"
         ],
         "anatomy": [
             "ankle",
@@ -147,7 +145,7 @@
             "persistent pain"
         ],
         "phrases": [
-            "persistent pain"
+            "persistent pain rays"
         ],
         "other_info": []
     },
@@ -164,7 +162,7 @@
             "swelling"
         ],
         "diagnosis": [
-            "right ligament tear injury",
+            "ligament tear injury",
             "tenderness"
         ],
         "anatomy": [
@@ -173,11 +171,10 @@
         ],
         "symptoms": [],
         "phrases": [
+            "rio ligament tear injury",
             "st 2019 medical melleolar swelling"
         ],
-        "other_info": [
-            "right"
-        ]
+        "other_info": []
     },
     "7": {
         "CIO_ID": "145206",
@@ -202,8 +199,7 @@
             "hip pain"
         ],
         "other_info": [
-            "left",
-            "right"
+            "left"
         ]
     },
     "8": {
@@ -218,7 +214,9 @@
         "diagnosis": [],
         "anatomy": [
             "mri",
-            "hip"
+            "hip",
+            "labral tear",
+            "oa"
         ],
         "symptoms": [
             "left pain ip"
@@ -238,7 +236,7 @@
         "priority": "P4",
         "medical_condition": [],
         "diagnosis": [
-            "neuropathy planar nerves trial tunnel",
+            "neuropathy tarsal tunnel",
             "near mass soft tissue"
         ],
         "anatomy": [
@@ -248,7 +246,9 @@
         ],
         "symptoms": [],
         "phrases": [],
-        "other_info": []
+        "other_info": [
+            "query"
+        ]
     },
     "10": {
         "CIO_ID": "154721",
@@ -259,10 +259,12 @@
         "Preferred MRI Site": null,
         "priority": "P3",
         "medical_condition": [
-            "abnormality extensor tunnel"
+            "abnormality extensor tunnel",
+            "thickening extensor tunnel",
+            "soft tissue abnormally"
         ],
         "diagnosis": [
-            "right de guerlain s tenosynovitis"
+            "right de quervains tenosynovitis"
         ],
         "anatomy": [
             "mri",
@@ -273,7 +275,10 @@
             "pain"
         ],
         "phrases": [
-            "pain and limitation query"
+            "de quervains",
+            "pain and limitation query",
+            "thickening",
+            "soft tissue abnormally"
         ],
         "other_info": []
     },
@@ -316,7 +321,9 @@
         "priority": "P3",
         "medical_condition": [],
         "diagnosis": [
-            "supraspinatus subscapularis tears"
+            "supraspinatus \/ subscapularis tears",
+            "bicepital tendinitis",
+            "tendon retraction"
         ],
         "anatomy": [
             "shoulder"
@@ -324,7 +331,8 @@
         "symptoms": [],
         "phrases": [
             "shoulder dislocation",
-            "supraspinatus subscapularis tears"
+            "supraspinatus \/ subscapularis",
+            "bicepital"
         ],
         "other_info": []
     },
@@ -363,7 +371,7 @@
         "diagnosis": [
             "right acute shoulder pain",
             "injury",
-            "potato cuff tear",
+            "rotator cuff tear",
             "retraction"
         ],
         "anatomy": [
@@ -373,7 +381,8 @@
         "symptoms": [],
         "phrases": [
             "chronic right shoulder pain",
-            "injury"
+            "injury",
+            "rotator cuff"
         ],
         "other_info": [
             "history"
@@ -466,15 +475,17 @@
             "mass soft tissue"
         ],
         "diagnosis": [
-            "diploma",
-            "mass diploma"
+            "lipoma",
+            "mass lipoma"
         ],
         "anatomy": [
             "back",
             "shoulder"
         ],
         "symptoms": [],
-        "phrases": [],
+        "phrases": [
+            "soft tissue mass previous lipoma resections"
+        ],
         "other_info": []
     },
     "19": {
@@ -485,21 +496,26 @@
         "age": 0,
         "Preferred MRI Site": "UBCH",
         "priority": "P4",
-        "medical_condition": [],
+        "medical_condition": [
+            "left reduced rom"
+        ],
         "diagnosis": [],
         "anatomy": [
             "mri left shoulder mri arthrogram",
             "shoulder",
-            "shoulder"
+            "shoulder",
+            "labral injury",
+            "tear"
         ],
         "symptoms": [
-            "pain",
+            "ongoing pain",
             "restricted rom"
         ],
         "phrases": [
             "ongoing pain",
             "rom",
-            "left shoulder"
+            "us left shoulder",
+            "no rotator cuff tear"
         ],
         "other_info": []
     },
@@ -587,7 +603,7 @@
         "diagnosis": [
             "bilateral wrist pain",
             "quervains tendinitis",
-            "right wrist pain lunar sided",
+            "wrist pain lunar sided",
             "fcc injury"
         ],
         "anatomy": [
@@ -598,11 +614,10 @@
         "phrases": [
             "bilateral diffuse wrist pain",
             "de quervains tendinitis",
-            "sided wrist pain right"
+            "sided",
+            "wrist pain rio"
         ],
-        "other_info": [
-            "right"
-        ]
+        "other_info": []
     },
     "24": {
         "CIO_ID": "4eafd6ed-61a3-46df-b27f-b70cfa786876",
@@ -619,7 +634,8 @@
         ],
         "symptoms": [
             "right ankle pain",
-            "swelling"
+            "swelling",
+            "right limping"
         ],
         "phrases": [
             "right ankle pain"
@@ -689,12 +705,12 @@
         "priority": "P3",
         "medical_condition": [
             "deformity biceps",
-            "anterolateral anterior mass biceps shoulder",
-            "anterior pain shoulder shoulder",
-            "right anterior lump shoulder potato cuff"
+            "anterolateral anterior mass biceps shoulder shoulder",
+            "around anterior pain shoulder shoulder",
+            "anterior lump shoulder"
         ],
         "diagnosis": [
-            "potato cuff tear shoulder"
+            "rotator cuff tear biceps tendons"
         ],
         "anatomy": [
             "mri",
@@ -705,13 +721,10 @@
         ],
         "phrases": [
             "acute pain",
-            "biceps",
             "the anterior shoulder anterolateral shoulder pain pain",
-            "lump anterior shoulder right o full thickness potato cuff tear"
+            "lump anterior shoulder rio full thickness rotator cuff tear"
         ],
-        "other_info": [
-            "right"
-        ]
+        "other_info": []
     },
     "28": {
         "CIO_ID": "113048",
@@ -752,25 +765,24 @@
         "Preferred MRI Site": "UBCH",
         "priority": "P3",
         "medical_condition": [
-            "right top selling foot ankle",
-            "unable to fully weight bear",
+            "selling foot ankle"
+        ],
+        "diagnosis": [
             "ligaments damage"
         ],
-        "diagnosis": [],
         "anatomy": [
             "mri",
             "ankle",
             "foot"
         ],
         "symptoms": [
-            "pain"
+            "pain ankle"
         ],
         "phrases": [
-            "top",
             "her right ankle and foot right ankle inversion",
             "the entire foot and ankle",
             "pain",
-            "fully weight bear"
+            "damage"
         ],
         "other_info": [
             "right"
@@ -786,7 +798,8 @@
         "priority": "P4",
         "medical_condition": [],
         "diagnosis": [
-            "impingement pain"
+            "impingement",
+            "pain"
         ],
         "anatomy": [
             "shoulder"
@@ -839,7 +852,9 @@
             "mass",
             "the anteromedical elbow"
         ],
-        "other_info": []
+        "other_info": [
+            "query"
+        ]
     },
     "33": {
         "CIO_ID": "33b3171e-5e1a-4b5c-b332-a1b9c85bd684",
@@ -853,9 +868,9 @@
         "diagnosis": [
             "left injury shoulder",
             "left pain shoulder",
-            "potato cuff tears",
+            "rotator cuff tears",
             "labral tear",
-            "potato cuff tears"
+            "rotator cuff tears"
         ],
         "anatomy": [
             "arthrogram",
@@ -865,6 +880,7 @@
         "phrases": [
             "pain",
             "the left shoulder",
+            "small partial rotator cuff tears",
             "labral tear and status"
         ],
         "other_info": []
@@ -879,7 +895,7 @@
         "priority": "P4",
         "medical_condition": [],
         "diagnosis": [
-            "potato cuff lesion",
+            "rotator cuff lesion",
             "slap lesion"
         ],
         "anatomy": [
@@ -887,7 +903,9 @@
             "shoulder"
         ],
         "symptoms": [],
-        "phrases": [],
+        "phrases": [
+            "rotator cuff lesion"
+        ],
         "other_info": []
     },
     "35": {
@@ -926,8 +944,8 @@
         "medical_condition": [],
         "diagnosis": [
             "anterolateral chronic acute shoulder pain",
-            "right pacific potato cuff tendinopathy",
-            "potato cuff tear"
+            "pacific rotator cuff tendinopathy",
+            "rotator cuff tear"
         ],
         "anatomy": [
             "mri",
@@ -938,7 +956,6 @@
             "chronic tight anterolateral shoulder pain history"
         ],
         "other_info": [
-            "right",
             "history"
         ]
     },
@@ -974,7 +991,7 @@
         "priority": "P2",
         "medical_condition": [],
         "diagnosis": [
-            "left tumor shoulder maxilla"
+            "left tumor shoulder maxilla chest"
         ],
         "anatomy": [
             "shoulder",
@@ -982,7 +999,7 @@
         ],
         "symptoms": [],
         "phrases": [
-            "shoulder maxilla chest"
+            "shoulder \/ maxillae chest"
         ],
         "other_info": [
             "left"
@@ -999,7 +1016,7 @@
         "medical_condition": [],
         "diagnosis": [
             "right tinnitus",
-            "mengele s disease",
+            "meneses disease",
             "inc lesion",
             "optic nerve tumour"
         ],
@@ -1011,8 +1028,7 @@
             "vertigo"
         ],
         "phrases": [
-            "right tinnitus and vertigo probable mengele",
-            "disease",
+            "right tinnitus and vertigo probable meneses disease",
             "optic nerve tumour"
         ],
         "other_info": [
@@ -1034,7 +1050,8 @@
         ],
         "anatomy": [
             "mri brain epilepsy protocol",
-            "brain"
+            "brain",
+            "epilepsy"
         ],
         "symptoms": [],
         "phrases": [
@@ -1077,18 +1094,21 @@
         "Preferred MRI Site": "RH",
         "priority": "P2",
         "medical_condition": [
-            "left sided facial weakness",
+            "facial weakness",
             "hearing loss"
         ],
-        "diagnosis": [],
+        "diagnosis": [
+            "brainstem infarct"
+        ],
         "anatomy": [
             "mri brain",
-            "brain"
+            "brain",
+            "stroke"
         ],
         "symptoms": [],
         "phrases": [
-            "sided",
-            "facial weakness and hearing loss"
+            "left-sided facial weakness and hearing loss",
+            "indeterminate age query brainstem infarct"
         ],
         "other_info": []
     },
@@ -1135,7 +1155,9 @@
         ],
         "symptoms": [],
         "phrases": [],
-        "other_info": []
+        "other_info": [
+            "followup"
+        ]
     },
     "45": {
         "CIO_ID": "5ce97fa3-fd41-43b3-9439-cf6f8c5d566b",
@@ -1152,7 +1174,7 @@
             "tumor"
         ],
         "anatomy": [
-            "mri brain",
+            "mri brain summerhall",
             "brain"
         ],
         "symptoms": [],
@@ -1172,21 +1194,20 @@
         "priority": "P2",
         "medical_condition": [],
         "diagnosis": [
-            "right frontal mass",
-            "right stroke mass"
+            "frontal masson",
+            "headache",
+            "stroke mass"
         ],
         "anatomy": [
             "mri head",
             "head"
         ],
-        "symptoms": [
-            "headache"
-        ],
+        "symptoms": [],
         "phrases": [
-            "new headache"
+            "new headache rio stroke"
         ],
         "other_info": [
-            "right"
+            "stroke"
         ]
     },
     "47": {
@@ -1225,16 +1246,19 @@
         "medical_condition": [
             "lateral tear meniscus"
         ],
-        "diagnosis": [],
+        "diagnosis": [
+            "lateral pain joint"
+        ],
         "anatomy": [
             "mri",
             "knee"
         ],
         "symptoms": [
-            "lateral pain joint",
             "lateral swelling meniscus"
         ],
-        "phrases": [],
+        "phrases": [
+            "pain"
+        ],
         "other_info": []
     },
     "49": {
@@ -1267,8 +1291,8 @@
         "priority": "P4",
         "medical_condition": [],
         "diagnosis": [
-            "thoracic myopathy",
-            "right injury t1"
+            "thoracic myelopathy",
+            "injury t1"
         ],
         "anatomy": [
             "thoracic spine"
@@ -1276,7 +1300,7 @@
         "symptoms": [],
         "phrases": [],
         "other_info": [
-            "right"
+            "syrinx"
         ]
     },
     "51": {
@@ -1290,14 +1314,15 @@
         "medical_condition": [],
         "diagnosis": [
             "lumbar spinal stenosis",
-            "right disc extrusion t1 12"
+            "disc extrusion"
         ],
         "anatomy": [
             "thoracic spine"
         ],
         "symptoms": [],
         "phrases": [
-            "lumbar spinal stenosis mri bbc"
+            "lumbar spinal stenosis mri bbc",
+            "right n111 disc extrusion"
         ],
         "other_info": []
     },
@@ -1341,8 +1366,8 @@
             "knee"
         ],
         "other_info": [
-            "left",
-            "medical history"
+            "medical history",
+            "left"
         ]
     },
     "54": {
@@ -1361,7 +1386,9 @@
             "mri sella adrenal pelvis"
         ],
         "symptoms": [],
-        "phrases": [],
+        "phrases": [
+            "pituitary"
+        ],
         "other_info": []
     },
     "55": {
@@ -1412,8 +1439,10 @@
         "priority": "P4",
         "medical_condition": [],
         "diagnosis": [
-            "ankyloaing spondylitis",
-            "right gaseous abnormality"
+            "right wrist pain",
+            "ankylosing spondylitis",
+            "osseous abnormality",
+            "soft tissue abnormality"
         ],
         "anatomy": [
             "hand",
@@ -1422,11 +1451,12 @@
         ],
         "symptoms": [],
         "phrases": [
-            "ankyloaing spondylitis"
+            "nonspecific right wrist pain",
+            "osseous"
         ],
         "other_info": [
-            "right",
-            "medical history"
+            "medical history",
+            "right"
         ]
     },
     "58": {
@@ -1495,8 +1525,8 @@
             "bony tumour"
         ],
         "other_info": [
-            "left",
-            "history"
+            "history",
+            "left"
         ]
     },
     "61": {
@@ -1509,7 +1539,7 @@
         "priority": "P3",
         "medical_condition": [],
         "diagnosis": [
-            "marian s syndrome"
+            "marfan syndrome"
         ],
         "anatomy": [
             "mri of aorta chest abdomen",
@@ -1530,27 +1560,26 @@
         "Preferred MRI Site": null,
         "priority": "P4",
         "medical_condition": [
-            "parkinson walking",
-            "stooped posture"
+            "parkinson walking"
         ],
         "diagnosis": [
-            "x 1 week left acute hip pain",
+            "left acute hip pain",
             "left inferior anterior narrowing hip joint femoral head",
-            "inferior avascular necrosis hip joint femoral head"
+            "avascular necrosis femoral head"
         ],
         "anatomy": [
             "mri",
             "hip"
         ],
-        "symptoms": [],
+        "symptoms": [
+            "stooped posture"
+        ],
         "phrases": [
-            "left hip x ray dec",
+            "left hip ray dec",
             "left hip pain",
-            "1 week",
             "the left hip joint",
             "avascular necrosis",
-            "mri imaging",
-            "walker stooped posture"
+            "mri imaging"
         ],
         "other_info": [
             "history"
@@ -1591,7 +1620,9 @@
         ],
         "anatomy": [
             "knee",
-            "mri"
+            "mri",
+            "pain",
+            "walking difficulty"
         ],
         "symptoms": [],
         "phrases": [
@@ -1608,10 +1639,9 @@
         "age": 0,
         "Preferred MRI Site": "UBCH",
         "priority": "P4",
-        "medical_condition": [
-            "medial torn meniscus"
-        ],
+        "medical_condition": [],
         "diagnosis": [
+            "medial torn meniscus",
             "right acute lyme arthritis"
         ],
         "anatomy": [
@@ -1623,8 +1653,8 @@
             "acute lyme arthritis"
         ],
         "other_info": [
-            "right",
-            "medical history"
+            "medical history",
+            "right"
         ]
     },
     "66": {
@@ -1642,14 +1672,15 @@
         ],
         "anatomy": [
             "spine",
-            "lumbar rh vga",
-            "lumbar rh vga mri"
+            "lumbar",
+            "lumbar rh vghmri"
         ],
         "symptoms": [
-            "bowel bladder incontinence"
+            "bowel\/bladder incontinence"
         ],
         "phrases": [
-            "new bowel bladder incontinence known stenosis"
+            "new bowel\/bladder incontinence",
+            "stenosis"
         ],
         "other_info": []
     },
@@ -1683,15 +1714,18 @@
         "priority": "nan",
         "medical_condition": [],
         "diagnosis": [
-            "retroperitoneal cystic lesion",
+            "retroperitoneal cystic lesion sarcoma",
+            "renal cyst",
             "adrenal cyst"
         ],
         "anatomy": [
-            "mri abdomen pelvis",
-            "abdomen"
+            "mri abdomen\/pelvis"
         ],
         "symptoms": [],
-        "phrases": [],
+        "phrases": [
+            "renal cyst",
+            "adrenal cyst"
+        ],
         "other_info": []
     },
     "69": {
@@ -1705,6 +1739,7 @@
         "medical_condition": [],
         "diagnosis": [
             "right tumour intercostal space th and th rib",
+            "nerve sheath tumour",
             "lesion"
         ],
         "anatomy": [
@@ -1713,7 +1748,8 @@
         ],
         "symptoms": [],
         "phrases": [
-            "contrast enhanced mri"
+            "a nerve sheath tumour",
+            "contrastenhanced mri"
         ],
         "other_info": []
     },
@@ -1753,11 +1789,10 @@
             "hip"
         ],
         "symptoms": [
-            "pain hip groin hip buttocks"
+            "pain hip"
         ],
         "phrases": [
-            "significant pain hip",
-            "groin hip buttocks"
+            "significant pain hip"
         ],
         "other_info": []
     },
@@ -1776,11 +1811,10 @@
             "hip"
         ],
         "symptoms": [
-            "pain hip hip buttocks"
+            "pain hip"
         ],
         "phrases": [
-            "significant pain hip",
-            "groin hip buttocks"
+            "significant pain hip"
         ],
         "other_info": []
     },
@@ -1794,7 +1828,7 @@
         "priority": "P3",
         "medical_condition": [],
         "diagnosis": [
-            "left sided renal colic",
+            "renal colic",
             "left sided cyst",
             "kidney cyst"
         ],
@@ -1804,9 +1838,12 @@
         ],
         "symptoms": [],
         "phrases": [
-            "due kidney cyst other"
+            "recent renal colic mri",
+            "15 cm cyst query due kidney cyst query"
         ],
         "other_info": [
+            "query",
+            "followup",
             "left"
         ]
     },
@@ -1825,6 +1862,7 @@
         "anatomy": [
             "mri abdomen",
             "abdomen",
+            "abnormal liver",
             "liver",
             "pancreas",
             "ct"
@@ -1850,10 +1888,10 @@
         "anatomy": [
             "mri abdomen",
             "abdomen",
+            "abnormal liver",
             "liver",
             "pancreas",
-            "ct",
-            "wide bore facility"
+            "ct"
         ],
         "symptoms": [],
         "phrases": [
@@ -1909,7 +1947,7 @@
         "priority": "P2",
         "medical_condition": [],
         "diagnosis": [
-            "rt lesions pectoralis muscle"
+            "right lesions pectoralis muscle"
         ],
         "anatomy": [
             "mri rt chest",
@@ -1917,7 +1955,10 @@
         ],
         "symptoms": [],
         "phrases": [],
-        "other_info": []
+        "other_info": [
+            "query",
+            "right"
+        ]
     },
     "79": {
         "CIO_ID": "53772",
@@ -2046,19 +2087,20 @@
         "medical_condition": [],
         "diagnosis": [
             "luv pain",
+            "soft tissue abnormality",
             "pancreatic ca"
         ],
         "anatomy": [
-            "mri abdomen including pancreas contrast",
+            "mri abdomen including pancreas",
             "abdomen",
             "pancreas"
         ],
         "symptoms": [],
         "phrases": [
-            "pancreas right o"
+            "pancreas rio",
+            "soft tissue abnormality history"
         ],
         "other_info": [
-            "right",
             "history",
             "medical history"
         ]
@@ -2157,8 +2199,9 @@
             "colon cancer"
         ],
         "other_info": [
-            "right",
-            "medical history"
+            "followup",
+            "medical history",
+            "right"
         ]
     },
     "89": {
@@ -2196,7 +2239,7 @@
         "priority": "P2",
         "medical_condition": [],
         "diagnosis": [
-            "left lesions"
+            "lesions"
         ],
         "anatomy": [
             "spine",
@@ -2204,12 +2247,8 @@
             "lumbar mri"
         ],
         "symptoms": [],
-        "phrases": [
-            "spine contrast reassess"
-        ],
-        "other_info": [
-            "left"
-        ]
+        "phrases": [],
+        "other_info": []
     },
     "91": {
         "CIO_ID": "59c5baa5-f0ad-48f7-b547-51d8612630e8",
@@ -2313,8 +2352,8 @@
         "Preferred MRI Site": "VGH",
         "priority": "P1",
         "medical_condition": [
-            "upper left right weakness extremity",
-            "upper left right sensory change"
+            "upper left weakness extremity",
+            "upper left sensory change"
         ],
         "diagnosis": [],
         "anatomy": [
@@ -2326,8 +2365,7 @@
         "symptoms": [],
         "phrases": [],
         "other_info": [
-            "left",
-            "right"
+            "left"
         ]
     },
     "96": {
@@ -2348,7 +2386,9 @@
             "cranial nervesmra intracranial vessels"
         ],
         "symptoms": [],
-        "phrases": [],
+        "phrases": [
+            "hemifacial spasm"
+        ],
         "other_info": []
     },
     "97": {
@@ -2481,11 +2521,12 @@
         ],
         "phrases": [
             "neck pain",
-            "injury",
-            "intermittent weakness",
-            "physio and gabapentin radiculopathy"
+            "injury normal",
+            "left arm pain parasthesia",
+            "intermittent weakness"
         ],
         "other_info": [
+            "query",
             "history"
         ]
     },
@@ -2497,17 +2538,18 @@
         "age": 0,
         "Preferred MRI Site": null,
         "priority": "P4",
-        "medical_condition": [
-            "neurological symptoms"
+        "medical_condition": [],
+        "diagnosis": [
+            "x 2 years ongoing postconcussive syndrome"
         ],
-        "diagnosis": [],
         "anatomy": [
             "mri head",
             "head"
         ],
         "symptoms": [],
         "phrases": [
-            "neurological"
+            "ongoing postconcussive syndrome",
+            "2 years"
         ],
         "other_info": []
     },
@@ -2530,7 +2572,7 @@
         ],
         "symptoms": [],
         "phrases": [
-            "white matter lesions",
+            "follow-up white matter lesions",
             "demyelination report"
         ],
         "other_info": []
@@ -2553,7 +2595,9 @@
         ],
         "symptoms": [],
         "phrases": [],
-        "other_info": []
+        "other_info": [
+            "query"
+        ]
     },
     "106": {
         "CIO_ID": "d5c68df3-c340-4ece-85e8-c6c50f58853d",
@@ -2572,15 +2616,15 @@
             "head"
         ],
         "symptoms": [
-            "non specific symptoms",
             "headaches"
         ],
         "phrases": [
             "mri head known lupus",
-            "non specific symptoms",
             "headaches"
         ],
-        "other_info": []
+        "other_info": [
+            "followup"
+        ]
     },
     "107": {
         "CIO_ID": "c09f2bea-35fa-4560-a9b1-b30464c3555f",
@@ -2591,7 +2635,8 @@
         "Preferred MRI Site": null,
         "priority": "P3",
         "medical_condition": [
-            "diploma"
+            "diploma",
+            "dysarthria"
         ],
         "diagnosis": [
             "posterior lesion fossa"
@@ -2602,13 +2647,12 @@
         ],
         "symptoms": [
             "episodes headache",
-            "visual disturbance",
-            "dysarthria"
+            "visual disturbance"
         ],
         "phrases": [
             "headache",
             "diploma visual disturbance",
-            "dysarthria ct ca normal rule"
+            "dysarthria ct\/cta normal rule"
         ],
         "other_info": []
     },
@@ -2627,7 +2671,8 @@
         ],
         "anatomy": [
             "mri head dementia protocol",
-            "head"
+            "head",
+            "dementia"
         ],
         "symptoms": [],
         "phrases": [],
@@ -2674,7 +2719,7 @@
             "cerebral aneurysm"
         ],
         "anatomy": [
-            "mri head vga",
+            "mri head",
             "head"
         ],
         "symptoms": [],
@@ -2712,7 +2757,7 @@
         "medical_condition": [],
         "diagnosis": [
             "pituitary tumor",
-            "pituitary tumor",
+            "tumor",
             "kidney disease"
         ],
         "anatomy": [
@@ -2721,7 +2766,7 @@
         ],
         "symptoms": [],
         "phrases": [
-            "pituitary tumor head pituitary tumor",
+            "pituitary tumor headpituitary tumor",
             "kidney disease"
         ],
         "other_info": [
@@ -2786,9 +2831,11 @@
         "age": 0,
         "Preferred MRI Site": "VGH",
         "priority": "P3",
-        "medical_condition": [],
+        "medical_condition": [
+            "mass soft tissue"
+        ],
         "diagnosis": [
-            "diploma soft tissue"
+            "lipoma"
         ],
         "anatomy": [
             "hip"
@@ -2797,7 +2844,9 @@
         "phrases": [
             "soft tissue"
         ],
-        "other_info": []
+        "other_info": [
+            "query"
+        ]
     },
     "116": {
         "CIO_ID": "5473f40f-8c9c-4ad8-8d91-4be52e5c293c",
@@ -2817,9 +2866,7 @@
         ],
         "symptoms": [],
         "phrases": [],
-        "other_info": [
-            "right"
-        ]
+        "other_info": []
     },
     "117": {
         "CIO_ID": "40627a6b-f0a0-4c74-842c-041764dfbce6",
@@ -2864,8 +2911,7 @@
         ],
         "symptoms": [],
         "phrases": [
-            "oh poor ventricular function",
-            "january 2020previous mi"
+            "oh poor ventricular function"
         ],
         "other_info": []
     },
@@ -2881,7 +2927,7 @@
         "diagnosis": [
             "headaches",
             "parasthesia hand",
-            "right pulmonary sarcoidosis"
+            "pulmonary sarcoidosis"
         ],
         "anatomy": [
             "mri brain gad",
@@ -2889,10 +2935,10 @@
         ],
         "symptoms": [],
         "phrases": [
-            "new headaches"
+            "new headaches",
+            "sarcoidosis"
         ],
         "other_info": [
-            "right",
             "medical history"
         ]
     },
@@ -2914,9 +2960,7 @@
         ],
         "symptoms": [],
         "phrases": [],
-        "other_info": [
-            "right"
-        ]
+        "other_info": []
     },
     "121": {
         "CIO_ID": "9e2ed27d-19bd-4d5d-9dba-bd04f8e80cbe",
@@ -2960,7 +3004,9 @@
         ],
         "symptoms": [],
         "phrases": [],
-        "other_info": []
+        "other_info": [
+            "followup"
+        ]
     },
     "123": {
         "CIO_ID": "f75f6a8b-7063-4060-9797-80c756d87f91",
@@ -2974,7 +3020,8 @@
         "diagnosis": [],
         "anatomy": [
             "mri head",
-            "head"
+            "head",
+            "stroke"
         ],
         "symptoms": [],
         "phrases": [],
@@ -2990,7 +3037,7 @@
         "priority": "P3",
         "medical_condition": [],
         "diagnosis": [
-            "3 months right hemifacial spasm"
+            "right hemifacial spasm"
         ],
         "anatomy": [
             "mri brain with gad",
@@ -2998,11 +3045,9 @@
         ],
         "symptoms": [],
         "phrases": [
-            "3 months"
+            "newly developed right hemifacial spasm"
         ],
-        "other_info": [
-            "right"
-        ]
+        "other_info": []
     },
     "125": {
         "CIO_ID": "fb5396c4-074a-480b-b4af-b9807814221c",
@@ -3036,16 +3081,18 @@
         "priority": "P4",
         "medical_condition": [],
         "diagnosis": [
-            "lumbar radiculopathy",
+            "radiculopathy cervical\/lumbar",
+            "spondylitis",
             "spinal stenosis"
         ],
         "anatomy": [
-            "neck"
+            "neck",
+            "cervical radiculopathy"
         ],
         "symptoms": [
             "x 3 months pain neck shoulder",
             "left left pain neck trapezius arm",
-            "left left numb arm"
+            "left numb arm"
         ],
         "phrases": [
             "pain",
@@ -3088,11 +3135,13 @@
         "diagnosis": [],
         "anatomy": [
             "brain",
-            "c spine"
+            "spine"
         ],
         "symptoms": [],
         "phrases": [],
-        "other_info": []
+        "other_info": [
+            "query"
+        ]
     },
     "129": {
         "CIO_ID": "3ea48f42-43a4-493d-aa3d-67dcaff90f8b",
@@ -3105,7 +3154,7 @@
         "medical_condition": [],
         "diagnosis": [
             "bilateral spondylolysis",
-            "bilateral spondylolisthesis l5 s1",
+            "bilateral spondylolisthesis",
             "spondylolisthesis",
             "change in spondylolsis"
         ],
@@ -3116,7 +3165,6 @@
         "symptoms": [],
         "phrases": [
             "bilateral spondylolysis and grade i spondylolisthesis",
-            "l5 s1",
             "spondylolisthesis"
         ],
         "other_info": []
@@ -3132,8 +3180,8 @@
         "medical_condition": [],
         "diagnosis": [
             "acute relapse",
-            "6 weeks ago upper thoracic cord symptom",
-            "6 weeks ago lesion"
+            "upper thoracic cord symptom",
+            "lesion"
         ],
         "anatomy": [
             "mri c"
@@ -3141,7 +3189,7 @@
         "symptoms": [],
         "phrases": [
             "3 acute relapse",
-            "6 weeks"
+            "upper thoracic cord symptom onset"
         ],
         "other_info": []
     },
@@ -3155,8 +3203,8 @@
         "priority": "P3",
         "medical_condition": [],
         "diagnosis": [
-            "behind left soft tissue density renal him bladder",
-            "behind left cyst renal him mullein duct"
+            "left soft tissue density renal him",
+            "mullein duct cyst"
         ],
         "anatomy": [
             "mri",
@@ -3165,7 +3213,8 @@
         ],
         "symptoms": [],
         "phrases": [
-            "soft tissue density"
+            "soft tissue density",
+            "bladder"
         ],
         "other_info": []
     },
@@ -3180,7 +3229,7 @@
         "medical_condition": [],
         "diagnosis": [],
         "anatomy": [
-            "mri of abdomen liver",
+            "mri of abdomen\/liver",
             "abdomen",
             "liver"
         ],
@@ -3206,7 +3255,8 @@
         "anatomy": [
             "mri abdomen liver mass primovist protocol",
             "abdomen",
-            "liver"
+            "liver",
+            "liver mass"
         ],
         "symptoms": [],
         "phrases": [
@@ -3224,26 +3274,26 @@
         "Preferred MRI Site": null,
         "priority": "P4",
         "medical_condition": [
-            "right medial lt tenderness"
+            "medial left tenderness knee"
         ],
         "diagnosis": [
-            "medial lt medical injury"
+            "ongoing pain",
+            "medical injury"
         ],
         "anatomy": [
             "lt knee mri",
             "knee"
         ],
         "symptoms": [
-            "ongoing pain",
-            "medial lt swelling knee joint"
+            "medial left swelling knee"
         ],
         "phrases": [
             "ongoing pain",
-            "swelling",
-            "lt knee"
+            "left knee",
+            "medial"
         ],
         "other_info": [
-            "right"
+            "left"
         ]
     },
     "135": {
@@ -3271,7 +3321,9 @@
             "persistent pain",
             "patella"
         ],
-        "other_info": []
+        "other_info": [
+            "query"
+        ]
     },
     "136": {
         "CIO_ID": "83e8bf94-eda7-40e5-8394-71f965fbe50a",
@@ -3323,7 +3375,7 @@
             "new lumbar back pain",
             "significant scoliosis",
             "a fall",
-            "infection om spinal stenosis"
+            "infection\/om \/ spinal stenosis"
         ],
         "other_info": []
     },
@@ -3346,10 +3398,11 @@
         ],
         "symptoms": [],
         "phrases": [
-            "acl tear",
-            "meniscus"
+            "acl tear"
         ],
-        "other_info": []
+        "other_info": [
+            "query"
+        ]
     },
     "139": {
         "CIO_ID": "9a2051aa-d85a-4ca0-a4ac-cd91eb4dc39a",
@@ -3389,21 +3442,19 @@
         "priority": "P3",
         "medical_condition": [],
         "diagnosis": [
-            "c6 7 stenosis",
-            "ongoing myelomalacia",
+            "c\/o stenosis",
+            "myelomalacia",
             "stenosis"
         ],
         "anatomy": [
-            "mri c spine",
-            "c spine"
+            "mri spine",
+            "spine"
         ],
         "symptoms": [],
         "phrases": [
-            "c6 7 stenosis",
-            "ongoing"
+            "c\/o stenosis"
         ],
         "other_info": [
-            "right",
             "history"
         ]
     },
@@ -3417,7 +3468,7 @@
         "priority": "P4",
         "medical_condition": [],
         "diagnosis": [
-            "chronic lower back pain l4 l5",
+            "chronic lower back pain",
             "acute bony tenderness"
         ],
         "anatomy": [
@@ -3439,15 +3490,16 @@
         "Preferred MRI Site": null,
         "priority": "P1",
         "medical_condition": [
-            "right injury head neck"
+            "injury head"
         ],
         "diagnosis": [
-            "right injury neck arm"
+            "right neck injury"
         ],
         "anatomy": [
             "cervical spine"
         ],
         "symptoms": [
+            "right weak arm",
             "right numb arm"
         ],
         "phrases": [],
@@ -3461,11 +3513,11 @@
         "age": 0,
         "Preferred MRI Site": null,
         "priority": "P4",
-        "medical_condition": [
-            "bilateral right demyelination foot",
+        "medical_condition": [],
+        "diagnosis": [
+            "bilateral demyelination foot",
             "bilateral hand numbness"
         ],
-        "diagnosis": [],
         "anatomy": [
             "mri brain",
             "brain",
@@ -3473,12 +3525,8 @@
             "c spine"
         ],
         "symptoms": [],
-        "phrases": [
-            "bilateral"
-        ],
-        "other_info": [
-            "right"
-        ]
+        "phrases": [],
+        "other_info": []
     },
     "144": {
         "CIO_ID": "31596",
@@ -3547,6 +3595,7 @@
         "diagnosis": [
             "pregnant",
             "pain",
+            "elevated wbc mcburney",
             "appendicitis"
         ],
         "anatomy": [
@@ -3558,7 +3607,6 @@
             "2 day medical history rl pain"
         ],
         "other_info": [
-            "right",
             "medical history"
         ]
     },
@@ -3596,7 +3644,7 @@
         "Preferred MRI Site": null,
         "priority": "P4",
         "medical_condition": [
-            "chronic rt rupture",
+            "chronic right rupture",
             "retraction"
         ],
         "diagnosis": [],
@@ -3607,7 +3655,9 @@
         ],
         "symptoms": [],
         "phrases": [],
-        "other_info": []
+        "other_info": [
+            "right"
+        ]
     },
     "149": {
         "CIO_ID": "cc214a08-5cf4-4f51-8273-8651ce5e2f5e",
@@ -3620,7 +3670,7 @@
         "medical_condition": [],
         "diagnosis": [
             "ma",
-            "lumbar pain"
+            "continued lumbar pain"
         ],
         "anatomy": [
             "lumbar spine"
@@ -3641,14 +3691,14 @@
         "priority": "P4",
         "medical_condition": [],
         "diagnosis": [
-            "right foot drop"
+            "lower right foot drop"
         ],
         "anatomy": [
             "mri lumbar spine",
             "lumbar spine"
         ],
         "symptoms": [
-            "lower lateral right numbness l5 s1 foot leg"
+            "lower lateral right numbness foot leg"
         ],
         "phrases": [
             "right foot drop",
@@ -3675,11 +3725,9 @@
             "cervical spine urgent"
         ],
         "symptoms": [
-            "proximal bilateral muscle weakness",
-            "muscle weakness"
+            "proximal bilateral muscle weakness"
         ],
         "phrases": [
-            "bilateral proximal muscle weakness",
             "muscle weakness",
             "the myopathy ck"
         ],
@@ -3694,8 +3742,8 @@
         "Preferred MRI Site": "VGH",
         "priority": "nan",
         "medical_condition": [
-            "right pain",
-            "right tenderness"
+            "pain",
+            "tenderness"
         ],
         "diagnosis": [],
         "anatomy": [
@@ -3703,10 +3751,10 @@
             "abdomen mri"
         ],
         "symptoms": [],
-        "phrases": [],
-        "other_info": [
-            "right"
-        ]
+        "phrases": [
+            "rl pain tenderness"
+        ],
+        "other_info": []
     },
     "153": {
         "CIO_ID": "84284",
@@ -3719,7 +3767,7 @@
         "medical_condition": [],
         "diagnosis": [
             "distal left fracture ulna",
-            "ongoing pain"
+            "left pain wrist"
         ],
         "anatomy": [
             "mri",
@@ -3727,7 +3775,7 @@
         ],
         "symptoms": [],
         "phrases": [
-            "ongoing pain"
+            "left wrist"
         ],
         "other_info": []
     },
@@ -3906,6 +3954,7 @@
         "priority": "P4",
         "medical_condition": [],
         "diagnosis": [
+            "dorsal right wrist pain lunar aspect",
             "fcc tear",
             "scapholunate dissociation"
         ],
@@ -4002,7 +4051,7 @@
         "priority": "P3",
         "medical_condition": [],
         "diagnosis": [
-            "adjacent portal vein abnormality abdomen endometrial cavity"
+            "adjacent portal vein abnormality endometrial cavity"
         ],
         "anatomy": [
             "mri pelvis",
@@ -4145,8 +4194,8 @@
         "medical_condition": [],
         "diagnosis": [
             "left shoulder pain",
-            "potato cuff impingement",
-            "potato cuff tear"
+            "rotator cuff impingement",
+            "rotator cuff tear"
         ],
         "anatomy": [
             "mri",
@@ -4154,7 +4203,9 @@
         ],
         "symptoms": [],
         "phrases": [
-            "shoulder pain"
+            "shoulder pain",
+            "rotator cuff impingement",
+            "any full thickness rotator cuff tear"
         ],
         "other_info": []
     },
@@ -4170,8 +4221,9 @@
         "diagnosis": [
             "low left back pain",
             "ma",
-            "edema l4 5",
-            "disc injury l4 5"
+            "joint degeneration",
+            "edema",
+            "l4 disc injury"
         ],
         "anatomy": [
             "mri",
@@ -4179,7 +4231,7 @@
             "si joints"
         ],
         "symptoms": [
-            "left left sided joint pain"
+            "left joint pain"
         ],
         "phrases": [],
         "other_info": [
@@ -4195,11 +4247,11 @@
         "Preferred MRI Site": null,
         "priority": "P3",
         "medical_condition": [
-            "medial medial thinning collateral pigment area knee compartment"
+            "medial medial thinning collateral pigment area compartment"
         ],
         "diagnosis": [
             "medial medial around right knee pain collateral pigment area knee",
-            "medial medial meniscus injury collateral ligament",
+            "medial meniscus injury",
             "right medial injury collateral ligament knee"
         ],
         "anatomy": [
@@ -4210,10 +4262,12 @@
         "phrases": [
             "right knee pain",
             "knee",
-            "medial meniscus injury",
+            "query medial meniscus injury",
             "right knee"
         ],
-        "other_info": []
+        "other_info": [
+            "query"
+        ]
     },
     "173": {
         "CIO_ID": "56fd3c38-d3a5-47f8-aa71-9939b545bfde",
@@ -4225,15 +4279,19 @@
         "priority": "P2",
         "medical_condition": [],
         "diagnosis": [
-            "rt lesions pectoralis muscle"
+            "right lesions pectoralis muscle"
         ],
         "anatomy": [
             "mri rt chest",
             "chest"
         ],
         "symptoms": [],
-        "phrases": [],
-        "other_info": []
+        "phrases": [
+            "us ct chest"
+        ],
+        "other_info": [
+            "right"
+        ]
     },
     "174": {
         "CIO_ID": "6ecff7ab-9666-48f9-92b9-3f3f983f6c6a",
@@ -4251,8 +4309,9 @@
             "weight loss",
             "vertical gaze palsy",
             "supranuclear palsy",
-            "autoimmune paraneoplastic psp mimic",
-            "parkinson s"
+            "psp vs autoimmune",
+            "paraneoplastic psp mimic",
+            "parkinson"
         ],
         "anatomy": [
             "mri brain",
@@ -4263,9 +4322,7 @@
             "rapidly progressive parkinsonism weight loss",
             "vertical gaze",
             "toe",
-            "the left progressive supranuclear palsy psp",
-            "autoimmune paraneoplastic psp mimic",
-            "parkinson"
+            "the left progressive supranuclear palsy psp"
         ],
         "other_info": [
             "history"
@@ -4282,7 +4339,7 @@
         "medical_condition": [],
         "diagnosis": [
             "amnesia head",
-            "rt hyperdesk structure head parietal lobe developmental"
+            "right hyperdesk structure head parietal lobe developmental"
         ],
         "anatomy": [
             "head",
@@ -4294,7 +4351,8 @@
             "medical history dental delay ct head"
         ],
         "other_info": [
-            "medical history"
+            "medical history",
+            "right"
         ]
     },
     "176": {
@@ -4328,22 +4386,20 @@
         "Preferred MRI Site": null,
         "priority": "P4",
         "medical_condition": [
-            "parenthesis legs",
-            "right demyelination arms face"
+            "parenthesis legs"
         ],
-        "diagnosis": [],
+        "diagnosis": [
+            "demyelination"
+        ],
         "anatomy": [
             "mri brain",
             "brain"
         ],
         "symptoms": [],
         "phrases": [
-            "legs",
-            "arms"
+            "legs"
         ],
-        "other_info": [
-            "right"
-        ]
+        "other_info": []
     },
     "178": {
         "CIO_ID": "3b758034-a5fb-476b-be8e-3630688130b5",
@@ -4414,7 +4470,7 @@
             "pituitary microadenoma"
         ],
         "anatomy": [
-            "mri brain gad",
+            "mri brain \/ gad seller",
             "brain"
         ],
         "symptoms": [],
@@ -4469,7 +4525,9 @@
         "phrases": [
             "stroke protocol"
         ],
-        "other_info": []
+        "other_info": [
+            "stroke"
+        ]
     },
     "184": {
         "CIO_ID": "50afc8c5-690c-4737-a3c5-eed1d44c69eb",
@@ -4509,7 +4567,7 @@
         "priority": "P3",
         "medical_condition": [],
         "diagnosis": [
-            "right sciatica lb l4 5"
+            "right sca aneurysm"
         ],
         "anatomy": [
             "mri angiogram",
@@ -4518,9 +4576,11 @@
         ],
         "symptoms": [],
         "phrases": [
-            "right sciatica"
+            "right sca aneurysm"
         ],
-        "other_info": []
+        "other_info": [
+            "right"
+        ]
     },
     "186": {
         "CIO_ID": "6aa0b296-0d28-4d12-9cd3-f10fa7c3e042",
@@ -4555,16 +4615,12 @@
             "for 3 months pulsating tinnitus"
         ],
         "anatomy": [
-            "mri head non contrast",
+            "mri head noncontrast",
             "head"
         ],
         "symptoms": [],
-        "phrases": [
-            "3"
-        ],
-        "other_info": [
-            "right"
-        ]
+        "phrases": [],
+        "other_info": []
     },
     "188": {
         "CIO_ID": "c4183c77-c1a9-46c9-ba9e-4966de57f242",
@@ -4625,7 +4681,7 @@
             "right parietal vascular lesion"
         ],
         "anatomy": [
-            "mri brain gad",
+            "mri brain",
             "brain"
         ],
         "symptoms": [],
@@ -4644,7 +4700,7 @@
         "priority": "P4",
         "medical_condition": [],
         "diagnosis": [
-            "right diploma shoulder"
+            "right lipoma shoulder"
         ],
         "anatomy": [
             "mri",
@@ -4669,15 +4725,17 @@
         "priority": "U\/I",
         "medical_condition": [],
         "diagnosis": [
-            "left acoustic neurons",
+            "left acoustic neuroma",
             "facial palsy"
         ],
         "anatomy": [
             "mri brain fall",
-            "brain"
+            "brain",
+            "fall"
         ],
         "symptoms": [],
         "phrases": [
+            "acoustic neuroma",
             "facial palsy reassessment"
         ],
         "other_info": []
@@ -4758,17 +4816,18 @@
         "priority": "U\/I",
         "medical_condition": [],
         "diagnosis": [
-            "right acoustic neurons"
+            "right acoustic neuroma"
         ],
         "anatomy": [
-            "mri brain gad fall",
-            "brain"
+            "mri brain \/ gad fall",
+            "brain",
+            "fall"
         ],
         "symptoms": [],
-        "phrases": [],
-        "other_info": [
-            "followup"
-        ]
+        "phrases": [
+            "right acoustic neuroma"
+        ],
+        "other_info": []
     },
     "197": {
         "CIO_ID": "75137",
@@ -4780,7 +4839,7 @@
         "priority": "P4",
         "medical_condition": [],
         "diagnosis": [
-            "potato cuff tear"
+            "rotator cuff tear"
         ],
         "anatomy": [
             "mri",
@@ -4793,8 +4852,7 @@
         "phrases": [
             "severe pain",
             "reduced rom",
-            "shoulder rule",
-            "cuff"
+            "shoulder rule"
         ],
         "other_info": []
     },
@@ -4808,7 +4866,7 @@
         "priority": "P4",
         "medical_condition": [],
         "diagnosis": [
-            "transverse myelitis c spine",
+            "transverse myelitis",
             "lesions c spine"
         ],
         "anatomy": [
@@ -4831,10 +4889,10 @@
         "Preferred MRI Site": "RH",
         "priority": "P4",
         "medical_condition": [
-            "left reduced range of motion potato cuff shoulder"
+            "left reduced range of motion rotator cuff shoulder"
         ],
         "diagnosis": [
-            "left left tear potato cuff shoulder"
+            "left left tear rotator cuff shoulder"
         ],
         "anatomy": [
             "mri",
@@ -4842,6 +4900,7 @@
         ],
         "symptoms": [],
         "phrases": [
+            "rotator cuff",
             "shoulder pain",
             "range"
         ],
@@ -4856,7 +4915,8 @@
         "Preferred MRI Site": "RH",
         "priority": "P3",
         "medical_condition": [
-            "3 months healthy"
+            "3 months healthy",
+            "decreased romxray"
         ],
         "diagnosis": [
             "fcc injury",
@@ -4874,7 +4934,8 @@
         ],
         "phrases": [
             "3 months",
-            "wrist pain swelling"
+            "wrist pain swelling",
+            "injury"
         ],
         "other_info": []
     },
@@ -4919,8 +4980,7 @@
         "Preferred MRI Site": "VGH",
         "priority": "P4",
         "medical_condition": [
-            "laxity",
-            "limited rom"
+            "laxity"
         ],
         "diagnosis": [
             "ma",
@@ -4934,7 +4994,6 @@
         "phrases": [
             "laxity post ma",
             "shoulder weakness",
-            "limited rom concern",
             "torn labrum evaluation"
         ],
         "other_info": []
@@ -4959,7 +5018,7 @@
             "pain",
             "swelling calcareous",
             "lateral pain calcareous",
-            "lateral pain planar facial",
+            "lateral pain plantar facial",
             "pain"
         ],
         "phrases": [
@@ -4978,14 +5037,12 @@
         "age": 0,
         "Preferred MRI Site": "UBCH",
         "priority": "P3",
-        "medical_condition": [
-            "vertical bruising"
-        ],
+        "medical_condition": [],
         "diagnosis": [
             "right vertical licence tibia",
-            "vertical swelling tibia",
+            "vertical right swelling\/bruising ankle tibia",
             "tear interosseous connective tissue fibula tibia",
-            "right right pain"
+            "right pain"
         ],
         "anatomy": [
             "ankle"
@@ -4995,7 +5052,7 @@
         ],
         "phrases": [
             "right ankle",
-            "c o pain",
+            "pain",
             "activity previous triathletes ankle ache",
             "interosseous connective tissue",
             "the fibula and tibia exam pain"
@@ -5013,16 +5070,15 @@
         "Preferred MRI Site": "VGH",
         "priority": "P2",
         "medical_condition": [
-            "right mass soft tissue"
+            "mass soft tissue"
         ],
         "diagnosis": [],
         "anatomy": [
-            "chest wall"
+            "chest wall",
+            "chest wall mass"
         ],
         "symptoms": [],
         "phrases": [],
-        "other_info": [
-            "right"
-        ]
+        "other_info": []
     }
 }

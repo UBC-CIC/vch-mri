@@ -37,8 +37,8 @@ CREATE TABLE IF NOT EXISTS word_weights (
 );
 
 CREATE TABLE IF NOT EXISTS conjunctions (
-    key VARCHAR(8) PRIMARY KEY, 
-    val VARCHAR(16)
+    key VARCHAR(16) PRIMARY KEY, 
+    val VARCHAR(32)
 );
 
 CREATE TABLE IF NOT EXISTS spellchecker(
@@ -241,7 +241,7 @@ INSERT INTO mri_rules(body_part, info, priority, contrast) VALUES
 ('hip', 'Chronic Osteomyelitis', 'P2', TRUE),
 ('hip', 'Hip Query labral tear (arthrogram)', 'P4', TRUE),
 ('hip', 'Joint Injury', 'P4', FALSE),
-('hip', 'Labral tear query', 'P4', TRUE),
+('hip', 'Labral tear query (arthrogram)', 'P4', TRUE),
 ('hip', 'Metastatic workup', 'P3', TRUE), 
 ('hip', 'Primary sarcoma of bone or soft tissue', 'P2', TRUE), 
 ('hip', 'R/O occult fractures from ER: Hip', 'P2', FALSE), 
@@ -257,7 +257,7 @@ INSERT INTO mri_rules(body_part, info, priority, contrast) VALUES
 ('shoulder', 'Chronic Osteomyelitis', 'P2', TRUE),
 ('shoulder', 'Impingement', 'P4', FALSE),
 ('shoulder', 'Joint Injury (ie. labrum)', 'P4', FALSE),
-('shoulder', 'Labral tear query', 'P4', TRUE),
+('shoulder', 'Labral tear query (arthrogram)', 'P4', TRUE),
 ('shoulder', 'Metastatic workup', 'P3', TRUE), 
 ('shoulder', 'Primary sarcoma of bone or soft tissue', 'P2', TRUE), 
 ('shoulder', 'Rotator cuff query tear', 'P3', FALSE), 
@@ -329,12 +329,10 @@ UPDATE mri_rules
 SET bp_tk = to_tsvector(body_part);
 
 UPDATE mri_rules 
-SET arthro = TRUE
-WHERE info = 'Labral tear query';
+SET arthro = TRUE 
+WHERE info LIKE '%arthrogram%';
 
-\copy word_weights FROM 'C:\Users\jackhou\Documents\mri_project\mri_app\csv\a_keywords.csv' DELIMITER ',' CSV;
-\copy word_weights FROM 'C:\Users\jackhou\Documents\mri_project\mri_app\csv\b_keywords.csv' DELIMITER ',' CSV;
-\copy word_weights FROM 'C:\Users\jackhou\Documents\mri_project\mri_app\csv\connectors_keywords.csv' DELIMITER ',' CSV;
+\copy word_weights FROM 'C:\Users\jackhou\Documents\mri_project\mri_app\csv\wordweights.csv' DELIMITER ',' CSV;
 
 \copy spellchecker FROM 'C:\Users\jackhou\Documents\mri_project\mri_app\csv\spellchecker.csv' DELIMITER ',' CSV; 
 
@@ -345,12 +343,4 @@ CREATE INDEX info_weighted_idx
 ON mri_rules 
 USING GIN (info_weighted_tk);
 
-INSERT INTO conjunctions(key, val) VALUES
-('L', 'left'),
-('l', 'left'),
-('R', 'right'),
-('r', 'right'),
-('followup','followup'),
-('history','history'),
-('hx','medical history'),
-('?','query');
+\copy conjunctions FROM 'C:\Users\jackhou\Documents\mri_project\mri_app\csv\conjunctions.csv' DELIMITER ',' CSV;

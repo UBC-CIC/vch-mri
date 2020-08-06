@@ -84,26 +84,19 @@ def preProcessText(col):
     """
     Takes in a pandas.Series and preprocesses the text
     """
-    reponct = re.compile('[%s]' % re.escape(string.punctuation))
+    reponct = string.punctuation.replace("?","").replace("/","")
     rehtml = re.compile('<.*>')
-    extr = col.strip()
-    extr = re.sub(rehtml, '', col)
-    extr = re.sub(reponct, ' ', col)
-    extr = extr.replace('[^0-9a-zA-Z ]+', '')
-    extr = extr.replace('\s+', ' ')
-    extr = extr.lower()
+    extr = col.str.strip()
+    extr = extr.str.replace(rehtml, '', regex=True)
+    extr = extr.str.translate(str.maketrans('','',reponct))
+    extr = extr.str.replace('[^0-9a-zA-Z?/ ]+', '', regex=True)
+    extr = extr.str.replace('\s+', ' ', regex=True)
+    extr = extr.str.lower()
     return extr
 
 def checkSpelling(text: str):
-    words = spell.split_words(text)
+    words = text.split()
     return ' '.join([spell.correction(word) for word in words])
-
-def anatomySpelling(text: str):
-    words = spell.split_words(text)
-    word_list = []
-    for word in words:
-        word_list.append(spell.correction(word))
-    return ' '.join(word_list)
 
 def replace_conjunctions(conj_list, text: str, info_list): 
     temp_text = f' {text} '
@@ -263,10 +256,10 @@ def handler(event, context):
     key_phrases = []
     other_info = []
     # Parse the Exam Requested Column into Comprehend Medical to find Anatomy Entities
-    anatomy_json = find_all_entities(anatomySpelling(f'{data_df["Exam Requested"]}'))
+    anatomy_json = find_all_entities(checkSpelling(f'{data_df["Exam Requested"]}'))
     preprocessed_text = replace_conjunctions(conj_list,f'{data_df["Reason for Exam/Relevant Clinical History"]}',other_info)
     print("Text is: ", preprocessed_text)
-    for obj in list(filter(lambda info_list: info_list['Category'] == 'ANATOMY' or info_list['Category'] == 'TEST_TREATMENT_PROCEDURE', anatomy_json)):
+    for obj in list(filter(lambda info_list: info_list['Category'] == 'ANATOMY' or info_list['Category'] == 'TEST_TREATMENT_PROCEDURE' or info_list['Category'] == 'MEDICAL_CONDITION', anatomy_json)):
         anatomy_list.append(anatomy)
         # if(contains_word('hip',anatomy) or contains_word('knee', anatomy)):
         #     # apply comprehend to knee/hip column
