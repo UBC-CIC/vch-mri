@@ -84,6 +84,33 @@ Resources:
           - python3.6
         RetentionPolicy: Delete
 
+  QueryTable:
+    Type: AWS::Serverless::Function 
+    Properties:
+      CodeUri: ./lambdas/query_rules_table
+      Events:
+        ExplicitApi: # warning: creates a public endpoint
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref HttpApi
+            Method: Post
+            Path: /rules
+            TimeoutInMillis: 29000
+            PayloadFormatVersion: "2.0"
+            RouteSettings:
+              ThrottlingBurstLimit: 100
+      Layers: 
+        - !Ref Psycopg2Layer
+        - !Ref PostgresLayer
+      Policies:
+        - SSMParameterReadPolicy:
+            ParameterName: "mri-phsa*"
+      VpcConfig: 
+        SecurityGroupIds: 
+          - !Ref SecurityGroupId 
+        SubnetIds:
+          - !Ref PrivateSubnetID
+
   Preprocess:
     Type: AWS::Serverless::Function 
     Properties:
@@ -143,6 +170,8 @@ Outputs:
       Value: !GetAtt Preprocess.Arn
   RuleProcessing:
       Value: !GetAtt RuleProcessing.Arn
+  QueryTable:
+      Value: !GetAtt QueryTable.Arn
   HttpApiUrl:
       Description: URL of your API endpoint
       Value:

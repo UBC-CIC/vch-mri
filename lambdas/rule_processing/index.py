@@ -9,26 +9,27 @@ logger = logging.getLogger()
 logger.setLevel(logging.INFO)
     
 insert_cmd = """
-INSERT INTO data_results(id, info, init_priority) VALUES 
+INSERT INTO data_results(id, info, p5_check) VALUES 
 (%s, %s, %s)
 ON CONFLICT (id) DO UPDATE
 SET info = excluded.info, 
-init_priority = excluded.init_priority;
+p5_check = excluded.p5_check;
 """
 
 update_sys_priority = """
 UPDATE data_results
 SET sys_priority = %s
-WHERE id = '%s'; 
+WHERE id = %s; 
 """
 
 update_cmd = """
 UPDATE data_results 
-SET rules_id = r.id , sys_priority = r.priority
+SET rules_id = r.id , sys_priority = r.priority, contrast = r.contrast, arthro = r.arthro
 FROM mri_rules r WHERE r.id = (
 SELECT id
 FROM mri_rules, to_tsquery('ths_search','%s') query 
 WHERE info_weighted_tk @@ query
+AND active = 't'
 """
 
 update_cmd_end = """
@@ -66,7 +67,7 @@ def handler(event, context):
             # No anatomy found => sys_priority = P99
             try: 
                 logger.info("No anatomy found for CIO ID: ", v["CIO_ID"])
-                cur.execute(insert_cmd, (v["CIO_ID"], json.dumps(v), v["priority"]))
+                cur.execute(insert_cmd, (v["CIO_ID"], json.dumps(v), v["p5"]))
                 cur.execute(update_sys_priority, ('P99',v["CIO_ID"]))
             except psycopg2.IntegrityError:
                 logger.info("Exception: ", err)
@@ -75,13 +76,11 @@ def handler(event, context):
             info_str = searchText(v, "anatomy", "medical_condition", "diagnosis", "symptoms", "phrases", "other_info")
             command = (update_cmd % info_str) + anatomy_str + (update_cmd_end % v["CIO_ID"])
             try:
-                cur.execute(insert_cmd, (v["CIO_ID"], json.dumps(v), v["priority"]))
+                cur.execute(insert_cmd, (v["CIO_ID"], json.dumps(v), v["p5"]))
                 cur.execute(command)
                 ret = cur.fetchall() 
                 if not ret: 
                     cur.execute(update_sys_priority, ('P98', v["CIO_ID"]))
-                if v["priority"] == 'P5':
-                    cur.execute(update_sys_priority, (v["priority"], v["CIO_ID"]))
             except psycopg2.IntegrityError:                    
                 logger.info("Exception: ", err)
         # commit the changes

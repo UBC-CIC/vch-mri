@@ -21,18 +21,10 @@ lambda_client = boto3.client('lambda')
 
 RuleProcessingLambdaName = os.getenv('RULE_PROCESSING_LAMBDA')
 
-def queryTable(conn, table):
-    cmd = """
-    SELECT * FROM {}
-    """
-    with conn.cursor() as cur: 
-        cur.execute(sql.SQL(cmd).format(sql.Identifier(table)))
-        return cur.fetchall()
-
 spell = SpellChecker() 
 psql = postgresql.PostgreSQL()
-conj_list = queryTable(psql.conn, "conjunctions")
-spelling_list = [x[0] for x in queryTable(psql.conn, 'spellchecker')]
+conj_list = psql.queryTable("conjunctions")
+spelling_list = [x[0] for x in psql.queryTable('spellchecker')]
 psql.closeConn()
 # Add words to spell list 
 spell.word_frequency.load_words(spelling_list)
@@ -85,13 +77,12 @@ def preProcessText(col):
     Takes in a pandas.Series and preprocesses the text
     """
     reponct = string.punctuation.replace("?","").replace("/","")
-    rehtml = re.compile('<.*>')
-    extr = col.str.strip()
-    extr = extr.str.replace(rehtml, '', regex=True)
-    extr = extr.str.translate(str.maketrans('','',reponct))
-    extr = extr.str.replace('[^0-9a-zA-Z?/ ]+', '', regex=True)
-    extr = extr.str.replace('\s+', ' ', regex=True)
-    extr = extr.str.lower()
+    extr = col.strip()
+    extr = re.sub('<.*>', '', extr)
+    extr = extr.translate(str.maketrans('','',reponct))
+    extr = re.sub('[^0-9a-zA-Z?/ ]+', ' ', extr)
+    extr = re.sub('\s+', ' ', extr)
+    extr = extr.lower()
     return extr
 
 def checkSpelling(text: str):
@@ -129,18 +120,18 @@ def infer_icd10_cm(data: str, med_cond, diagnosis, symptoms):
     try:
         icd10_result = compr_m.infer_icd10_cm(Text=data)
         for resp in icd10_result['Entities']:
-            if resp['Score'] > 0.5:
+            if resp['Score'] > 0.4:
                 resp_str = resp['Text']
                 category = ''
                 # first check Attributes
                 for attr in resp['Attributes']:
-                    if attr['Score'] > 0.5:
+                    if attr['Score'] > 0.4:
                         if attr['Type'] == 'ACUITY' or attr['Type'] == 'DIRECTION':
                             resp_str = f'{attr["Text"]}' + ' ' + resp_str
                         elif attr['Type'] == 'SYSTEM_ORGAN_SITE':
                             resp_str = resp_str + ' ' + f'{attr["Text"]}'
                 for trait in resp['Traits']:
-                    if trait['Score'] > 0.5:
+                    if trait['Score'] > 0.4:
                         if trait['Name'] == 'NEGATION':
                             category = 'NEG'
                             break #don't save anything for negation
@@ -176,7 +167,7 @@ def find_key_phrases(data:str, key_phrases, icd10cm_list, anatomy_list):
         kp_result = compr.detect_key_phrases(Text=data, LanguageCode='en')
         for resp in kp_result['KeyPhrases']:
             placed = False
-            if resp['Score'] > 0.5:
+            if resp['Score'] > 0.4:
                 for icd10cm in icd10cm_list:
                     if contains_word(icd10cm, resp['Text']):
                         resp_str = checkSpelling(resp['Text'])
@@ -248,6 +239,7 @@ def handler(event, context):
     formatted_df['symptoms'] = ''
     formatted_df['phrases'] = ''
     formatted_df['other_info'] = ''
+    formatted_df['p5'] = 'f'
     
     anatomy_list = []
     medical_conditions = []
@@ -258,9 +250,11 @@ def handler(event, context):
     # Parse the Exam Requested Column into Comprehend Medical to find Anatomy Entities
     anatomy_json = find_all_entities(checkSpelling(f'{data_df["Exam Requested"]}'))
     preprocessed_text = replace_conjunctions(conj_list,f'{data_df["Reason for Exam/Relevant Clinical History"]}',other_info)
-    print("Text is: ", preprocessed_text)
-    for obj in list(filter(lambda info_list: info_list['Category'] == 'ANATOMY' or info_list['Category'] == 'TEST_TREATMENT_PROCEDURE' or info_list['Category'] == 'MEDICAL_CONDITION', anatomy_json)):
-        anatomy_list.append(anatomy)
+    for obj in anatomy_json: 
+        if obj['Category'] == 'ANATOMY' or obj['Category'] == 'TEST_TREATMENT_PROCEDURE' or obj['Category'] == 'MEDICAL_CONDITION':
+            anatomy_list.append(obj['Text'])
+        elif obj['Score'] > 0.4 and obj['Category'] == 'TIME_EXPRESSION' and obj['Type'] == 'TIME_TO_TEST_NAME':
+            formatted_df['p5'] = 't' 
         # if(contains_word('hip',anatomy) or contains_word('knee', anatomy)):
         #     # apply comprehend to knee/hip column
         #     formatted_df['Hip & Knee'][row] = find_entities(f'{data_df["Hip & Knee"][row]}')

@@ -7,6 +7,15 @@ DROP TABLE IF EXISTS word_weights;
 DROP TABLE IF EXISTS conjunctions; 
 DROP TABLE IF EXISTS spellchecker; 
 
+--timestamp function
+CREATE OR REPLACE FUNCTION trigger_set_timestamp()
+RETURNS TRIGGER AS $$
+BEGIN
+  NEW.updated_at = NOW();
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
 CREATE TABLE IF NOT EXISTS mri_rules ( 
     id SERIAL PRIMARY KEY, 
     body_part VARCHAR(32) NOT NULL, 
@@ -15,21 +24,31 @@ CREATE TABLE IF NOT EXISTS mri_rules (
     arthro BOOLEAN DEFAULT FALSE,
     info TEXT, 
     info_weighted_tk TSVECTOR, 
-    priority VARCHAR(3)
+    priority VARCHAR(3),
+    active BOOLEAN DEFAULT TRUE,
+    UNIQUE (body_part, info)
 ); 
 
 CREATE TABLE IF NOT EXISTS data_results ( 
     id VARCHAR(36) PRIMARY KEY, 
-    init_priority VARCHAR(3),
     info JSON NOT NULL, 
     rules_id INT, 
     sys_priority VARCHAR(3),
     contrast BOOLEAN,
     arthro BOOLEAN, 
+    p5_check BOOLEAN, 
     phys_priority VARCHAR(3),
     phys_contrast BOOLEAN,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     FOREIGN KEY (rules_id) REFERENCES mri_rules(id)
 ); 
+
+-- Trigger for data_results
+CREATE TRIGGER set_timestamp
+BEFORE UPDATE ON data_results
+FOR EACH ROW
+EXECUTE PROCEDURE trigger_set_timestamp();
 
 CREATE TABLE IF NOT EXISTS word_weights (
     word VARCHAR(32) PRIMARY KEY, 
@@ -63,7 +82,7 @@ INSERT INTO mri_rules(body_part, info, priority, contrast) VALUES
 ('abdomen', 'MRCP known', 'P4', TRUE),
 ('abdomen', 'Pancreas Cancer (rad review)', 'P3', TRUE),
 ('abdomen', 'Portal vein Thrombosis', 'RAD', TRUE),
-('abdomen', 'Renal Cancer  Follow up', 'P4', TRUE),
+('abdomen', 'Renal Cancer followup', 'P4', TRUE),
 ('abdomen', 'Renal Artery Stenosis', 'P4', TRUE),
 ('abdomen', 'Renal Cancer Query is semi', 'P3', TRUE),
 ('abdomen', 'SBFT  Chrohns (unless clinically Warrants sooner)', 'P4', TRUE),
@@ -82,7 +101,8 @@ INSERT INTO mri_rules(body_part, info, priority, contrast) VALUES
 ('angio', 'Screen Circle of Willis', 'P4', FALSE);
 
 INSERT INTO mri_rules(body_part, info, priority, contrast) VALUES 
-('aortic arch and branches', 'Aneurysm (confirmed, enlarging, Preop) F/U Routine)', 'RAD', TRUE),
+('aortic arch and branches', 'Aneurysm (confirmed, enlarging, Preop) Followup Routine)', 'RAD', TRUE),
+('aortic arch and branches', 'Aneurysm', 'P3', TRUE),
 ('aortic arch and branches', 'Coarctation', 'RAD', TRUE),
 ('aortic arch and branches', 'Vascular Abnormalities', 'RAD', TRUE);
 
@@ -91,15 +111,15 @@ INSERT INTO mri_rules(body_part, info, priority, contrast) VALUES
 ('brain / head', 'Acoustic neuroma Query ',  'P3', FALSE),
 ('brain / head', 'Acute stroke (CT preferred as initial investigation)',  'P1', FALSE),
 ('brain / head', 'Aneurysm (Initial)', 'P3', FALSE),
-('brain / head', 'Aneurysm (F/U or screening)', 'P4', FALSE),
+('brain / head', 'Aneurysm (followup or screening)', 'P4', FALSE),
 ('brain / head', 'Any acute hydrocephalus if MRI needed for RX planning (i.e. ventriculostomy)', 'P1', FALSE),
 ('brain / head', 'Arachnoid cyst ', 'P4', FALSE),
 ('brain / head', 'Arachnoiditis', 'P3', TRUE),
-('brain / head', 'Arteriovenus malformation (known P3/Screen)', 'P3', TRUE),
-('brain / head', 'Arteriovenus malformation (f/u)', 'P4', TRUE),
+('brain / head', 'Arteriovenous malformation', 'P3', TRUE),
+('brain / head', 'Arteriovenous malformation (followup)', 'P4', TRUE),
 ('brain / head', 'Asymmetric sensorineural hearing loss', 'P4', FALSE),
 ('brain / head', 'Ataxic gait', 'P4', FALSE),
-('brain / head', 'Cavernous Malformations (Screen or f/u)', 'P4', FALSE),
+('brain / head', 'Cavernous Malformations (Screen or followup)', 'P4', FALSE),
 ('brain / head', 'Characterization soft tissue mass likely benign (lipoma)', 'P3', TRUE),
 ('brain / head', 'Cognitive change', 'P4', FALSE),
 ('brain / head', 'Congenital brain/spine abnormality which is symptomatic', 'P3', FALSE),
@@ -107,17 +127,17 @@ INSERT INTO mri_rules(body_part, info, priority, contrast) VALUES
 ('brain / head', 'Demyelination (like MS, diagnosis)', 'P3', FALSE),
 ('brain / head', 'Grand Mal Seizures, History of', 'P4', FALSE),
 ('brain / head', 'Grand Mal Seizures, New ', 'P4', FALSE),
-('brain / head', 'Head venogram ? new clot benign intracranial hypertention (Tech/Rad review)', 'P2', TRUE),
+('brain / head', 'Head venogram query new clot benign intracranial hypertention (Tech or Rad review)', 'P2', TRUE),
 ('brain / head', 'Increased Prolactin level PIT)', 'P3', TRUE),
 ('brain / head', 'Intracranial hemorrhageassessment of underlying lesion', 'P1', FALSE),
 ('brain / head', 'Intracranial neoplasm further delineation of lesion seen on CT, or exclusion of additional metastatic lesion when surgery not immediately contemplated', 'P2', TRUE),
 ('brain / head', 'Ischemic optic Neuropathy', 'P3', FALSE),
 ('brain / head', 'Know Chiari malformations', 'P4', FALSE),
 ('brain / head', 'Know Chiari malformations with surgical decompressions (surgical work up P3)', 'P3', FALSE),
-('brain / head', 'Meningioma Follow up', 'P4', TRUE),
+('brain / head', 'Meningioma Followup', 'P4', TRUE),
 ('brain / head', 'Meningioma initial workup', 'P3', TRUE),
 ('brain / head', 'Metastatic workup', 'P3', TRUE),
-('brain / head', 'MS Follow up known, ? Query new lesion', 'P4', FALSE),
+('brain / head', 'MS Followup known, Query new lesion', 'P4', FALSE),
 ('brain / head', 'MS Rule out PML', 'P3', FALSE),
 ('brain / head', 'MS Initial diagnosis', 'P3', FALSE),
 ('brain / head', 'Neurodegenerative/ dementia', 'P4', FALSE),
@@ -142,17 +162,17 @@ INSERT INTO mri_rules(body_part, info, priority, contrast) VALUES
 ('brain / head', 'Suspected intracranial lesion', 'P4', FALSE),
 ('brain / head', 'Suspected intracranial venous thrombosis if CTA unavailable or unable to be performed', 'RAD', TRUE),
 ('brain / head', 'TMJ RJH only', 'P4', FALSE),
-('brain / head', 'TMJ (lockedthen semi urgent P3) RJH only', 'P3', FALSE);
+('brain / head', 'TMJ (locked then semi urgent P3) RJH only', 'P3', FALSE);
 
 INSERT INTO mri_rules(body_part, info, priority, contrast) VALUES 
 ('breast', 'Breast implants Usually looking for a leak', 'P4', TRUE),
-('breast', 'Breast residual/recurrent disease post Tx','P3', TRUE),
+('breast', 'Breast residual / recurrent disease post Tx','P3', TRUE),
 ('breast', 'Characterization soft tissue mass likely benign (lipoma)', 'P3', TRUE),
 ('breast', 'Metastatic workup', 'P3', TRUE),
 ('breast', 'Workup of new breast carcinoma', 'P2', TRUE);
 
 INSERT INTO mri_rules(body_part, info, priority, contrast) VALUES 
-('cardiac', 'cardiac ARVD', 'P2', TRUE),
+('cardiac', 'cardiac ARVD', 'P3', TRUE),
 ('cardiac', 'cardiac viability assessment or mass', 'P2', TRUE);
 
 INSERT INTO mri_rules(body_part, info, priority, contrast) VALUES 
@@ -167,11 +187,12 @@ INSERT INTO mri_rules(body_part, info, priority, contrast) VALUES
 ('neck', 'Characterization soft tissue masslikely benign (lipoma)', 'P3', TRUE),
 ('neck', 'Metastatic workup', 'P3', TRUE),
 ('neck', 'Skull base and nasopharyngeal tumours, for further localization and surgical planning', 'P2', TRUE),
-('neck', 'Staging of new cancer (thyroid)', 'P3', TRUE);
+('neck', 'Staging of new cancer (thyroid)', 'P3', TRUE),
+('neck / spine', 'Sciatica / radiculopathy', 'P4', FALSE);
 
 INSERT INTO mri_rules(body_part, info, priority, contrast) VALUES 
 ('pelvis', 'Anal Fistula', 'P4', FALSE), 
-('pelvis', 'Cervical cancer follow up', 'P4', TRUE), 
+('pelvis', 'Cervical cancer followup', 'P4', TRUE), 
 ('pelvis', 'Cervix Cancer staging', 'P3', FALSE), 
 ('pelvis', 'Fetal abnormality', 'P2', FALSE),
 ('pelvis', 'Fibroids', 'P4', FALSE), 
@@ -195,10 +216,10 @@ INSERT INTO mri_rules(body_part, info, priority, contrast) VALUES
 ('spine', 'Metastatic workup', 'P3', TRUE), 
 ('spine', 'Myelopathy', 'P2', FALSE), 
 ('spine', 'Neurofibroma', 'P3', TRUE),
-('spine', 'Neurofibromatosis (follow up)', 'P4', TRUE), 
+('spine', 'Neurofibromatosis (followup)', 'P4', TRUE), 
 ('spine', 'Preoperative evaluation of spinal cord neoplasm', 'P1', TRUE), 
 ('spine', 'Staging of new cancer', 'P3', TRUE), 
-('spine', 'Sciatica /radiculopathy', 'P4', FALSE), 
+('spine', 'Sciatica / radiculopathy', 'P4', FALSE), 
 ('spine', 'SI joints (rheumatology referral only)', 'P4', FALSE),
 ('spine', 'Spinal Stenosis (ordered by ortho)','P3', FALSE),
 ('spine', 'Spinal Stenosis (ordered by GP)', 'P4', FALSE),
@@ -207,7 +228,7 @@ INSERT INTO mri_rules(body_part, info, priority, contrast) VALUES
 ('spine', 'spine root compression poss mass', 'P3', TRUE), 
 ('spine', 'Suspicion of spinal osteomyelitis', 'P2', TRUE), 
 ('spine', 'Syrinx (query)', 'P3', FALSE),
-('spine', 'Syrinx (follow up)', 'P4', FALSE), 
+('spine', 'Syrinx (followup)', 'P4', FALSE), 
 ('spine', 'Urinary / bowel incontinence, HX that goes along with a Lumbar spine', 'P2', FALSE);
 
 INSERT INTO mri_rules(body_part, info, priority, contrast) VALUES
@@ -250,8 +271,8 @@ INSERT INTO mri_rules(body_part, info, priority, contrast) VALUES
 INSERT INTO mri_rules(body_part, info, priority, contrast) VALUES
 ('shoulder', 'Acute joint injury tendon rupture', 'P2', FALSE),
 ('shoulder', 'Acute osteomyelitis', 'P1', TRUE),
-('shoulder', 'Brachail plexus', 'P4', FALSE),
-('shoulder', 'Brachail plexus query tumor', 'P4', TRUE),
+('shoulder', 'Brachial plexus', 'P4', FALSE),
+('shoulder', 'Brachial plexus query tumor', 'P4', TRUE),
 ('shoulder', 'Characterization soft tissue mass, likely benign (lipoma)', 'P3', TRUE),
 ('shoulder', 'Chronic joint pain', 'P4', FALSE),
 ('shoulder', 'Chronic Osteomyelitis', 'P2', TRUE),

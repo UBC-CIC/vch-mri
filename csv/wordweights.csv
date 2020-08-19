@@ -1,9 +1,8 @@
 abnormalities,B
 abscess,A
 acl,B
-acute,A
-acute fracture,A
-adenoma ,B
+acute,B
+adenoma,B
 adrenal,B
 aneurysm,B
 angio,B
@@ -11,24 +10,22 @@ aortic,B
 appendix,A
 arachnoid,B
 arachnoiditis,B
-arteriovenus,B
+arteriovenous,A
 artery,B
-arthogram,B
 arthrogram,A
 arvd,B
 assessment,B
 assymetric,B
 ataxic,B
 atrophy,B
-avascular ,A
-avascular necrosis  ,A
+avascular,A
 avn,A
 benign,B
 bone,B
 bowel,B
 brain,B
-breast ,A
-cancer ,A
+breast,A
+cancer,A
 carcinoma ,A
 cardiac,B
 carotid,B
@@ -46,7 +43,7 @@ critical,A
 ct,B
 cyst,B
 dementia,B
-demyelination,B
+demyelination,A
 dissection,A
 emblization,B
 encephalatis,B
@@ -58,8 +55,7 @@ fistula,B
 fnh,B
 follow,B
 foot,B
-fracture,A
-fractures,A
+fracture,B
 glomus,B
 gp,B
 head,B
@@ -70,7 +66,7 @@ hernia,B
 high,A
 high grade,A
 hip,B
-history,B
+history,C
 hx,B
 hydrocephalus,B
 ica,B
@@ -79,10 +75,6 @@ implants,B
 inguinal,B
 injury,B
 intracranial,A
-intracranial abscess,A
-intracranial hemorrhage,A
-intracranial neoplasm,A
-intracranial vascular lesion,A
 invading,B
 invasion,B
 ischemia,A
@@ -115,9 +107,8 @@ neurodegenerative,B
 neurofibroma,B
 neuroma,B
 neuropathy,B
-new,B
-new breast cancer ,A
-occult fracture ,A
+new,C
+occult ,B
 operative,B
 optic,B
 orthopedic,B
@@ -125,12 +116,11 @@ osteochondromas,B
 osteomyelitis,A
 pain,B
 pancoast,B
-pancreas,B
+pancreas,A
 PIT,B
-pituitari,A
-pituitary,B
+pituitary,A
 planning ,A
-pre-,A
+pre-,B
 pre-op,A
 preoperative,A
 prolactic,B
@@ -150,9 +140,7 @@ sarcoma,A
 sbft,B
 scaphoid,B
 sciatica,B
-seizur,A
 seizure,A
-seizures,A
 semi,B
 seminoma,B
 si,B
@@ -165,7 +153,6 @@ stenosis,A
 stroke,A
 supraspinatus,B
 surgical,A
-surgical planning,A
 suspected,B
 syndrome,B
 syrinx,A
@@ -175,7 +162,7 @@ tfcc,B
 thrombosis,A
 thyroid,B
 tinnitus ,A
-tissue,B
+tissue,C
 tmj,B
 tumour,B
 uae,B

@@ -8,7 +8,9 @@ r,right
 R,right
 lt,left
 rt,right
-MRA,MRI Arthrogram / MR Angiogram
+cn6, cranial nerve
+mra,MRI Arthrogram / MR Angiogram
 stroke,stroke
 syrinx,syrinx
-MS,MS
+ms,MS
+rrms,MS
