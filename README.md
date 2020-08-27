@@ -30,6 +30,7 @@ aws ssm put-parameter --name /mri-phsa/dbserver_ec2 --value <host> --type Secure
 aws ssm put-parameter --name /mri-phsa/dbname_ec2 --value <database> --type SecureString --overwrite
 aws ssm put-parameter --name /mri-phsa/dbuser_ec2 --value <user> --type SecureString --overwrite
 aws ssm put-parameter --name /mri-phsa/dbpwd_ec2 --value <password> --type SecureString --overwrite
+aws ssm put-parameter --name /mri-phsa/ec2 --value <instance id> --type SecureString --overwrite
 ```
 
 ## Preprocessing
@@ -49,9 +50,10 @@ aws ssm put-parameter --name /mri-phsa/dbpwd_ec2 --value <password> --type Secur
 - Python Code used for lambda functions
 - To run the cloudformation code, use the following commands: 
 ```
-sam package --s3-bucket cic-mri-data-bucket-test --output-template-file out.yaml
-sam deploy --template-file out.yaml --capabilities CAPABILITY_IAM CAPABILITY_AUTO_EXPAND --stack-name mri-test-stack
+sam package --s3-bucket <s3 bucket name> --output-template-file out.yaml
+sam deploy --template-file out.yaml --capabilities CAPABILITY_IAM CAPABILITY_AUTO_EXPAND --stack-name <stack name>
 ```
+- For the Thesaurus Lambda, you will need to create a [Run Command called copyFile](copyFile.json) in AWS Systems Manager through the Console
 
 ## Rule Database Analysis
-- [Sample Result](/csv/mri_dataset_results_0730.xlsx): Form to P-Value Data (most recent)
+- [Sample Result](/csv/mri_dataset_results_0820.xlsx): Form to P-Value Data (most recent)

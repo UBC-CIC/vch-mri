@@ -7,6 +7,7 @@
         "age": 0,
         "Preferred MRI Site": "VGH",
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [
             "pain",
             "irregularity"
@@ -33,6 +34,7 @@
         "age": 0,
         "Preferred MRI Site": "VGH",
         "priority": "P3",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "mass"
@@ -54,6 +56,7 @@
         "age": 0,
         "Preferred MRI Site": "VGH",
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [
             "trauma"
         ],
@@ -86,6 +89,7 @@
         "age": 0,
         "Preferred MRI Site": "VGH",
         "priority": "nan",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "chronic aortic dissection"
@@ -107,6 +111,7 @@
         "age": 0,
         "Preferred MRI Site": "UBCH",
         "priority": "P3",
+        "p5": "f",
         "medical_condition": [
             "lateral right posterior mass ankle"
         ],
@@ -134,6 +139,7 @@
         "age": 0,
         "Preferred MRI Site": "RH",
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "ligaments injury"
@@ -157,6 +163,7 @@
         "age": 0,
         "Preferred MRI Site": "UBCH",
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [
             "swelling",
             "swelling"
@@ -184,6 +191,7 @@
         "age": 0,
         "Preferred MRI Site": "UBCH",
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "left hip pain",
@@ -210,6 +218,7 @@
         "age": 0,
         "Preferred MRI Site": null,
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [],
         "anatomy": [
@@ -234,6 +243,7 @@
         "age": 0,
         "Preferred MRI Site": "UBCH",
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "neuropathy tarsal tunnel",
@@ -258,6 +268,7 @@
         "age": 0,
         "Preferred MRI Site": null,
         "priority": "P3",
+        "p5": "f",
         "medical_condition": [
             "abnormality extensor tunnel",
             "thickening extensor tunnel",
@@ -290,6 +301,7 @@
         "age": 0,
         "Preferred MRI Site": "RH",
         "priority": "P3",
+        "p5": "f",
         "medical_condition": [
             "tenosynovitis"
         ],
@@ -319,6 +331,7 @@
         "age": 0,
         "Preferred MRI Site": "RH",
         "priority": "P3",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "supraspinatus \/ subscapularis tears",
@@ -344,6 +357,7 @@
         "age": 0,
         "Preferred MRI Site": "RH",
         "priority": "P3",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "right mass"
@@ -364,6 +378,7 @@
         "age": 0,
         "Preferred MRI Site": "RH",
         "priority": "P3",
+        "p5": "f",
         "medical_condition": [
             "tear",
             "atrophy"
@@ -396,6 +411,7 @@
         "age": 0,
         "Preferred MRI Site": "VGH",
         "priority": "P5",
+        "p5": "t",
         "medical_condition": [],
         "diagnosis": [
             "anterior nodule soft tissue mediastinum",
@@ -419,6 +435,7 @@
         "age": 0,
         "Preferred MRI Site": "UBCH",
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "persistent injury",
@@ -447,6 +464,7 @@
         "age": 0,
         "Preferred MRI Site": "UBCH",
         "priority": "P3",
+        "p5": "f",
         "medical_condition": [
             "swelling"
         ],
@@ -471,6 +489,7 @@
         "age": 0,
         "Preferred MRI Site": "VGH",
         "priority": "P3",
+        "p5": "f",
         "medical_condition": [
             "mass soft tissue"
         ],
@@ -496,6 +515,7 @@
         "age": 0,
         "Preferred MRI Site": "UBCH",
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [
             "left reduced rom"
         ],
@@ -527,6 +547,7 @@
         "age": 0,
         "Preferred MRI Site": "UBCH",
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "persistent 2 years ago workplace injury",
@@ -553,6 +574,7 @@
         "age": 0,
         "Preferred MRI Site": "RH",
         "priority": "P3",
+        "p5": "f",
         "medical_condition": [
             "right side adjacent abnormality pelvic area"
         ],
@@ -578,6 +600,7 @@
         "age": 0,
         "Preferred MRI Site": null,
         "priority": "P2",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "chronic renal insufficiency"
@@ -599,6 +622,7 @@
         "age": 0,
         "Preferred MRI Site": "UBCH",
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "bilateral wrist pain",
@@ -627,6 +651,7 @@
         "age": 0,
         "Preferred MRI Site": null,
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [],
         "anatomy": [
@@ -652,6 +677,7 @@
         "age": 0,
         "Preferred MRI Site": "UBCH",
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [
             "pain groin region"
         ],
@@ -668,7 +694,8 @@
             "2018 hip"
         ],
         "other_info": [
-            "right"
+            "right",
+            "MRI Arthrogram \/ MR Angiogram"
         ]
     },
     "26": {
@@ -679,6 +706,7 @@
         "age": 0,
         "Preferred MRI Site": "RH",
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "motor vehicle accident",
@@ -703,6 +731,7 @@
         "age": 0,
         "Preferred MRI Site": "RH",
         "priority": "P3",
+        "p5": "f",
         "medical_condition": [
             "deformity biceps",
             "anterolateral anterior mass biceps shoulder shoulder",
@@ -734,6 +763,7 @@
         "age": 0,
         "Preferred MRI Site": null,
         "priority": "P3",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "left foot pain",
@@ -764,6 +794,7 @@
         "age": 0,
         "Preferred MRI Site": "UBCH",
         "priority": "P3",
+        "p5": "f",
         "medical_condition": [
             "selling foot ankle"
         ],
@@ -796,6 +827,7 @@
         "age": 0,
         "Preferred MRI Site": null,
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "impingement",
@@ -816,6 +848,7 @@
         "age": 0,
         "Preferred MRI Site": "UBCH",
         "priority": "P3",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "medial chronic repetitive sprain"
@@ -836,6 +869,7 @@
         "age": 0,
         "Preferred MRI Site": null,
         "priority": "P3",
+        "p5": "f",
         "medical_condition": [
             "swelling",
             "mass anteromedical elbow"
@@ -864,6 +898,7 @@
         "age": 0,
         "Preferred MRI Site": "UBCH",
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "left injury shoulder",
@@ -893,6 +928,7 @@
         "age": 0,
         "Preferred MRI Site": "UBCH",
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "rotator cuff lesion",
@@ -916,6 +952,7 @@
         "age": 0,
         "Preferred MRI Site": null,
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "left rupture long head biceps tendon"
@@ -941,6 +978,7 @@
         "age": 0,
         "Preferred MRI Site": "RH",
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "anterolateral chronic acute shoulder pain",
@@ -967,6 +1005,7 @@
         "age": 0,
         "Preferred MRI Site": "UBCH",
         "priority": "P3",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "right frontal lesion"
@@ -989,6 +1028,7 @@
         "age": 0,
         "Preferred MRI Site": "VGH",
         "priority": "P2",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "left tumor shoulder maxilla chest"
@@ -1013,6 +1053,7 @@
         "age": 0,
         "Preferred MRI Site": "VGH",
         "priority": "P3",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "right tinnitus",
@@ -1043,6 +1084,7 @@
         "age": 0,
         "Preferred MRI Site": "VGH",
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "partial sz",
@@ -1069,6 +1111,7 @@
         "age": 0,
         "Preferred MRI Site": "RH",
         "priority": "P4",
+        "p5": "t",
         "medical_condition": [],
         "diagnosis": [
             "infection",
@@ -1093,6 +1136,7 @@
         "age": 0,
         "Preferred MRI Site": "RH",
         "priority": "P2",
+        "p5": "f",
         "medical_condition": [
             "facial weakness",
             "hearing loss"
@@ -1120,11 +1164,12 @@
         "age": 0,
         "Preferred MRI Site": "VGH",
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "hearing loss",
             "white matter changes",
-            "demylinating disease"
+            "demyelinating disease"
         ],
         "anatomy": [
             "mri brain",
@@ -1145,12 +1190,13 @@
         "age": 0,
         "Preferred MRI Site": "VGH",
         "priority": "P5",
+        "p5": "t",
         "medical_condition": [],
         "diagnosis": [
             "pituitary microadenoma"
         ],
         "anatomy": [
-            "mri brain",
+            "mri brain plus minus sellar views spring\/summer",
             "brain"
         ],
         "symptoms": [],
@@ -1167,6 +1213,7 @@
         "age": 0,
         "Preferred MRI Site": "VGH",
         "priority": "P5",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "perisellar epidermoid",
@@ -1192,6 +1239,7 @@
         "age": 0,
         "Preferred MRI Site": "VGH",
         "priority": "P2",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "frontal masson",
@@ -1218,6 +1266,7 @@
         "age": 0,
         "Preferred MRI Site": "VGH",
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "focal epilepsy",
@@ -1243,6 +1292,7 @@
         "age": 0,
         "Preferred MRI Site": "VGH",
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [
             "lateral tear meniscus"
         ],
@@ -1269,6 +1319,7 @@
         "age": 0,
         "Preferred MRI Site": "RH",
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "left slap lesion shoulder"
@@ -1289,6 +1340,7 @@
         "age": 0,
         "Preferred MRI Site": "UBCH",
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "thoracic myelopathy",
@@ -1311,6 +1363,7 @@
         "age": 0,
         "Preferred MRI Site": "UBCH",
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "lumbar spinal stenosis",
@@ -1334,6 +1387,7 @@
         "age": 0,
         "Preferred MRI Site": null,
         "priority": "P3",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [],
         "anatomy": [
@@ -1352,6 +1406,7 @@
         "age": 0,
         "Preferred MRI Site": null,
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [
             "left knee locking"
         ],
@@ -1378,6 +1433,7 @@
         "age": 0,
         "Preferred MRI Site": null,
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "pituitary or adrenal or ovarian mass"
@@ -1399,6 +1455,7 @@
         "age": 0,
         "Preferred MRI Site": null,
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [],
         "anatomy": [
@@ -1419,6 +1476,7 @@
         "age": 0,
         "Preferred MRI Site": null,
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [],
         "anatomy": [
@@ -1437,6 +1495,7 @@
         "age": 0,
         "Preferred MRI Site": null,
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "right wrist pain",
@@ -1467,6 +1526,7 @@
         "age": 0,
         "Preferred MRI Site": "UBCH",
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "adrenal gland nodules"
@@ -1487,6 +1547,7 @@
         "age": 0,
         "Preferred MRI Site": "VGH",
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "distal fcc tear",
@@ -1509,6 +1570,7 @@
         "age": 0,
         "Preferred MRI Site": "RH",
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "left joint pain",
@@ -1537,6 +1599,7 @@
         "age": 0,
         "Preferred MRI Site": null,
         "priority": "P3",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "marfan syndrome"
@@ -1559,6 +1622,7 @@
         "age": 0,
         "Preferred MRI Site": null,
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [
             "parkinson walking"
         ],
@@ -1593,6 +1657,7 @@
         "age": 0,
         "Preferred MRI Site": null,
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [],
         "anatomy": [
@@ -1611,6 +1676,7 @@
         "age": 0,
         "Preferred MRI Site": null,
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [
             "fell foot",
             "torn cartilage"
@@ -1639,6 +1705,7 @@
         "age": 0,
         "Preferred MRI Site": "UBCH",
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "medial torn meniscus",
@@ -1665,6 +1732,7 @@
         "age": 0,
         "Preferred MRI Site": "VGH",
         "priority": "P1",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "stenosis",
@@ -1692,6 +1760,7 @@
         "age": 0,
         "Preferred MRI Site": "RH",
         "priority": "nan",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "medical tear"
@@ -1712,6 +1781,7 @@
         "age": 0,
         "Preferred MRI Site": "VGH",
         "priority": "nan",
+        "p5": "t",
         "medical_condition": [],
         "diagnosis": [
             "retroperitoneal cystic lesion sarcoma",
@@ -1736,6 +1806,7 @@
         "age": 0,
         "Preferred MRI Site": null,
         "priority": "P2",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "right tumour intercostal space th and th rib",
@@ -1761,6 +1832,7 @@
         "age": 0,
         "Preferred MRI Site": "UBCH",
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "chronic knee pain"
@@ -1782,6 +1854,7 @@
         "age": 0,
         "Preferred MRI Site": null,
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [],
         "anatomy": [
@@ -1804,6 +1877,7 @@
         "age": 0,
         "Preferred MRI Site": null,
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [],
         "anatomy": [
@@ -1826,6 +1900,7 @@
         "age": 0,
         "Preferred MRI Site": "VGH",
         "priority": "P3",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "renal colic",
@@ -1855,6 +1930,7 @@
         "age": 0,
         "Preferred MRI Site": "VGH",
         "priority": "P3",
+        "p5": "t",
         "medical_condition": [
             "abnormal appearing liver"
         ],
@@ -1883,6 +1959,7 @@
         "age": 0,
         "Preferred MRI Site": "VGH",
         "priority": "P3",
+        "p5": "t",
         "medical_condition": [],
         "diagnosis": [],
         "anatomy": [
@@ -1908,6 +1985,7 @@
         "age": 0,
         "Preferred MRI Site": null,
         "priority": "P2",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "pancreatic tail lesion"
@@ -1927,6 +2005,7 @@
         "age": 0,
         "Preferred MRI Site": null,
         "priority": "P2",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [],
         "anatomy": [
@@ -1945,6 +2024,7 @@
         "age": 0,
         "Preferred MRI Site": null,
         "priority": "P2",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "right lesions pectoralis muscle"
@@ -1968,6 +2048,7 @@
         "age": 0,
         "Preferred MRI Site": "VGH",
         "priority": "P3",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "lesions hepatic space"
@@ -1990,6 +2071,7 @@
         "age": 0,
         "Preferred MRI Site": "VGH",
         "priority": "P3",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "lesions hepatic space"
@@ -2012,6 +2094,7 @@
         "age": 0,
         "Preferred MRI Site": "VGH",
         "priority": "P2",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [],
         "anatomy": [
@@ -2030,6 +2113,7 @@
         "age": 0,
         "Preferred MRI Site": "VGH",
         "priority": "P3",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "renal cell carcinoma"
@@ -2054,6 +2138,7 @@
         "age": 0,
         "Preferred MRI Site": "VGH",
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "right lesion pancreas adrenal gland",
@@ -2084,6 +2169,7 @@
         "age": 0,
         "Preferred MRI Site": "VGH",
         "priority": "P2",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "luv pain",
@@ -2113,6 +2199,7 @@
         "age": 0,
         "Preferred MRI Site": "VGH",
         "priority": "P2",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "aortic aneurysm"
@@ -2134,6 +2221,7 @@
         "age": 0,
         "Preferred MRI Site": "VGH",
         "priority": "P3",
+        "p5": "f",
         "medical_condition": [
             "lesion spleen"
         ],
@@ -2159,6 +2247,7 @@
         "age": 0,
         "Preferred MRI Site": "VGH",
         "priority": "P3",
+        "p5": "t",
         "medical_condition": [],
         "diagnosis": [],
         "anatomy": [
@@ -2177,6 +2266,7 @@
         "age": 0,
         "Preferred MRI Site": "VGH",
         "priority": "P2",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "renal cancer",
@@ -2212,6 +2302,7 @@
         "age": 0,
         "Preferred MRI Site": "UBCH",
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "intermittent right sciatica",
@@ -2237,6 +2328,7 @@
         "age": 0,
         "Preferred MRI Site": "VGH",
         "priority": "P2",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "lesions"
@@ -2258,6 +2350,7 @@
         "age": 0,
         "Preferred MRI Site": "VGH",
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "acute inflammatory activity"
@@ -2270,7 +2363,9 @@
         "phrases": [
             "acute inflammatory activity"
         ],
-        "other_info": []
+        "other_info": [
+            "MS"
+        ]
     },
     "92": {
         "CIO_ID": "f5b18fee-f7dd-4406-b9d9-495ab9531ed1",
@@ -2280,6 +2375,7 @@
         "age": 0,
         "Preferred MRI Site": "VGH",
         "priority": "U\/I",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "venous malformation"
@@ -2302,6 +2398,7 @@
         "age": 0,
         "Preferred MRI Site": "VGH",
         "priority": "U\/I",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "colorectal cancer",
@@ -2313,7 +2410,7 @@
         ],
         "symptoms": [],
         "phrases": [
-            "lymphoma metastatic colorectal cancer delirium nod ct head"
+            "lymphoma metastatic colorectal cancer delirium nyd ct head"
         ],
         "other_info": [
             "history"
@@ -2327,6 +2424,7 @@
         "age": 0,
         "Preferred MRI Site": "VGH",
         "priority": "U\/I",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "optic neuropathy",
@@ -2339,9 +2437,11 @@
         ],
         "symptoms": [],
         "phrases": [
-            "optic neuropathy out"
+            "optic neuropathy"
         ],
-        "other_info": []
+        "other_info": [
+            "medical history"
+        ]
     },
     "95": {
         "CIO_ID": "ecf56fee-27f7-4aed-a140-502919802e41",
@@ -2351,11 +2451,14 @@
         "age": 0,
         "Preferred MRI Site": "VGH",
         "priority": "P1",
+        "p5": "f",
         "medical_condition": [
-            "upper left weakness extremity",
-            "upper left sensory change"
+            "upper left acute weakness extremity",
+            "upper left acute sensory change"
         ],
-        "diagnosis": [],
+        "diagnosis": [
+            "upper left stroke"
+        ],
         "anatomy": [
             "spine",
             "cervical",
@@ -2365,7 +2468,8 @@
         "symptoms": [],
         "phrases": [],
         "other_info": [
-            "left"
+            "left",
+            "stroke"
         ]
     },
     "96": {
@@ -2376,6 +2480,7 @@
         "age": 0,
         "Preferred MRI Site": "VGH",
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "left hemifacial spasm"
@@ -2383,13 +2488,15 @@
         "anatomy": [
             "mri brain",
             "brain",
-            "cranial nervesmra intracranial vessels"
+            "cranial nerves",
+            "mra",
+            "intracranial vessels"
         ],
         "symptoms": [],
-        "phrases": [
-            "hemifacial spasm"
-        ],
-        "other_info": []
+        "phrases": [],
+        "other_info": [
+            "query"
+        ]
     },
     "97": {
         "CIO_ID": "66004ccd-9f40-4063-b3e7-e71b46d1e87e",
@@ -2399,6 +2506,7 @@
         "age": 0,
         "Preferred MRI Site": "VGH",
         "priority": "P3",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [],
         "anatomy": [
@@ -2420,6 +2528,7 @@
         "age": 0,
         "Preferred MRI Site": "VGH",
         "priority": "P3",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [],
         "anatomy": [
@@ -2441,6 +2550,7 @@
         "age": 0,
         "Preferred MRI Site": "RH",
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [],
         "anatomy": [
@@ -2464,6 +2574,7 @@
         "age": 0,
         "Preferred MRI Site": "VGH",
         "priority": "P3",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [],
         "anatomy": [
@@ -2484,6 +2595,7 @@
         "age": 0,
         "Preferred MRI Site": "VGH",
         "priority": "U\/I",
+        "p5": "f",
         "medical_condition": [
             "lesions"
         ],
@@ -2493,7 +2605,9 @@
         ],
         "symptoms": [],
         "phrases": [],
-        "other_info": []
+        "other_info": [
+            "MS"
+        ]
     },
     "102": {
         "CIO_ID": "2e97a0f5-112b-4de3-b901-357c42f33887",
@@ -2503,6 +2617,7 @@
         "age": 0,
         "Preferred MRI Site": null,
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "neck pain",
@@ -2538,6 +2653,7 @@
         "age": 0,
         "Preferred MRI Site": null,
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "x 2 years ongoing postconcussive syndrome"
@@ -2561,6 +2677,7 @@
         "age": 0,
         "Preferred MRI Site": null,
         "priority": "P5",
+        "p5": "t",
         "medical_condition": [],
         "diagnosis": [
             "lesions",
@@ -2585,6 +2702,7 @@
         "age": 0,
         "Preferred MRI Site": null,
         "priority": "P5",
+        "p5": "t",
         "medical_condition": [],
         "diagnosis": [
             "atom aneurysm"
@@ -2607,6 +2725,7 @@
         "age": 0,
         "Preferred MRI Site": null,
         "priority": "P5",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "lupus"
@@ -2634,8 +2753,9 @@
         "age": 0,
         "Preferred MRI Site": null,
         "priority": "P3",
+        "p5": "f",
         "medical_condition": [
-            "diploma",
+            "diplopia",
             "dysarthria"
         ],
         "diagnosis": [
@@ -2651,7 +2771,7 @@
         ],
         "phrases": [
             "headache",
-            "diploma visual disturbance",
+            "diplopia visual disturbance",
             "dysarthria ct\/cta normal rule"
         ],
         "other_info": []
@@ -2664,6 +2784,7 @@
         "age": 0,
         "Preferred MRI Site": null,
         "priority": "P3",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "hiv",
@@ -2686,6 +2807,7 @@
         "age": 0,
         "Preferred MRI Site": "VGH",
         "priority": "P3",
+        "p5": "t",
         "medical_condition": [],
         "diagnosis": [
             "lupus",
@@ -2714,16 +2836,20 @@
         "age": 0,
         "Preferred MRI Site": "VGH",
         "priority": "P2",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
+            "headaches",
             "cerebral aneurysm"
         ],
         "anatomy": [
-            "mri head",
+            "mri head vga",
             "head"
         ],
         "symptoms": [],
-        "phrases": [],
+        "phrases": [
+            "daily headaches"
+        ],
         "other_info": []
     },
     "111": {
@@ -2734,16 +2860,19 @@
         "age": 0,
         "Preferred MRI Site": "VGH",
         "priority": "P3",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
-            "seller mass brain"
+            "sellar mass brain"
         ],
         "anatomy": [
             "head",
             "head mri"
         ],
         "symptoms": [],
-        "phrases": [],
+        "phrases": [
+            "sellar mass"
+        ],
         "other_info": []
     },
     "112": {
@@ -2754,10 +2883,11 @@
         "age": 0,
         "Preferred MRI Site": "VGH",
         "priority": "P3",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "pituitary tumor",
-            "tumor",
+            "pituitary tumor",
             "kidney disease"
         ],
         "anatomy": [
@@ -2766,7 +2896,7 @@
         ],
         "symptoms": [],
         "phrases": [
-            "pituitary tumor headpituitary tumor",
+            "pituitary tumor head pituitary tumor",
             "kidney disease"
         ],
         "other_info": [
@@ -2781,6 +2911,7 @@
         "age": 0,
         "Preferred MRI Site": "UBCH",
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "soft tissue tumour neck",
@@ -2802,6 +2933,7 @@
         "age": 0,
         "Preferred MRI Site": "RH",
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "injury"
@@ -2831,6 +2963,7 @@
         "age": 0,
         "Preferred MRI Site": "VGH",
         "priority": "P3",
+        "p5": "f",
         "medical_condition": [
             "mass soft tissue"
         ],
@@ -2856,6 +2989,7 @@
         "age": 0,
         "Preferred MRI Site": "RH",
         "priority": "U\/I",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "branchial plexus injury"
@@ -2876,6 +3010,7 @@
         "age": 0,
         "Preferred MRI Site": "VGH",
         "priority": "P2",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "osteomyelitis"
@@ -2898,11 +3033,12 @@
         "age": 0,
         "Preferred MRI Site": "VGH",
         "priority": "P3",
+        "p5": "f",
         "medical_condition": [
             "poor ventricular function"
         ],
         "diagnosis": [
-            "ischaemic cardiomyopathyplease",
+            "ischaemic cardiomyopathy",
             "mi",
             "cad"
         ],
@@ -2911,7 +3047,8 @@
         ],
         "symptoms": [],
         "phrases": [
-            "oh poor ventricular function"
+            "oh poor ventricular function",
+            "early january 2020 previous mi"
         ],
         "other_info": []
     },
@@ -2923,9 +3060,11 @@
         "age": 0,
         "Preferred MRI Site": "VGH",
         "priority": "P3",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "headaches",
+            "hyperreflexia",
             "parasthesia hand",
             "pulmonary sarcoidosis"
         ],
@@ -2939,7 +3078,8 @@
             "sarcoidosis"
         ],
         "other_info": [
-            "medical history"
+            "medical history",
+            "right"
         ]
     },
     "120": {
@@ -2950,9 +3090,10 @@
         "age": 0,
         "Preferred MRI Site": "RH",
         "priority": "P3",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
-            "left cnd palsy"
+            "left cranial nerve palsy"
         ],
         "anatomy": [
             "mri brain",
@@ -2960,7 +3101,9 @@
         ],
         "symptoms": [],
         "phrases": [],
-        "other_info": []
+        "other_info": [
+            " cranial nerve"
+        ]
     },
     "121": {
         "CIO_ID": "9e2ed27d-19bd-4d5d-9dba-bd04f8e80cbe",
@@ -2970,6 +3113,7 @@
         "age": 0,
         "Preferred MRI Site": "RH",
         "priority": "P3",
+        "p5": "f",
         "medical_condition": [
             "lower weakness extremity"
         ],
@@ -2994,6 +3138,7 @@
         "age": 0,
         "Preferred MRI Site": "VGH",
         "priority": "U\/I",
+        "p5": "t",
         "medical_condition": [
             "goma residual change"
         ],
@@ -3016,6 +3161,7 @@
         "age": 0,
         "Preferred MRI Site": "VGH",
         "priority": "U\/I",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [],
         "anatomy": [
@@ -3035,6 +3181,7 @@
         "age": 0,
         "Preferred MRI Site": "UBCH",
         "priority": "P3",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "right hemifacial spasm"
@@ -3057,6 +3204,7 @@
         "age": 0,
         "Preferred MRI Site": "RH",
         "priority": "P3",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "cognitive decline"
@@ -3079,6 +3227,7 @@
         "age": 0,
         "Preferred MRI Site": null,
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "radiculopathy cervical\/lumbar",
@@ -3111,6 +3260,7 @@
         "age": 0,
         "Preferred MRI Site": null,
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [],
         "anatomy": [
@@ -3129,6 +3279,7 @@
         "age": 0,
         "Preferred MRI Site": null,
         "priority": "P3",
+        "p5": "f",
         "medical_condition": [
             "lesions"
         ],
@@ -3140,7 +3291,8 @@
         "symptoms": [],
         "phrases": [],
         "other_info": [
-            "query"
+            "query",
+            "MS"
         ]
     },
     "129": {
@@ -3151,6 +3303,7 @@
         "age": 0,
         "Preferred MRI Site": null,
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "bilateral spondylolysis",
@@ -3177,6 +3330,7 @@
         "age": 0,
         "Preferred MRI Site": "UBCH",
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "acute relapse",
@@ -3201,6 +3355,7 @@
         "age": 0,
         "Preferred MRI Site": "VGH",
         "priority": "P3",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "left soft tissue density renal him",
@@ -3226,6 +3381,7 @@
         "age": 0,
         "Preferred MRI Site": "VGH",
         "priority": "P5",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [],
         "anatomy": [
@@ -3247,6 +3403,7 @@
         "age": 0,
         "Preferred MRI Site": null,
         "priority": "P3",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "hepatic masses",
@@ -3273,6 +3430,7 @@
         "age": 0,
         "Preferred MRI Site": null,
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [
             "medial left tenderness knee"
         ],
@@ -3304,6 +3462,7 @@
         "age": 0,
         "Preferred MRI Site": null,
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "right injuries knee",
@@ -3333,6 +3492,7 @@
         "age": 0,
         "Preferred MRI Site": null,
         "priority": "P3",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [],
         "anatomy": [
@@ -3351,6 +3511,7 @@
         "age": 0,
         "Preferred MRI Site": null,
         "priority": "P2",
+        "p5": "f",
         "medical_condition": [
             "hep c"
         ],
@@ -3387,6 +3548,7 @@
         "age": 0,
         "Preferred MRI Site": "VGH",
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "acl tear",
@@ -3412,6 +3574,7 @@
         "age": 0,
         "Preferred MRI Site": "UBCH",
         "priority": "P4",
+        "p5": "t",
         "medical_condition": [],
         "diagnosis": [
             "isolated syndrome",
@@ -3440,6 +3603,7 @@
         "age": 0,
         "Preferred MRI Site": null,
         "priority": "P3",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "c\/o stenosis",
@@ -3466,6 +3630,7 @@
         "age": 0,
         "Preferred MRI Site": null,
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "chronic lower back pain",
@@ -3489,6 +3654,7 @@
         "age": 0,
         "Preferred MRI Site": null,
         "priority": "P1",
+        "p5": "f",
         "medical_condition": [
             "injury head"
         ],
@@ -3513,6 +3679,7 @@
         "age": 0,
         "Preferred MRI Site": null,
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "bilateral demyelination foot",
@@ -3536,6 +3703,7 @@
         "age": 0,
         "Preferred MRI Site": null,
         "priority": "P3",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "stenosis",
@@ -3561,10 +3729,11 @@
         "age": 0,
         "Preferred MRI Site": "VGH",
         "priority": "P3",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "lupus",
-            "inflammatory or demyelination disorder"
+            "inflammatory or demyelinating disorder"
         ],
         "anatomy": [
             "mri brain",
@@ -3591,6 +3760,7 @@
         "age": 0,
         "Preferred MRI Site": "VGH",
         "priority": "nan",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "pregnant",
@@ -3618,6 +3788,7 @@
         "age": 0,
         "Preferred MRI Site": null,
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "lesions liver",
@@ -3643,6 +3814,7 @@
         "age": 0,
         "Preferred MRI Site": null,
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [
             "chronic right rupture",
             "retraction"
@@ -3667,6 +3839,7 @@
         "age": 0,
         "Preferred MRI Site": null,
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "ma",
@@ -3689,6 +3862,7 @@
         "age": 0,
         "Preferred MRI Site": null,
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "lower right foot drop"
@@ -3714,6 +3888,7 @@
         "age": 0,
         "Preferred MRI Site": null,
         "priority": "P3",
+        "p5": "f",
         "medical_condition": [
             "myopathy"
         ],
@@ -3741,6 +3916,7 @@
         "age": 0,
         "Preferred MRI Site": "VGH",
         "priority": "nan",
+        "p5": "f",
         "medical_condition": [
             "pain",
             "tenderness"
@@ -3764,6 +3940,7 @@
         "age": 0,
         "Preferred MRI Site": null,
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "distal left fracture ulna",
@@ -3787,6 +3964,7 @@
         "age": 0,
         "Preferred MRI Site": "RH",
         "priority": "P3",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "medici tear"
@@ -3809,6 +3987,7 @@
         "age": 0,
         "Preferred MRI Site": null,
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [
             "loose fragments joint"
         ],
@@ -3836,6 +4015,7 @@
         "age": 0,
         "Preferred MRI Site": "VGH",
         "priority": "nan",
+        "p5": "t",
         "medical_condition": [],
         "diagnosis": [
             "liver ca"
@@ -3860,6 +4040,7 @@
         "age": 0,
         "Preferred MRI Site": null,
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [
             "pain",
             "instability",
@@ -3887,6 +4068,7 @@
         "age": 0,
         "Preferred MRI Site": null,
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [
             "radial head",
             "elbow flexion clicking",
@@ -3923,6 +4105,7 @@
         "age": 0,
         "Preferred MRI Site": null,
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "left partial tear supraspinatus"
@@ -3952,6 +4135,7 @@
         "age": 0,
         "Preferred MRI Site": null,
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "dorsal right wrist pain lunar aspect",
@@ -3982,6 +4166,7 @@
         "age": 0,
         "Preferred MRI Site": null,
         "priority": "P2",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "pancreatic injury"
@@ -4002,6 +4187,7 @@
         "age": 0,
         "Preferred MRI Site": null,
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "bony contusion",
@@ -4030,6 +4216,7 @@
         "age": 0,
         "Preferred MRI Site": null,
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [],
         "anatomy": [
@@ -4049,6 +4236,7 @@
         "age": 0,
         "Preferred MRI Site": null,
         "priority": "P3",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "adjacent portal vein abnormality endometrial cavity"
@@ -4074,6 +4262,7 @@
         "age": 0,
         "Preferred MRI Site": "UBCH",
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "chronic effusion",
@@ -4097,6 +4286,7 @@
         "age": 0,
         "Preferred MRI Site": "VGH",
         "priority": "P3",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "fairy disease"
@@ -4106,7 +4296,9 @@
         ],
         "symptoms": [],
         "phrases": [],
-        "other_info": []
+        "other_info": [
+            "MS"
+        ]
     },
     "167": {
         "CIO_ID": "25500",
@@ -4116,6 +4308,7 @@
         "age": 0,
         "Preferred MRI Site": null,
         "priority": "P3",
+        "p5": "f",
         "medical_condition": [
             "injury"
         ],
@@ -4141,6 +4334,7 @@
         "age": 0,
         "Preferred MRI Site": null,
         "priority": "P3",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "right ankle trimalleolar fracture",
@@ -4164,6 +4358,7 @@
         "age": 0,
         "Preferred MRI Site": "VGH",
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [],
         "anatomy": [
@@ -4191,6 +4386,7 @@
         "age": 0,
         "Preferred MRI Site": null,
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "left shoulder pain",
@@ -4217,6 +4413,7 @@
         "age": 0,
         "Preferred MRI Site": null,
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "low left back pain",
@@ -4246,6 +4443,7 @@
         "age": 0,
         "Preferred MRI Site": null,
         "priority": "P3",
+        "p5": "f",
         "medical_condition": [
             "medial medial thinning collateral pigment area compartment"
         ],
@@ -4277,6 +4475,7 @@
         "age": 0,
         "Preferred MRI Site": null,
         "priority": "P2",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "right lesions pectoralis muscle"
@@ -4301,6 +4500,7 @@
         "age": 0,
         "Preferred MRI Site": "UBCH",
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [
             "left going toe"
         ],
@@ -4336,6 +4536,7 @@
         "age": 0,
         "Preferred MRI Site": "VGH",
         "priority": "P2",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "amnesia head",
@@ -4363,6 +4564,7 @@
         "age": 0,
         "Preferred MRI Site": "VGH",
         "priority": "P3",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "abscess brain"
@@ -4385,6 +4587,7 @@
         "age": 0,
         "Preferred MRI Site": null,
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [
             "parenthesis legs"
         ],
@@ -4409,9 +4612,11 @@
         "age": 0,
         "Preferred MRI Site": "VGH",
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [],
         "anatomy": [
+            "mri",
             "lumbar spine",
             "si joints"
         ],
@@ -4427,8 +4632,12 @@
         "age": 0,
         "Preferred MRI Site": "VGH",
         "priority": "P3",
+        "p5": "t",
         "medical_condition": [],
-        "diagnosis": [],
+        "diagnosis": [
+            "optic neuritic",
+            "demyelinating lesions"
+        ],
         "anatomy": [
             "mri brain",
             "brain"
@@ -4445,8 +4654,11 @@
         "age": 0,
         "Preferred MRI Site": "VGH",
         "priority": "P2",
+        "p5": "f",
         "medical_condition": [],
-        "diagnosis": [],
+        "diagnosis": [
+            "metastatic disease"
+        ],
         "anatomy": [
             "spine",
             "cervical",
@@ -4454,7 +4666,9 @@
             "thoracic rh vga mri"
         ],
         "symptoms": [],
-        "phrases": [],
+        "phrases": [
+            "path metastatic disease worsening"
+        ],
         "other_info": []
     },
     "181": {
@@ -4465,12 +4679,13 @@
         "age": 0,
         "Preferred MRI Site": "VGH",
         "priority": "nan",
+        "p5": "t",
         "medical_condition": [],
         "diagnosis": [
             "pituitary microadenoma"
         ],
         "anatomy": [
-            "mri brain \/ gad seller",
+            "mri brain \/ gad sellar views",
             "brain"
         ],
         "symptoms": [],
@@ -4485,6 +4700,7 @@
         "age": 0,
         "Preferred MRI Site": "VGH",
         "priority": "U\/I",
+        "p5": "t",
         "medical_condition": [
             "bilateral visual field zigzag flashes"
         ],
@@ -4512,6 +4728,7 @@
         "age": 0,
         "Preferred MRI Site": "VGH",
         "priority": "P2",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "stroke",
@@ -4537,10 +4754,11 @@
         "age": 0,
         "Preferred MRI Site": "RH",
         "priority": "P3",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "white matter hypoattenuation",
-            "demyelination disease"
+            "demyelinating disease"
         ],
         "anatomy": [
             "mri brain",
@@ -4565,6 +4783,7 @@
         "age": 0,
         "Preferred MRI Site": "VGH",
         "priority": "P3",
+        "p5": "t",
         "medical_condition": [],
         "diagnosis": [
             "right sca aneurysm"
@@ -4590,6 +4809,7 @@
         "age": 0,
         "Preferred MRI Site": "VGH",
         "priority": "P3",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [],
         "anatomy": [
@@ -4610,6 +4830,7 @@
         "age": 0,
         "Preferred MRI Site": "UBCH",
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "for 3 months pulsating tinnitus"
@@ -4630,11 +4851,12 @@
         "age": 0,
         "Preferred MRI Site": "VGH",
         "priority": "U\/I",
+        "p5": "t",
         "medical_condition": [],
         "diagnosis": [
             "connective tissue disease",
             "cervical spine lesions",
-            "demyelination disease cervical spine"
+            "demyelinating disease cervical spine"
         ],
         "anatomy": [
             "mri of the brain",
@@ -4656,6 +4878,7 @@
         "age": 0,
         "Preferred MRI Site": "UBCH",
         "priority": "P3",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [],
         "anatomy": [
@@ -4675,6 +4898,7 @@
         "age": 0,
         "Preferred MRI Site": "RH",
         "priority": "U\/I",
+        "p5": "t",
         "medical_condition": [],
         "diagnosis": [
             "cp angle meningloma",
@@ -4698,6 +4922,7 @@
         "age": 0,
         "Preferred MRI Site": "UBCH",
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "right lipoma shoulder"
@@ -4723,6 +4948,7 @@
         "age": 0,
         "Preferred MRI Site": "VGH",
         "priority": "U\/I",
+        "p5": "t",
         "medical_condition": [],
         "diagnosis": [
             "left acoustic neuroma",
@@ -4748,6 +4974,7 @@
         "age": 0,
         "Preferred MRI Site": "VGH",
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [
             "tinnitus"
         ],
@@ -4757,9 +4984,12 @@
             "head",
             "internal acoustic canal"
         ],
-        "symptoms": [],
+        "symptoms": [
+            "hearing loss"
+        ],
         "phrases": [
-            "worse tinnitus"
+            "worse tinnitus",
+            "hearing loss"
         ],
         "other_info": []
     },
@@ -4771,8 +5001,11 @@
         "age": 0,
         "Preferred MRI Site": "UBCH",
         "priority": "P2",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
+            "optic neuritic",
+            "lesions",
             "multiple sclerosis"
         ],
         "anatomy": [
@@ -4780,7 +5013,9 @@
             "head"
         ],
         "symptoms": [],
-        "phrases": [],
+        "phrases": [
+            "lesions"
+        ],
         "other_info": []
     },
     "195": {
@@ -4791,6 +5026,7 @@
         "age": 0,
         "Preferred MRI Site": "VGH",
         "priority": "P3",
+        "p5": "t",
         "medical_condition": [],
         "diagnosis": [
             "pineal cyst",
@@ -4814,6 +5050,7 @@
         "age": 0,
         "Preferred MRI Site": "VGH",
         "priority": "U\/I",
+        "p5": "t",
         "medical_condition": [],
         "diagnosis": [
             "right acoustic neuroma"
@@ -4837,6 +5074,7 @@
         "age": 0,
         "Preferred MRI Site": "RH",
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "rotator cuff tear"
@@ -4864,6 +5102,7 @@
         "age": 0,
         "Preferred MRI Site": "UBCH",
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "transverse myelitis",
@@ -4876,9 +5115,12 @@
         ],
         "symptoms": [],
         "phrases": [
-            "transverse myelitis"
+            "transverse myelitis query"
         ],
-        "other_info": []
+        "other_info": [
+            "query",
+            "MS"
+        ]
     },
     "199": {
         "CIO_ID": "95279",
@@ -4888,6 +5130,7 @@
         "age": 0,
         "Preferred MRI Site": "RH",
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [
             "left reduced range of motion rotator cuff shoulder"
         ],
@@ -4914,9 +5157,9 @@
         "age": 0,
         "Preferred MRI Site": "RH",
         "priority": "P3",
+        "p5": "f",
         "medical_condition": [
-            "3 months healthy",
-            "decreased romxray"
+            "3 months healthy"
         ],
         "diagnosis": [
             "fcc injury",
@@ -4930,7 +5173,8 @@
         ],
         "symptoms": [
             "3 months wrist pain",
-            "swelling"
+            "3 months swelling",
+            "decreased rom"
         ],
         "phrases": [
             "3 months",
@@ -4947,6 +5191,7 @@
         "age": 0,
         "Preferred MRI Site": "UBCH",
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [
             "loss to vibration sense"
         ],
@@ -4979,8 +5224,10 @@
         "age": 0,
         "Preferred MRI Site": "VGH",
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [
-            "laxity"
+            "laxity",
+            "limited rom"
         ],
         "diagnosis": [
             "ma",
@@ -4994,6 +5241,7 @@
         "phrases": [
             "laxity post ma",
             "shoulder weakness",
+            "limited rom concern",
             "torn labrum evaluation"
         ],
         "other_info": []
@@ -5006,6 +5254,7 @@
         "age": 0,
         "Preferred MRI Site": "VGH",
         "priority": "P4",
+        "p5": "f",
         "medical_condition": [
             "injury foot"
         ],
@@ -5037,6 +5286,7 @@
         "age": 0,
         "Preferred MRI Site": "UBCH",
         "priority": "P3",
+        "p5": "f",
         "medical_condition": [],
         "diagnosis": [
             "right vertical licence tibia",
@@ -5045,7 +5295,8 @@
             "right pain"
         ],
         "anatomy": [
-            "ankle"
+            "ankle",
+            "mri icc"
         ],
         "symptoms": [
             "pain"
@@ -5069,6 +5320,7 @@
         "age": 0,
         "Preferred MRI Site": "VGH",
         "priority": "P2",
+        "p5": "f",
         "medical_condition": [
             "mass soft tissue"
         ],

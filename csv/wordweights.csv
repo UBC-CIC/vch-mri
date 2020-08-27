@@ -53,7 +53,7 @@ fibrocartilage,B
 fibroid,B
 fistula,B
 fnh,B
-follow,B
+followup,C
 foot,B
 fracture,B
 glomus,B
@@ -64,14 +64,14 @@ hemorrhage,A
 hepatic,B
 hernia,B
 high,A
-high grade,A
 hip,B
-history,C
+history,D
 hx,B
 hydrocephalus,B
 ica,B
 impingement,B
 implants,B
+incontinence, B
 inguinal,B
 injury,B
 intracranial,A
@@ -90,10 +90,10 @@ locked,B
 lymphoma,B
 malformation,B
 mass,B
-medical,B
+medical,C
 meningioma,B
 meniscal,B
-metastatic,B
+metastatic,A
 mortens,B
 mra,B
 mrcp,B
@@ -111,12 +111,13 @@ new,C
 occult ,B
 operative,B
 optic,B
+orbital,B
 orthopedic,B
 osteochondromas,B
 osteomyelitis,A
 pain,B
 pancoast,B
-pancreas,A
+pancreas,B
 PIT,B
 pituitary,A
 planning ,A
@@ -126,7 +127,7 @@ preoperative,A
 prolactic,B
 prostate,B
 pulsatile,B
-query,B
+query,C
 r/o,B
 rad,B
 rectal,B
@@ -162,7 +163,7 @@ tfcc,B
 thrombosis,A
 thyroid,B
 tinnitus ,A
-tissue,C
+tissue, D
 tmj,B
 tumour,B
 uae,B

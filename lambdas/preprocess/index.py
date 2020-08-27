@@ -106,7 +106,7 @@ def find_all_entities(data: str):
     except Exception as ex:
         template = "An exception of type {0} occurred. Arguments:\n{1!r}"
         message = template.format(type(ex).__name__, ex.args)
-        print(message)
+        logger.error(message)
 
 def infer_icd10_cm(data: str, med_cond, diagnosis, symptoms):
     """
@@ -152,7 +152,7 @@ def infer_icd10_cm(data: str, med_cond, diagnosis, symptoms):
     except Exception as ex:
         template = "An exception of type {0} occurred. Arguments:\n{1!r}"
         message = template.format(type(ex).__name__, ex.args)
-        print(message)
+        logger.error(message)
 
 def find_key_phrases(data:str, key_phrases, icd10cm_list, anatomy_list):
     """
@@ -188,7 +188,7 @@ def find_key_phrases(data:str, key_phrases, icd10cm_list, anatomy_list):
     except Exception as ex:
         template = "An exception of type {0} occurred. Arguments:\n{1!r}"
         message = template.format(type(ex).__name__, ex.args)
-        print(message)
+        logger.error(message)
 
 def recursively_prune_dict_keys(obj, keep):
     if isinstance(obj, dict):
@@ -272,7 +272,7 @@ def handler(event, context):
     formatted_df['other_info'] = other_info
     
     #formatted_df.to_json('sample_output.json', orient='index')
-    print("output is: ", formatted_df)
+    #print("output is: ", formatted_df)
     
     response = lambda_client.invoke(
             FunctionName=RuleProcessingLambdaName,

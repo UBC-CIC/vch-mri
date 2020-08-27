@@ -1,0 +1,32 @@
+// AWS Run Command
+{
+    "schemaVersion": "2.2",
+    "description": "Command Document Example JSON Template",
+    "parameters": {
+      "Message": {
+        "type": "String",
+        "description": "Example",
+        "default": "Hello World"
+      },
+      "fileName": {
+        "type": "String"
+      },
+      "destPath": {
+        "type": "String"
+      },
+      "bucket": {
+        "type": "String"
+      }
+    },
+    "mainSteps": [
+      {
+        "action": "aws:runShellScript",
+        "name": "example",
+        "inputs": {
+          "runCommand": [
+            "aws s3 cp s3://{{bucket}}/{{fileName}} {{destPath}}{{fileName}}"
+          ]
+        }
+      }
+    ]
+  }

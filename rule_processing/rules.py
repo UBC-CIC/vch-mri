@@ -6,11 +6,12 @@ import boto3
 from postgresql import connect 
 
 insert_cmd = """
-INSERT INTO data_results(id, info, init_priority) VALUES 
-(%s, %s, %s)
+INSERT INTO data_results(id, info, p5_flag, phys_priority) VALUES 
+(%s, %s, %s, %s)
 ON CONFLICT (id) DO UPDATE
-SET info = excluded.info, 
-init_priority = excluded.init_priority;
+SET info = excluded.info,
+p5_flag = excluded.p5_flag,
+phys_priority = excluded.phys_priority;
 """
 
 update_sys_priority = """
@@ -21,17 +22,27 @@ WHERE id = %s;
 
 update_cmd = """
 UPDATE data_results 
-SET rules_id = r.id , sys_priority = r.priority, contrast = r.contrast, arthro = r.arthro
+SET rules_id = r.id , sys_priority = r.priority, contrast = r.contrast
 FROM mri_rules r WHERE r.id = (
 SELECT id
 FROM mri_rules, to_tsquery('ths_search','%s') query 
 WHERE info_weighted_tk @@ query
+AND active = 't'
 """
 
 update_cmd_end = """
 ORDER BY ts_rank_cd('{0.1, 0.2, 0.4, 1.0}',info_weighted_tk, query, 1) DESC LIMIT 1)
 AND data_results.id = '%s'
-RETURNING r.id, r.priority, r.contrast, r.arthro;
+RETURNING r.id, r.priority, r.contrast, r.info;
+"""
+
+update_tags = """
+UPDATE data_results
+SET tags = array_tag FROM (
+SELECT array_agg(tag) AS array_tag FROM (
+SELECT tag from specialty_tags
+WHERE %s ~* tag) AS x) AS y
+where id = %s;
 """
 
 def searchAnatomy(data, cur):        
@@ -62,31 +73,30 @@ def compare_rules(data):
         
         # insert into data_results one by one 
         for x, v in data.items():
-            if not v["anatomy"]: 
-                # No anatomy found => sys_priority = P99
-                try: 
+            try: 
+                # insert CIO_ID, JSON data, P5 Flag and Physician/Rad Priority to data_results
+                cur.execute(insert_cmd, (v["CIO_ID"], json.dumps(v), v["p5"], v["priority"]))
+                # Check if there is anatomy found
+                if not v["anatomy"]: 
                     print("No anatomy found for CIO ID: ", v["CIO_ID"])
-                    cur.execute(insert_cmd, (v["CIO_ID"], json.dumps(v), v["priority"]))
                     cur.execute(update_sys_priority, ('P99',v["CIO_ID"]))
-                except psycopg2.IntegrityError:
-                    print("Exception: ", err)
-            else:
-                anatomy_str  = searchAnatomy(v["anatomy"], cur)
-                info_str = searchText(cur, v, "anatomy", "medical_condition", "diagnosis", "symptoms", "phrases", "other_info")
-                command = (update_cmd % info_str) + anatomy_str + (update_cmd_end % v["CIO_ID"])
-                try:
-                    cur.execute(insert_cmd, (v["CIO_ID"], json.dumps(v), v["priority"]))
+                else:
+                    # Get the Anatomy String
+                    anatomy_str  = searchAnatomy(v["anatomy"], cur)
+                    # Create a string with all the processed data 
+                    info_str = searchText(cur, v, "anatomy", "medical_condition", "diagnosis", "symptoms", "phrases", "other_info")
+                    command = (update_cmd % info_str) + anatomy_str + (update_cmd_end % v["CIO_ID"])
                     cur.execute(command)
                     ret = cur.fetchall()                         
                     if not ret:  
                         print("No Rule Found for CIO ID: %s" % v["CIO_ID"])
                         cur.execute(update_sys_priority, ('P98', v["CIO_ID"]))
-                    if v["priority"] == 'P5':
-                        print("Initial Priority of P5")
-                        cur.execute(update_sys_priority, ('P5', v["CIO_ID"]))
-                    print("For CIO ID: %s, With return of: %s" % (v["CIO_ID"], ret))
-                except psycopg2.IntegrityError:
-                    print("Exception: ", err)
+                    else: 
+                        print("For CIO ID: %s, With return of: %s" % (v["CIO_ID"], ret))
+                        # See if there are any tags and set tags 
+                        cur.execute(update_tags, (ret[0][3], v["CIO_ID"]))
+            except psycopg2.IntegrityError:
+                print("Exception: ", err)
         # close communication with the PostgreSQL database server
         cur.close()
         # commit the changes

@@ -50,6 +50,9 @@ Resources:
           - "*"
         ExposeHeaders: 
           - "*"
+  
+  ThesaurusFileBucket: 
+      Type: AWS::S3::Bucket
 
   PreprocessLayer:
       Type: AWS::Serverless::LayerVersion
@@ -83,33 +86,6 @@ Resources:
           - python3.7
           - python3.6
         RetentionPolicy: Delete
-
-  QueryTable:
-    Type: AWS::Serverless::Function 
-    Properties:
-      CodeUri: ./lambdas/query_rules_table
-      Events:
-        ExplicitApi: # warning: creates a public endpoint
-          Type: HttpApi
-          Properties:
-            ApiId: !Ref HttpApi
-            Method: Post
-            Path: /rules
-            TimeoutInMillis: 29000
-            PayloadFormatVersion: "2.0"
-            RouteSettings:
-              ThrottlingBurstLimit: 100
-      Layers: 
-        - !Ref Psycopg2Layer
-        - !Ref PostgresLayer
-      Policies:
-        - SSMParameterReadPolicy:
-            ParameterName: "mri-phsa*"
-      VpcConfig: 
-        SecurityGroupIds: 
-          - !Ref SecurityGroupId 
-        SubnetIds:
-          - !Ref PrivateSubnetID
 
   Preprocess:
     Type: AWS::Serverless::Function 
@@ -164,14 +140,217 @@ Resources:
           - !Ref SecurityGroupId 
         SubnetIds: 
           - !Ref PrivateSubnetID
+    
+  QueryRules:
+    Type: AWS::Serverless::Function 
+    Properties:
+      CodeUri: ./lambdas/query_rules_table
+      Events:
+        ExplicitApi: # warning: creates a public endpoint
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref HttpApi
+            Method: Post
+            Path: /rules
+            TimeoutInMillis: 29000
+            PayloadFormatVersion: "2.0"
+            RouteSettings:
+              ThrottlingBurstLimit: 100
+      Layers: 
+        - !Ref Psycopg2Layer
+        - !Ref PostgresLayer
+      Policies:
+        - SSMParameterReadPolicy:
+            ParameterName: "mri-phsa*"
+        - LambdaInvokePolicy:
+            FunctionName:
+              !Ref UpdateWeights
+      VpcConfig: 
+        SecurityGroupIds: 
+          - !Ref SecurityGroupId 
+        SubnetIds:
+          - !Ref PrivateSubnetID
+      Environment:
+        Variables:
+          UPDATE_WEIGHTS_LAMBDA: !Ref UpdateWeights
+
+  QuerySpellchecker:
+    Type: AWS::Serverless::Function 
+    Properties:
+      CodeUri: ./lambdas/query_spellchecker
+      Events:
+        ExplicitApi: # warning: creates a public endpoint
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref HttpApi
+            Method: Post
+            Path: /spell
+            TimeoutInMillis: 29000
+            PayloadFormatVersion: "2.0"
+            RouteSettings:
+              ThrottlingBurstLimit: 100
+      Layers: 
+        - !Ref Psycopg2Layer
+        - !Ref PostgresLayer
+      Policies:
+        - SSMParameterReadPolicy:
+            ParameterName: "mri-phsa*"
+      VpcConfig: 
+        SecurityGroupIds: 
+          - !Ref SecurityGroupId 
+        SubnetIds:
+          - !Ref PrivateSubnetID
+
+  QueryConjunctions:
+    Type: AWS::Serverless::Function 
+    Properties:
+      CodeUri: ./lambdas/query_conjunctions
+      Events:
+        ExplicitApi: # warning: creates a public endpoint
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref HttpApi
+            Method: Post
+            Path: /conjunctions
+            TimeoutInMillis: 29000
+            PayloadFormatVersion: "2.0"
+            RouteSettings:
+              ThrottlingBurstLimit: 100
+      Layers: 
+        - !Ref Psycopg2Layer
+        - !Ref PostgresLayer
+      Policies:
+        - SSMParameterReadPolicy:
+            ParameterName: "mri-phsa*"
+      VpcConfig: 
+        SecurityGroupIds: 
+          - !Ref SecurityGroupId 
+        SubnetIds:
+          - !Ref PrivateSubnetID
+
+  QueryWeights:
+    Type: AWS::Serverless::Function 
+    Properties:
+      CodeUri: ./lambdas/query_weights
+      Events:
+        ExplicitApi: # warning: creates a public endpoint
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref HttpApi
+            Method: Post
+            Path: /weights
+            TimeoutInMillis: 29000
+            PayloadFormatVersion: "2.0"
+            RouteSettings:
+              ThrottlingBurstLimit: 100
+      Layers: 
+        - !Ref Psycopg2Layer
+        - !Ref PostgresLayer
+      Policies:
+        - SSMParameterReadPolicy:
+            ParameterName: "mri-phsa*"
+        - LambdaInvokePolicy:
+            FunctionName:
+              !Ref UpdateWeights
+      VpcConfig: 
+        SecurityGroupIds: 
+          - !Ref SecurityGroupId 
+        SubnetIds:
+          - !Ref PrivateSubnetID
+      Environment:
+        Variables:
+          UPDATE_WEIGHTS_LAMBDA: !Ref UpdateWeights
+
+  UpdateWeights:
+    Type: AWS::Serverless::Function 
+    Properties:
+      CodeUri: ./lambdas/update_word_weights
+      Layers: 
+        - !Ref Psycopg2Layer
+        - !Ref PostgresLayer
+      Policies:
+        - SSMParameterReadPolicy:
+            ParameterName: "mri-phsa*"
+        - arn:aws:iam::aws:policy/AWSXrayWriteOnlyAccess
+      VpcConfig: 
+        SecurityGroupIds: 
+          - !Ref SecurityGroupId 
+        SubnetIds: 
+          - !Ref PrivateSubnetID
+
+  DataResults:
+    Type: AWS::Serverless::Function 
+    Properties:
+      CodeUri: ./lambdas/results
+      Events:
+        ExplicitApi: # warning: creates a public endpoint
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref HttpApi
+            Method: Post
+            Path: /results
+            TimeoutInMillis: 29000
+            PayloadFormatVersion: "2.0"
+            RouteSettings:
+              ThrottlingBurstLimit: 100
+      Layers: 
+        - !Ref Psycopg2Layer
+        - !Ref PostgresLayer
+      Policies:
+        - SSMParameterReadPolicy:
+            ParameterName: "mri-phsa*"
+      VpcConfig: 
+        SecurityGroupIds: 
+          - !Ref SecurityGroupId 
+        SubnetIds: 
+          - !Ref PrivateSubnetID
+
+  Thesaurus:
+    Type: AWS::Serverless::Function 
+    Properties:
+      CodeUri: ./lambdas/thesaurus
+      Events:
+        FileUpload:
+          Type: S3
+          Properties: 
+            Bucket: !Ref ThesaurusFileBucket
+            Events: s3:ObjectCreated:*
+      Layers: 
+        - !Ref Psycopg2Layer
+        - !Ref PostgresLayer
+      Policies:
+        - SSMParameterReadPolicy:
+            ParameterName: "mri-phsa*"
+        - S3ReadPolicy:
+            BucketName: '*'
+        - arn:aws:iam::aws:policy/AmazonSSMFullAccess
+        - arn:aws:iam::aws:policy/AWSResourceAccessManagerFullAccess
+      VpcConfig: 
+        SecurityGroupIds: 
+          - !Ref SecurityGroupId 
+        SubnetIds:
+          - !Ref PrivateSubnetID
+      Environment:
+        Variables:
+          destPath: "/usr/share/pgsql/tsearch_data/" # Path to shared postgresql directory
 
 Outputs:
   Preprocess:
       Value: !GetAtt Preprocess.Arn
   RuleProcessing:
       Value: !GetAtt RuleProcessing.Arn
-  QueryTable:
-      Value: !GetAtt QueryTable.Arn
+  QueryRules:
+      Value: !GetAtt QueryRules.Arn
+  QuerySpellchecker:
+      Value: !GetAtt QuerySpellchecker.Arn
+  QueryConjunctions: 
+      Value: !GetAtt QueryConjunctions.Arn
+  QueryWeights:
+      Value: !GetAtt QueryWeights.Arn
+  UpdateWeights: 
+      Value: !GetAtt UpdateWeights.Arn
+  DataResults:
+      Value: !GetAtt DataResults.Arn
   HttpApiUrl:
       Description: URL of your API endpoint
       Value:

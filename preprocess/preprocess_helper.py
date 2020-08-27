@@ -57,6 +57,7 @@ def convert2CM(height):
         return 0
 
 def convert2KG(weight):
+    print('weight is:', weight)
     if not isinstance(weight, str):
         return 0
     try:
@@ -90,7 +91,7 @@ def preProcessText(col):
     extr = col.str.strip()
     extr = extr.str.replace(rehtml, '', regex=True)
     extr = extr.str.translate(str.maketrans('','',reponct))
-    extr = extr.str.replace('[^0-9a-zA-Z?/ ]+', '', regex=True)
+    extr = extr.str.replace('[^0-9a-zA-Z?/ ]+', ' ', regex=True)
     extr = extr.str.replace('\s+', ' ', regex=True)
     extr = extr.str.lower()
     return extr

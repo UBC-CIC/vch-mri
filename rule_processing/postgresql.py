@@ -6,10 +6,6 @@ def connect():
     Connect to PostgreSQL
     """
     ssm = boto3.client('ssm', region_name='ca-central-1')
-    # p_dbserver = '/mri-phsa/dbserver'
-    # p_dbname = '/mri-phsa/dbname'
-    # p_dbuser = '/mri-phsa/dbuser'
-    # p_dbpwd = '/mri-phsa/dbpwd'
     p_dbserver = '/mri-phsa/dbserver_ec2_public'
     p_dbname = '/mri-phsa/dbname_ec2'
     p_dbuser = '/mri-phsa/dbuser_ec2'

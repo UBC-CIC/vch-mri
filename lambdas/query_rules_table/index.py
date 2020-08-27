@@ -3,11 +3,13 @@ import postgresql
 import boto3 
 import logging 
 import json 
+import os 
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
-table = 'mri_rules'
+lambda_client = boto3.client('lambda')
+UpdateWeightLambdaName = os.getenv('UPDATE_WEIGHTS_LAMBDA')
 
 def update_bodypart_tokens(cur):
     cmd = """
@@ -18,7 +20,7 @@ def update_bodypart_tokens(cur):
 
 def queryRules(cur, count):
     cmd = """
-    SELECT id, body_part, contrast, arthro, priority, info, active 
+    SELECT id, body_part, contrast, priority, info, active 
     FROM mri_rules
     ORDER BY id
     """
@@ -30,7 +32,7 @@ def queryRules(cur, count):
 
 def queryRulesID(cur, id):
     cmd = """
-    SELECT id, body_part, contrast, arthro, priority, info, active 
+    SELECT id, body_part, contrast, priority, info, active 
     FROM mri_rules
     WHERE id = %s
     """
@@ -41,28 +43,33 @@ def queryRulesID(cur, id):
 
 def addRule(cur, values):
     cmd = """
-    INSERT INTO mri_rules(body_part, info, priority, contrast, arthro) 
+    INSERT INTO mri_rules(body_part, info, priority, contrast) 
     VALUES """
     param_values = []
     for value in values: 
         cmd += "(%s, %s, %s, %s, %s),"
-        param_values.extend([value['body_part'], value['info'], value['priority'], value['contrast'], value['arthro']])
+        param_values.extend([value['body_part'], value['info'], value['priority'], value['contrast']])
     cmd = cmd[:-1]
+    cmd += " RETURNING id, body_part, contrast, priority, info, active"
     cur.execute(cmd, param_values)
+    ret = cur.fetchall()
     update_bodypart_tokens(cur)
+    return ret 
 
-def updateRule(cur, id, values):
+def updateRule(cur, values):
     cmd = """
-    UPDATE mri_rules SET body_part = new_body_part, info = new_info, priority = new_priority, contrast = CAST(new_contrast AS BOOLEAN), arthro = CAST(new_arthro AS BOOLEAN)
+    UPDATE mri_rules SET body_part = new_body_part, info = new_info, priority = new_priority, contrast = CAST(new_contrast AS BOOLEAN)
     FROM (VALUES """
     param_values = []
     for value in values:
         cmd += "(%s, %s, %s, %s, %s, %s),"
-        param_values.extend([id, value['body_part'], value['info'], value['priority'], value['contrast'], value['arthro']])
+        param_values.extend([value['id'], value['body_part'], value['info'], value['priority'], value['contrast']])
     cmd = cmd[:-1]
-    cmd += " ) as tmp(id, new_body_part, new_info, new_priority, new_contrast, new_arthro) WHERE CAST(tmp.id AS INTEGER) = mri_rules.id"
+    cmd += " ) as tmp(id, new_body_part, new_info, new_priority, new_contrast) WHERE CAST(tmp.id AS INTEGER) = mri_rules.id RETURNING mri_rules.id, body_part, contrast, priority, info, active"
     cur.execute(cmd, param_values)
+    ret = cur.fetchall()
     update_bodypart_tokens(cur)
+    return ret
 
 def setRuleActivity(cur, id, active):
     cmd = """
@@ -70,11 +77,33 @@ def setRuleActivity(cur, id, active):
     WHERE id = %s"""
     cur.execute(cmd, (active,id))
 
+def applyWeight():
+    response = lambda_client.invoke(
+            FunctionName=UpdateWeightLambdaName,
+            InvocationType='RequestResponse',
+    )
+    ret = json.loads(response['Payload'].read())
+    if ret['result'] == False:
+        logger.error("Apply Weight Failed")
+
+def parseResponse(response):
+    resp_list = []
+    for resp_tuple in response: 
+        resp = {}
+        resp['id'] = resp_tuple[0]
+        resp['body_part'] = resp_tuple[1]
+        resp['contrast'] = resp_tuple[2]
+        resp['priority'] = resp_tuple[3]
+        resp['info'] = resp_tuple[4]
+        resp['active'] = resp_tuple[5]
+        resp_list.append(resp)
+    return resp_list
+
 def handler(event, context):
     logger.info(event)
     if 'body' not in event:
         logger.error( 'Missing parameters')
-        return {'result': False, 'msg': 'Missing parameters' }
+        return {'result': False, 'msg': 'Missing parameters body' }
 
     data = json.loads(event['body']) # use for postman tests
     # data = event['body'] # use for console tests
@@ -89,33 +118,31 @@ def handler(event, context):
                 else: 
                     response = queryRules(cur, data['count'])
                 
-                resp_dict = {'status': "DONE"}
-                count = 0
+                resp_dict = {'result': True, 'data': []}
                 logger.info(response)
-                for resp_tuple in response: 
-                    resp_dict[count] = {}
-                    resp_dict[count]['id'] = resp_tuple[0]
-                    resp_dict[count]['body_part'] = resp_tuple[1]
-                    resp_dict[count]['contrast'] = resp_tuple[2]
-                    resp_dict[count]['arthro'] = resp_tuple[3]
-                    resp_dict[count]['priority'] = resp_tuple[4]
-                    resp_dict[count]['info'] = resp_tuple[5]
-                    resp_dict[count]['active'] = resp_tuple[6]
-                    count+=1
+                resp_list = parseResponse(response)
+                resp_dict['data'] = resp_list
                 return resp_dict
 
             elif data['operation'] == 'ADD':
-                addRule(cur, data['values'])
+                response = addRule(cur, data['values'])
+                resp_list = parseResponse(response)
             elif data['operation'] == 'UPDATE': 
-                updateRule(cur, data['id'], data['values'])
+                response = updateRule(cur, data['values'])
+                resp_list = parseResponse(response)
             elif data['operation'] == 'DEACTIVATE':
                 setRuleActivity(cur, data['id'], 'f')
             elif data['operation'] == 'ACTIVATE':
                 setRuleActivity(cur, data['id'], 't')
             psql.commit() 
-        except (Exception, psycopg2.DatabaseError) as error:
+            if data['operation'] == 'ADD' or data['operation'] == 'UPDATE':
+                logger.info("Applying weight")
+                applyWeight()
+                return {'result': True, 'data': resp_list}
+        except Exception as error:
             logger.error(error)
-            return {"status": "ERROR", "error": error}
-    
-    return {"status": "DONE"}
+            logger.error("Exception Type: %s" % type(error))
+            return {'result': False, 'msg': f'{error}'}
+
+    return {'result': True}
     

@@ -1,6 +1,11 @@
-import itertools
-import psycopg2
-from postgresql import connect 
+import psycopg2 
+import postgresql
+import boto3 
+import logging 
+import json 
+
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
 
 def getKeywords(cur, weight_type:str):
     """
@@ -50,33 +55,26 @@ def updateWeights(cur, table: str, column: str, list_setweight):
     command = command % (table, column, set_weight)
     cur.execute(command)
 
-def runUpdateWeights():
-    conn = None
-    try:
-        # connect to the PostgreSQL server
-        conn = connect()
-        cur = conn.cursor()
-        # execute the command 
-        lemex_a = getKeywords(cur, 'A')
-        lemex_b = getKeywords(cur, 'B')
-        lemex_c = getKeywords(cur, 'C')
-        lemex_d = getKeywords(cur, 'D')
-        setweight_a = create_setWeight('to_tsvector(info)', 'A', lemex_a)
-        setweight_b = create_setWeight('to_tsvector(info)', 'B', lemex_b)
-        setweight_c = create_setWeight('to_tsvector(info)', 'C', lemex_c)
-        setweight_d = create_setWeight('to_tsvector(info)', 'D', lemex_d)
-        list_weights = [setweight_a, setweight_b, setweight_c, setweight_d]
-        updateWeights(cur, 'mri_rules', 'info_weighted_tk', list_weights)
-        # close communication with the PostgreSQL database server
-        cur.close()
-        # commit the changes
-        conn.commit()
-        print("Weights Finished Updating")
-    except (Exception, psycopg2.DatabaseError) as error:
-        print(error)
-    finally:
-        if conn is not None:
-            conn.close()
-
-if __name__ == '__main__':
-    runUpdateWeights()
+def handler(event, context):
+    psql = postgresql.PostgreSQL()
+    try: 
+        with psql.conn.cursor() as cur:
+            # execute the command 
+            lemex_a = getKeywords(cur, 'A')
+            lemex_b = getKeywords(cur, 'B')
+            lemex_c = getKeywords(cur, 'C')
+            lemex_d = getKeywords(cur, 'D')
+            setweight_a = create_setWeight('to_tsvector(info)', 'A', lemex_a)
+            setweight_b = create_setWeight('to_tsvector(info)', 'B', lemex_b)
+            setweight_c = create_setWeight('to_tsvector(info)', 'C', lemex_c)
+            setweight_d = create_setWeight('to_tsvector(info)', 'D', lemex_d)
+            list_weights = [setweight_a, setweight_b, setweight_c, setweight_d]
+            updateWeights(cur, 'mri_rules', 'info_weighted_tk', list_weights)
+            # commit the changes
+            psql.commit()
+            logger.info("Weights Finished Updating")
+            return {'result': True}
+    except Exception as error:
+        logger.error(error)
+        logger.error("Exception Type: %s" % type(error))
+        return {'result': False, 'msg': f'{error}'}
