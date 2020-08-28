@@ -2,7 +2,7 @@
     "0": {
         "CIO_ID": "163232",
         "height": null,
-        "weight": null,
+        "weight": 73.481904,
         "Sex": "F",
         "age": 0,
         "Preferred MRI Site": "VGH",
@@ -29,7 +29,7 @@
     "1": {
         "CIO_ID": "127661",
         "height": 163.0,
-        "weight": null,
+        "weight": 62.0,
         "Sex": "F",
         "age": 0,
         "Preferred MRI Site": "VGH",
@@ -51,7 +51,7 @@
     "2": {
         "CIO_ID": "164302",
         "height": 163.0,
-        "weight": null,
+        "weight": 53.0,
         "Sex": "F",
         "age": 0,
         "Preferred MRI Site": "VGH",
@@ -106,7 +106,7 @@
     "4": {
         "CIO_ID": "158843",
         "height": 160.02,
-        "weight": null,
+        "weight": 77.11064,
         "Sex": "f",
         "age": 0,
         "Preferred MRI Site": "UBCH",
@@ -134,7 +134,7 @@
     "5": {
         "CIO_ID": "131946",
         "height": 185.0,
-        "weight": null,
+        "weight": 71.0,
         "Sex": "M",
         "age": 0,
         "Preferred MRI Site": "RH",
@@ -158,7 +158,7 @@
     "6": {
         "CIO_ID": "6c00b26d-e251-4c33-889f-d310499b822a",
         "height": 176.0,
-        "weight": null,
+        "weight": 65.0,
         "Sex": "M",
         "age": 0,
         "Preferred MRI Site": "UBCH",
@@ -178,7 +178,7 @@
         ],
         "symptoms": [],
         "phrases": [
-            "rio ligament tear injury",
+            "r\/o ligament tear injury",
             "st 2019 medical melleolar swelling"
         ],
         "other_info": []
@@ -186,7 +186,7 @@
     "7": {
         "CIO_ID": "145206",
         "height": 157.0,
-        "weight": null,
+        "weight": 53.5,
         "Sex": "F",
         "age": 0,
         "Preferred MRI Site": "UBCH",
@@ -213,7 +213,7 @@
     "8": {
         "CIO_ID": "59831",
         "height": 168.0,
-        "weight": null,
+        "weight": 64.0,
         "Sex": "F",
         "age": 0,
         "Preferred MRI Site": null,
@@ -238,7 +238,7 @@
     "9": {
         "CIO_ID": "128245",
         "height": 170.0,
-        "weight": null,
+        "weight": 70.0,
         "Sex": "M",
         "age": 0,
         "Preferred MRI Site": "UBCH",
@@ -263,7 +263,7 @@
     "10": {
         "CIO_ID": "154721",
         "height": 154.0,
-        "weight": null,
+        "weight": 66.0,
         "Sex": "F",
         "age": 0,
         "Preferred MRI Site": null,
@@ -296,7 +296,7 @@
     "11": {
         "CIO_ID": "d8d73a26-c85a-4935-838b-940c047bb270",
         "height": 182.88,
-        "weight": null,
+        "weight": 89.357624,
         "Sex": "M",
         "age": 0,
         "Preferred MRI Site": "RH",
@@ -326,7 +326,7 @@
     "12": {
         "CIO_ID": "106068",
         "height": 183.0,
-        "weight": null,
+        "weight": 91.0,
         "Sex": "M",
         "age": 0,
         "Preferred MRI Site": "RH",
@@ -352,7 +352,7 @@
     "13": {
         "CIO_ID": "117223",
         "height": 157.48,
-        "weight": null,
+        "weight": 84.0,
         "Sex": "F",
         "age": 0,
         "Preferred MRI Site": "RH",
@@ -406,7 +406,7 @@
     "15": {
         "CIO_ID": "7725c650-903e-4be9-96a2-6a29343dfc25",
         "height": 167.64,
-        "weight": null,
+        "weight": 554.289424,
         "Sex": "M",
         "age": 0,
         "Preferred MRI Site": "VGH",
@@ -430,7 +430,7 @@
     "16": {
         "CIO_ID": "112650",
         "height": 165.0,
-        "weight": null,
+        "weight": 150.0,
         "Sex": "F",
         "age": 0,
         "Preferred MRI Site": "UBCH",
@@ -484,7 +484,7 @@
     "18": {
         "CIO_ID": "134831",
         "height": 170.18,
-        "weight": null,
+        "weight": 70.30676,
         "Sex": "F",
         "age": 0,
         "Preferred MRI Site": "VGH",
@@ -510,7 +510,7 @@
     "19": {
         "CIO_ID": "137607",
         "height": 180.4,
-        "weight": null,
+        "weight": 76.7,
         "Sex": "F",
         "age": 0,
         "Preferred MRI Site": "UBCH",
@@ -542,7 +542,7 @@
     "20": {
         "CIO_ID": "111323",
         "height": 165.0,
-        "weight": null,
+        "weight": 60.0,
         "Sex": "F",
         "age": 0,
         "Preferred MRI Site": "UBCH",
@@ -569,7 +569,7 @@
     "21": {
         "CIO_ID": "115812",
         "height": 167.0,
-        "weight": null,
+        "weight": 70.0,
         "Sex": "M",
         "age": 0,
         "Preferred MRI Site": "RH",
@@ -595,7 +595,7 @@
     "22": {
         "CIO_ID": "128019",
         "height": 175.0,
-        "weight": null,
+        "weight": 93.0,
         "Sex": "M",
         "age": 0,
         "Preferred MRI Site": null,
@@ -617,7 +617,7 @@
     "23": {
         "CIO_ID": "110759",
         "height": 162.56,
-        "weight": null,
+        "weight": 155.0,
         "Sex": "F",
         "age": 0,
         "Preferred MRI Site": "UBCH",
@@ -628,7 +628,7 @@
             "bilateral wrist pain",
             "quervains tendinitis",
             "wrist pain lunar sided",
-            "fcc injury"
+            "tfcc injury"
         ],
         "anatomy": [
             "wrist",
@@ -639,14 +639,14 @@
             "bilateral diffuse wrist pain",
             "de quervains tendinitis",
             "sided",
-            "wrist pain rio"
+            "wrist pain r\/o"
         ],
         "other_info": []
     },
     "24": {
         "CIO_ID": "4eafd6ed-61a3-46df-b27f-b70cfa786876",
         "height": 167.64,
-        "weight": null,
+        "weight": 84.821704,
         "Sex": "F",
         "age": 0,
         "Preferred MRI Site": null,
@@ -672,7 +672,7 @@
     "25": {
         "CIO_ID": "117317",
         "height": 177.8,
-        "weight": null,
+        "weight": 58.96696,
         "Sex": "F",
         "age": 0,
         "Preferred MRI Site": "UBCH",
@@ -701,7 +701,7 @@
     "26": {
         "CIO_ID": "121004",
         "height": 164.0,
-        "weight": null,
+        "weight": 67.7,
         "Sex": "F",
         "age": 0,
         "Preferred MRI Site": "RH",
@@ -726,7 +726,7 @@
     "27": {
         "CIO_ID": "108279",
         "height": 172.72,
-        "weight": null,
+        "weight": 72.57,
         "Sex": "M",
         "age": 0,
         "Preferred MRI Site": "RH",
@@ -751,7 +751,7 @@
         "phrases": [
             "acute pain",
             "the anterior shoulder anterolateral shoulder pain pain",
-            "lump anterior shoulder rio full thickness rotator cuff tear"
+            "lump anterior shoulder r\/o full thickness rotator cuff tear"
         ],
         "other_info": []
     },
@@ -789,7 +789,7 @@
     "29": {
         "CIO_ID": "125592",
         "height": 173.0,
-        "weight": null,
+        "weight": 98.0,
         "Sex": "F",
         "age": 0,
         "Preferred MRI Site": "UBCH",
@@ -822,7 +822,7 @@
     "30": {
         "CIO_ID": "113945",
         "height": 196.0,
-        "weight": null,
+        "weight": 252.0,
         "Sex": "M",
         "age": 0,
         "Preferred MRI Site": null,
@@ -843,7 +843,7 @@
     "31": {
         "CIO_ID": "120542",
         "height": 160.0,
-        "weight": null,
+        "weight": 54.0,
         "Sex": "F",
         "age": 0,
         "Preferred MRI Site": "UBCH",
@@ -864,7 +864,7 @@
     "32": {
         "CIO_ID": "92587",
         "height": 150.0,
-        "weight": null,
+        "weight": 70.0,
         "Sex": "F",
         "age": 0,
         "Preferred MRI Site": null,
@@ -923,7 +923,7 @@
     "34": {
         "CIO_ID": "79714",
         "height": 185.0,
-        "weight": null,
+        "weight": 92.0,
         "Sex": "M",
         "age": 0,
         "Preferred MRI Site": "UBCH",
@@ -947,7 +947,7 @@
     "35": {
         "CIO_ID": "99083",
         "height": 157.5,
-        "weight": null,
+        "weight": 62.5,
         "Sex": "F",
         "age": 0,
         "Preferred MRI Site": null,
@@ -973,7 +973,7 @@
     "36": {
         "CIO_ID": "102729",
         "height": 170.18,
-        "weight": null,
+        "weight": 74.84,
         "Sex": "m",
         "age": 0,
         "Preferred MRI Site": "RH",
@@ -1048,7 +1048,7 @@
     "39": {
         "CIO_ID": "105188",
         "height": 190.5,
-        "weight": null,
+        "weight": 108.86208,
         "Sex": "M",
         "age": 0,
         "Preferred MRI Site": "VGH",
@@ -1079,7 +1079,7 @@
     "40": {
         "CIO_ID": "98793",
         "height": 180.0,
-        "weight": null,
+        "weight": 58.96696,
         "Sex": "M",
         "age": 0,
         "Preferred MRI Site": "VGH",
@@ -1106,7 +1106,7 @@
     "41": {
         "CIO_ID": "70c3e868-77b1-44e9-9887-39001b8b34f2",
         "height": 165.0,
-        "weight": null,
+        "weight": 80.0,
         "Sex": "F",
         "age": 0,
         "Preferred MRI Site": "RH",
@@ -1131,7 +1131,7 @@
     "42": {
         "CIO_ID": "112171",
         "height": 188.0,
-        "weight": null,
+        "weight": 86.0,
         "Sex": "M",
         "age": 0,
         "Preferred MRI Site": "RH",
@@ -1159,7 +1159,7 @@
     "43": {
         "CIO_ID": "92851",
         "height": 170.18,
-        "weight": null,
+        "weight": 124.7378,
         "Sex": "F",
         "age": 0,
         "Preferred MRI Site": "VGH",
@@ -1185,7 +1185,7 @@
     "44": {
         "CIO_ID": "59301",
         "height": 175.26,
-        "weight": null,
+        "weight": 86.36,
         "Sex": "F",
         "age": 0,
         "Preferred MRI Site": "VGH",
@@ -1208,7 +1208,7 @@
     "45": {
         "CIO_ID": "5ce97fa3-fd41-43b3-9439-cf6f8c5d566b",
         "height": 187.96,
-        "weight": null,
+        "weight": 106.59412,
         "Sex": "M",
         "age": 0,
         "Preferred MRI Site": "VGH",
@@ -1234,7 +1234,7 @@
     "46": {
         "CIO_ID": "e829d5b4-f532-474d-be9d-be7938d60284",
         "height": 172.72,
-        "weight": null,
+        "weight": 86.18248,
         "Sex": "M",
         "age": 0,
         "Preferred MRI Site": "VGH",
@@ -1252,7 +1252,7 @@
         ],
         "symptoms": [],
         "phrases": [
-            "new headache rio stroke"
+            "new headache r\/o stroke"
         ],
         "other_info": [
             "stroke"
@@ -1261,7 +1261,7 @@
     "47": {
         "CIO_ID": "66880",
         "height": 170.0,
-        "weight": null,
+        "weight": 70.0,
         "Sex": "M",
         "age": 0,
         "Preferred MRI Site": "VGH",
@@ -1287,7 +1287,7 @@
     "48": {
         "CIO_ID": "101407",
         "height": 167.64,
-        "weight": null,
+        "weight": 61.23492,
         "Sex": "F",
         "age": 0,
         "Preferred MRI Site": "VGH",
@@ -1314,7 +1314,7 @@
     "49": {
         "CIO_ID": "81083",
         "height": 187.96,
-        "weight": null,
+        "weight": 111.13004,
         "Sex": "M",
         "age": 0,
         "Preferred MRI Site": "RH",
@@ -1335,7 +1335,7 @@
     "50": {
         "CIO_ID": "88769",
         "height": 160.0,
-        "weight": null,
+        "weight": 60.0,
         "Sex": "M",
         "age": 0,
         "Preferred MRI Site": "UBCH",
@@ -1358,7 +1358,7 @@
     "51": {
         "CIO_ID": "80802",
         "height": 149.86,
-        "weight": null,
+        "weight": 56.699,
         "Sex": "M",
         "age": 0,
         "Preferred MRI Site": "UBCH",
@@ -1382,7 +1382,7 @@
     "52": {
         "CIO_ID": "94390",
         "height": 175.0,
-        "weight": null,
+        "weight": 88.0,
         "Sex": "M",
         "age": 0,
         "Preferred MRI Site": null,
@@ -1428,7 +1428,7 @@
     "54": {
         "CIO_ID": "98271",
         "height": 165.1,
-        "weight": null,
+        "weight": 58.96696,
         "Sex": "F",
         "age": 0,
         "Preferred MRI Site": null,
@@ -1471,7 +1471,7 @@
     "56": {
         "CIO_ID": "95423",
         "height": 168.0,
-        "weight": null,
+        "weight": 54.43104,
         "Sex": "M",
         "age": 0,
         "Preferred MRI Site": null,
@@ -1490,7 +1490,7 @@
     "57": {
         "CIO_ID": "82996",
         "height": 180.0,
-        "weight": null,
+        "weight": 86.0,
         "Sex": "M",
         "age": 0,
         "Preferred MRI Site": null,
@@ -1550,7 +1550,7 @@
         "p5": "f",
         "medical_condition": [],
         "diagnosis": [
-            "distal fcc tear",
+            "distal tfcc tear",
             "ongoing distal fracture radius",
             "ongoing pain lunar sided"
         ],
@@ -1559,13 +1559,15 @@
             "wrist"
         ],
         "symptoms": [],
-        "phrases": [],
+        "phrases": [
+            "tfcc tear"
+        ],
         "other_info": []
     },
     "60": {
         "CIO_ID": "73809",
         "height": 0.0,
-        "weight": null,
+        "weight": 113.8,
         "Sex": "M",
         "age": 0,
         "Preferred MRI Site": "RH",
@@ -1617,7 +1619,7 @@
     "62": {
         "CIO_ID": "78ee2f66-5374-4d40-917e-8f4c290caf9b",
         "height": 159.0,
-        "weight": null,
+        "weight": 78.2,
         "Sex": "F",
         "age": 0,
         "Preferred MRI Site": null,
@@ -1671,7 +1673,7 @@
     "64": {
         "CIO_ID": "96458",
         "height": 170.0,
-        "weight": null,
+        "weight": 86.0,
         "Sex": "M",
         "age": 0,
         "Preferred MRI Site": null,
@@ -1755,7 +1757,7 @@
     "67": {
         "CIO_ID": "b1bf5a0a-6f47-4b7e-a844-46ca35475154",
         "height": 180.0,
-        "weight": null,
+        "weight": 140.0,
         "Sex": "M",
         "age": 0,
         "Preferred MRI Site": "RH",
@@ -1763,14 +1765,16 @@
         "p5": "f",
         "medical_condition": [],
         "diagnosis": [
-            "medical tear"
+            "meniscal tear"
         ],
         "anatomy": [
             "mri",
             "knee"
         ],
         "symptoms": [],
-        "phrases": [],
+        "phrases": [
+            "meniscal"
+        ],
         "other_info": []
     },
     "68": {
@@ -1801,7 +1805,7 @@
     "69": {
         "CIO_ID": "98505",
         "height": 173.0,
-        "weight": null,
+        "weight": 70.3,
         "Sex": "M",
         "age": 0,
         "Preferred MRI Site": null,
@@ -1827,7 +1831,7 @@
     "70": {
         "CIO_ID": "81217",
         "height": 182.88,
-        "weight": null,
+        "weight": 77.11064,
         "Sex": "M",
         "age": 0,
         "Preferred MRI Site": "UBCH",
@@ -1849,7 +1853,7 @@
     "71": {
         "CIO_ID": "90821",
         "height": 163.0,
-        "weight": null,
+        "weight": 78.0,
         "Sex": "F",
         "age": 0,
         "Preferred MRI Site": null,
@@ -1872,7 +1876,7 @@
     "72": {
         "CIO_ID": "90821",
         "height": 163.0,
-        "weight": null,
+        "weight": 78.0,
         "Sex": null,
         "age": 0,
         "Preferred MRI Site": null,
@@ -1895,7 +1899,7 @@
     "73": {
         "CIO_ID": "95759",
         "height": 166.0,
-        "weight": null,
+        "weight": 103.9,
         "Sex": "F",
         "age": 0,
         "Preferred MRI Site": "VGH",
@@ -2043,7 +2047,7 @@
     "79": {
         "CIO_ID": "53772",
         "height": 177.8,
-        "weight": null,
+        "weight": 83.9,
         "Sex": "M",
         "age": 0,
         "Preferred MRI Site": "VGH",
@@ -2066,7 +2070,7 @@
     "80": {
         "CIO_ID": "53772",
         "height": 177.8,
-        "weight": null,
+        "weight": 83.9,
         "Sex": "M",
         "age": 0,
         "Preferred MRI Site": "VGH",
@@ -2108,7 +2112,7 @@
     "82": {
         "CIO_ID": "23f684d2-576b-4766-84ae-dd37292a66bb",
         "height": 169.0,
-        "weight": null,
+        "weight": 79.8,
         "Sex": "M",
         "age": 0,
         "Preferred MRI Site": "VGH",
@@ -2133,7 +2137,7 @@
     "83": {
         "CIO_ID": "aa62a204-f50b-4a0d-bde7-22a3cc1722bb",
         "height": 0.0,
-        "weight": null,
+        "weight": 98.4,
         "Sex": "M",
         "age": 0,
         "Preferred MRI Site": "VGH",
@@ -2164,7 +2168,7 @@
     "84": {
         "CIO_ID": "4818a405-7d5d-4e28-8f30-9538677df909",
         "height": 186.0,
-        "weight": null,
+        "weight": 97.7,
         "Sex": "M",
         "age": 0,
         "Preferred MRI Site": "VGH",
@@ -2183,7 +2187,7 @@
         ],
         "symptoms": [],
         "phrases": [
-            "pancreas rio",
+            "pancreas r\/o",
             "soft tissue abnormality history"
         ],
         "other_info": [
@@ -2216,7 +2220,7 @@
     "86": {
         "CIO_ID": "60495",
         "height": 170.18,
-        "weight": null,
+        "weight": 71.213944,
         "Sex": "F",
         "age": 0,
         "Preferred MRI Site": "VGH",
@@ -2242,7 +2246,7 @@
     "87": {
         "CIO_ID": "e3317040-f496-45cb-8255-53c1ae068903",
         "height": 182.88,
-        "weight": null,
+        "weight": 110.45,
         "Sex": "M",
         "age": 0,
         "Preferred MRI Site": "VGH",
@@ -2261,7 +2265,7 @@
     "88": {
         "CIO_ID": "45532",
         "height": 177.5,
-        "weight": null,
+        "weight": 84.7,
         "Sex": "M",
         "age": 0,
         "Preferred MRI Site": "VGH",
@@ -2297,7 +2301,7 @@
     "89": {
         "CIO_ID": "33515",
         "height": 170.18,
-        "weight": null,
+        "weight": 77.11064,
         "Sex": "F",
         "age": 0,
         "Preferred MRI Site": "UBCH",
@@ -2345,7 +2349,7 @@
     "91": {
         "CIO_ID": "59c5baa5-f0ad-48f7-b547-51d8612630e8",
         "height": 172.72,
-        "weight": null,
+        "weight": 61.23492,
         "Sex": "F",
         "age": 0,
         "Preferred MRI Site": "VGH",
@@ -2501,7 +2505,7 @@
     "97": {
         "CIO_ID": "66004ccd-9f40-4063-b3e7-e71b46d1e87e",
         "height": 0.0,
-        "weight": null,
+        "weight": 58.96696,
         "Sex": "F",
         "age": 0,
         "Preferred MRI Site": "VGH",
@@ -2523,7 +2527,7 @@
     "98": {
         "CIO_ID": "2562667e-69c2-42e7-bfec-f20328c676df",
         "height": 0.0,
-        "weight": null,
+        "weight": 58.96696,
         "Sex": "F",
         "age": 0,
         "Preferred MRI Site": "VGH",
@@ -2590,7 +2594,7 @@
     "101": {
         "CIO_ID": "a2d92c3a-3449-4027-a0bf-5d3517fca2f7",
         "height": 177.8,
-        "weight": null,
+        "weight": 72.57472,
         "Sex": "M",
         "age": 0,
         "Preferred MRI Site": "VGH",
@@ -2648,7 +2652,7 @@
     "103": {
         "CIO_ID": "107a40b0-6880-43ed-98f8-d64d28a2f028",
         "height": 2103.12,
-        "weight": null,
+        "weight": 70.30676,
         "Sex": "M",
         "age": 0,
         "Preferred MRI Site": null,
@@ -2689,7 +2693,7 @@
         ],
         "symptoms": [],
         "phrases": [
-            "follow-up white matter lesions",
+            "followup white matter lesions",
             "demyelination report"
         ],
         "other_info": []
@@ -2748,7 +2752,7 @@
     "107": {
         "CIO_ID": "c09f2bea-35fa-4560-a9b1-b30464c3555f",
         "height": 157.0,
-        "weight": null,
+        "weight": 65.0,
         "Sex": "F",
         "age": 0,
         "Preferred MRI Site": null,
@@ -2779,7 +2783,7 @@
     "108": {
         "CIO_ID": "b9047a9d-88c6-4ea2-9b32-60a73e13c5dc",
         "height": 175.0,
-        "weight": null,
+        "weight": 81.0,
         "Sex": "M",
         "age": 0,
         "Preferred MRI Site": null,
@@ -2831,7 +2835,7 @@
     "110": {
         "CIO_ID": "136ae7ea-af21-475b-88cc-63ac80d39973",
         "height": 167.64,
-        "weight": null,
+        "weight": 58.96696,
         "Sex": "F",
         "age": 0,
         "Preferred MRI Site": "VGH",
@@ -2906,7 +2910,7 @@
     "113": {
         "CIO_ID": "adf07f55-f4d5-4000-bec5-c4c51a43ac6c",
         "height": 0.0,
-        "weight": null,
+        "weight": 93.0,
         "Sex": "M",
         "age": 0,
         "Preferred MRI Site": "UBCH",
@@ -2928,7 +2932,7 @@
     "114": {
         "CIO_ID": "103616",
         "height": 177.8,
-        "weight": null,
+        "weight": 127.00576,
         "Sex": "M",
         "age": 0,
         "Preferred MRI Site": "RH",
@@ -2958,7 +2962,7 @@
     "115": {
         "CIO_ID": "151088",
         "height": 176.5,
-        "weight": null,
+        "weight": 70.1,
         "Sex": "F",
         "age": 0,
         "Preferred MRI Site": "VGH",
@@ -2992,7 +2996,7 @@
         "p5": "f",
         "medical_condition": [],
         "diagnosis": [
-            "branchial plexus injury"
+            "brachial plexus injury"
         ],
         "anatomy": [
             "shoulder",
@@ -3028,7 +3032,7 @@
     "118": {
         "CIO_ID": "152535",
         "height": 172.0,
-        "weight": null,
+        "weight": 63.0,
         "Sex": "M",
         "age": 0,
         "Preferred MRI Site": "VGH",
@@ -3038,7 +3042,7 @@
             "poor ventricular function"
         ],
         "diagnosis": [
-            "ischaemic cardiomyopathy",
+            "ischemic cardiomyopathy",
             "mi",
             "cad"
         ],
@@ -3048,6 +3052,7 @@
         "symptoms": [],
         "phrases": [
             "oh poor ventricular function",
+            "ischemic cardiomyopathy",
             "early january 2020 previous mi"
         ],
         "other_info": []
@@ -3055,7 +3060,7 @@
     "119": {
         "CIO_ID": "6f948e34-a1b8-4cdd-8879-5ff9f1f432ac",
         "height": 170.18,
-        "weight": null,
+        "weight": 74.84268,
         "Sex": "M",
         "age": 0,
         "Preferred MRI Site": "VGH",
@@ -3255,7 +3260,7 @@
     "127": {
         "CIO_ID": "e6c1bc26-e6f0-43c4-85aa-82b248365de4",
         "height": 175.5,
-        "weight": null,
+        "weight": 106.8,
         "Sex": "M",
         "age": 0,
         "Preferred MRI Site": null,
@@ -3298,7 +3303,7 @@
     "129": {
         "CIO_ID": "3ea48f42-43a4-493d-aa3d-67dcaff90f8b",
         "height": 177.8,
-        "weight": null,
+        "weight": 74.84268,
         "Sex": "M",
         "age": 0,
         "Preferred MRI Site": null,
@@ -3376,7 +3381,7 @@
     "132": {
         "CIO_ID": "32300",
         "height": 175.0,
-        "weight": null,
+        "weight": 68.1,
         "Sex": "M",
         "age": 0,
         "Preferred MRI Site": "VGH",
@@ -3398,7 +3403,7 @@
     "133": {
         "CIO_ID": "76958",
         "height": 0.0,
-        "weight": null,
+        "weight": 80.0,
         "Sex": "F",
         "age": 0,
         "Preferred MRI Site": null,
@@ -3425,7 +3430,7 @@
     "134": {
         "CIO_ID": "2a364e13-497b-4b1c-98f0-9b78690139f5",
         "height": 175.0,
-        "weight": null,
+        "weight": 77.3,
         "Sex": "M",
         "age": 0,
         "Preferred MRI Site": null,
@@ -3436,7 +3441,7 @@
         ],
         "diagnosis": [
             "ongoing pain",
-            "medical injury"
+            "meniscal injury"
         ],
         "anatomy": [
             "lt knee mri",
@@ -3457,7 +3462,7 @@
     "135": {
         "CIO_ID": "78483",
         "height": 183.0,
-        "weight": null,
+        "weight": 71.5,
         "Sex": "M",
         "age": 0,
         "Preferred MRI Site": null,
@@ -3487,7 +3492,7 @@
     "136": {
         "CIO_ID": "83e8bf94-eda7-40e5-8394-71f965fbe50a",
         "height": 157.0,
-        "weight": null,
+        "weight": 77.0,
         "Sex": "F",
         "age": 0,
         "Preferred MRI Site": null,
@@ -3506,7 +3511,7 @@
     "137": {
         "CIO_ID": "101518",
         "height": 170.0,
-        "weight": null,
+        "weight": 60.0,
         "Sex": "M",
         "age": 0,
         "Preferred MRI Site": null,
@@ -3543,7 +3548,7 @@
     "138": {
         "CIO_ID": "91290",
         "height": 175.0,
-        "weight": null,
+        "weight": 81.0,
         "Sex": "M",
         "age": 0,
         "Preferred MRI Site": "VGH",
@@ -3569,7 +3574,7 @@
     "139": {
         "CIO_ID": "9a2051aa-d85a-4ca0-a4ac-cd91eb4dc39a",
         "height": 165.1,
-        "weight": null,
+        "weight": 63.50288,
         "Sex": "F",
         "age": 0,
         "Preferred MRI Site": "UBCH",
@@ -3674,7 +3679,7 @@
     "143": {
         "CIO_ID": "7f99f03a-2851-4541-89a8-c93166b63542",
         "height": 160.02,
-        "weight": null,
+        "weight": 68.0388,
         "Sex": "F",
         "age": 0,
         "Preferred MRI Site": null,
@@ -3698,7 +3703,7 @@
     "144": {
         "CIO_ID": "31596",
         "height": 0.0,
-        "weight": null,
+        "weight": 77.6,
         "Sex": "M",
         "age": 0,
         "Preferred MRI Site": null,
@@ -3724,7 +3729,7 @@
     "145": {
         "CIO_ID": "6d4903be-e8a3-45b2-ade7-2c9d357e170f",
         "height": 157.0,
-        "weight": null,
+        "weight": 77.0,
         "Sex": null,
         "age": 0,
         "Preferred MRI Site": "VGH",
@@ -3783,7 +3788,7 @@
     "147": {
         "CIO_ID": "40835",
         "height": 172.0,
-        "weight": null,
+        "weight": 60.0,
         "Sex": "F",
         "age": 0,
         "Preferred MRI Site": null,
@@ -3809,7 +3814,7 @@
     "148": {
         "CIO_ID": "a3428723-8635-4ac0-a7dd-b4381da810d4",
         "height": 177.8,
-        "weight": null,
+        "weight": 85.28,
         "Sex": "M",
         "age": 0,
         "Preferred MRI Site": null,
@@ -3834,7 +3839,7 @@
     "149": {
         "CIO_ID": "cc214a08-5cf4-4f51-8273-8651ce5e2f5e",
         "height": 175.0,
-        "weight": null,
+        "weight": 75.0,
         "Sex": "M",
         "age": 0,
         "Preferred MRI Site": null,
@@ -3857,7 +3862,7 @@
     "150": {
         "CIO_ID": "27503",
         "height": 172.0,
-        "weight": null,
+        "weight": 77.6,
         "Sex": "F",
         "age": 0,
         "Preferred MRI Site": null,
@@ -3883,7 +3888,7 @@
     "151": {
         "CIO_ID": "12b25c38-4179-42f0-8f54-b42f23653e09",
         "height": 175.0,
-        "weight": null,
+        "weight": 75.0,
         "Sex": "M",
         "age": 0,
         "Preferred MRI Site": null,
@@ -3935,7 +3940,7 @@
     "153": {
         "CIO_ID": "84284",
         "height": 185.0,
-        "weight": null,
+        "weight": 85.5,
         "Sex": "M",
         "age": 0,
         "Preferred MRI Site": null,
@@ -3959,7 +3964,7 @@
     "154": {
         "CIO_ID": "89975",
         "height": 152.4,
-        "weight": null,
+        "weight": 54.4,
         "Sex": "F",
         "age": 0,
         "Preferred MRI Site": "RH",
@@ -4010,7 +4015,7 @@
     "156": {
         "CIO_ID": "48400",
         "height": 170.0,
-        "weight": null,
+        "weight": 67.131616,
         "Sex": "M",
         "age": 0,
         "Preferred MRI Site": "VGH",
@@ -4035,7 +4040,7 @@
     "157": {
         "CIO_ID": "79590",
         "height": 175.26,
-        "weight": null,
+        "weight": 79.3786,
         "Sex": "M",
         "age": 0,
         "Preferred MRI Site": null,
@@ -4072,8 +4077,8 @@
         "medical_condition": [
             "radial head",
             "elbow flexion clicking",
-            "left pain fcc",
-            "left over tender fcc radial sided"
+            "left pain tfcc",
+            "left over tender tfcc radial sided"
         ],
         "diagnosis": [
             "forearm fracture",
@@ -4091,7 +4096,8 @@
             "forearm fracture",
             "lateral elbow pain",
             "radial head",
-            "elbow flexion"
+            "elbow flexion",
+            "tfcc"
         ],
         "other_info": [
             "history"
@@ -4100,7 +4106,7 @@
     "159": {
         "CIO_ID": "73818",
         "height": 162.56,
-        "weight": null,
+        "weight": 90.0,
         "Sex": "F",
         "age": 0,
         "Preferred MRI Site": null,
@@ -4130,7 +4136,7 @@
     "160": {
         "CIO_ID": "60934",
         "height": 172.72,
-        "weight": null,
+        "weight": 68.0388,
         "Sex": "M",
         "age": 0,
         "Preferred MRI Site": null,
@@ -4139,7 +4145,7 @@
         "medical_condition": [],
         "diagnosis": [
             "dorsal right wrist pain lunar aspect",
-            "fcc tear",
+            "tfcc tear",
             "scapholunate dissociation"
         ],
         "anatomy": [
@@ -4148,11 +4154,12 @@
         ],
         "symptoms": [
             "fall",
-            "over tenderness fcc"
+            "over tenderness tfcc"
         ],
         "phrases": [
             "right dorsal lunar aspect wrist pain",
-            "a fall"
+            "a fall",
+            "tfcc tear"
         ],
         "other_info": [
             "history"
@@ -4182,7 +4189,7 @@
     "162": {
         "CIO_ID": "87233",
         "height": 177.5,
-        "weight": null,
+        "weight": 97.52228,
         "Sex": "F",
         "age": 0,
         "Preferred MRI Site": null,
@@ -4231,7 +4238,7 @@
     "164": {
         "CIO_ID": "88110",
         "height": 170.18,
-        "weight": null,
+        "weight": 65.77084,
         "Sex": "F",
         "age": 0,
         "Preferred MRI Site": null,
@@ -4281,7 +4288,7 @@
     "166": {
         "CIO_ID": "57233",
         "height": 155.0,
-        "weight": null,
+        "weight": 60.7,
         "Sex": "F",
         "age": 0,
         "Preferred MRI Site": "VGH",
@@ -4303,7 +4310,7 @@
     "167": {
         "CIO_ID": "25500",
         "height": 167.5,
-        "weight": null,
+        "weight": 65.77084,
         "Sex": "M",
         "age": 0,
         "Preferred MRI Site": null,
@@ -4329,7 +4336,7 @@
     "168": {
         "CIO_ID": "118566",
         "height": 165.0,
-        "weight": null,
+        "weight": 130.0,
         "Sex": "F",
         "age": 0,
         "Preferred MRI Site": null,
@@ -4381,7 +4388,7 @@
     "170": {
         "CIO_ID": "115166",
         "height": 175.0,
-        "weight": null,
+        "weight": 70.0,
         "Sex": "M",
         "age": 0,
         "Preferred MRI Site": null,
@@ -4495,7 +4502,7 @@
     "174": {
         "CIO_ID": "6ecff7ab-9666-48f9-92b9-3f3f983f6c6a",
         "height": 0.0,
-        "weight": null,
+        "weight": 74.84268,
         "Sex": "M",
         "age": 0,
         "Preferred MRI Site": "UBCH",
@@ -4635,7 +4642,7 @@
         "p5": "t",
         "medical_condition": [],
         "diagnosis": [
-            "optic neuritic",
+            "optic neuritis",
             "demyelinating lesions"
         ],
         "anatomy": [
@@ -4643,7 +4650,9 @@
             "brain"
         ],
         "symptoms": [],
-        "phrases": [],
+        "phrases": [
+            "optic neuritis"
+        ],
         "other_info": []
     },
     "180": {
@@ -4674,7 +4683,7 @@
     "181": {
         "CIO_ID": "3c4cede6-4611-4f69-9563-784eea1a249c",
         "height": 0.0,
-        "weight": null,
+        "weight": 39.92,
         "Sex": "F",
         "age": 0,
         "Preferred MRI Site": "VGH",
@@ -4749,7 +4758,7 @@
     "184": {
         "CIO_ID": "50afc8c5-690c-4737-a3c5-eed1d44c69eb",
         "height": 178.0,
-        "weight": null,
+        "weight": 77.0,
         "Sex": "M",
         "age": 0,
         "Preferred MRI Site": "RH",
@@ -4804,7 +4813,7 @@
     "186": {
         "CIO_ID": "6aa0b296-0d28-4d12-9cd3-f10fa7c3e042",
         "height": 167.0,
-        "weight": null,
+        "weight": 70.0,
         "Sex": "F",
         "age": 0,
         "Preferred MRI Site": "VGH",
@@ -4825,7 +4834,7 @@
     "187": {
         "CIO_ID": "4ec09bf7-5567-434c-b298-a8d34f4befc8",
         "height": 178.0,
-        "weight": null,
+        "weight": 77.0,
         "Sex": "M",
         "age": 0,
         "Preferred MRI Site": "UBCH",
@@ -4833,7 +4842,7 @@
         "p5": "f",
         "medical_condition": [],
         "diagnosis": [
-            "for 3 months pulsating tinnitus"
+            "for 3 months pulsatile tinnitus"
         ],
         "anatomy": [
             "mri head noncontrast",
@@ -4873,7 +4882,7 @@
     "189": {
         "CIO_ID": "5a5786b1-c4b3-4d53-a72b-0e4eca98a451",
         "height": 170.18,
-        "weight": null,
+        "weight": 64.410064,
         "Sex": "M",
         "age": 0,
         "Preferred MRI Site": "UBCH",
@@ -4901,7 +4910,7 @@
         "p5": "t",
         "medical_condition": [],
         "diagnosis": [
-            "cp angle meningloma",
+            "cp angle meningioma",
             "right parietal vascular lesion"
         ],
         "anatomy": [
@@ -4910,14 +4919,14 @@
         ],
         "symptoms": [],
         "phrases": [
-            "right cp angle meningloma and right parietal vascular lesion"
+            "right cp angle meningioma and right parietal vascular lesion"
         ],
         "other_info": []
     },
     "191": {
         "CIO_ID": "82263",
         "height": 160.0,
-        "weight": null,
+        "weight": 69.0,
         "Sex": "F",
         "age": 0,
         "Preferred MRI Site": "UBCH",
@@ -4943,7 +4952,7 @@
     "192": {
         "CIO_ID": "104506",
         "height": 175.25,
-        "weight": null,
+        "weight": 70.31,
         "Sex": "M",
         "age": 0,
         "Preferred MRI Site": "VGH",
@@ -4969,7 +4978,7 @@
     "193": {
         "CIO_ID": "105613",
         "height": 162.56,
-        "weight": null,
+        "weight": 64.0,
         "Sex": "F",
         "age": 0,
         "Preferred MRI Site": "VGH",
@@ -4996,7 +5005,7 @@
     "194": {
         "CIO_ID": "115890",
         "height": 165.0,
-        "weight": null,
+        "weight": 70.0,
         "Sex": "F",
         "age": 0,
         "Preferred MRI Site": "UBCH",
@@ -5004,7 +5013,7 @@
         "p5": "f",
         "medical_condition": [],
         "diagnosis": [
-            "optic neuritic",
+            "optic neuritis",
             "lesions",
             "multiple sclerosis"
         ],
@@ -5014,6 +5023,7 @@
         ],
         "symptoms": [],
         "phrases": [
+            "optic neuritis mri",
             "lesions"
         ],
         "other_info": []
@@ -5045,7 +5055,7 @@
     "196": {
         "CIO_ID": "44686",
         "height": 165.1,
-        "weight": null,
+        "weight": 59.09,
         "Sex": "F",
         "age": 0,
         "Preferred MRI Site": "VGH",
@@ -5069,7 +5079,7 @@
     "197": {
         "CIO_ID": "75137",
         "height": 165.0,
-        "weight": null,
+        "weight": 70.8,
         "Sex": "F",
         "age": 0,
         "Preferred MRI Site": "RH",
@@ -5125,7 +5135,7 @@
     "199": {
         "CIO_ID": "95279",
         "height": 164.0,
-        "weight": null,
+        "weight": 81.4,
         "Sex": "F",
         "age": 0,
         "Preferred MRI Site": "RH",
@@ -5162,7 +5172,7 @@
             "3 months healthy"
         ],
         "diagnosis": [
-            "fcc injury",
+            "tfcc injury",
             "occult scaphoid",
             "late injury"
         ],
@@ -5186,7 +5196,7 @@
     "201": {
         "CIO_ID": "96546",
         "height": 167.0,
-        "weight": null,
+        "weight": 63.0,
         "Sex": "F",
         "age": 0,
         "Preferred MRI Site": "UBCH",
@@ -5219,7 +5229,7 @@
     "202": {
         "CIO_ID": "c56963a7-0ffd-4524-ab28-2f0eea3cab7f",
         "height": 185.0,
-        "weight": null,
+        "weight": 111.0,
         "Sex": "M",
         "age": 0,
         "Preferred MRI Site": "VGH",
@@ -5249,7 +5259,7 @@
     "203": {
         "CIO_ID": "107492",
         "height": 152.0,
-        "weight": null,
+        "weight": 40.0,
         "Sex": "F",
         "age": 0,
         "Preferred MRI Site": "VGH",
@@ -5281,7 +5291,7 @@
     "204": {
         "CIO_ID": "122298",
         "height": 160.0,
-        "weight": null,
+        "weight": 63.0,
         "Sex": "F",
         "age": 0,
         "Preferred MRI Site": "UBCH",
@@ -5315,7 +5325,7 @@
     "205": {
         "CIO_ID": "124186",
         "height": 160.0,
-        "weight": null,
+        "weight": 86.18248,
         "Sex": "F",
         "age": 0,
         "Preferred MRI Site": "VGH",

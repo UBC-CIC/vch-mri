@@ -9,15 +9,15 @@ from datetime import date, datetime
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
-def queryResults(cur, limit, prev_date):
+def queryResults(cur, page):
     cmd = """
     SELECT id, info, rules_id, sys_priority, contrast, p5_flag, tags, phys_priority, phys_contrast, created_at
     FROM data_results
-    WHERE created_at < %s
     ORDER BY created_at DESC
-    LIMIT %s
+    LIMIT 50 OFFSET %s
     """
-    cur.execute(cmd, (prev_date, limit))
+    offset = int(page-1)*50
+    cur.execute(cmd, (str(offset)))
     return cur.fetchall()
 
 def queryResultsID(cur, id):
@@ -64,7 +64,8 @@ def getResultCount(cur, interval):
 def datetime_to_json(obj):
     if isinstance(obj, (datetime, date)):
         return obj.strftime("%Y-%m-%d %H:%M:%S")
-    else return obj
+    else:
+        return obj
 
 def parseResponse(response):
     resp_list = []
@@ -98,21 +99,21 @@ def handler(event, context):
         try: 
             if data['operation'] == 'GET':
                 if 'id' in data.keys():
-                    response = queryResultsID(cur, data['id'])
-                    resp_list = parseResponse(response)
-                elif 'interval' in data.keys():
-                    response = getResultCount(cur, data['interval'])
-                    resp_list = [response]
+                    response = parseResponse(queryResultsID(cur, data['id']))
                 else: 
-                    response = queryResults(cur, data['limit'], data['timestamp'])
-                    resp_list = parseResponse(response)
+                    response = parseResponse(queryResults(cur, data['page']))
             elif data['operation'] == 'UPDATE':
                 response = updateResults(cur, data['id'], data['phys_priority'], data['phys_contrast'])
-                resp_list = [{'id': response[0][0], 'phys_priority': response[0][1], 'phys_contrast': response[0][2]}]
+                response = [{'id': response[0][0], 'phys_priority': response[0][1], 'phys_contrast': response[0][2]}]
+            elif data['operation'] == 'GET_DATA':
+                daily = getResultCount(cur, 'DAILY')
+                weekly = getResultCount(cur, 'WEEKLY')
+                monthly = getResultCount(cur, 'MONTHLY')
+                response = [{'daily': daily, 'weekly': weekly, 'monthly': monthly}]
             psql.commit()
             resp_dict = {'result': True, 'data': []}
             logger.info(response)
-            resp_dict['data'] = resp_list
+            resp_dict['data'] = response
             return resp_dict
         except Exception as error:
             logger.error(error)
@@ -120,4 +121,3 @@ def handler(event, context):
             return {'result': False, 'msg': f'{error}'}
 
     return {'result': True}
-    

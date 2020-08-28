@@ -247,3 +247,5 @@ knee,Arthrogram Postoperative,f,P3
 elbow,Arthrogram,f,P3
 ankle,Arthrogram,f,P3
 wrist / hand,Arthrogram,f,P3
+spine ,Acute stroke (CT preferred as initial investigation),f,P1
+pelvis / hip,Chronic Joint Pain,f,P4
