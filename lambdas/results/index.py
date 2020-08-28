@@ -4,6 +4,7 @@ import boto3
 import logging 
 import json 
 import os 
+from datetime import date, datetime
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
@@ -60,6 +61,11 @@ def getResultCount(cur, interval):
     cur.execute(cmd)
     return cur.fetchall()[0][0]
 
+def datetime_to_json(obj):
+    if isinstance(obj, (datetime, date)):
+        return obj.strftime("%Y-%m-%d %H:%M:%S")
+    else return obj
+
 def parseResponse(response):
     resp_list = []
     for resp_tuple in response: 
@@ -73,7 +79,7 @@ def parseResponse(response):
         resp['tags'] = resp_tuple[6]
         resp['phys_priority'] = resp_tuple[7]
         resp['phys_contrast'] = resp_tuple[8]
-        resp['date_created'] = resp_tuple[9]
+        resp['date_created'] = datetime_to_json(resp_tuple[9])
         resp_list.append(resp)
     return resp_list
 
