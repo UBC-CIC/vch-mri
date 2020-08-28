@@ -38,6 +38,28 @@ def updateResults(cur, id, priority, contrast):
     cur.execute(cmd, (priority, contrast, id))
     return cur.fetchall()
 
+def getResultCount(cur, interval):
+    if interval == 'DAILY':
+        cmd = """
+        SELECT COUNT(id)
+        FROM data_results
+        WHERE DATE(created_at) = current_date
+        """
+    elif interval == 'WEEKLY':
+        cmd = """
+        SELECT COUNT(id)
+        FROM data_results
+        WHERE EXTRACT(WEEK FROM created_at) = EXTRACT(WEEK FROM current_date)
+        """
+    elif interval == 'MONTHLY':
+        cmd = """
+        SELECT COUNT(id)
+        FROM data_results
+        WHERE EXTRACT(MONTH FROM created_at) = EXTRACT(MONTH FROM current_date)
+        """
+    cur.execute(cmd)
+    return cur.fetchall()[0][0]
+
 def parseResponse(response):
     resp_list = []
     for resp_tuple in response: 
@@ -71,9 +93,13 @@ def handler(event, context):
             if data['operation'] == 'GET':
                 if 'id' in data.keys():
                     response = queryResultsID(cur, data['id'])
+                    resp_list = parseResponse(response)
+                elif 'interval' in data.keys():
+                    response = getResultCount(cur, data['interval'])
+                    resp_list = [response]
                 else: 
                     response = queryResults(cur, data['limit'], data['timestamp'])
-                resp_list = parseResponse(response)
+                    resp_list = parseResponse(response)
             elif data['operation'] == 'UPDATE':
                 response = updateResults(cur, data['id'], data['phys_priority'], data['phys_contrast'])
                 resp_list = [{'id': response[0][0], 'phys_priority': response[0][1], 'phys_contrast': response[0][2]}]

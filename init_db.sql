@@ -8,6 +8,8 @@ DROP TABLE IF EXISTS conjunctions;
 DROP TABLE IF EXISTS spellchecker; 
 DROP TABLE IF EXISTS specialty_tags; 
 
+SET TIMEZONE = 'America/Vancouver';
+
 --timestamp function
 CREATE OR REPLACE FUNCTION trigger_set_timestamp()
 RETURNS TRIGGER AS $$

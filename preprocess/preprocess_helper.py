@@ -57,7 +57,6 @@ def convert2CM(height):
         return 0
 
 def convert2KG(weight):
-    print('weight is:', weight)
     if not isinstance(weight, str):
         return 0
     try:

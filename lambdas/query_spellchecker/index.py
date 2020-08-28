@@ -20,15 +20,6 @@ def addWord(cur, values):
     cur.execute(cmd, values)
     return cur.fetchall()
 
-def updateWord(cur, id, value):
-    cmd = """
-    UPDATE spellchecker set word = %s
-    where word = %s
-    RETURNING word
-    """
-    cur.execute(cmd, (value, id))
-    return cur.fetchall()
-
 def deleteWord(cur, id):
     cmd = """
     DELETE FROM spellchecker
@@ -64,9 +55,6 @@ def handler(event, context):
 
             elif data['operation'] == 'ADD':
                 response = addWord(cur, data['values'])
-                resp_list = parseResponse(response)
-            elif data['operation'] == 'UPDATE': 
-                updateWord(cur, data['id'], data['values'])
                 resp_list = parseResponse(response)
             elif data['operation'] == 'DELETE':
                 deleteWord(cur, data['id'])

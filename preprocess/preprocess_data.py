@@ -10,7 +10,7 @@ from rule_processing import postgresql
 
 start = time.time() 
 
-data_df = pd.read_csv('./csv/ms_data.csv', skip_blank_lines=True).fillna({'Req # CIO': '-1'}).astype('object')
+data_df = pd.read_csv('./csv/requisition_data_200.csv', skip_blank_lines=True).fillna({'Req # CIO': '-1'}).astype('object')
 # Format columns that don't need comprehend medical and preprocess the text 
 data_df['CIO_ID'] = data_df['Req # CIO']
 data_df['age'] = data_df['DOB \n(yyyy-mm-dd)'].apply(dob2age)
@@ -85,6 +85,6 @@ for row in range(len(formatted_df.index)):
     formatted_df.at[row, 'phrases'] = key_phrases
     formatted_df.at[row, 'other_info'] = other_info
 
-formatted_df.to_json('sample_output_1.json', orient='index')
+formatted_df.to_json('sample_output.json', orient='index')
 
 print(f'---{time.time()-start}---')

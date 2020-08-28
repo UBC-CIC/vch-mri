@@ -13,20 +13,20 @@ ec2 = boto3.client('ec2')
 ssm = boto3.client('ssm')
 
 cmd = """
-DROP TEXT SEARCH CONFIGURATION ths_search;
+DROP TEXT SEARCH CONFIGURATION IF EXISTS ths_search;
 
-DROP TEXT SEARCH DICTIONARY ths_test;
+DROP TEXT SEARCH DICTIONARY IF EXISTS ths_med;
 
-CREATE TEXT SEARCH DICTIONARY ths_test (
+CREATE TEXT SEARCH DICTIONARY ths_med (
 TEMPLATE = thesaurus, 
-DictFile = thesaurus_test,
+DictFile = thesaurus_medical,
 Dictionary = english_stem); 
 
 CREATE TEXT SEARCH CONFIGURATION ths_search (copy=english); 
 
 ALTER TEXT SEARCH CONFIGURATION ths_search 
 ALTER MAPPING FOR asciiword, asciihword, hword_asciipart 
-WITH ths_test, english_stem;
+WITH ths_med, english_stem;
 """
 
 def handler(event, context):
@@ -73,11 +73,12 @@ def handler(event, context):
         DocumentName='copyFile'
     )
     logger.info("Updated EC2 Instance")
-    # # Update text configuration on postgresql 
+    # Update text configuration on postgresql 
     # psql = postgresql.PostgreSQL()
     # with psql.conn.cursor() as cur: 
     #     try: 
     #         cur.execute(cmd)
+    #         psql.commit()
     #     except Exception as error:
     #         logger.error(error)
     #         logger.error("Exception Type: %s" % type(error))         
