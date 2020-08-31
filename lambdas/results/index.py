@@ -16,9 +16,17 @@ def queryResults(cur, page):
     ORDER BY created_at DESC
     LIMIT 50 OFFSET %s
     """
-    offset = int(page-1)*50
-    cur.execute(cmd, (str(offset)))
+    offset = (int(page)-1)*50
+    cur.execute(cmd, (offset,))
     return cur.fetchall()
+
+def queryPageCount(cur):
+    cmd = """
+    SELECT CEIL(CAST(COUNT(id) AS float)/50)
+    FROM data_results
+    """
+    cur.execute(cmd)
+    return cur.fetchall()[0][0]
 
 def queryResultsID(cur, id):
     cmd = """
@@ -97,11 +105,13 @@ def handler(event, context):
 
     with psql.conn.cursor() as cur:
         try: 
+            resp_dict = {'result': True, 'data': []}
             if data['operation'] == 'GET':
                 if 'id' in data.keys():
                     response = parseResponse(queryResultsID(cur, data['id']))
                 else: 
                     response = parseResponse(queryResults(cur, data['page']))
+                    resp_dict['total_pgs']= queryPageCount(cur)
             elif data['operation'] == 'UPDATE':
                 response = updateResults(cur, data['id'], data['phys_priority'], data['phys_contrast'])
                 response = [{'id': response[0][0], 'phys_priority': response[0][1], 'phys_contrast': response[0][2]}]
@@ -111,7 +121,6 @@ def handler(event, context):
                 monthly = getResultCount(cur, 'MONTHLY')
                 response = [{'daily': daily, 'weekly': weekly, 'monthly': monthly}]
             psql.commit()
-            resp_dict = {'result': True, 'data': []}
             logger.info(response)
             resp_dict['data'] = response
             return resp_dict

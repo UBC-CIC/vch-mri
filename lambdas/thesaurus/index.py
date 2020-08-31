@@ -7,7 +7,8 @@ import postgresql
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
-destPath = os.getenv('destPath')
+destPath = os.getenv('DEST_PATH')
+sendCommandName = os.getenv('SEND_COMMAND_NAME')
 s3 = boto3.client('s3')
 ec2 = boto3.client('ec2')
 ssm = boto3.client('ssm')
@@ -70,15 +71,16 @@ def handler(event, context):
                     bucket,
                 ],
             },
-        DocumentName='copyFile'
+        DocumentName=sendCommandName
     )
     logger.info("Updated EC2 Instance")
     # Update text configuration on postgresql 
-    # psql = postgresql.PostgreSQL()
-    # with psql.conn.cursor() as cur: 
-    #     try: 
-    #         cur.execute(cmd)
-    #         psql.commit()
-    #     except Exception as error:
-    #         logger.error(error)
-    #         logger.error("Exception Type: %s" % type(error))         
+    psql = postgresql.PostgreSQL()
+    with psql.conn.cursor() as cur: 
+        try: 
+            cur.execute(cmd)
+            psql.commit()
+            logger.info("Updated PostgreSQL Text Configuration")
+        except Exception as error:
+            logger.error(error)
+            logger.error("Exception Type: %s" % type(error))         

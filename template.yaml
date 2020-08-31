@@ -4,9 +4,6 @@ Description: >
     "MRI Scheduler Project \n"
 
 Parameters:
-#   CollectionId:  
-#     Default: twitter-selfie
-#     Type: String
   SecurityGroupId: 
     Type: String
     Default: sg-040d55deb79054a53
@@ -25,8 +22,6 @@ Globals:
     Runtime: python3.7
     Timeout: 20
     Tracing: Active
-    # Layers:
-    #   - !Ref CoreLayer
 
 Resources:
   AccessLogs:
@@ -52,7 +47,33 @@ Resources:
           - "*"
   
   ThesaurusFileBucket: 
-      Type: AWS::S3::Bucket
+    Type: AWS::S3::Bucket
+  
+  copyFile: 
+    Type: AWS::SSM::Document
+    Properties:
+      Content:
+        schemaVersion: '2.2'
+        description: 'Run a script to copy file from S3 onto Linux Instance.'
+        parameters:
+          fileName:
+            type: String
+            description: "(Required) Name of file in S3"
+          destPath:
+            type: String
+            description: "(Required) EC2 instance ID"
+          bucket: 
+            type: String
+            description: "(Required) S3 bucket name"
+        mainSteps:
+        - action: aws:runShellScript
+          name: runCommands
+          inputs:
+            timeoutSeconds: '60'
+            runCommand:
+            - "aws s3 cp s3://{{bucket}}/{{fileName}} {{destPath}}{{fileName}}"
+      DocumentType: Command
+      Name: 'copyFile'
 
   PreprocessLayer:
       Type: AWS::Serverless::LayerVersion
@@ -332,7 +353,8 @@ Resources:
           - !Ref PrivateSubnetID
       Environment:
         Variables:
-          destPath: "/usr/share/pgsql/tsearch_data/" # Path to shared postgresql directory
+          DEST_PATH: "/usr/share/pgsql/tsearch_data/" # Path to shared postgresql directory
+          SEND_COMMAND_NAME: !Ref copyFile
 
 Outputs:
   Preprocess:
