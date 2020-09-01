@@ -1,0 +1,69 @@
+import psycopg2 
+import postgresql
+import boto3 
+import logging 
+import json 
+
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
+
+def addTag(cur, values):
+    cmd = """
+    INSERT INTO specialty_tags
+    VALUES """
+    #param_values = []
+    for value in values: 
+        cmd += "(%s),"
+        #param_values.extend(value)
+    cmd = cmd[:-1]
+    cmd += " RETURNING tag"
+    cur.execute(cmd, values)
+    return cur.fetchall()
+
+def deleteTag(cur, id):
+    cmd = """
+    DELETE FROM specialty_tags
+    WHERE tag = %s"""
+    cur.execute(cmd, (id,))
+
+def parseResponse(response):
+    resp_list = []
+    for resp_tuple in response: 
+        resp_list.append(resp_tuple[0])
+    return resp_list
+
+def handler(event, context):
+    logger.info(event)
+    if 'body' not in event:
+        logger.error( 'Missing parameters')
+        return {'result': False, 'msg': 'Missing parameters' }
+
+    data = json.loads(event['body']) # use for postman tests
+    # data = event['body'] # use for console tests
+    logger.info(data)
+    psql = postgresql.PostgreSQL()
+
+    with psql.conn.cursor() as cur:
+        try: 
+            if data['operation'] == 'GET':
+                response = psql.queryTable('specialty_tags')
+                resp_dict = {'result': True}
+                logger.info(response)
+                resp_list = parseResponse(response)
+                resp_dict['data'] = resp_list
+                return resp_dict
+            elif data['operation'] == 'ADD':
+                response = addTag(cur, data['values'])
+                resp_list = parseResponse(response)
+            elif data['operation'] == 'DELETE':
+                deleteTag(cur, data['id'])
+            psql.commit() 
+            if data['operation'] == 'ADD' or data['operation'] == 'UPDATE':
+                return {'result': True, 'data': resp_list}
+        except Exception as error:
+            logger.error(error)
+            logger.error("Exception Type: %s" % type(error))
+            return {'result': False, 'msg': f'{error}'}
+
+    return {'result': True}
+    

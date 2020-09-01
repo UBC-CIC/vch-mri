@@ -282,6 +282,33 @@ Resources:
         Variables:
           UPDATE_WEIGHTS_LAMBDA: !Ref UpdateWeights
 
+  QuerySpecialtyTags:
+    Type: AWS::Serverless::Function 
+    Properties:
+      CodeUri: ./lambdas/query_specialty_tags
+      Events:
+        ExplicitApi: # warning: creates a public endpoint
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref HttpApi
+            Method: Post
+            Path: /tags
+            TimeoutInMillis: 29000
+            PayloadFormatVersion: "2.0"
+            RouteSettings:
+              ThrottlingBurstLimit: 100
+      Layers: 
+        - !Ref Psycopg2Layer
+        - !Ref PostgresLayer
+      Policies:
+        - SSMParameterReadPolicy:
+            ParameterName: "mri-phsa*"
+      VpcConfig: 
+        SecurityGroupIds: 
+          - !Ref SecurityGroupId 
+        SubnetIds:
+          - !Ref PrivateSubnetID
+
   UpdateWeights:
     Type: AWS::Serverless::Function 
     Properties:
