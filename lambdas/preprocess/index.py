@@ -202,7 +202,7 @@ def handler(event, context):
     logger.info(event)
     if 'body' not in event:
         logger.error( 'Missing parameters')
-        return {'result': False, 'msg': 'Missing parameters' }
+        return {"isBase64Encoded": False, "statusCode": 400, "body": "Missing Body Parameter", "headers": {"Content-Type": "application/json"}}
 
     data_df = json.loads(event['body']) # use for postman tests
     # data_df = event['body'] # use for console tests
@@ -274,14 +274,17 @@ def handler(event, context):
     #formatted_df.to_json('sample_output.json', orient='index')
     #print("output is: ", formatted_df)
     
-    response = lambda_client.invoke(
+    rules_response = lambda_client.invoke(
             FunctionName=RuleProcessingLambdaName,
             InvocationType='RequestResponse',
             Payload=json.dumps(formatted_df)
         )
-        
-    data = json.loads(response['Payload'].read())
-        
+
+    if rule_response['ResponseMetadata']['HTTPStatusCode'] != 200: 
+        return rule_response
+
+    data = json.loads(rule_response['Payload'].read())
+    
     response = { 
         'result': data, 
         'context': formatted_df

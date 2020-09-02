@@ -36,7 +36,7 @@ def handler(event, context):
     logger.info(event)
     if 'body' not in event:
         logger.error( 'Missing parameters')
-        return {'result': False, 'msg': 'Missing parameters' }
+        return {"isBase64Encoded": False, "statusCode": 400, "body": "Missing Body Parameter", "headers": {"Content-Type": "application/json"}}
 
     data = json.loads(event['body']) # use for postman tests
     # data = event['body'] # use for console tests
@@ -63,7 +63,7 @@ def handler(event, context):
         except Exception as error:
             logger.error(error)
             logger.error("Exception Type: %s" % type(error))
-            return {'result': False, 'msg': f'{error}'}
+            return {"isBase64Encoded": False, "statusCode": 400, "body": f'{type(error)}', "headers": {"Content-Type": "application/json"}}
 
     return {'result': True}
     

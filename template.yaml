@@ -382,6 +382,7 @@ Resources:
         Variables:
           DEST_PATH: "/usr/share/pgsql/tsearch_data/" # Path to shared postgresql directory
           SEND_COMMAND_NAME: !Ref copyFile
+          SSM_PATH: "/mri-phsa/ec2"
 
 Outputs:
   Preprocess:

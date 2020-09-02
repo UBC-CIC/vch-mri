@@ -99,7 +99,7 @@ def handler(event, context):
         except Exception as error:
             logger.error(error)
             logger.error("Exception Type: %s" % type(error))         
-            return {'result': False, 'msg': f'{error}'}
+            return {"isBase64Encoded": False, "statusCode": 500, "body": f'{type(error)}', "headers": {"Content-Type": "application/json"}}
 
 
     

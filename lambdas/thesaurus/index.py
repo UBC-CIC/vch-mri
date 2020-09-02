@@ -9,6 +9,7 @@ logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 destPath = os.getenv('DEST_PATH')
 sendCommandName = os.getenv('SEND_COMMAND_NAME')
+ssmPath = os.getenv("SSM_PATH")
 s3 = boto3.client('s3')
 ec2 = boto3.client('ec2')
 ssm = boto3.client('ssm')
@@ -32,19 +33,18 @@ WITH ths_med, english_stem;
 
 def handler(event, context):
     #get parameters from ssm
-    p_ec2 = '/mri-phsa/ec2'
     params = ssm.get_parameters(
         Names=[
-            p_ec2
+            ssmPath
         ],
         WithDecryption = True
     )
     logger.info("Finished Acquiring Params")
     if params['ResponseMetadata']['HTTPStatusCode'] != 200:
         logger.info('ParameterStore Error: ', str(params['ResponseMetadata']['HTTPStatusCode']))
-        sys.exit(1)
+        return {"isBase64Encoded": False, "statusCode": params['ResponseMetadata']['HTTPStatusCode'], "body": "SSM Error", "headers": {"Content-Type": "application/json"}}
     for p in params['Parameters']:
-        if p['Name'] == p_ec2:
+        if p['Name'] == ssmPath:
             ec2 = p['Value']
     #get bucket name
     bucket = event['Records'][0]['s3']['bucket']['name']
@@ -83,4 +83,4 @@ def handler(event, context):
             logger.info("Updated PostgreSQL Text Configuration")
         except Exception as error:
             logger.error(error)
-            logger.error("Exception Type: %s" % type(error))         
+            return {"isBase64Encoded": False, "statusCode": 400, "body": f'{type(error)}', "headers": {"Content-Type": "application/json"}}

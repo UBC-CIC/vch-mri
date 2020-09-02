@@ -25,7 +25,7 @@ data_df['Reason for Exam/Relevant Clinical History'] = preProcessText(data_df['R
 data_df['Hip & Knee'] = preProcessText(data_df['Appropriateness Checklist - Hip & Knee'])
 data_df['Spine'] = preProcessText(data_df['Appropriateness Checklist - Spine'])
 
-# New Dataframe with
+# New Dataframe with preprocessed columns and columns for comprehend data 
 formatted_df = data_df[['CIO_ID', 'height', 'weight', 'Sex','age', 'Preferred MRI Site', 'priority']]
 formatted_df.loc[:,'p5'] = 'f'
 formatted_df.loc[:,'medical_condition'] = ''
@@ -68,16 +68,12 @@ for row in range(len(formatted_df.index)):
         # elif(contains_word('spine',anatomy)):
         #     # apply comprehend to spine column
         #     formatted_df['Spine'][row] = find_entities(f'{data_df["Appropriateness Checklist - Spine"][row]}') 
-    
+   
+    # Use comprehend medical infer icd10cm on Reason for Exam column
     infer_icd10_cm(preprocessed_text, medical_conditions, diagnosis, symptoms)
+    # Use comprehend key phrases on Reason for Exam column
     find_key_phrases(preprocessed_text, key_phrases, medical_conditions+diagnosis+symptoms, anatomy_list)
-
-    # formatted_df['anatomy'][row] = anatomy_list    
-    # formatted_df['medical_condition'][row] = medical_conditions
-    # formatted_df['diagnosis'][row] = diagnosis
-    # formatted_df['symptoms'][row] = symptoms
-    # formatted_df['phrases'][row] = key_phrases
-    # formatted_df['other_info'][row] = other_info
+    # Set values in the formatted_df 
     formatted_df.at[row, 'anatomy'] = anatomy_list    
     formatted_df.at[row, 'medical_condition'] = medical_conditions
     formatted_df.at[row, 'diagnosis'] = diagnosis
