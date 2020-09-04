@@ -1,10 +1,11 @@
 # PHSA MRI CODE 
 - UBC CIC Medical Imaging Scheduler System 
-- To start this project, you will need to create the following before running the cloudformation script: 
-> S3 bucket 
-> EC2 instance
-> Security Groups
-> VPC with Private and Public Subnets 
+- To start this project, you will need to create the following prior to running the Cloudformation script: 
+1. S3 bucket to store Cloudformation
+2. An EC2 instance with postgreSQL installed (See instructions below)
+3. Security Groups for Lambdas to access the database: Enable PostgreSQL on Port 5432 Inbound on the EC2 instance security group for the Lambda Security Group
+4. VPC with Private and Public Subnets, an Internet Gateway, and an Elastic IP Address. See [https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Internet_Gateway.html](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Internet_Gateway.html) for more details. 
+- You will need add the security group and subnet into the [template file](template.yaml)
 - To run the cloudformation code, use the following commands: 
 ```
 sam package --s3-bucket <s3 bucket name> --output-template-file out.yaml
@@ -61,7 +62,6 @@ aws ssm put-parameter --name /mri-phsa/ec2 --value <instance id> --type SecureSt
 
 ![Rule Decision Tree](/media/decisionTree_rules.png)
 
-
 ## Lambdas
 - Python Code used for Lambda Functions 
 
@@ -73,4 +73,4 @@ aws ssm put-parameter --name /mri-phsa/ec2 --value <instance id> --type SecureSt
 - [Sample Result](/csv/mri_dataset_results_0820.xlsx): Form to P-Value Data (most recent)
 
 ### Further Recommendations 
-This is a proof of concept and it
+This is a proof of concept for VCH and PHSA done by UBC CIC in collaboration with AWS. The algorithm can be improved by modifying weights and adding more words to conjunctions and spellchecker. Furthermore, one can also begin to consider the impact of other metadata that is already being recorded such as height, weight and age for scheduling an MRI scan. 
