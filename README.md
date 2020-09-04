@@ -70,7 +70,7 @@ aws ssm put-parameter --name /mri-phsa/ec2 --value <instance id> --type SecureSt
 - To update or add a new layer, they must be zipped with the top level folder named __python__
 
 ## Rule Database Analysis
-- [Sample Result](/csv/mri_dataset_results_0820.xlsx): Form to P-Value Data (most recent)
+- [Sample Result](/csv/mri_dataset_results_0828.xlsx): Form to P-Value Data (most recent)
 
 ### Further Recommendations 
 This is a proof of concept for VCH and PHSA done by UBC CIC in collaboration with AWS. The algorithm can be improved by modifying weights and adding more words to conjunctions and spellchecker. Furthermore, one can also begin to consider the impact of other metadata that is already being recorded such as height, weight and age for scheduling an MRI scan. 
