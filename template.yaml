@@ -4,15 +4,37 @@ Description: >
     "MRI Scheduler Project \n"
 
 Parameters:
-  SecurityGroupId: 
+  CidrBlockVpcParameter:
+    Description: CIDR block allocated for 
+    Type: 'String'
+    Default: 10.0.0.0/16
+
+  PrivateSubnetAParameter:
+    Description: CIDR block allocated for Private Subnet A
+    Type: 'String'
+    Default: 10.0.1.0/24
+
+  PublicSubnetAParameter:
+    Description: CIDR block allocated for Private Subnet A
+    Type: 'String'
+    Default: 10.0.2.0/24
+
+  DBInstanceTypeParameter:
+    Description: EC2 instance type for the database
     Type: String
-    Default: sg-040d55deb79054a53
-  SubnetId: 
-    Type: String
-    Default: subnet-03b34c526bb19ba7a
-  PrivateSubnetID: 
-    Type: String
-    Default: subnet-045a095cc1cc062ea
+    Default: t3.medium
+    AllowedValues: [t2.medium, t2.large, t3.medium, t3.large]
+    ConstraintDescription: must be a valid EC2 instance type.
+
+  
+  AMIID:
+    Type:  'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
+    Default: '/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2'
+
+  KeyName:
+    Description: Name of an existing EC2 KeyPair to enable SSH access to the instance
+    Type: AWS::EC2::KeyPair::KeyName
+    ConstraintDescription: must be the name of an existing EC2 KeyPair.
 
 Globals:
   Function:
@@ -24,8 +46,192 @@ Globals:
     Tracing: Active
 
 Resources:
+  # Roles
+  IAMEC2InstanceRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      Description: The SSM Instance Profile
+      RoleName: AWSEC2SSM
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+              - ec2.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM
+        - arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore
+
+  IAMEC2InstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties: 
+        InstanceProfileName: AWSEC2SSMProfile
+        Roles: 
+          - !Ref IAMEC2InstanceRole
+
+  # VPC
+  VPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: !Ref CidrBlockVpcParameter
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+      InstanceTenancy: default
+      Tags:
+      - Key: Name
+        Value: !Join ['', [!Ref "AWS::StackName", "-VPC" ]] 
+  
+  # Internet Gateway
+  InternetGateway:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+      - Key: Name
+        Value: !Join ['', [!Ref "AWS::StackName", "-InternetGateway" ]]
+
+  VpcInternetGatewayAttchment:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties: 
+      VpcId: !Ref VPC
+      InternetGatewayId: !Ref InternetGateway
+
+  # Subnets
+  PrivateSubnetA:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      CidrBlock: !Ref PrivateSubnetAParameter
+      AvailabilityZone: !Select [0, !GetAZs '']
+      Tags:
+        - Key: Name
+          Value: Private Subnet A
+  
+  PublicSubnetA:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      CidrBlock: !Ref PublicSubnetAParameter
+      AvailabilityZone: !Select [0, !GetAZs '']
+      Tags:
+        - Key: Name
+          Value: !Sub ${AWS::StackName}-PublicSubnet-A
+
+  DataSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Allow traffic to data resources
+      VpcId: !Ref VPC
+      SecurityGroupIngress:
+      - IpProtocol: tcp
+        FromPort: 5432
+        ToPort: 5432
+        CidrIp: !Ref PrivateSubnetAParameter
+      - IpProtocol: tcp
+        FromPort: 22
+        ToPort: 22
+        CidrIp: !Ref PublicSubnetAParameter
+      Tags:
+        - Key: Name
+          Value: !Sub ${AWS::StackName}-DataSecurityGroup
+  # Route Tables
+  PrivateRouteTableA:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref VPC
+      Tags:
+        - Key: Name
+          Value: Private Route Table A
+
+  PublicRouteTableA:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref VPC
+      Tags:
+        - Key: Name
+          Value: Public Route Table A
+
+  # Routes
+  PublicRouteA:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId: !Ref PublicRouteTableA
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref InternetGateway
+
+  PrivateRouteA:
+    Type: 'AWS::EC2::Route'
+    Properties:
+      RouteTableId: !Ref PrivateRouteTableA
+      DestinationCidrBlock: 0.0.0.0/0
+      NatGatewayId: !Ref NATGateway
+
+  # Attach the subnets to route tables
+  PublicSubnetARouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PublicSubnetA
+      RouteTableId: !Ref PublicRouteTableA
+
+  PrivateSubnetARouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PrivateSubnetA
+      RouteTableId: !Ref PrivateRouteTableA
+  
+  # NAT Gateway:
+  NATGateway:
+    Type: AWS::EC2::NatGateway
+    Properties:
+      AllocationId: !GetAtt ElasticIPAddress.AllocationId
+      SubnetId: !Ref PublicSubnetA
+      Tags:
+      - Key: Name
+        Value: !Sub NAT-${AWS::StackName}
+  ElasticIPAddress:
+    Type: AWS::EC2::EIP
+    Properties:
+      Domain: VPC
+
   AccessLogs:
     Type: AWS::Logs::LogGroup
+
+  DatabaseEC2Instance:
+    Type: AWS::EC2::Instance
+    Properties: 
+      ImageId: !Ref AMIID
+      InstanceType: !Ref DBInstanceTypeParameter
+      IamInstanceProfile: !Ref IAMEC2InstanceProfile
+      KeyName: 
+        Ref: "KeyName"
+      NetworkInterfaces:
+      - GroupSet: 
+        - Ref: "DataSecurityGroup"
+        SubnetId:
+          Ref: "PrivateSubnetA"
+        AssociatePublicIpAddress: "false"
+        DeviceIndex: "0"
+      BlockDeviceMappings:
+        - DeviceName: /dev/xvda
+          Ebs:
+            VolumeType: gp2
+            VolumeSize: 40
+            DeleteOnTermination: 'false'
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash -xe
+          cd /tmp
+          sudo yum install -y https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm
+          sudo systemctl enable amazon-ssm-agent
+          sudo systemctl start amazon-ssm-agent
+          sudo yum update -y
+      Tags:
+      - Key: 'Name'
+        Value: 'MriPostgresDB'
+      - Key: SSMManaged
+        Value: "Yes"
 
   HttpApi:
     Type: AWS::Serverless::HttpApi
@@ -138,9 +344,9 @@ Resources:
               !Ref RuleProcessing
       VpcConfig: 
         SecurityGroupIds: 
-          - !Ref SecurityGroupId 
+          - !Ref DataSecurityGroup 
         SubnetIds:
-          - !Ref PrivateSubnetID
+          - !Ref PrivateSubnetA
       Environment:
         Variables:
           RULE_PROCESSING_LAMBDA: !Ref RuleProcessing
@@ -158,9 +364,9 @@ Resources:
         - arn:aws:iam::aws:policy/AWSXrayWriteOnlyAccess
       VpcConfig: 
         SecurityGroupIds: 
-          - !Ref SecurityGroupId 
+          - !Ref DataSecurityGroup 
         SubnetIds: 
-          - !Ref PrivateSubnetID
+          - !Ref PrivateSubnetA
     
   QueryRules:
     Type: AWS::Serverless::Function 
@@ -188,9 +394,9 @@ Resources:
               !Ref UpdateWeights
       VpcConfig: 
         SecurityGroupIds: 
-          - !Ref SecurityGroupId 
+          - !Ref DataSecurityGroup 
         SubnetIds:
-          - !Ref PrivateSubnetID
+          - !Ref PrivateSubnetA
       Environment:
         Variables:
           UPDATE_WEIGHTS_LAMBDA: !Ref UpdateWeights
@@ -218,9 +424,9 @@ Resources:
             ParameterName: "mri-phsa*"
       VpcConfig: 
         SecurityGroupIds: 
-          - !Ref SecurityGroupId 
+          - !Ref DataSecurityGroup 
         SubnetIds:
-          - !Ref PrivateSubnetID
+          - !Ref PrivateSubnetA
 
   QueryConjunctions:
     Type: AWS::Serverless::Function 
@@ -245,9 +451,9 @@ Resources:
             ParameterName: "mri-phsa*"
       VpcConfig: 
         SecurityGroupIds: 
-          - !Ref SecurityGroupId 
+          - !Ref DataSecurityGroup 
         SubnetIds:
-          - !Ref PrivateSubnetID
+          - !Ref PrivateSubnetA
 
   QueryWeights:
     Type: AWS::Serverless::Function 
@@ -275,9 +481,9 @@ Resources:
               !Ref UpdateWeights
       VpcConfig: 
         SecurityGroupIds: 
-          - !Ref SecurityGroupId 
+          - !Ref DataSecurityGroup 
         SubnetIds:
-          - !Ref PrivateSubnetID
+          - !Ref PrivateSubnetA
       Environment:
         Variables:
           UPDATE_WEIGHTS_LAMBDA: !Ref UpdateWeights
@@ -305,9 +511,9 @@ Resources:
             ParameterName: "mri-phsa*"
       VpcConfig: 
         SecurityGroupIds: 
-          - !Ref SecurityGroupId 
+          - !Ref DataSecurityGroup 
         SubnetIds:
-          - !Ref PrivateSubnetID
+          - !Ref PrivateSubnetA
 
   UpdateWeights:
     Type: AWS::Serverless::Function 
@@ -322,9 +528,9 @@ Resources:
         - arn:aws:iam::aws:policy/AWSXrayWriteOnlyAccess
       VpcConfig: 
         SecurityGroupIds: 
-          - !Ref SecurityGroupId 
+          - !Ref DataSecurityGroup 
         SubnetIds: 
-          - !Ref PrivateSubnetID
+          - !Ref PrivateSubnetA
 
   DataResults:
     Type: AWS::Serverless::Function 
@@ -349,9 +555,9 @@ Resources:
             ParameterName: "mri-phsa*"
       VpcConfig: 
         SecurityGroupIds: 
-          - !Ref SecurityGroupId 
+          - !Ref DataSecurityGroup 
         SubnetIds: 
-          - !Ref PrivateSubnetID
+          - !Ref PrivateSubnetA
 
   Thesaurus:
     Type: AWS::Serverless::Function 
@@ -375,9 +581,9 @@ Resources:
         - arn:aws:iam::aws:policy/AWSResourceAccessManagerFullAccess
       VpcConfig: 
         SecurityGroupIds: 
-          - !Ref SecurityGroupId 
+          - !Ref DataSecurityGroup 
         SubnetIds:
-          - !Ref PrivateSubnetID
+          - !Ref PrivateSubnetA
       Environment:
         Variables:
           DEST_PATH: "/usr/share/pgsql/tsearch_data/" # Path to shared postgresql directory
@@ -405,3 +611,26 @@ Outputs:
       Description: URL of your API endpoint
       Value:
         Fn::Sub: 'https://${HttpApi}.execute-api.${AWS::Region}.${AWS::URLSuffix}/'
+  VPC:
+    Description: VPC ID
+    Value: !Ref VPC
+    Export:
+      Name: !Sub ${AWS::StackName}-vpc-id
+  
+  PrivateSubnetA:
+    Description: Private Subnet A
+    Value: !Ref PrivateSubnetA
+    Export:
+      Name: !Sub ${AWS::StackName}-PrivateSubnetA
+
+  PublicSubnetA:
+    Description: Public Subnet A
+    Value: !Ref PublicSubnetA
+    Export:
+      Name: !Sub ${AWS::StackName}-PublicSubnetA
+
+  DataSecurityGroup:
+    Description: Allow traffic to data subnets
+    Value: !Ref DataSecurityGroup
+    Export:
+      Name: !Sub ${AWS::StackName}-DataSecurityGroup

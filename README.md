@@ -1,17 +1,46 @@
 # VCH MRI Booking Rule Based System
-- To start this project, you will need an AWS account with CLI and [SAM setup](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-install.html), as well as the following prior to running the Cloudformation script: 
-1. S3 bucket to store Cloudformation
-2. An EC2 instance with postgreSQL installed (See instructions below)
-3. Security Groups for Lambdas to access the database: Enable PostgreSQL on Port 5432 Inbound on the EC2 instance security group for the Lambda Security Group
-4. VPC with Private and Public Subnets, an Internet Gateway, and an Elastic IP Address. See [https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Internet_Gateway.html](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Internet_Gateway.html) for more details. 
-- You will need add the security group and subnet into the [template file](template.yaml)
-- To run the cloudformation code, use the following commands: 
+- To start this project, you will need an AWS account with CLI and [SAM setup](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-install.html) as well as SSM Session Manager installed to log into your EC2 instance with a private IP address.
+
+
+# Deployment
+
+## 1. S3 bucket to store Cloudformation
+
 ```
-sam package --s3-bucket <s3 bucket name> --output-template-file out.yaml
-sam deploy --template-file out.yaml --capabilities CAPABILITY_IAM CAPABILITY_AUTO_EXPAND --stack-name <stack name>
+aws s3api create-bucket --bucket {YOUR-BUCKET-NAME} --create-bucket-configuration  --region {YOUR-REGION}
+```
+## 2. Create an aws ec2 keypair
+
+```
+aws ec2 create-key-pair --key-name {MY-KEY-PAIR-NAME} --query 'KeyMaterial' --output text > MY-KEY-PAIR-NAME.pem 
+``` 
+
+## 3. Run the cloudformation code, use the following commands: 
+
+```
+sam package --s3-bucket {YOUR-BUCKET-NAME} --output-template-file out.yaml
 ```
 
-## Setup PostgreSQL in EC2
+```
+sam deploy --template-file out.yaml --capabilities CAPABILITY_IAM CAPABILITY_AUTO_EXPAND --stack-name {STACK-NAME} --parameter-overrides KeyName={YOUR-KEYNAME} 
+```
+## 4. Get the Instance ID of the  EC2 instance :
+
+Replace YOUR-REGION and YOUR-PROFILE
+
+```
+aws ec2 describe-instances --region {YOUR-REGION} --profile {YOUR-PROFILE}  --filter Name=tag:Name,Values=MriPostgresDB --filter Name=instance-state-name,Values=running  --query 'Reservations[*].Instances[*].{Instance:InstanceId}'   --output table 
+```
+
+## 5. Login to the EC2 instance using the SSM client 
+
+Replace  YOUR-INSTANCE-ID with results from step 4. as well as YOUR-REGION nad YOUR-PROFILE
+
+```
+aws ssm start-session --region {YOUR-REGION} --profile {YOUR-PROFILE}  --target {YOUR-INSTANCE-ID} 
+```
+
+## 6. Setup PostgreSQL in EC2
 - Follow [these instructions](https://installvirtual.com/install-postgresql-10-on-amazon-ec2/) to download postgres onto EC2
 - To update the configuration for remote access of postgres: 
 ```bash
