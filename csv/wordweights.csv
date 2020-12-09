@@ -26,14 +26,14 @@ bowel,B
 brain,B
 breast,A
 cancer,A
-carcinoma ,A
+carcinoma,A
 cardiac,B
 carotid,B
 cerebral,A
 cervix,B
 chiari,B
 chronic,C
-claudication ,A
+claudication,A
 clot,B
 cognitive,B
 compression,B
@@ -71,7 +71,7 @@ hydrocephalus,B
 ica,B
 impingement,B
 implants,B
-incontinence, B
+incontinence,B
 inguinal,B
 injury,B
 intracranial,A
@@ -100,7 +100,7 @@ mrcp,B
 ms,A
 myelopathy,B
 nasophrayngeal,B
-necrosis ,A
+necrosis,A
 neoplasm,A
 neuritis,B
 neurodegenerative,B
@@ -108,7 +108,7 @@ neurofibroma,B
 neuroma,B
 neuropathy,B
 new,C
-occult ,B
+occult,B
 operative,B
 optic,B
 orbital,B
@@ -120,7 +120,7 @@ pancoast,B
 pancreas,B
 PIT,B
 pituitary,A
-planning ,A
+planning,A
 pre-,B
 pre-op,A
 preoperative,A
@@ -162,14 +162,14 @@ tendon,B
 tfcc,B
 thrombosis,A
 thyroid,B
-tinnitus ,A
-tissue, D
+tinnitus,A
+tissue,D
 tmj,B
 tumour,B
 uae,B
 ultrasound,B
 uterine,B
-vascular ,A
+vascular,A
 venous,A
 workup,B
 wrist,B
