@@ -7,7 +7,7 @@
 ## 1. S3 bucket to store Cloudformation
 
 ```
-aws s3api create-bucket --bucket {YOUR-BUCKET-NAME} --create-bucket-configuration  --region {YOUR-REGION}
+aws s3api create-bucket --bucket {YOUR-BUCKET-NAME} --create-bucket-configuration LocationConstraint={YOUR-REGION}  --region {YOUR-REGION}
 ```
 ## 2. Create an aws ec2 keypair
 
