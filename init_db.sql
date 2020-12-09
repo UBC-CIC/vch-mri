@@ -25,8 +25,7 @@ CREATE TABLE IF NOT EXISTS mri_rules (
     info TEXT, 
     info_weighted_tk TSVECTOR, 
     priority VARCHAR(3),
-    active BOOLEAN DEFAULT TRUE,
-    UNIQUE (body_part, info)
+    active BOOLEAN DEFAULT TRUE
 ); 
 
 CREATE TABLE IF NOT EXISTS data_results ( 
@@ -52,7 +51,7 @@ EXECUTE PROCEDURE trigger_set_timestamp();
 
 CREATE TABLE IF NOT EXISTS word_weights (
     word VARCHAR(32) PRIMARY KEY, 
-    weight VARCHAR(1)
+    weight VARCHAR(2)
 );
 
 CREATE TABLE IF NOT EXISTS conjunctions (
