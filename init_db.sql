@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS spellchecker(
 
 CREATE TABLE IF NOT EXISTS specialty_tags ( 
     tag VARCHAR(32) PRIMARY KEY
-)
+);
 
 -- SELECT * FROM mri_rules; 
 \copy mri_rules(body_part, info, contrast, priority) FROM '<PROJECT LOCATION>/csv/rules.csv' DELIMITER ',' CSV HEADER;
