@@ -22,7 +22,7 @@ sam package --s3-bucket {YOUR-BUCKET-NAME} --output-template-file out.yaml
 ```
 
 ```
-sam deploy --template-file out.yaml --capabilities CAPABILITY_IAM CAPABILITY_AUTO_EXPAND --stack-name {STACK-NAME} --parameter-overrides KeyName={YOUR-KEYNAME} 
+sam deploy --template-file out.yaml --capabilities CAPABILITY_IAM CAPABILITY_AUTO_EXPAND CAPABILITY_NAMED_IAM --stack-name {STACK-NAME} --parameter-overrides KeyName={YOUR-KEYNAME} 
 ```
 ## 4. Get the Instance ID of the  EC2 instance :
 
