@@ -1,0 +1,30 @@
+version: 1
+backend:
+  phases:
+    preBuild:
+      commands:
+        - npm install -g @aws-amplify/cli
+    build:
+      commands:
+        - '# Execute Amplify CLI with the helper script'
+        - amplifyPush --simple
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - cd src/frontend
+        - npm install
+    build:
+      commands:
+        - export CFN_STACK_NAME=${STACK_NAME:-UNDEFINED}
+        - export API_ID=$(aws cloudformation describe-stack-resource --stack-name ${CFN_STACK_NAME} --logical-resource-id HttpApi --query StackResourceDetail.PhysicalResourceId --output text)
+        - export AWS_REGION=$(aws configure get region)
+        - export REACT_APP_HTTP_API_URL="https://${API_ID}.execute-api.${AWS_REGION}.amazonaws.com"
+        - npm run build
+  artifacts:
+    baseDirectory: src/frontend/build
+    files:
+      - '**/*'
+  cache:
+    paths:
+      - node_modules/**/*

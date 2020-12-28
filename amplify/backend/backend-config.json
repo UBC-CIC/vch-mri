@@ -1,0 +1,15 @@
+{
+	"auth": {
+		"reactAmplifyCognito": {
+			"service": "Cognito",
+			"providerPlugin": "awscloudformation",
+			"dependsOn": []
+		}
+	},
+	"storage": {
+		"vchmrifrontendstorage": {
+			"service": "S3",
+			"providerPlugin": "awscloudformation"
+		}
+	}
+}
