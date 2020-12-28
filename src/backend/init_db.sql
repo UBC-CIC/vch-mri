@@ -51,7 +51,7 @@ EXECUTE PROCEDURE trigger_set_timestamp();
 
 CREATE TABLE IF NOT EXISTS word_weights (
     word VARCHAR(32) PRIMARY KEY, 
-    weight VARCHAR(2)
+    weight VARCHAR(1)
 );
 
 CREATE TABLE IF NOT EXISTS conjunctions (
