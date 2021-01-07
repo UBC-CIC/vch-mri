@@ -11,3 +11,6 @@ A solution prototype utilizing AWS-managed Natural Language Processing (NLP) ser
 [Frontend Documentation](src/frontend/README.md)
 
 [UBC CIC Project Page](https://cic.ubc.ca/projects/vch-mri-project-cant-wait/)
+
+## License
+This project is distributed under the [MIT License](./LICENSE).
