@@ -37,7 +37,7 @@ If you don’t have any Amazon EC2 key-pair available [create-your-key-pair](htt
 aws ec2 describe-key-pairs
 ```
 
-1. Store the database username and password at Systems Manager Parameter Store. **Make sure to replace DATABASENAME and DATABASEPWD with the respectives username and password you want to use for the database.
+1. Store the database username and password at Systems Manager Parameter Store. **Make sure to replace DATABASENAME and DATABASEPWD with the respectives username and password you want to use for the database**.
 ```bash
 aws ssm put-parameter --name "/mri-sched/dbuser_ec2" --value "DATABASENAME" --type SecureString --overwrite
 aws ssm put-parameter --name "/mri-sched/dbpwd_ec2" --value "DATABASEPWD" --type SecureString --overwrite
@@ -48,7 +48,7 @@ aws ssm put-parameter --name "/mri-sched/dbpwd_ec2" --value "DATABASEPWD" --type
 sam deploy -g --capabilities CAPABILITY_IAM CAPABILITY_AUTO_EXPAND CAPABILITY_NAMED_IAM
 ```
 
-3. Provide the stack name, region and the key-pair name. For all other question accept the default answer or select *Y*. Below an example:
+3. Provide the stack name, region and the key-pair name. For all the other questions, please accept the default answers or select *Y*. Below an example:
 
 ```
 Configuring SAM deploy
