@@ -9,6 +9,10 @@ Before you deploy, you must have the following in place:
 
 # Step 1: Front-end deployment
 
+<a href="https://console.aws.amazon.com/amplify/home#/deploy?repo=https://github.com/UBC-CIC/vch-mri">
+    <img src="https://oneclick.amplifyapp.com/button.svg" alt="Deploy to Amplify Console">
+</a>
+
 1.  Clone and Fork this solution repository.
     If you haven't configured Amplify before, configure the Amplify CLI in your terminal as follows:
 ```bash
