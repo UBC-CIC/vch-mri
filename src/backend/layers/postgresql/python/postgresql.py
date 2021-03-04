@@ -11,12 +11,12 @@ class PostgreSQL:
     def __init__ (self):
         logger.info("------- PostgreSql Class Initialization")
 
-        ssm = boto3.client('ssm', region_name='ca-central-1')
-        p_dbserver = '/mri-phsa/dbserver_ec2'
-        # p_dbserver = '/mri-phsa/dbserver_ec2_public'
-        p_dbname = '/mri-phsa/dbname_ec2'
-        p_dbuser = '/mri-phsa/dbuser_ec2'
-        p_dbpwd = '/mri-phsa/dbpwd_ec2'
+        ssm = boto3.client('ssm')
+        p_dbserver = '/mri-sched/dbserver_ec2'
+        # p_dbserver = '/mri-sched/dbserver_ec2_public'
+        p_dbname = '/mri-sched/dbname_ec2'
+        p_dbuser = '/mri-sched/dbuser_ec2'
+        p_dbpwd = '/mri-sched/dbpwd_ec2'
         params = ssm.get_parameters(
             Names=[
                 p_dbserver, p_dbname, p_dbuser, p_dbpwd
