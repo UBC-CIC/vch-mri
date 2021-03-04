@@ -334,7 +334,7 @@ Resources:
       Type: AWS::Serverless::LayerVersion
       Properties:
         Description: Spell Checker 
-        ContentUri: ./layers/spellchecker.zip 
+        ContentUri: ./src/backend/layers/spellchecker.zip 
         CompatibleRuntimes:
           - python3.8
           - python3.7
@@ -345,7 +345,7 @@ Resources:
       Type: AWS::Serverless::LayerVersion
       Properties:
         Description: Psycopg2 Library
-        ContentUri: ./layers/psycopg2.zip
+        ContentUri: ./src/backend/layers/psycopg2.zip
         CompatibleRuntimes:
           - python3.8
           - python3.7
@@ -356,7 +356,7 @@ Resources:
       Type: AWS::Serverless::LayerVersion
       Properties:
         Description: Postgres Custom Functions
-        ContentUri: ./layers/postgresql.zip
+        ContentUri: ./src/backend/layers/postgresql.zip
         CompatibleRuntimes:
           - python3.8
           - python3.7
@@ -366,7 +366,7 @@ Resources:
   Preprocess:
     Type: AWS::Serverless::Function 
     Properties:
-      CodeUri: ./lambdas/preprocess
+      CodeUri: ./src/backend/lambdas/preprocess
       Events:
         ExplicitApi: # warning: creates a public endpoint
           Type: HttpApi
@@ -403,7 +403,7 @@ Resources:
   RuleProcessing:
     Type: AWS::Serverless::Function 
     Properties:
-      CodeUri: ./lambdas/rule_processing
+      CodeUri: ./src/backend/lambdas/rule_processing
       Layers: 
         - !Ref Psycopg2Layer
         - !Ref PostgresLayer
@@ -420,7 +420,7 @@ Resources:
   QueryRules:
     Type: AWS::Serverless::Function 
     Properties:
-      CodeUri: ./lambdas/query_rules_table
+      CodeUri: ./src/backend/lambdas/query_rules_table
       Events:
         ExplicitApi: # warning: creates a public endpoint
           Type: HttpApi
@@ -453,7 +453,7 @@ Resources:
   QuerySpellchecker:
     Type: AWS::Serverless::Function 
     Properties:
-      CodeUri: ./lambdas/query_spellchecker
+      CodeUri: ./src/backend/lambdas/query_spellchecker
       Events:
         ExplicitApi: # warning: creates a public endpoint
           Type: HttpApi
@@ -480,7 +480,7 @@ Resources:
   QueryConjunctions:
     Type: AWS::Serverless::Function 
     Properties:
-      CodeUri: ./lambdas/query_conjunctions
+      CodeUri: ./src/backend/lambdas/query_conjunctions
       Events:
         ExplicitApi: # warning: creates a public endpoint
           Type: HttpApi
@@ -507,7 +507,7 @@ Resources:
   QueryWeights:
     Type: AWS::Serverless::Function 
     Properties:
-      CodeUri: ./lambdas/query_weights
+      CodeUri: ./src/backend/lambdas/query_weights
       Events:
         ExplicitApi: # warning: creates a public endpoint
           Type: HttpApi
@@ -540,7 +540,7 @@ Resources:
   QuerySpecialtyTags:
     Type: AWS::Serverless::Function 
     Properties:
-      CodeUri: ./lambdas/query_specialty_tags
+      CodeUri: ./src/backend/lambdas/query_specialty_tags
       Events:
         ExplicitApi: # warning: creates a public endpoint
           Type: HttpApi
@@ -567,7 +567,7 @@ Resources:
   UpdateWeights:
     Type: AWS::Serverless::Function 
     Properties:
-      CodeUri: ./lambdas/update_word_weights
+      CodeUri: ./src/backend/lambdas/update_word_weights
       Layers: 
         - !Ref Psycopg2Layer
         - !Ref PostgresLayer
@@ -584,7 +584,7 @@ Resources:
   DataResults:
     Type: AWS::Serverless::Function 
     Properties:
-      CodeUri: ./lambdas/results
+      CodeUri: ./src/backend/lambdas/results
       Events:
         ExplicitApi: # warning: creates a public endpoint
           Type: HttpApi
@@ -611,7 +611,7 @@ Resources:
   Thesaurus:
     Type: AWS::Serverless::Function 
     Properties:
-      CodeUri: ./lambdas/thesaurus
+      CodeUri: ./src/backend/lambdas/thesaurus
       Events:
         FileUpload:
           Type: S3

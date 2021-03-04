@@ -6,9 +6,8 @@ A solution prototype utilizing AWS-managed Natural Language Processing (NLP) ser
 ## High level Architecture
 ![alt text](src/backend/media/AWS_Diagram.png)
 
-## Stack Documentation
-[Backend Documentation](src/backend/README.md) \
-[Frontend Documentation](src/frontend/README.md)
+## Deployment 
+ deploy this solution into your AWS Account please follow our [Deployment Guide](doc/deployment_guide.md) 
 
 [UBC CIC Project Page](https://cic.ubc.ca/projects/vch-mri-project-cant-wait/)
 

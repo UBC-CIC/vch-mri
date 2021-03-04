@@ -1,0 +1,11 @@
+version = 0.1
+[default]
+[default.deploy]
+[default.deploy.parameters]
+stack_name = "mri-sched"
+s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-tv5fka8ymyxs"
+s3_prefix = "mri-sched"
+region = "us-west-2"
+confirm_changeset = true
+capabilities = "CAPABILITY_IAM CAPABILITY_AUTO_EXPAND CAPABILITY_NAMED_IAM"
+parameter_overrides = "CidrBlockVpcParameter=\"10.0.0.0/16\" PrivateSubnetAParameter=\"10.0.1.0/24\" PublicSubnetAParameter=\"10.0.2.0/24\" DBInstanceTypeParameter=\"t3.medium\" AMIID=\"/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2\" KeyName=\"pdx-kenobi\""
