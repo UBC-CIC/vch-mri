@@ -68,7 +68,7 @@ CREATE TABLE IF NOT EXISTS specialty_tags (
 );
 
 -- SELECT * FROM mri_rules; 
-\copy mri_rules(body_part, info, contrast, priority) FROM '<Project Location>/csv/rules.csv' DELIMITER ',' CSV HEADER;
+\copy mri_rules(body_part, info, contrast, priority) FROM './src/backend/csv/rules.csv' DELIMITER ',' CSV HEADER;
 
 UPDATE mri_rules 
 SET bp_tk = to_tsvector(body_part);
@@ -81,11 +81,11 @@ CREATE INDEX tags_idx
 ON data_results
 USING GIN(tags);
 
-\copy word_weights FROM '<Project Location>/csv/wordweights.csv' DELIMITER ',' CSV;
+\copy word_weights FROM './src/backend/csv/wordweights.csv' DELIMITER ',' CSV;
 
-\copy spellchecker FROM '<Project Location>/csv/spellchecker.csv' DELIMITER ',' CSV;
+\copy spellchecker FROM './src/backend/csv/spellchecker.csv' DELIMITER ',' CSV;
 
-\copy specialty_tags FROM '<Project Location>/csv/specialty_exams.csv' DELIMITER ',' CSV;
+\copy specialty_tags FROM './src/backend/csv/specialty_exams.csv' DELIMITER ',' CSV;
 
 UPDATE word_weights
 SET word = TRIM(word); 
@@ -93,4 +93,4 @@ SET word = TRIM(word);
 UPDATE spellchecker 
 SET word = TRIM(word);
 
-\copy conjunctions FROM '<Project Location>/csv/conjunctions.csv' DELIMITER ',' CSV;
+\copy conjunctions FROM './src/backend/csv/conjunctions.csv' DELIMITER ',' CSV;
