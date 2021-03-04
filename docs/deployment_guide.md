@@ -32,7 +32,7 @@ amplify push
 
 # Step 2: Back-end deployment
 
-If you don’t have any Amazon EC2 key-pair available [create-your-key-pair](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html#having-ec2-create-your-key-pair). You need the name of the key-pair to proceed. You can list your key-pair executing the following command:
+If you don’t have any Amazon EC2 key-pair available [create-your-key-pair](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html#having-ec2-create-your-key-pair). You need the name of an EC2 key-pair to proceed. You can list all your EC2 key-pairs executing the following command:
 ```bash
 aws ec2 describe-key-pairs
 ```
