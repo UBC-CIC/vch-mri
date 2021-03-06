@@ -1,0 +1,21 @@
+{
+    "LambdaFunctionConfigurations": [
+      {
+        "Id": "ths",
+        "LambdaFunctionArn": "%LambdaArn%",
+        "Events": [
+          "s3:ObjectCreated:*"
+        ],
+        "Filter": {
+          "Key": {
+            "FilterRules": [
+              {
+                "Name": "suffix",
+                "Value": ".ths"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }
