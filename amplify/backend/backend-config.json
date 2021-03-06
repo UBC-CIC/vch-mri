@@ -7,7 +7,7 @@
 		}
 	},
 	"storage": {
-		"vchmrifrontendstorage": {
+		"mrischedfrontendstorage": {
 			"service": "S3",
 			"providerPlugin": "awscloudformation"
 		}

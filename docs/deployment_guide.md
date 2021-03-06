@@ -6,40 +6,7 @@ Before you deploy, you must have the following in place:
 *  [SAM CLI](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-install.html) 
 *  [Amplify CLI installed and configured](https://aws-amplify.github.io/docs/cli-toolchain/quickstart#quickstart) 
 
-
-# Step 1: Front-end deployment
-
-<a href="https://console.aws.amazon.com/amplify/home#/deploy?repo=https://github.com/UBC-CIC/vch-mri">
-    <img src="https://oneclick.amplifyapp.com/button.svg" alt="Deploy to Amplify Console">
-</a>
-
-1.  Clone and Fork this solution repository.
-    If you haven't configured Amplify before, configure the Amplify CLI in your terminal as follows:
-```bash
-amplify configure
-```
-
-2.  In a terminal from the project root directory, enter the following command selecting the IAM user of the AWS Account you will deploy this application from. (accept all defaults):
-
-```bash
-amplify init
-```
-
-3.  Deploy the resourse to your AWS Account using the command:
-```bash
-amplify push
-```
-
-4. Log into the AWS Management Console.
-5. Select AWS Amplify and select the **mri-sched**
-6. At the *Frontend environments* tab connect to your github account poiting to the forked repo. More informatoin at https://docs.aws.amazon.com/amplify/latest/userguide/deploy-backend.html
-
-# Step 2: Back-end deployment
-
-If you don’t have any Amazon EC2 key-pair available [create-your-key-pair](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html#having-ec2-create-your-key-pair). You need the name of an EC2 key-pair to proceed. You can list all your EC2 key-pairs executing the following command:
-```bash
-aws ec2 describe-key-pairs
-```
+# Step 1: Back-end deployment
 
 1. Store the database username and password at Systems Manager Parameter Store. **Make sure to replace DATABASENAME and DATABASEPWD with the respectives username and password you want to use for the database**.
 ```bash
@@ -69,7 +36,6 @@ Configuring SAM deploy
 	Parameter PublicSubnetAParameter [10.0.2.0/24]:
 	Parameter DBInstanceTypeParameter [t3.medium]:
 	Parameter AMIID [/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2]:
-	Parameter KeyName []: [Your-Key-Pair Name]
 	#Shows you resources changes to be deployed and require a 'Y' to initiate deploy
 	Confirm changes before deploy [y/N]: y
 	#SAM needs permission to be able to create roles to connect to the resources in your template
@@ -90,3 +56,43 @@ Configuring SAM deploy
 
 
 
+# Step 2: Front-end deployment
+
+1. Click on the **Deploy to Amplify Console** button below and follow the instructions:
+
+<a href="https://console.aws.amazon.com/amplify/home#/deploy?repo=https://github.com/UBC-CIC/vch-mri">
+    <img src="https://oneclick.amplifyapp.com/button.svg" alt="Deploy to Amplify Console">
+</a>
+
+
+Connect to GitHub
+
+Deploy th App (Create a new role - amplifyconsole-backend-role) 
+
+This process 
+Forks the repo into you github account, build and deploy the frontend solution 
+
+
+
+
+
+1.  Clone and Fork this solution repository.
+    If you haven't configured Amplify before, configure the Amplify CLI in your terminal as follows:
+```bash
+amplify configure
+```
+
+2.  In a terminal from the project root directory, enter the following command selecting the IAM user of the AWS Account you will deploy this application from. (accept all defaults):
+
+```bash
+amplify init
+```
+
+3.  Deploy the resourse to your AWS Account using the command:
+```bash
+amplify push
+```
+
+4. Log into the AWS Management Console.
+5. Select AWS Amplify and select the **mri-sched**
+6. At the *Frontend environments* tab connect to your github account poiting to the forked repo. More informatoin at https://docs.aws.amazon.com/amplify/latest/userguide/deploy-backend.html

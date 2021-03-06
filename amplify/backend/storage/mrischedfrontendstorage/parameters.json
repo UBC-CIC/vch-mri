@@ -1,5 +1,5 @@
 {
-    "bucketName": "vch-mri-thesaurusfilebucket",
+    "bucketName": "mri-sched-thesaurusfilebucket",
     "authPolicyName": "s3_amplify_12cf7f4f",
     "unauthPolicyName": "s3_amplify_12cf7f4f",
     "authRoleName": {

@@ -2,7 +2,7 @@
     "identityPoolName": "reactAmplifyCognito_identitypool_e8184e2c",
     "allowUnauthenticatedIdentities": false,
     "resourceNameTruncated": "reactA4e73df84",
-    "userPoolName": "vch_mri_frontend_user_pool",
+    "userPoolName": "mri_sched_frontend_user_pool",
     "autoVerifiedAttributes": [
         "email"
     ],

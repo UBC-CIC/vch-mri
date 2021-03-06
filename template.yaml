@@ -28,12 +28,7 @@ Parameters:
   
   AMIID:
     Type:  'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
-    Default: '/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2'
-
-  KeyName:
-    Description: Name of an existing EC2 KeyPair to enable SSH access to the instance
-    Type: AWS::EC2::KeyPair::KeyName
-    ConstraintDescription: must be the name of an existing EC2 KeyPair.  
+    Default: '/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2' 
 
 Globals:
   Function:
@@ -211,8 +206,6 @@ Resources:
       ImageId: !Ref AMIID
       InstanceType: !Ref DBInstanceTypeParameter
       IamInstanceProfile: !Ref IAMEC2InstanceProfile
-      KeyName: 
-        Ref: "KeyName"
       NetworkInterfaces:
       - GroupSet: 
         - Ref: "DataSecurityGroup"
@@ -257,11 +250,14 @@ Resources:
           sudo -u postgres psql -c "create role $DBUSER;"
           sudo -u postgres psql -c "alter role $DBUSER with login;"
           sudo -u postgres psql -c "alter user $DBUSER with password '$DBPWD';"
-          sudo -u postgres psql -c "grant all privileges on database rules to $DBUSER;"
+          sudo -u postgres psql -c "grant all privileges on database rules to $DBUSER;"                   
 
           sudo git clone https://github.com/UBC-CIC/vch-mri.git
           cd vch-mri
           sudo -u postgres psql -f ./src/backend/init_db.sql
+          sudo -u postgres psql -d rules -c "GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO $DBUSER;"
+          sudo -u postgres psql -d rules -c "GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO $DBUSER;"
+          sudo -u postgres psql -d rules -c "GRANT ALL PRIVILEGES ON ALL FUNCTIONS IN SCHEMA public TO $DBUSER;" 
 
           sudo systemctl restart postgresql                    
 
@@ -330,7 +326,7 @@ Resources:
       DocumentType: Command
       Name: 'copyFile'
 
-  PreprocessLayer:
+  SpellcheckerLayer:
       Type: AWS::Serverless::LayerVersion
       Properties:
         Description: Spell Checker 
@@ -379,7 +375,7 @@ Resources:
             RouteSettings:
               ThrottlingBurstLimit: 100
       Layers: 
-        - !Ref PreprocessLayer
+        - !Ref SpellcheckerLayer
         - !Ref Psycopg2Layer
         - !Ref PostgresLayer
       Policies:
@@ -387,7 +383,7 @@ Resources:
         - arn:aws:iam::aws:policy/ComprehendFullAccess
         - arn:aws:iam::aws:policy/ComprehendMedicalFullAccess
         - SSMParameterReadPolicy:
-            ParameterName: "mri-sched*"
+            ParameterName: "mri*"
         - LambdaInvokePolicy:
             FunctionName:
               !Ref RuleProcessing
@@ -409,7 +405,7 @@ Resources:
         - !Ref PostgresLayer
       Policies:
         - SSMParameterReadPolicy:
-            ParameterName: "mri-sched*"
+            ParameterName: "mri*"
         - arn:aws:iam::aws:policy/AWSXrayWriteOnlyAccess
       VpcConfig: 
         SecurityGroupIds: 
@@ -437,7 +433,7 @@ Resources:
         - !Ref PostgresLayer
       Policies:
         - SSMParameterReadPolicy:
-            ParameterName: "mri-sched*"
+            ParameterName: "mri*"
         - LambdaInvokePolicy:
             FunctionName:
               !Ref UpdateWeights
@@ -470,7 +466,7 @@ Resources:
         - !Ref PostgresLayer
       Policies:
         - SSMParameterReadPolicy:
-            ParameterName: "mri-sched*"
+            ParameterName: "mri*"
       VpcConfig: 
         SecurityGroupIds: 
           - !Ref DataSecurityGroup 
@@ -497,7 +493,7 @@ Resources:
         - !Ref PostgresLayer
       Policies:
         - SSMParameterReadPolicy:
-            ParameterName: "mri-sched*"
+            ParameterName: "mri*"
       VpcConfig: 
         SecurityGroupIds: 
           - !Ref DataSecurityGroup 
@@ -524,7 +520,7 @@ Resources:
         - !Ref PostgresLayer
       Policies:
         - SSMParameterReadPolicy:
-            ParameterName: "mri-sched*"
+            ParameterName: "mri*"
         - LambdaInvokePolicy:
             FunctionName:
               !Ref UpdateWeights
@@ -557,7 +553,7 @@ Resources:
         - !Ref PostgresLayer
       Policies:
         - SSMParameterReadPolicy:
-            ParameterName: "mri-sched*"
+            ParameterName: "mri*"
       VpcConfig: 
         SecurityGroupIds: 
           - !Ref DataSecurityGroup 
@@ -573,7 +569,7 @@ Resources:
         - !Ref PostgresLayer
       Policies:
         - SSMParameterReadPolicy:
-            ParameterName: "mri-sched*"
+            ParameterName: "mri*"
         - arn:aws:iam::aws:policy/AWSXrayWriteOnlyAccess
       VpcConfig: 
         SecurityGroupIds: 
@@ -601,7 +597,7 @@ Resources:
         - !Ref PostgresLayer
       Policies:
         - SSMParameterReadPolicy:
-            ParameterName: "mri-sched*"
+            ParameterName: "mri*"
       VpcConfig: 
         SecurityGroupIds: 
           - !Ref DataSecurityGroup 
@@ -623,7 +619,7 @@ Resources:
         - !Ref PostgresLayer
       Policies:
         - SSMParameterReadPolicy:
-            ParameterName: "mri-sched*"
+            ParameterName: "mri*"
         - S3ReadPolicy:
             BucketName: '*'
         - arn:aws:iam::aws:policy/AmazonSSMFullAccess

@@ -29,7 +29,6 @@ def connect():
             dbuser = p['Value']
         elif p['Name'] == p_dbpwd:
             dbpwd = p['Value']
-    print("Trying to connect to postgresql")
+    print("Trying to connect to postgresql: " + dbserver)
     conn = psycopg2.connect(host=dbserver, dbname=dbname, user=dbuser, password=dbpwd)
-    print("Success, connected to PostgreSQL!")
     return conn 

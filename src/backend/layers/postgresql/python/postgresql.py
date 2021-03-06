@@ -23,7 +23,7 @@ class PostgreSQL:
             ],
             WithDecryption = True
         )
-        logger.info("Finished Acquiring Params")
+        logger.info("------- Finished Acquiring Params")
         if params['ResponseMetadata']['HTTPStatusCode'] != 200: 
             logger.info('ParameterStore Error: ', str(params['ResponseMetadata']['HTTPStatusCode']))
             sys.exit(1)
@@ -37,7 +37,7 @@ class PostgreSQL:
                 dbuser = p['Value']
             elif p['Name'] == p_dbpwd:
                 dbpwd = p['Value']
-        logger.info("------- Connecting to PostgreSql")
+        logger.info("------- Connecting to PostgreSql: " + dbserver)
         self.conn = psycopg2.connect(host=dbserver, dbname=dbname, user=dbuser, password=dbpwd)
         logger.info("------- PostgreSql Class Initialized")
     
