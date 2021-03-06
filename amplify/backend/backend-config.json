@@ -7,7 +7,7 @@
 		}
 	},
 	"storage": {
-		"mrischedfrontendstorage": {
+		"mrischeduler": {
 			"service": "S3",
 			"providerPlugin": "awscloudformation"
 		}
