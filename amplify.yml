@@ -14,7 +14,6 @@ backend:
         - yum install -y jq
         - export PROJECT_NAME=$(cat ./amplify/.config/project-config.json | jq -r '.projectName')
         - export S3_BUCKET=$(aws resourcegroupstaggingapi get-resources --tag-filters Key=user:Application,Values="${PROJECT_NAME}" --resource-type-filters s3 --query 'ResourceTagMappingList[*].[ResourceARN]' --output text | grep -v deployment | awk -F':::' '{print $2}')
-        - aws s3 cp ./src/backend/csv/thesaurus_medical.ths s3://$S3_BUCKET/public/thesaurus_medical.ths
         - export LAMBDATHS=$(aws cloudformation describe-stack-resource --stack-name ${CFN_STACK_NAME} --logical-resource-id Thesaurus --query StackResourceDetail.PhysicalResourceId --output text)
         - export AWS_REGION=$(aws configure get region)
         - export ACCOUNTID=$(aws sts get-caller-identity --query Account --output text)
@@ -22,6 +21,8 @@ backend:
         - aws lambda add-permission --function-name ${LAMBDATHS} --principal s3.amazonaws.com --statement-id s3invoke --action "lambda:InvokeFunction" --source-arn arn:aws:s3:::${S3_BUCKET} --source-account ${ACCOUNTID}
         - sed "s|%LambdaArn%|$LAMBDA_ARN|g" notification.json > notification.s3
         - aws s3api put-bucket-notification-configuration --bucket $S3_BUCKET --notification-configuration file://notification.s3 --output text
+        - aws s3 cp ./src/backend/csv/thesaurus_medical.ths s3://$S3_BUCKET/public/thesaurus_medical.ths
+
 frontend:
   phases:
     preBuild:
