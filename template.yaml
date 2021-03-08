@@ -641,8 +641,7 @@ Resources:
       Name: /mri-sched/apiid
       Type: String
       Value: 
-        Fn::Sub:
-          - HttpApi
+        !Ref HttpApi
       Description: !Sub HTTP API Domain for mri-sched
 
   lambdaThesaurusParameter:
