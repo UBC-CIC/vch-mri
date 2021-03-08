@@ -635,6 +635,25 @@ Resources:
           SEND_COMMAND_NAME: !Ref copyFile
           SSM_PATH: "/mri-sched/ec2"
 
+  HttpParameter:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name: /mri-sched/apiid
+      Type: String
+      Value: 
+        Fn::Sub:
+          - HttpApi
+      Description: !Sub HTTP API Domain for mri-sched
+
+  lambdaThesaurusParameter:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name: /mri-sched/lambdathesaurusarn
+      Type: String
+      Value: 
+        !GetAtt Thesaurus.Arn
+      Description: !Sub LambdaArn Thesaurus
+
 Outputs:
   Preprocess:
       Value: !GetAtt Preprocess.Arn
