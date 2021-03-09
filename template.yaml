@@ -242,7 +242,7 @@ Resources:
           aws configure set default.region $AWSREGION
 
           DBUSER=$(aws ssm get-parameter --name "/mri-sched/dbuser_ec2" --with-decryption --query Parameter.Value --output text)
-          DBPWD=$(aws ssm get-parameter --name "/mri-sched/dbpwd_ec2" --with-decryption --query Parameter.Value --output text)          
+          DBPWD=$(aws ssm get-parameter --name "/mri-sched/dbpwd_ec2" --with-decryption --query Parameter.Value --output text)
            
           sudo systemctl start postgresql
 
