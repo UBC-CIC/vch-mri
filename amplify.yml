@@ -19,7 +19,8 @@ backend:
         - export LAMBDA_NAME=$(echo $LAMBDA_ARN | awk -F':' '{print $7}')
         - aws lambda add-permission --function-name ${LAMBDA_NAME} --principal s3.amazonaws.com --statement-id s3invoke --action "lambda:InvokeFunction" --source-arn arn:aws:s3:::${S3_BUCKET} --source-account ${ACCOUNTID}
         - sed "s|%LambdaArn%|$LAMBDA_ARN|g" notification.json > notification.s3
-        - aws s3api put-bucket-notification-configuration --bucket $S3_BUCKET --notification-configuration file://notification.s3 2> out.txt
+        - export RST=$(aws s3api get-bucket-notification-configuration --bucket $S3_BUCKET 2> out.txt)
+        - if [ -z "$RST" ]; then aws s3api put-bucket-notification-configuration --bucket $S3_BUCKET --notification-configuration file://notification.s3 --output text; fi
         - aws s3 cp ./src/backend/csv/thesaurus_medical.ths s3://$S3_BUCKET/public/thesaurus_medical.ths
 
 frontend:
