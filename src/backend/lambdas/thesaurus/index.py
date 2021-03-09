@@ -11,7 +11,6 @@ destPath = os.getenv('DEST_PATH')
 sendCommandName = os.getenv('SEND_COMMAND_NAME')
 ssmPath = os.getenv("SSM_PATH")
 s3 = boto3.client('s3')
-ec2 = boto3.client('ec2')
 ssm = boto3.client('ssm')
 
 cmd = """
@@ -45,7 +44,7 @@ def handler(event, context):
         return {"isBase64Encoded": False, "statusCode": params['ResponseMetadata']['HTTPStatusCode'], "body": "SSM Error", "headers": {"Content-Type": "application/json"}}
     for p in params['Parameters']:
         if p['Name'] == ssmPath:
-            ec2 = p['Value']
+            ssmPath = p['Value']
     #get bucket name
     bucket = event['Records'][0]['s3']['bucket']['name']
     #get the file/key name

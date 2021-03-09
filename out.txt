@@ -1,0 +1,2 @@
+
+An error occurred (NoSuchBucket) when calling the GetBucketNotificationConfiguration operation: The specified bucket does not exist
