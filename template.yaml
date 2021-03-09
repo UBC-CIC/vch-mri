@@ -254,10 +254,13 @@ Resources:
 
           sudo git clone https://github.com/UBC-CIC/vch-mri.git
           cd vch-mri
+          sudo cp ./src/backend/csv/thesaurus_medical.ths /usr/share/pgsql/tsearch_data/thesaurus_medical.ths
+
           sudo -u postgres psql -f ./src/backend/init_db.sql
           sudo -u postgres psql -d rules -c "GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO $DBUSER;"
           sudo -u postgres psql -d rules -c "GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO $DBUSER;"
           sudo -u postgres psql -d rules -c "GRANT ALL PRIVILEGES ON ALL FUNCTIONS IN SCHEMA public TO $DBUSER;" 
+
 
           sudo systemctl restart postgresql                    
 
@@ -651,7 +654,7 @@ Resources:
       Type: String
       Value: 
         !GetAtt Thesaurus.Arn
-      Description: !Sub LambdaArn Thesaurus
+      Description: LambdaArn Thesaurus
 
 Outputs:
   Preprocess:

@@ -94,3 +94,14 @@ UPDATE spellchecker
 SET word = TRIM(word);
 
 \copy conjunctions FROM './src/backend/csv/conjunctions.csv' DELIMITER ',' CSV;
+
+CREATE TEXT SEARCH DICTIONARY ths_med (
+TEMPLATE = thesaurus, 
+DictFile = thesaurus_medical,
+Dictionary = english_stem); 
+
+CREATE TEXT SEARCH CONFIGURATION ths_search (copy=english); 
+
+ALTER TEXT SEARCH CONFIGURATION ths_search 
+ALTER MAPPING FOR asciiword, asciihword, hword_asciipart 
+WITH ths_med, english_stem;
