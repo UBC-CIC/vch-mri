@@ -55,44 +55,27 @@ Configuring SAM deploy
 4. Confirm the deployment and wait for the stack to be created.
 
 
+If you need to connect to the EC2 Postgres database, you can securelly access the server using [AWS Systems Manager Session Manager](https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager.html). 
+
+```
+aws ssm start-session --region {YOUR-REGION} --target {YOUR-INSTANCE-ID} 
+```
+
 
 # Step 2: Front-end deployment
 
-1. Click on the **Deploy to Amplify Console** button below and follow the instructions:
+The **Deploy to Amplify Console** button will take you to your AWS console to deploy the front-end solution. Make sure you are connecting to the same AWS Account you deployed the backend solutio.
 
 <a href="https://console.aws.amazon.com/amplify/home#/deploy?repo=https://github.com/UBC-CIC/vch-mri">
     <img src="https://oneclick.amplifyapp.com/button.svg" alt="Deploy to Amplify Console">
 </a>
 
 
-Connect to GitHub
+The follow screenshots shows how simple this step is:
 
-Deploy th App (Create a new role - amplifyconsole-backend-role) 
+1. ![alt text](../images/amplify-console-01.png)
 
-This process 
-Forks the repo into you github account, build and deploy the frontend solution 
+2. ![alt text](../images/amplify-console-02.png)
 
+3. ![alt text](../images/amplify-console-03.png)
 
-
-
-
-1.  Clone and Fork this solution repository.
-    If you haven't configured Amplify before, configure the Amplify CLI in your terminal as follows:
-```bash
-amplify configure
-```
-
-2.  In a terminal from the project root directory, enter the following command selecting the IAM user of the AWS Account you will deploy this application from. (accept all defaults):
-
-```bash
-amplify init
-```
-
-3.  Deploy the resourse to your AWS Account using the command:
-```bash
-amplify push
-```
-
-4. Log into the AWS Management Console.
-5. Select AWS Amplify and select the **mri-sched**
-6. At the *Frontend environments* tab connect to your github account poiting to the forked repo. More informatoin at https://docs.aws.amazon.com/amplify/latest/userguide/deploy-backend.html
