@@ -8,7 +8,7 @@
 - [sample_output.json](../src/backend/sample_output.json): Sample JSON output for first 100 rows of data of sample.csv
 - To create a sample_output.json, in the terminal run `python .\preprocess\preprocess_data.py`
 
-![Preprocessing Decision Tree](images/decisionTree_preprocess.png)
+![Preprocessing Decision Tree](../images/decisionTree_preprocess.png)
 
 ## Rule Processing 
 - [rules.py](../src/backend/rule_processing/rules.py): Main python script to obtain the priority value 
@@ -17,7 +17,7 @@
 - To update the weighted rule tokens, run `python .\rules_processing\update_weights.py` in the terminal
 - To apply the rules and obtain a Rule ID + P-Value, run `python .\rule_processing\rules.py` in the terminal
 
-![Rule Decision Tree](images/decisionTree_rules.png)
+![Rule Decision Tree](../images/decisionTree_rules.png)
 
 ## Lambdas
 - Python Code used for Lambda Functions 
