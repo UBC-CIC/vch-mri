@@ -259,8 +259,7 @@ Resources:
           sudo -u postgres psql -f ./src/backend/init_db.sql
           sudo -u postgres psql -d rules -c "GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO $DBUSER;"
           sudo -u postgres psql -d rules -c "GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO $DBUSER;"
-          sudo -u postgres psql -d rules -c "GRANT ALL PRIVILEGES ON ALL FUNCTIONS IN SCHEMA public TO $DBUSER;" 
-
+          sudo -u postgres psql -d rules -c "GRANT ALL PRIVILEGES ON ALL FUNCTIONS IN SCHEMA public TO $DBUSER;"
 
           sudo systemctl restart postgresql                    
 
@@ -655,6 +654,16 @@ Resources:
       Value: 
         !GetAtt Thesaurus.Arn
       Description: LambdaArn Thesaurus
+
+
+  lambdaUpdateWeightsParameter:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name: /mri-sched/lambdaupdateweightsarn
+      Type: String
+      Value: 
+        !GetAtt UpdateWeights.Arn
+      Description: LambdaArn UpdateWeights
 
 Outputs:
   Preprocess:

@@ -73,9 +73,6 @@ CREATE TABLE IF NOT EXISTS specialty_tags (
 UPDATE mri_rules 
 SET bp_tk = to_tsvector(body_part);
 
-UPDATE mri_rules
-SET info_weighted_tk = to_tsvector(info)
-
 CREATE INDEX info_weighted_idx 
 ON mri_rules 
 USING GIN (info_weighted_tk);

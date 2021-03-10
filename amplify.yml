@@ -23,6 +23,8 @@ backend:
         - sed "s|%LambdaArn%|$LAMBDA_ARN|g" notification.json > notification.s3
         - aws s3api put-bucket-notification-configuration --bucket $S3_BUCKET --notification-configuration file://notification.s3 --output text
         - aws s3 cp ./src/backend/csv/thesaurus_medical.ths s3://$S3_BUCKET/public/thesaurus_medical.ths
+        - export LAMBDA_UPDATE=$(aws ssm get-parameter --name /mri-sched/lambdaupdateweightsarn --query Parameter.Value --output text)
+        - aws lambda invoke --function-name $LAMBDA_UPDATE
 
 frontend:
   phases:
