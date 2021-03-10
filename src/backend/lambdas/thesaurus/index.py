@@ -44,7 +44,7 @@ def handler(event, context):
         return {"isBase64Encoded": False, "statusCode": params['ResponseMetadata']['HTTPStatusCode'], "body": "SSM Error", "headers": {"Content-Type": "application/json"}}
     for p in params['Parameters']:
         if p['Name'] == ssmPath:
-            ssmPath = p['Value']
+            ec2 = p['Value']
     #get bucket name
     bucket = event['Records'][0]['s3']['bucket']['name']
     #get the file/key name
