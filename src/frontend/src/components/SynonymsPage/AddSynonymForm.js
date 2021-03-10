@@ -134,7 +134,7 @@ class AddSynonymForm extends React.Component {
                         type='submit'
                         content="Add Synonym"
                         color='blue'
-                        disabled={!this.state.word || this.state.synonyms.length === 0}
+                        disabled={!this.state.word || this.state.synonym.length === 0}
                     />
                 </Modal.Actions>
             </Modal>
