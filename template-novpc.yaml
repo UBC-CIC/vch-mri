@@ -13,7 +13,7 @@ Parameters:
     Type: 'String'
 
   PublicSubnetB:
-    Description: Private Subnet A
+    Description: Private Subnet B
     Type: 'String'
 
   DBInstanceTypeParameter:
@@ -214,7 +214,10 @@ Resources:
         parameters:
           fileName:
             type: String
-            description: "(Required) Name of file in S3"
+            description: "(Required) Name of file"
+          s3Key:
+            type: String
+            description: "(Required) S3 Key"
           destPath:
             type: String
             description: "(Required) EC2 instance ID"
@@ -227,7 +230,7 @@ Resources:
           inputs:
             timeoutSeconds: '60'
             runCommand:
-            - "aws s3 cp s3://{{bucket}}/{{fileName}} {{destPath}}{{fileName}}"
+            - "aws s3 cp s3://{{bucket}}/{{s3Key}} {{destPath}}{{fileName}}"
       DocumentType: Command
       Name: 'copyFile'
 

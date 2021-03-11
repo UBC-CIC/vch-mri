@@ -49,6 +49,7 @@ def handler(event, context):
     bucket = event['Records'][0]['s3']['bucket']['name']
     #get the file/key name
     key = urllib.parse.unquote_plus(event['Records'][0]['s3']['object']['key'], encoding='utf-8')
+    fileName = key.split("/")[1]
     logger.info(bucket)
     logger.info(key)
     logger.info(destPath)
@@ -62,6 +63,9 @@ def handler(event, context):
         InstanceIds =[ec2],
         Parameters={
                 'fileName': [
+                    fileName,
+                ],
+                's3Key': [
                     key,
                 ],
                 'destPath': [

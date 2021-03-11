@@ -312,7 +312,10 @@ Resources:
         parameters:
           fileName:
             type: String
-            description: "(Required) Name of file in S3"
+            description: "(Required) Name of file"
+          s3Key:
+            type: String
+            description: "(Required) S3 Key"
           destPath:
             type: String
             description: "(Required) EC2 instance ID"
