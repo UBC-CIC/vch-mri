@@ -19,6 +19,11 @@ aws ssm put-parameter --name "/mri-sched/dbpwd_ec2" --value "DATABASEPWD" --type
 sam deploy -g --capabilities CAPABILITY_IAM CAPABILITY_AUTO_EXPAND CAPABILITY_NAMED_IAM
 ```
 
+To deploy the solution into an existent VPC please use the following command:
+```bash
+sam deploy -g -t template-novpc.yaml --capabilities CAPABILITY_IAM CAPABILITY_AUTO_EXPAND CAPABILITY_NAMED_IAM
+```
+
 3. Provide the stack name, region and the key-pair name. For all the other questions, please accept the default answers or select *Y*. Below an example:
 
 ```

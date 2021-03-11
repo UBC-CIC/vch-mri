@@ -4,20 +4,17 @@ Description: >
     "MRI Scheduler Project \n"
 
 Parameters:
-  CidrBlockVpcParameter:
-    Description: CIDR block allocated for 
+  VpcId:
+    Description: VpcId
     Type: 'String'
-    Default: 10.0.0.0/16
 
-  PrivateSubnetAParameter:
-    Description: CIDR block allocated for Private Subnet A
+  PrivateSubnetA:
+    Description: Private Subnet A
     Type: 'String'
-    Default: 10.0.1.0/24
 
-  PublicSubnetAParameter:
-    Description: CIDR block allocated for Private Subnet A
+  PublicSubnetB:
+    Description: Private Subnet A
     Type: 'String'
-    Default: 10.0.2.0/24
 
   DBInstanceTypeParameter:
     Description: EC2 instance type for the database
@@ -74,128 +71,33 @@ Resources:
         Roles: 
           - !Ref IAMEC2InstanceRole
 
-  # VPC
-  VPC:
-    Type: AWS::EC2::VPC
-    Properties:
-      CidrBlock: !Ref CidrBlockVpcParameter
-      EnableDnsSupport: true
-      EnableDnsHostnames: true
-      InstanceTenancy: default
-      Tags:
-      - Key: Name
-        Value: !Join ['', [!Ref "AWS::StackName", "-VPC" ]] 
-  
-  # Internet Gateway
-  InternetGateway:
-    Type: AWS::EC2::InternetGateway
-    Properties:
-      Tags:
-      - Key: Name
-        Value: !Join ['', [!Ref "AWS::StackName", "-InternetGateway" ]]
-
-  VpcInternetGatewayAttchment:
-    Type: AWS::EC2::VPCGatewayAttachment
-    Properties: 
-      VpcId: !Ref VPC
-      InternetGatewayId: !Ref InternetGateway
-
-  # Subnets
-  PrivateSubnetA:
-    Type: AWS::EC2::Subnet
-    Properties:
-      VpcId: !Ref VPC
-      CidrBlock: !Ref PrivateSubnetAParameter
-      AvailabilityZone: !Select [0, !GetAZs '']
-      Tags:
-        - Key: Name
-          Value: Private Subnet A
-  
-  PublicSubnetA:
-    Type: AWS::EC2::Subnet
-    Properties:
-      VpcId: !Ref VPC
-      CidrBlock: !Ref PublicSubnetAParameter
-      AvailabilityZone: !Select [0, !GetAZs '']
-      Tags:
-        - Key: Name
-          Value: !Sub ${AWS::StackName}-PublicSubnet-A
-
   DataSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupDescription: Allow traffic to data resources
-      VpcId: !Ref VPC
-      SecurityGroupIngress:
-      - IpProtocol: tcp
-        FromPort: 5432
-        ToPort: 5432
-        CidrIp: !Ref PrivateSubnetAParameter
-      - IpProtocol: tcp
-        FromPort: 22
-        ToPort: 22
-        CidrIp: !Ref PublicSubnetAParameter
+      GroupDescription: Allow traffic to data resources for MRI SHED
+      VpcId: !Ref VpcId
       Tags:
         - Key: Name
           Value: !Sub ${AWS::StackName}-DataSecurityGroup
-  # Route Tables
-  PrivateRouteTableA:
-    Type: AWS::EC2::RouteTable
-    Properties:
-      VpcId: !Ref VPC
-      Tags:
-        - Key: Name
-          Value: Private Route Table A
 
-  PublicRouteTableA:
-    Type: AWS::EC2::RouteTable
+  SelfReferenceRulePostGres:
+    Type: AWS::EC2::SecurityGroupIngress
     Properties:
-      VpcId: !Ref VPC
-      Tags:
-        - Key: Name
-          Value: Public Route Table A
+      IpProtocol: tcp
+      FromPort: 5432
+      ToPort: 5432
+      SourceSecurityGroupId: !Ref DataSecurityGroup
+      GroupId: !Ref DataSecurityGroup
 
-  # Routes
-  PublicRouteA:
-    Type: AWS::EC2::Route
+  SelfReferenceRuleSSH:
+    Type: AWS::EC2::SecurityGroupIngress
     Properties:
-      RouteTableId: !Ref PublicRouteTableA
-      DestinationCidrBlock: 0.0.0.0/0
-      GatewayId: !Ref InternetGateway
+      IpProtocol: tcp
+      FromPort: 22
+      ToPort: 22
+      SourceSecurityGroupId: !Ref DataSecurityGroup
+      GroupId: !Ref DataSecurityGroup
 
-  PrivateRouteA:
-    Type: 'AWS::EC2::Route'
-    Properties:
-      RouteTableId: !Ref PrivateRouteTableA
-      DestinationCidrBlock: 0.0.0.0/0
-      NatGatewayId: !Ref NATGateway
-
-  # Attach the subnets to route tables
-  PublicSubnetARouteTableAssociation:
-    Type: AWS::EC2::SubnetRouteTableAssociation
-    Properties:
-      SubnetId: !Ref PublicSubnetA
-      RouteTableId: !Ref PublicRouteTableA
-
-  PrivateSubnetARouteTableAssociation:
-    Type: AWS::EC2::SubnetRouteTableAssociation
-    Properties:
-      SubnetId: !Ref PrivateSubnetA
-      RouteTableId: !Ref PrivateRouteTableA
-  
-  # NAT Gateway:
-  NATGateway:
-    Type: AWS::EC2::NatGateway
-    Properties:
-      AllocationId: !GetAtt ElasticIPAddress.AllocationId
-      SubnetId: !Ref PublicSubnetA
-      Tags:
-      - Key: Name
-        Value: !Sub NAT-${AWS::StackName}
-  ElasticIPAddress:
-    Type: AWS::EC2::EIP
-    Properties:
-      Domain: VPC
 
   AccessLogs:
     Type: AWS::Logs::LogGroup
@@ -687,23 +589,6 @@ Outputs:
       Description: URL of your API endpoint
       Value:
         Fn::Sub: 'https://${HttpApi}.execute-api.${AWS::Region}.${AWS::URLSuffix}/'
-  VPC:
-    Description: VPC ID
-    Value: !Ref VPC
-    Export:
-      Name: !Sub ${AWS::StackName}-vpc-id
-  
-  PrivateSubnetA:
-    Description: Private Subnet A
-    Value: !Ref PrivateSubnetA
-    Export:
-      Name: !Sub ${AWS::StackName}-PrivateSubnetA
-
-  PublicSubnetA:
-    Description: Public Subnet A
-    Value: !Ref PublicSubnetA
-    Export:
-      Name: !Sub ${AWS::StackName}-PublicSubnetA
 
   DataSecurityGroup:
     Description: Allow traffic to data subnets
