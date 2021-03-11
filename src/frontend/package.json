@@ -8,7 +8,7 @@
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
     "aws-amplify": "^3.0.22",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "history": "^5.0.0",
     "jwt-decode": "^2.2.0",
     "lodash": "^4.17.20",
