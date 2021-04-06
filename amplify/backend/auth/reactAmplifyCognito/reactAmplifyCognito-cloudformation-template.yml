@@ -181,10 +181,10 @@ Resources:
       UsernameAttributes: !Ref usernameAttributes
           
       MfaConfiguration: !Ref mfaConfiguration
-      SmsVerificationMessage: !Ref smsVerificationMessage
-      SmsConfiguration: 
-        SnsCallerArn: !GetAtt SNSRole.Arn
-        ExternalId: reactA4e73df84_role_external_id
+      # SmsVerificationMessage: !Ref smsVerificationMessage
+      # SmsConfiguration: 
+      #   SnsCallerArn: !GetAtt SNSRole.Arn
+      #   ExternalId: reactA4e73df84_role_external_id
     
   
     
