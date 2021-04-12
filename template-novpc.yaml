@@ -12,8 +12,12 @@ Parameters:
     Description: Private Subnet A
     Type: 'String'
 
-  PublicSubnetB:
+  PrivateSubnetB:
     Description: Private Subnet B
+    Type: 'String'
+
+  AdicionalSecurityGroup:
+    Description: Adicional Security Group Id with pre-defined rules
     Type: 'String'
 
   DBInstanceTypeParameter:
@@ -98,7 +102,6 @@ Resources:
       SourceSecurityGroupId: !Ref DataSecurityGroup
       GroupId: !Ref DataSecurityGroup
 
-
   AccessLogs:
     Type: AWS::Logs::LogGroup
 
@@ -110,7 +113,8 @@ Resources:
       IamInstanceProfile: !Ref IAMEC2InstanceProfile
       NetworkInterfaces:
       - GroupSet: 
-        - Ref: "DataSecurityGroup"
+        - Ref: DataSecurityGroup
+        - Ref: AdicionalSecurityGroup
         SubnetId:
           Ref: "PrivateSubnetA"
         AssociatePublicIpAddress: false
@@ -134,6 +138,7 @@ Resources:
           sudo yum install -y git jq postgresql-server postgresql-devel
           sudo /usr/bin/postgresql-setup --initdb   
           sudo systemctl enable postgresql
+          sudo systemctl start amazon-ssm-agent 
 
           sudo sed -i "s|#listen_addresses = 'localhost'|listen_addresses = '*'|g" /var/lib/pgsql/data/postgresql.conf 
           ORIG="host    all             all             127.0.0.1/32            ident"
@@ -143,7 +148,7 @@ Resources:
           AWSREGION=$(curl  http://169.254.169.254/latest/dynamic/instance-identity/document | jq -r .region)
 
           aws configure set default.region $AWSREGION
-
+          
           DBUSER=$(aws ssm get-parameter --name "/mri-sched/dbuser_ec2" --with-decryption --query Parameter.Value --output text)
           DBPWD=$(aws ssm get-parameter --name "/mri-sched/dbpwd_ec2" --with-decryption --query Parameter.Value --output text)
            
@@ -173,9 +178,7 @@ Resources:
           INSTANCEID=$(curl http://169.254.169.254/latest/meta-data/instance-id)
           aws ssm put-parameter --name "/mri-sched/ec2" --value "$INSTANCEID" --type SecureString --overwrite
 
-          aws ssm put-parameter --name "/mri-sched/dbname_ec2" --value "rules" --type SecureString --overwrite
-
-          sudo systemctl start amazon-ssm-agent          
+          aws ssm put-parameter --name "/mri-sched/dbname_ec2" --value "rules" --type SecureString --overwrite                   
 
       Tags:
       - Key: 'Name'
@@ -298,6 +301,7 @@ Resources:
       VpcConfig: 
         SecurityGroupIds: 
           - !Ref DataSecurityGroup 
+          - !Ref AdicionalSecurityGroup
         SubnetIds:
           - !Ref PrivateSubnetA
       Environment:
@@ -318,6 +322,7 @@ Resources:
       VpcConfig: 
         SecurityGroupIds: 
           - !Ref DataSecurityGroup 
+          - !Ref AdicionalSecurityGroup
         SubnetIds: 
           - !Ref PrivateSubnetA
     
@@ -348,6 +353,7 @@ Resources:
       VpcConfig: 
         SecurityGroupIds: 
           - !Ref DataSecurityGroup 
+          - !Ref AdicionalSecurityGroup
         SubnetIds:
           - !Ref PrivateSubnetA
       Environment:
@@ -378,6 +384,7 @@ Resources:
       VpcConfig: 
         SecurityGroupIds: 
           - !Ref DataSecurityGroup 
+          - !Ref AdicionalSecurityGroup
         SubnetIds:
           - !Ref PrivateSubnetA
 
@@ -405,6 +412,7 @@ Resources:
       VpcConfig: 
         SecurityGroupIds: 
           - !Ref DataSecurityGroup 
+          - !Ref AdicionalSecurityGroup
         SubnetIds:
           - !Ref PrivateSubnetA
 
@@ -435,6 +443,7 @@ Resources:
       VpcConfig: 
         SecurityGroupIds: 
           - !Ref DataSecurityGroup 
+          - !Ref AdicionalSecurityGroup
         SubnetIds:
           - !Ref PrivateSubnetA
       Environment:
@@ -465,6 +474,7 @@ Resources:
       VpcConfig: 
         SecurityGroupIds: 
           - !Ref DataSecurityGroup 
+          - !Ref AdicionalSecurityGroup
         SubnetIds:
           - !Ref PrivateSubnetA
 
@@ -482,6 +492,7 @@ Resources:
       VpcConfig: 
         SecurityGroupIds: 
           - !Ref DataSecurityGroup 
+          - !Ref AdicionalSecurityGroup
         SubnetIds: 
           - !Ref PrivateSubnetA
 
@@ -509,6 +520,7 @@ Resources:
       VpcConfig: 
         SecurityGroupIds: 
           - !Ref DataSecurityGroup 
+          - !Ref AdicionalSecurityGroup
         SubnetIds: 
           - !Ref PrivateSubnetA
 
@@ -535,6 +547,7 @@ Resources:
       VpcConfig: 
         SecurityGroupIds: 
           - !Ref DataSecurityGroup 
+          - !Ref AdicionalSecurityGroup
         SubnetIds:
           - !Ref PrivateSubnetA
       Environment:
