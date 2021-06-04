@@ -47,7 +47,7 @@ def addRule(cur, values):
     VALUES """
     param_values = []
     for value in values: 
-        cmd += "(%s, %s, %s, %s, %s),"
+        cmd += "(%s, %s, %s, %s),"
         param_values.extend([value['body_part'], value['info'], value['priority'], value['contrast']])
     cmd = cmd[:-1]
     cmd += " RETURNING id, body_part, contrast, priority, info, active"
@@ -62,7 +62,7 @@ def updateRule(cur, values):
     FROM (VALUES """
     param_values = []
     for value in values:
-        cmd += "(%s, %s, %s, %s, %s, %s),"
+        cmd += "(%s, %s, %s, %s, %s),"
         param_values.extend([value['id'], value['body_part'], value['info'], value['priority'], value['contrast']])
     cmd = cmd[:-1]
     cmd += " ) as tmp(id, new_body_part, new_info, new_priority, new_contrast) WHERE CAST(tmp.id AS INTEGER) = mri_rules.id RETURNING mri_rules.id, body_part, contrast, priority, info, active"
