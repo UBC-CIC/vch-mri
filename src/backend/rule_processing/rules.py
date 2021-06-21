@@ -109,7 +109,7 @@ def compare_rules(data):
 
 if __name__ == '__main__':
     start = time.time()
-    with open('./sample_output.json') as f: 
+    with open('../preprocess/sample_output.json') as f:
         data = json.load(f)
     compare_rules(data)
     print( f'---{time.time()-start}---')

@@ -3,6 +3,7 @@
 
 ## Preprocessing 
 - Install the libraries into a virtual environment using `pip install -r requirements.txt`
+    - Setup if above didn't work: [Dev setup](./dev_setup.md)
 - [preprocess_data.py](../src/backend/preprocess/preprocess_data.py): Main python script to preprocess the requisition data in large batches locally
 - [preprocess_helper.py](../src/backend/preprocess/preprocess_helper.py): Helper functions 
 - [sample_output.json](../src/backend/sample_output.json): Sample JSON output for first 100 rows of data of sample.csv
