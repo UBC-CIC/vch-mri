@@ -82,18 +82,18 @@ def compare_rules(data):
                     cur.execute(update_sys_priority, ('P99',v["CIO_ID"]))
                 else:
                     # Get the Anatomy String
-                    anatomy_str  = searchAnatomy(v["anatomy"], cur)
+                    anatomy_str = searchAnatomy(v["anatomy"], cur)
                     # Create a string with all the processed data 
                     info_str = searchText(cur, v, "anatomy", "medical_condition", "diagnosis", "symptoms", "phrases", "other_info")
                     command = (update_cmd % info_str) + anatomy_str + (update_cmd_end % v["CIO_ID"])
                     cur.execute(command)
-                    ret = cur.fetchall()                         
-                    if not ret:  
+                    ret = cur.fetchall()
+                    if not ret:
                         print("No Rule Found for CIO ID: %s" % v["CIO_ID"])
                         cur.execute(update_sys_priority, ('P98', v["CIO_ID"]))
-                    else: 
+                    else:
                         print("For CIO ID: %s, With return of: %s" % (v["CIO_ID"], ret))
-                        # See if there are any tags and set tags 
+                        # See if there are any tags and set tags
                         cur.execute(update_tags, (ret[0][3], v["CIO_ID"]))
             except psycopg2.IntegrityError:
                 print("Exception: ", err)

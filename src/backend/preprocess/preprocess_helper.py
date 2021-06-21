@@ -71,7 +71,10 @@ def convert2KG(weight):
 
 def dob2age(dob):
     try: 
-        birthdate = datetime.strptime(dob, '%Y-%m-%d')
+        # requisition_data_200.csv format is diff than production server
+        #
+        # birthdate = datetime.strptime(dob, '%Y-%m-%d')
+        birthdate = datetime.strptime(dob, '%m/%d/%Y')
         today = date.today()
         age = today.year - birthdate.year - ((today.month, today.day) < (birthdate.month, birthdate.day))
         return age

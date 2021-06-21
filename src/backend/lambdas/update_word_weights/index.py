@@ -27,11 +27,12 @@ def getKeywordStem(cur, word_list):
     ret = cur.fetchall()
     return '{' + ', '.join(ret[0][0]) + '}'
 
-def createLemexes(key_list):
-    """
-    :return str: in the format of {x, y, z} from input of key_list
-    """
-    return '{' + ', '.join(key_list) + '}'
+#  NOT used
+# def createLemexes(key_list):
+#     """
+#     :return str: in the format of {x, y, z} from input of key_list
+#     """
+#     return '{' + ', '.join(key_list) + '}'
 
 def create_setWeight(col: str, weight: str, lemex: str):
     """

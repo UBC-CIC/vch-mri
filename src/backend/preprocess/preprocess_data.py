@@ -14,7 +14,7 @@ data_df = pd.read_csv('./csv/requisition_data_200.csv', skip_blank_lines=True).f
 # Format columns that don't need comprehend medical and preprocess the text 
 data_df['CIO_ID'] = data_df['Req # CIO']
 data_df['age'] = data_df['DOB \n(yyyy-mm-dd)'].apply(dob2age)
-data_df['height'] = data_df['Height \r\n(eg: ft.in)'] + \
+data_df['height'] = data_df['Height \n(eg: ft.in)'].astype(str) + \
     ' ' + data_df['INCH - CM']
 data_df['weight'] = data_df["Weight"].astype(str) + ' ' + data_df['KG - LBS']
 data_df['height'] = data_df['height'].apply(convert2CM)
