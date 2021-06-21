@@ -39,3 +39,10 @@ amplify/backend/awscloudformation
 /**/amplifytools.xcconfig
 
 samconfig.toml
+
+#frontend
+src/frontend/.vscode
+
+#backend
+src/backend/.idea
+src/backend/venv
