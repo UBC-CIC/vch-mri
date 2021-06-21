@@ -10,6 +10,9 @@ A solution prototype utilizing AWS-managed Natural Language Processing (NLP) ser
 ## Deployment 
 To deploy this solution into your AWS Account please follow our [Deployment Guide](docs/deployment_guide.md) 
 
+## Backend Guide
+Details in how the backend server work at [Backend Guide](docs/backend_guide.md)
+
 ## Frontend Guide
 Details in how the application work at [Frontend Guide](docs/frontend_guide.md)
  
