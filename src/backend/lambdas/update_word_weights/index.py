@@ -57,6 +57,12 @@ def updateWeights(cur, table: str, column: str, list_setweight):
     cur.execute(command)
 
 def handler(event, context):
+    # CORS preflight for local debugging
+    headers = {
+        'Access-Control-Allow-Headers': 'Content-Type',
+        'Access-Control-Allow-Origin': 'http://localhost:3000',
+        'Access-Control-Allow-Methods': 'OPTIONS,POST,GET'
+    }
     psql = postgresql.PostgreSQL()
     try: 
         with psql.conn.cursor() as cur:
@@ -74,7 +80,7 @@ def handler(event, context):
             # commit the changes
             psql.commit()
             logger.info("Weights Finished Updating")
-            return {'result': True}
+            return {'result': True, 'headers': headers}
     except Exception as error:
         logger.error(error)
         logger.error("Exception Type: %s" % type(error))

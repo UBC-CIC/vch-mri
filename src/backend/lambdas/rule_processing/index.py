@@ -71,6 +71,14 @@ def handler(event, context):
     logger.info(event)
     v = event
     psql = postgresql.PostgreSQL()
+
+    # CORS preflight for local debugging
+    headers = {
+        'Access-Control-Allow-Headers': 'Content-Type',
+        'Access-Control-Allow-Origin': 'http://localhost:3000',
+        'Access-Control-Allow-Methods': 'OPTIONS,POST,GET'
+    }
+
     with psql.conn.cursor() as cur: 
         # insert into data_results one by one
         try:
@@ -80,7 +88,7 @@ def handler(event, context):
                 logger.info("No anatomy found for CIO ID: ", v["CIO_ID"])
                 cur.execute(update_sys_priority, ('P99',v["CIO_ID"]))
                 psql.conn.commit()
-                return {"rule_id": "N/A", "priority": "P99"}
+                return {"rule_id": "N/A", 'headers': headers, "priority": "P99"}
             else:
                 anatomy_str  = searchAnatomy(v["anatomy"])
                 info_str = searchText(v, "anatomy", "medical_condition", "diagnosis", "symptoms", "phrases", "other_info")
@@ -90,16 +98,13 @@ def handler(event, context):
                 if not ret: 
                     cur.execute(update_sys_priority, ('P98', v["CIO_ID"]))
                     psql.conn.commit()
-                    return {"rule_id": "N/A", "priority": "P98"}
+                    return {"rule_id": "N/A", 'headers': headers, "priority": "P98"}
                 cur.execute(update_tags, (ret[0][5], v["CIO_ID"]))
                 tags = cur.fetchall()
             # commit the changes
             psql.conn.commit()
-            return {"rule_id": ret[0][0], "anatomy": ret[0][1], "priority": ret[0][2], "contrast": ret[0][3], "p5_flag": ret[0][4], "specialty_exams": tags[0][0]}
+            return {"rule_id": ret[0][0], 'headers': headers, "anatomy": ret[0][1], "priority": ret[0][2], "contrast": ret[0][3], "p5_flag": ret[0][4], "specialty_exams": tags[0][0]}
         except Exception as error:
             logger.error(error)
             logger.error("Exception Type: %s" % type(error))         
             return {"isBase64Encoded": False, "statusCode": 500, "body": f'{type(error)}', "headers": {"Content-Type": "application/json"}}
-
-
-    

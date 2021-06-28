@@ -1,4 +1,3 @@
-import psycopg2 
 import postgresql
 import boto3 
 import logging 
@@ -111,6 +110,13 @@ def handler(event, context):
     logger.info(data)
     psql = postgresql.PostgreSQL()
 
+    # CORS preflight for local debugging
+    headers = {
+        'Access-Control-Allow-Headers': 'Content-Type',
+        'Access-Control-Allow-Origin': 'http://localhost:3000',
+        'Access-Control-Allow-Methods': 'OPTIONS,POST,GET'
+    }
+
     with psql.conn.cursor() as cur:
         try: 
             if data['operation'] == 'GET':
@@ -119,7 +125,7 @@ def handler(event, context):
                 else: 
                     response = queryRules(cur, data['count'])
                 
-                resp_dict = {'result': True, 'data': []}
+                resp_dict = {'result': True, 'headers': headers, 'data': []}
                 logger.info(response)
                 resp_list = parseResponse(response)
                 resp_dict['data'] = resp_list
@@ -139,10 +145,10 @@ def handler(event, context):
             if data['operation'] == 'ADD' or data['operation'] == 'UPDATE':
                 logger.info("Applying weight")
                 applyWeight()
-                return {'result': True, 'data': resp_list}
+                return {'result': True, 'headers': headers, 'data': resp_list}
         except Exception as error:
             logger.error(error)
             logger.error("Exception Type: %s" % type(error))
             return {"isBase64Encoded": False, "statusCode": 400, "body": f'{type(error)}', "headers": {"Content-Type": "application/json"}}
-    return {'result': True}
+    return {'result': True, 'headers': headers}
     

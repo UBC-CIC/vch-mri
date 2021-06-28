@@ -1,24 +1,24 @@
-AWSTemplateFormatVersion: '2010-09-09'
+AWSTemplateFormatVersion: "2010-09-09"
 Transform: AWS::Serverless-2016-10-31
 Description: >
-    "MRI Scheduler Project \n"
+  "MRI Scheduler Project \n"
 
 Parameters:
   VpcId:
     Description: VpcId
-    Type: 'String'
+    Type: "String"
 
   PrivateSubnetA:
     Description: Private Subnet A
-    Type: 'String'
+    Type: "String"
 
   PrivateSubnetB:
     Description: Private Subnet B
-    Type: 'String'
+    Type: "String"
 
   AdicionalSecurityGroup:
     Description: Adicional Security Group Id with pre-defined rules
-    Type: 'String'
+    Type: "String"
 
   DBInstanceTypeParameter:
     Description: EC2 instance type for the database
@@ -26,10 +26,10 @@ Parameters:
     Default: t3.medium
     AllowedValues: [t2.medium, t2.large, t3.medium, t3.large]
     ConstraintDescription: must be a valid EC2 instance type.
-  
+
   AMIID:
-    Type:  'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
-    Default: '/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2' 
+    Type: "AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>"
+    Default: "/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2"
 
 Globals:
   Function:
@@ -43,7 +43,7 @@ Globals:
 Resources:
   # Roles
   IAMEC2InstanceRole:
-    Type: 'AWS::IAM::Role'
+    Type: "AWS::IAM::Role"
     Properties:
       Description: The SSM Instance Profile
       AssumeRolePolicyDocument:
@@ -52,28 +52,28 @@ Resources:
           - Effect: Allow
             Principal:
               Service:
-              - ec2.amazonaws.com
+                - ec2.amazonaws.com
             Action:
-              - 'sts:AssumeRole'
+              - "sts:AssumeRole"
       Policies:
         - PolicyName: ssmPutParameter
           PolicyDocument:
             Version: "2012-10-17"
             Statement:
               - Effect: Allow
-                Action: 
-                  - 'ssm:PutParameter'                
-                Resource: !Sub 'arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/mri*'
+                Action:
+                  - "ssm:PutParameter"
+                Resource: !Sub "arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/mri*"
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM
         - arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore
 
   IAMEC2InstanceProfile:
     Type: AWS::IAM::InstanceProfile
-    Properties: 
-        InstanceProfileName: AWSEC2SSMProfile
-        Roles: 
-          - !Ref IAMEC2InstanceRole
+    Properties:
+      InstanceProfileName: AWSEC2SSMProfile
+      Roles:
+        - !Ref IAMEC2InstanceRole
 
   DataSecurityGroup:
     Type: AWS::EC2::SecurityGroup
@@ -107,18 +107,18 @@ Resources:
 
   DatabaseEC2Instance:
     Type: AWS::EC2::Instance
-    Properties: 
+    Properties:
       ImageId: !Ref AMIID
       InstanceType: !Ref DBInstanceTypeParameter
       IamInstanceProfile: !Ref IAMEC2InstanceProfile
       NetworkInterfaces:
-      - GroupSet: 
-        - Ref: DataSecurityGroup
-        - Ref: AdicionalSecurityGroup
-        SubnetId:
-          Ref: "PrivateSubnetA"
-        AssociatePublicIpAddress: false
-        DeviceIndex: "0"
+        - GroupSet:
+            - Ref: DataSecurityGroup
+            - Ref: AdicionalSecurityGroup
+          SubnetId:
+            Ref: "PrivateSubnetA"
+          AssociatePublicIpAddress: false
+          DeviceIndex: "0"
       BlockDeviceMappings:
         - DeviceName: /dev/xvda
           Ebs:
@@ -148,7 +148,7 @@ Resources:
           AWSREGION=$(curl  http://169.254.169.254/latest/dynamic/instance-identity/document | jq -r .region)
 
           aws configure set default.region $AWSREGION
-          
+
           DBUSER=$(aws ssm get-parameter --name "/mri-sched/dbuser_ec2" --with-decryption --query Parameter.Value --output text)
           DBPWD=$(aws ssm get-parameter --name "/mri-sched/dbpwd_ec2" --with-decryption --query Parameter.Value --output text)
            
@@ -178,13 +178,13 @@ Resources:
           INSTANCEID=$(curl http://169.254.169.254/latest/meta-data/instance-id)
           aws ssm put-parameter --name "/mri-sched/ec2" --value "$INSTANCEID" --type SecureString --overwrite
 
-          aws ssm put-parameter --name "/mri-sched/dbname_ec2" --value "rules" --type SecureString --overwrite                   
+          aws ssm put-parameter --name "/mri-sched/dbname_ec2" --value "rules" --type SecureString --overwrite
 
       Tags:
-      - Key: 'Name'
-        Value: 'MriPostgresDB'
-      - Key: SSMManaged
-        Value: "Yes"
+        - Key: "Name"
+          Value: "MriPostgresDB"
+        - Key: SSMManaged
+          Value: "Yes"
 
   HttpApi:
     Type: AWS::Serverless::HttpApi
@@ -195,25 +195,25 @@ Resources:
       DefaultRouteSettings:
         ThrottlingBurstLimit: 200
       FailOnWarnings: True
-      CorsConfiguration: 
-        AllowHeaders: 
+      CorsConfiguration:
+        AllowHeaders:
           - "*"
-        AllowMethods: 
+        AllowMethods:
           - "*"
-        AllowOrigins: 
+        AllowOrigins:
           - "*"
-        ExposeHeaders: 
+        ExposeHeaders:
           - "*"
-  
-  ThesaurusFileBucket: 
+
+  ThesaurusFileBucket:
     Type: AWS::S3::Bucket
-  
-  copyFile: 
+
+  copyFile:
     Type: AWS::SSM::Document
     Properties:
       Content:
-        schemaVersion: '2.2'
-        description: 'Run a script to copy file from S3 onto Linux Instance.'
+        schemaVersion: "2.2"
+        description: "Run a script to copy file from S3 onto Linux Instance."
         parameters:
           fileName:
             type: String
@@ -224,54 +224,54 @@ Resources:
           destPath:
             type: String
             description: "(Required) EC2 instance ID"
-          bucket: 
+          bucket:
             type: String
             description: "(Required) S3 bucket name"
         mainSteps:
-        - action: aws:runShellScript
-          name: runCommands
-          inputs:
-            timeoutSeconds: '60'
-            runCommand:
-            - "aws s3 cp s3://{{bucket}}/{{s3Key}} {{destPath}}{{fileName}}"
+          - action: aws:runShellScript
+            name: runCommands
+            inputs:
+              timeoutSeconds: "60"
+              runCommand:
+                - "aws s3 cp s3://{{bucket}}/{{s3Key}} {{destPath}}{{fileName}}"
       DocumentType: Command
-      Name: 'copyFile'
+      Name: "copyFile"
 
   SpellcheckerLayer:
-      Type: AWS::Serverless::LayerVersion
-      Properties:
-        Description: Spell Checker 
-        ContentUri: ./src/backend/layers/spellchecker.zip 
-        CompatibleRuntimes:
-          - python3.8
-          - python3.7
-          - python3.6
-        RetentionPolicy: Delete
-  
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      Description: Spell Checker
+      ContentUri: ./src/backend/layers/spellchecker.zip
+      CompatibleRuntimes:
+        - python3.8
+        - python3.7
+        - python3.6
+      RetentionPolicy: Delete
+
   Psycopg2Layer:
-      Type: AWS::Serverless::LayerVersion
-      Properties:
-        Description: Psycopg2 Library
-        ContentUri: ./src/backend/layers/psycopg2.zip
-        CompatibleRuntimes:
-          - python3.8
-          - python3.7
-          - python3.6
-        RetentionPolicy: Delete
-  
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      Description: Psycopg2 Library
+      ContentUri: ./src/backend/layers/psycopg2.zip
+      CompatibleRuntimes:
+        - python3.8
+        - python3.7
+        - python3.6
+      RetentionPolicy: Delete
+
   PostgresLayer:
-      Type: AWS::Serverless::LayerVersion
-      Properties:
-        Description: Postgres Custom Functions
-        ContentUri: ./src/backend/layers/postgresql.zip
-        CompatibleRuntimes:
-          - python3.8
-          - python3.7
-          - python3.6
-        RetentionPolicy: Delete
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      Description: Postgres Custom Functions
+      ContentUri: ./src/backend/layers/postgresql.zip
+      CompatibleRuntimes:
+        - python3.8
+        - python3.7
+        - python3.6
+      RetentionPolicy: Delete
 
   Preprocess:
-    Type: AWS::Serverless::Function 
+    Type: AWS::Serverless::Function
     Properties:
       CodeUri: ./src/backend/lambdas/preprocess
       Events:
@@ -285,7 +285,7 @@ Resources:
             PayloadFormatVersion: "2.0"
             RouteSettings:
               ThrottlingBurstLimit: 100
-      Layers: 
+      Layers:
         - !Ref SpellcheckerLayer
         - !Ref Psycopg2Layer
         - !Ref PostgresLayer
@@ -296,38 +296,41 @@ Resources:
         - SSMParameterReadPolicy:
             ParameterName: "mri*"
         - LambdaInvokePolicy:
-            FunctionName:
-              !Ref RuleProcessing
-      VpcConfig: 
-        SecurityGroupIds: 
-          - !Ref DataSecurityGroup 
+            FunctionName: !Ref RuleProcessing
+      VpcConfig:
+        SecurityGroupIds:
+          - !Ref DataSecurityGroup
           - !Ref AdicionalSecurityGroup
         SubnetIds:
           - !Ref PrivateSubnetA
       Environment:
         Variables:
           RULE_PROCESSING_LAMBDA: !Ref RuleProcessing
+          LOCAL_DEBUG: None
 
   RuleProcessing:
-    Type: AWS::Serverless::Function 
+    Type: AWS::Serverless::Function
     Properties:
       CodeUri: ./src/backend/lambdas/rule_processing
-      Layers: 
+      Layers:
         - !Ref Psycopg2Layer
         - !Ref PostgresLayer
       Policies:
         - SSMParameterReadPolicy:
             ParameterName: "mri*"
         - arn:aws:iam::aws:policy/AWSXrayWriteOnlyAccess
-      VpcConfig: 
-        SecurityGroupIds: 
-          - !Ref DataSecurityGroup 
+      VpcConfig:
+        SecurityGroupIds:
+          - !Ref DataSecurityGroup
           - !Ref AdicionalSecurityGroup
-        SubnetIds: 
+        SubnetIds:
           - !Ref PrivateSubnetA
-    
+      Environment:
+        Variables:
+          LOCAL_DEBUG: None
+
   QueryRules:
-    Type: AWS::Serverless::Function 
+    Type: AWS::Serverless::Function
     Properties:
       CodeUri: ./src/backend/lambdas/query_rules_table
       Events:
@@ -341,27 +344,27 @@ Resources:
             PayloadFormatVersion: "2.0"
             RouteSettings:
               ThrottlingBurstLimit: 100
-      Layers: 
+      Layers:
         - !Ref Psycopg2Layer
         - !Ref PostgresLayer
       Policies:
         - SSMParameterReadPolicy:
             ParameterName: "mri*"
         - LambdaInvokePolicy:
-            FunctionName:
-              !Ref UpdateWeights
-      VpcConfig: 
-        SecurityGroupIds: 
-          - !Ref DataSecurityGroup 
+            FunctionName: !Ref UpdateWeights
+      VpcConfig:
+        SecurityGroupIds:
+          - !Ref DataSecurityGroup
           - !Ref AdicionalSecurityGroup
         SubnetIds:
           - !Ref PrivateSubnetA
       Environment:
         Variables:
           UPDATE_WEIGHTS_LAMBDA: !Ref UpdateWeights
+          LOCAL_DEBUG: None
 
   QuerySpellchecker:
-    Type: AWS::Serverless::Function 
+    Type: AWS::Serverless::Function
     Properties:
       CodeUri: ./src/backend/lambdas/query_spellchecker
       Events:
@@ -375,21 +378,24 @@ Resources:
             PayloadFormatVersion: "2.0"
             RouteSettings:
               ThrottlingBurstLimit: 100
-      Layers: 
+      Layers:
         - !Ref Psycopg2Layer
         - !Ref PostgresLayer
       Policies:
         - SSMParameterReadPolicy:
             ParameterName: "mri*"
-      VpcConfig: 
-        SecurityGroupIds: 
-          - !Ref DataSecurityGroup 
+      VpcConfig:
+        SecurityGroupIds:
+          - !Ref DataSecurityGroup
           - !Ref AdicionalSecurityGroup
         SubnetIds:
           - !Ref PrivateSubnetA
+      Environment:
+        Variables:
+          LOCAL_DEBUG: None
 
   QueryConjunctions:
-    Type: AWS::Serverless::Function 
+    Type: AWS::Serverless::Function
     Properties:
       CodeUri: ./src/backend/lambdas/query_conjunctions
       Events:
@@ -403,21 +409,24 @@ Resources:
             PayloadFormatVersion: "2.0"
             RouteSettings:
               ThrottlingBurstLimit: 100
-      Layers: 
+      Layers:
         - !Ref Psycopg2Layer
         - !Ref PostgresLayer
       Policies:
         - SSMParameterReadPolicy:
             ParameterName: "mri*"
-      VpcConfig: 
-        SecurityGroupIds: 
-          - !Ref DataSecurityGroup 
+      VpcConfig:
+        SecurityGroupIds:
+          - !Ref DataSecurityGroup
           - !Ref AdicionalSecurityGroup
         SubnetIds:
           - !Ref PrivateSubnetA
+      Environment:
+        Variables:
+          LOCAL_DEBUG: None
 
   QueryWeights:
-    Type: AWS::Serverless::Function 
+    Type: AWS::Serverless::Function
     Properties:
       CodeUri: ./src/backend/lambdas/query_weights
       Events:
@@ -431,27 +440,27 @@ Resources:
             PayloadFormatVersion: "2.0"
             RouteSettings:
               ThrottlingBurstLimit: 100
-      Layers: 
+      Layers:
         - !Ref Psycopg2Layer
         - !Ref PostgresLayer
       Policies:
         - SSMParameterReadPolicy:
             ParameterName: "mri*"
         - LambdaInvokePolicy:
-            FunctionName:
-              !Ref UpdateWeights
-      VpcConfig: 
-        SecurityGroupIds: 
-          - !Ref DataSecurityGroup 
+            FunctionName: !Ref UpdateWeights
+      VpcConfig:
+        SecurityGroupIds:
+          - !Ref DataSecurityGroup
           - !Ref AdicionalSecurityGroup
         SubnetIds:
           - !Ref PrivateSubnetA
       Environment:
         Variables:
           UPDATE_WEIGHTS_LAMBDA: !Ref UpdateWeights
+          LOCAL_DEBUG: None
 
   QuerySpecialtyTags:
-    Type: AWS::Serverless::Function 
+    Type: AWS::Serverless::Function
     Properties:
       CodeUri: ./src/backend/lambdas/query_specialty_tags
       Events:
@@ -465,39 +474,45 @@ Resources:
             PayloadFormatVersion: "2.0"
             RouteSettings:
               ThrottlingBurstLimit: 100
-      Layers: 
+      Layers:
         - !Ref Psycopg2Layer
         - !Ref PostgresLayer
       Policies:
         - SSMParameterReadPolicy:
             ParameterName: "mri*"
-      VpcConfig: 
-        SecurityGroupIds: 
-          - !Ref DataSecurityGroup 
+      VpcConfig:
+        SecurityGroupIds:
+          - !Ref DataSecurityGroup
           - !Ref AdicionalSecurityGroup
         SubnetIds:
           - !Ref PrivateSubnetA
+      Environment:
+        Variables:
+          LOCAL_DEBUG: None
 
   UpdateWeights:
-    Type: AWS::Serverless::Function 
+    Type: AWS::Serverless::Function
     Properties:
       CodeUri: ./src/backend/lambdas/update_word_weights
-      Layers: 
+      Layers:
         - !Ref Psycopg2Layer
         - !Ref PostgresLayer
       Policies:
         - SSMParameterReadPolicy:
             ParameterName: "mri*"
         - arn:aws:iam::aws:policy/AWSXrayWriteOnlyAccess
-      VpcConfig: 
-        SecurityGroupIds: 
-          - !Ref DataSecurityGroup 
+      VpcConfig:
+        SecurityGroupIds:
+          - !Ref DataSecurityGroup
           - !Ref AdicionalSecurityGroup
-        SubnetIds: 
+        SubnetIds:
           - !Ref PrivateSubnetA
+      Environment:
+        Variables:
+          LOCAL_DEBUG: None
 
   DataResults:
-    Type: AWS::Serverless::Function 
+    Type: AWS::Serverless::Function
     Properties:
       CodeUri: ./src/backend/lambdas/results
       Events:
@@ -511,42 +526,45 @@ Resources:
             PayloadFormatVersion: "2.0"
             RouteSettings:
               ThrottlingBurstLimit: 100
-      Layers: 
+      Layers:
         - !Ref Psycopg2Layer
         - !Ref PostgresLayer
       Policies:
         - SSMParameterReadPolicy:
             ParameterName: "mri*"
-      VpcConfig: 
-        SecurityGroupIds: 
-          - !Ref DataSecurityGroup 
+      VpcConfig:
+        SecurityGroupIds:
+          - !Ref DataSecurityGroup
           - !Ref AdicionalSecurityGroup
-        SubnetIds: 
+        SubnetIds:
           - !Ref PrivateSubnetA
+      Environment:
+        Variables:
+          LOCAL_DEBUG: None
 
   Thesaurus:
-    Type: AWS::Serverless::Function 
+    Type: AWS::Serverless::Function
     Properties:
       CodeUri: ./src/backend/lambdas/thesaurus
       Events:
         FileUpload:
           Type: S3
-          Properties: 
+          Properties:
             Bucket: !Ref ThesaurusFileBucket
             Events: s3:ObjectCreated:*
-      Layers: 
+      Layers:
         - !Ref Psycopg2Layer
         - !Ref PostgresLayer
       Policies:
         - SSMParameterReadPolicy:
             ParameterName: "mri*"
         - S3ReadPolicy:
-            BucketName: '*'
+            BucketName: "*"
         - arn:aws:iam::aws:policy/AmazonSSMFullAccess
         - arn:aws:iam::aws:policy/AWSResourceAccessManagerFullAccess
-      VpcConfig: 
-        SecurityGroupIds: 
-          - !Ref DataSecurityGroup 
+      VpcConfig:
+        SecurityGroupIds:
+          - !Ref DataSecurityGroup
           - !Ref AdicionalSecurityGroup
         SubnetIds:
           - !Ref PrivateSubnetA
@@ -555,14 +573,14 @@ Resources:
           DEST_PATH: "/usr/share/pgsql/tsearch_data/" # Path to shared postgresql directory
           SEND_COMMAND_NAME: !Ref copyFile
           SSM_PATH: "/mri-sched/ec2"
+          LOCAL_DEBUG: None
 
   HttpParameter:
     Type: AWS::SSM::Parameter
     Properties:
       Name: /mri-sched/apiid
       Type: String
-      Value: 
-        !Ref HttpApi
+      Value: !Ref HttpApi
       Description: !Sub HTTP API Domain for mri-sched
 
   lambdaThesaurusParameter:
@@ -570,41 +588,38 @@ Resources:
     Properties:
       Name: /mri-sched/lambdathesaurusarn
       Type: String
-      Value: 
-        !GetAtt Thesaurus.Arn
+      Value: !GetAtt Thesaurus.Arn
       Description: LambdaArn Thesaurus
-
 
   lambdaUpdateWeightsParameter:
     Type: AWS::SSM::Parameter
     Properties:
       Name: /mri-sched/lambdaupdateweightsarn
       Type: String
-      Value: 
-        !GetAtt UpdateWeights.Arn
+      Value: !GetAtt UpdateWeights.Arn
       Description: LambdaArn UpdateWeights
 
 Outputs:
   Preprocess:
-      Value: !GetAtt Preprocess.Arn
+    Value: !GetAtt Preprocess.Arn
   RuleProcessing:
-      Value: !GetAtt RuleProcessing.Arn
+    Value: !GetAtt RuleProcessing.Arn
   QueryRules:
-      Value: !GetAtt QueryRules.Arn
+    Value: !GetAtt QueryRules.Arn
   QuerySpellchecker:
-      Value: !GetAtt QuerySpellchecker.Arn
-  QueryConjunctions: 
-      Value: !GetAtt QueryConjunctions.Arn
+    Value: !GetAtt QuerySpellchecker.Arn
+  QueryConjunctions:
+    Value: !GetAtt QueryConjunctions.Arn
   QueryWeights:
-      Value: !GetAtt QueryWeights.Arn
-  UpdateWeights: 
-      Value: !GetAtt UpdateWeights.Arn
+    Value: !GetAtt QueryWeights.Arn
+  UpdateWeights:
+    Value: !GetAtt UpdateWeights.Arn
   DataResults:
-      Value: !GetAtt DataResults.Arn
+    Value: !GetAtt DataResults.Arn
   HttpApiUrl:
-      Description: URL of your API endpoint
-      Value:
-        Fn::Sub: 'https://${HttpApi}.execute-api.${AWS::Region}.${AWS::URLSuffix}/'
+    Description: URL of your API endpoint
+    Value:
+      Fn::Sub: "https://${HttpApi}.execute-api.${AWS::Region}.${AWS::URLSuffix}/"
 
   DataSecurityGroup:
     Description: Allow traffic to data subnets
