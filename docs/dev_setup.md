@@ -50,12 +50,17 @@ https://www.psycopg.org/docs/install.html
 
 - Make sure Docker is installed and running
 - Make sure Postgres is running
-- Run ALL lambdas locally connected to local Postgres DB
-  cd /SapienMachineLearning/vch-mri
-  sam local start-api --env-vars ./SAM/env.json --port 5000
+- Run ALL lambdas locally connected to local Postgres DB:
+
+  - cd /SapienMachineLearning/vch-mri
+  - sam local start-lambda -t template-novpc.yaml --port 5001
+  - sam local start-api -t template-novpc.yaml --env-vars ./SAM/env.json --port 5000 -d 5858 --debug
 
 - default Running on http://127.0.0.1:5000/
 - verify working via Postman or CURL to any route for ex POST http://127.0.0.1:5000/rules
+
+Note: the 5001 Lambda services are needed because the 5000 Lambda's call the 5001's locally - this is the only way
+to invoke a Lambda locally from another local Lambda
 
 ### postgresql layer
 

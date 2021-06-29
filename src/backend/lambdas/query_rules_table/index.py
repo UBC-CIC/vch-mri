@@ -1,5 +1,7 @@
 import postgresql
-import boto3 
+import boto3
+from botocore.config import Config
+from botocore import UNSIGNED
 import logging 
 import json 
 import os 
@@ -77,6 +79,22 @@ def setRuleActivity(cur, id, active):
     cur.execute(cmd, (active,id))
 
 def applyWeight():
+    IS_LOCAL = os.getenv('IS_LOCAL')
+    logger.info('IS_LOCAL')
+    logger.info(IS_LOCAL)
+
+    debug = os.getenv('LOCAL_DEBUG')
+    if debug is not None:
+        # “generated Lambdas are suffixed with an ID to keep them unique between multiple deployments (e.g. FunctionB-123ABC4DE5F6A),
+        #   so a Lamba named "FunctionB" doesn't exist”
+        # https://stackoverflow.com/questions/60181387/how-to-invoke-aws-lambda-from-another-lambda-within-sam-local
+        lambda_client = boto3.client('lambda',
+                                    endpoint_url="http://host.docker.internal:5001",
+                                    use_ssl=False,
+                                    verify=False,
+                                    config=Config(signature_version=UNSIGNED,
+                                                read_timeout=10000,
+                                                retries={'max_attempts': 0}))
     response = lambda_client.invoke(
             FunctionName=UpdateWeightLambdaName,
             InvocationType='RequestResponse',

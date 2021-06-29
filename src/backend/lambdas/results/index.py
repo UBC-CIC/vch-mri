@@ -100,13 +100,6 @@ def parseResponse(response):
 
 
 def handler(event, context):
-    logger.info("LOCAL_DEBUG")
-    debug = os.getenv('LOCAL_DEBUG')
-    # debug = os.environ['AWS_REGION']
-    logger.info(debug)
-    if debug is None:
-        logger.info('LOCAL_DEBUG is None')
-
     logger.info(event)
     if 'body' not in event:
         logger.error('Missing parameters')

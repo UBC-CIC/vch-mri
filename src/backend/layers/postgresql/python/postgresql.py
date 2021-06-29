@@ -11,13 +11,13 @@ logger.setLevel(logging.INFO)
 class PostgreSQL: 
     def __init__ (self):
         logger.info("------- PostgreSql Class Initialization")
-        logger.info("LOCAL_DEBUG")
-        debug = os.getenv('LOCAL_DEBUG')
         # debug = os.environ['AWS_REGION']
-        logger.info(debug)
-        if debug is None:
-            logger.info('LOCAL_DEBUG is None')
+        debug = os.getenv('LOCAL_DEBUG')
+        # logger.info("LOCAL_DEBUG")
+        # logger.info(debug)
 
+        if debug is None:
+            # logger.info('LOCAL_DEBUG is None')
             ssm = boto3.client('ssm')
             p_dbserver = '/mri-sched/dbserver_ec2'
             # p_dbserver = '/mri-sched/dbserver_ec2_public'
