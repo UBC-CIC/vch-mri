@@ -2,9 +2,9 @@ import React from "react";
 import { connect } from "react-redux";
 import { Form, Table, Accordion } from "semantic-ui-react";
 import { modifyResult } from "../../actions/ResultActions";
-import ResultView from "./ResultView";
+import ResultView from "./RequestsView";
 
-class ResultsTableRow extends React.Component {
+class RequestsTableRow extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -145,4 +145,4 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, { modifyResult })(ResultsTableRow);
+export default connect(mapStateToProps, { modifyResult })(RequestsTableRow);
