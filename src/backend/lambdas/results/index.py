@@ -11,8 +11,9 @@ logger.setLevel(logging.INFO)
 
 def queryResults(cur, page):
     cmd = """
-    SELECT id, info, rules_id, sys_priority, contrast, p5_flag, tags, phys_priority, phys_contrast, created_at
-    FROM data_results
+    SELECT id, info, rules_id, ai_priority, contrast, p5_flag, tags, phys_priority, phys_contrast, created_at,
+        dob, height, weight, reason_for_exam, exam_requested
+    FROM data_request
     ORDER BY created_at DESC
     LIMIT 50 OFFSET %s
     """
@@ -24,7 +25,7 @@ def queryResults(cur, page):
 def queryPageCount(cur):
     cmd = """
     SELECT CEIL(CAST(COUNT(id) AS float)/50)
-    FROM data_results
+    FROM data_request
     """
     cur.execute(cmd)
     return cur.fetchall()[0][0]
@@ -32,8 +33,9 @@ def queryPageCount(cur):
 
 def queryResultsID(cur, id):
     cmd = """
-    SELECT id, info, rules_id, sys_priority, contrast, p5_flag, tags, phys_priority, phys_contrast, created_at
-    FROM data_results
+    SELECT id, info, rules_id, ai_priority, contrast, p5_flag, tags, phys_priority, phys_contrast, created_at,
+        dob, height, weight, reason_for_exam, exam_requested
+    FROM data_request
     WHERE id = %s
     """
     cur.execute(cmd, [id])
@@ -42,7 +44,7 @@ def queryResultsID(cur, id):
 
 def updateResults(cur, id, priority, contrast):
     cmd = """
-    UPDATE data_results 
+    UPDATE data_request 
     SET phys_priority = %s, phys_contrast = %s
     WHERE id = %s
     RETURNING id, phys_priority, phys_contrast
@@ -55,19 +57,19 @@ def getResultCount(cur, interval):
     if interval == 'DAILY':
         cmd = """
         SELECT COUNT(id)
-        FROM data_results
+        FROM data_request
         WHERE DATE(created_at) = current_date
         """
     elif interval == 'WEEKLY':
         cmd = """
         SELECT COUNT(id)
-        FROM data_results
+        FROM data_request
         WHERE EXTRACT(WEEK FROM created_at) = EXTRACT(WEEK FROM current_date)
         """
     elif interval == 'MONTHLY':
         cmd = """
         SELECT COUNT(id)
-        FROM data_results
+        FROM data_request
         WHERE EXTRACT(MONTH FROM created_at) = EXTRACT(MONTH FROM current_date)
         """
     cur.execute(cmd)
@@ -95,6 +97,11 @@ def parseResponse(response):
         resp['phys_priority'] = resp_tuple[7]
         resp['phys_contrast'] = resp_tuple[8]
         resp['date_created'] = datetime_to_json(resp_tuple[9])
+        resp['dob'] = resp_tuple[10]
+        resp['height'] = resp_tuple[11]
+        resp['weight'] = resp_tuple[12]
+        resp['reason_for_exam'] = resp_tuple[13]
+        resp['exam_requested'] = resp_tuple[14]
         resp_list.append(resp)
     return resp_list
 

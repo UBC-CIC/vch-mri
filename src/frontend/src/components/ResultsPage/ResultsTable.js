@@ -56,6 +56,47 @@ class ResultsTable extends React.Component {
               <Table.HeaderCell
                 collapsing
                 sorted={
+                  this.props.sortedColumn === "dob"
+                    ? this.props.sortDirection
+                    : null
+                }
+                onClick={() => {
+                  this.props.changeResultSort("dob");
+                }}
+              >
+                DOB
+              </Table.HeaderCell>
+              <Table.HeaderCell
+                collapsing
+                sorted={
+                  this.props.sortedColumn === "height"
+                    ? this.props.sortDirection
+                    : null
+                }
+                onClick={() => {
+                  this.props.changeResultSort("height");
+                }}
+              >
+                Height
+              </Table.HeaderCell>
+              <Table.HeaderCell
+                collapsing
+                sorted={
+                  this.props.sortedColumn === "weight"
+                    ? this.props.sortDirection
+                    : null
+                }
+                onClick={() => {
+                  this.props.changeResultSort("weight");
+                }}
+              >
+                Weight
+              </Table.HeaderCell>
+              <Table.HeaderCell>Reason for Exam</Table.HeaderCell>
+              <Table.HeaderCell>Exam Requested</Table.HeaderCell>
+              <Table.HeaderCell
+                collapsing
+                sorted={
                   this.props.sortedColumn === "rules_id"
                     ? this.props.sortDirection
                     : null
@@ -130,7 +171,18 @@ class ResultsTable extends React.Component {
                 Physician Contrast
               </Table.HeaderCell>
               <Table.HeaderCell>Tags</Table.HeaderCell>
-              <Table.HeaderCell>Date Created</Table.HeaderCell>
+              <Table.HeaderCell
+                sorted={
+                  this.props.sortedColumn === "created_at"
+                    ? this.props.sortDirection
+                    : null
+                }
+                onClick={() => {
+                  this.props.changeResultSort("created_at");
+                }}
+              >
+                Date Created
+              </Table.HeaderCell>
               <Table.HeaderCell collapsing />
             </Table.Row>
           </Table.Header>

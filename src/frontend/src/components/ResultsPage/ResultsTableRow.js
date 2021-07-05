@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Form, Table, Accordion } from "semantic-ui-react";
+import { Form, Table } from "semantic-ui-react";
 import { modifyResult } from "../../actions/ResultActions";
 import ResultView from "./ResultView";
 
@@ -58,14 +58,27 @@ class ResultsTableRow extends React.Component {
   render() {
     return (
       <>
-        <Accordion.Title
-          active={this.state.activeIndex === 0}
-          as={Table.Row}
-          index={this.props.result.id}
-          onClick={this.handleClick}
-        >
-          {/* <Table.Row disabled={this.props.loading}> */}
+        <Table.Row disabled={this.props.loading}>
           <Table.Cell>{this.props.result.id}</Table.Cell>
+          <Table.Cell>
+            {this.props.result.dob ? this.props.result.dob : "N/A"}
+          </Table.Cell>
+          <Table.Cell>
+            {this.props.result.height ? this.props.result.height : "N/A"}
+          </Table.Cell>
+          <Table.Cell>
+            {this.props.result.weight ? this.props.result.weight : "N/A"}
+          </Table.Cell>
+          <Table.Cell>
+            {this.props.result.reason_for_exam
+              ? this.props.result.reason_for_exam
+              : "N/A"}
+          </Table.Cell>
+          <Table.Cell>
+            {this.props.result.exam_requested
+              ? this.props.result.exam_requested
+              : "N/A"}
+          </Table.Cell>
           <Table.Cell>
             {this.props.result.rules_id ? this.props.result.rules_id : "N/A"}
           </Table.Cell>
@@ -120,15 +133,7 @@ class ResultsTableRow extends React.Component {
           <Table.Cell textAlign="right" collapsing>
             <ResultView info={this.props.result.info} />
           </Table.Cell>
-          {/* </Table.Row> */}
-        </Accordion.Title>
-        <Accordion.Content active={this.state.activeIndex === 0}>
-          <p>
-            A dog is a type of domesticated animal. Known for its loyalty and
-            faithfulness, it can be found as a welcome guest in many households
-            across the world.
-          </p>
-        </Accordion.Content>
+        </Table.Row>
       </>
     );
   }

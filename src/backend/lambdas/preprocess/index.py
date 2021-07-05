@@ -27,9 +27,38 @@ spell = SpellChecker()
 psql = postgresql.PostgreSQL()
 conj_list = psql.queryTable("conjunctions")
 spelling_list = [x[0] for x in psql.queryTable('spellchecker')]
-psql.closeConn()
 # Add words to spell list 
 spell.word_frequency.load_words(spelling_list)
+
+insert_new_request_cmd = """
+INSERT INTO data_request(id, state, dob, height, weight, exam_requested, reason_for_exam) VALUES 
+('%s', 'received', '%s', '%s', '%s', '%s', '%s')
+ON CONFLICT (id)
+DO UPDATE SET
+    dob = EXCLUDED.dob,
+    height = EXCLUDED.height,
+    weight = EXCLUDED.weight,
+    exam_requested = EXCLUDED.exam_requested,
+    reason_for_exam = EXCLUDED.reason_for_exam,
+    state='received_duplicate',
+    error='',
+    info=null,
+    p5_flag=null,
+    rules_id=null,
+    phys_priority='',
+    ai_priority='',
+    final_priority='',
+    contrast=null,
+    tags=null,
+    phys_contrast=null;
+"""
+
+insert_history_request_cmd = """
+INSERT INTO request_history(id_data_request, history_type, dob, height, weight, exam_requested, reason_for_exam,
+    cognito_user_id, cognito_user_fullname)
+VALUES 
+('%s', 'request', '%s', '%s', '%s', '%s', '%s', '%s', '%s')
+"""
 
 def convert2CM(height):
     if not isinstance(height, str):
@@ -215,20 +244,69 @@ def handler(event, context):
     else: 
         data_df['CIO_ID'] = (data_df['ReqCIO'])
 
+
+
+
+    ##########################################
+    # TODO: Parameter validation
+    cognito_user_id = ''
+    if 'cognito_user_id' in data_df and data_df['cognito_user_id']:
+        cognito_user_id = data_df["cognito_user_id"]
+        logger.info(cognito_user_id)
+    cognito_user_fullname = ''
+    if 'cognito_user_fullname' in data_df and data_df['cognito_user_fullname']:
+        cognito_user_fullname = data_df["cognito_user_fullname"]
+        logger.info(cognito_user_fullname)
+    cio = data_df["CIO_ID"]
+    logger.info(cio)
+    dob = data_df['DOB']
+    logger.info(dob)
+    height = data_df['Height'] + ' ' + data_df['inch-cm']
+    logger.info(height)
+    weight = data_df['Weight'] + ' ' + data_df['kg-lbs']
+    logger.info(weight)
+    exam_requested = data_df['Exam Requested']
+    logger.info(exam_requested)
+    reason_for_exam = data_df['Reason for Exam']
+    logger.info(reason_for_exam)
+
+    logger.info('Store request in the DB immediately')
+    with psql.conn.cursor() as cur:
+        try:
+            command = insert_new_request_cmd % (data_df["CIO_ID"], dob, height, weight, exam_requested,
+                                                reason_for_exam)
+            logger.info(command)
+            cur.execute(command)
+
+            command = insert_history_request_cmd % (data_df["CIO_ID"], dob, height, weight, exam_requested,
+                                                    reason_for_exam, cognito_user_id, cognito_user_fullname)
+            logger.info(command)
+            cur.execute(command)
+
+            psql.conn.commit()
+        except Exception as error:
+            logger.error(error)
+            logger.error("Postgrest DB error - Exception Type: %s" % type(error))
+            return {"isBase64Encoded": False, "statusCode": 400, "body": f'{type(error)}',
+                    "headers": {"Content-Type": "application/json"}}
+
+    return {"isBase64Encoded": False, "statusCode": 400, "body": "debubging",
+            "headers": {"Content-Type": "application/json"}}
+
+
     if data_df['Radiologist Priority'].lower() == 'unidentified':
         data_df['priority'] = 'U/I'
     else: 
         data_df['priority'] = data_df['Radiologist Priority']
 
     # Format columns that don't need comprehend medical and preprocess the text
-    data_df['age'] = dob2age(data_df['DOB'])
-    data_df['height'] = data_df['Height'] + \
-        ' ' + data_df['inch-cm']
-    data_df['weight'] = data_df['Weight'] + ' ' + data_df['kg-lbs']
+    data_df['age'] = dob2age(dob)
+    data_df['height'] = height
+    data_df['weight'] = weight
     data_df['height'] = convert2CM(data_df['height'])
     data_df['weight'] = convert2KG(data_df['weight'])
-    data_df['Exam Requested'] = preProcessText(data_df['Exam Requested'])
-    data_df['Reason for Exam/Relevant Clinical History'] = preProcessText(data_df['Reason for Exam'])
+    data_df['Exam Requested'] = preProcessText(exam_requested)
+    data_df['Reason for Exam/Relevant Clinical History'] = preProcessText(reason_for_exam)
     # data_df['Spine'] = preProcessText(data_df['Appropriateness Checklist - Spine'])
     # data_df['Hip & Knee'] = preProcessText(data_df['Appropriateness Checklist - Hip & Knee'])
     

@@ -1,12 +1,15 @@
 --Initial postgres table creation script 
 \c rules
 
-DROP TABLE IF EXISTS data_results; 
+DROP TABLE IF EXISTS request_history;
+DROP TABLE IF EXISTS data_request;
 DROP TABLE IF EXISTS mri_rules; 
 DROP TABLE IF EXISTS word_weights; 
 DROP TABLE IF EXISTS conjunctions; 
 DROP TABLE IF EXISTS spellchecker; 
 DROP TABLE IF EXISTS specialty_tags; 
+DROP TYPE enum_requests_state;
+DROP TYPE enum_history_type;
 
 --timestamp function
 CREATE OR REPLACE FUNCTION trigger_set_timestamp()
@@ -28,24 +31,54 @@ CREATE TABLE IF NOT EXISTS mri_rules (
     active BOOLEAN DEFAULT TRUE
 ); 
 
-CREATE TABLE IF NOT EXISTS data_results ( 
-    id VARCHAR(36) PRIMARY KEY, 
-    info JSON NOT NULL, 
+CREATE TYPE enum_requests_state AS ENUM ('received', 'received_duplicate', 'deleted', 'ai_priority_processed', 'final_priority_received', 'labelled');
+
+CREATE TABLE IF NOT EXISTS data_request ( 
+    id VARCHAR(36) PRIMARY KEY,
+    state enum_requests_state,
+    error VARCHAR,
+    notes VARCHAR,
+    dob VARCHAR,    -- current request
+    height VARCHAR,
+    weight VARCHAR,
+    exam_requested VARCHAR,
+    reason_for_exam VARCHAR,
+    info JSON,     -- processed current request data prior sending to Rules engine
     p5_flag BOOLEAN, 
     rules_id INT, 
-    sys_priority VARCHAR(3),
+    phys_priority VARCHAR(3),
+    ai_priority VARCHAR(3),
+    final_priority VARCHAR(3),
     contrast BOOLEAN,
     tags VARCHAR[],
-    phys_priority VARCHAR(3),
     phys_contrast BOOLEAN,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     FOREIGN KEY (rules_id) REFERENCES mri_rules(id)
-); 
+);
 
--- Trigger for data_results
+CREATE TYPE enum_history_type AS ENUM ('request', 'modification', 'delete');
+
+CREATE TABLE IF NOT EXISTS request_history ( 
+    id SERIAL PRIMARY KEY,
+    id_data_request VARCHAR(36),
+    history_type enum_history_type,
+    description VARCHAR,
+    cognito_user_id VARCHAR,
+    cognito_user_fullname VARCHAR,
+    dob VARCHAR,
+    height VARCHAR,
+    weight VARCHAR,
+    exam_requested VARCHAR,
+    reason_for_exam VARCHAR,
+    mod_info JSON,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    FOREIGN KEY (id_data_request) REFERENCES data_request(id) ON DELETE CASCADE
+);
+
+-- Trigger for data_request
 CREATE TRIGGER set_timestamp
-BEFORE UPDATE ON data_results
+BEFORE UPDATE ON data_request
 FOR EACH ROW
 EXECUTE PROCEDURE trigger_set_timestamp();
 
@@ -78,7 +111,7 @@ ON mri_rules
 USING GIN (info_weighted_tk);
 
 CREATE INDEX tags_idx
-ON data_results
+ON data_request
 USING GIN(tags);
 
 \copy word_weights FROM './src/backend/csv/wordweights.csv' DELIMITER ',' CSV;

@@ -9,22 +9,22 @@ logger = logging.getLogger()
 logger.setLevel(logging.INFO)
     
 insert_cmd = """
-INSERT INTO data_results(id, info, p5_flag) VALUES 
+INSERT INTO data_request(id, info, p5_flag) VALUES 
 (%s, %s, %s)
 ON CONFLICT (id) DO UPDATE
 SET info = excluded.info, 
 p5_flag = excluded.p5_flag;
 """
 
-update_sys_priority = """
-UPDATE data_results
-SET sys_priority = %s
+update_ai_priority = """
+UPDATE data_request
+SET ai_priority = %s
 WHERE id = %s; 
 """
 
 update_cmd = """
-UPDATE data_results
-SET rules_id = r.id , sys_priority = r.priority, contrast = r.contrast
+UPDATE data_request
+SET rules_id = r.id , ai_priority = r.priority, contrast = r.contrast
 FROM mri_rules r WHERE r.id = (
 SELECT id
 FROM mri_rules, to_tsquery('ths_search','%s') query 
@@ -34,12 +34,12 @@ AND active = 't'
 
 update_cmd_end = """
 ORDER BY ts_rank_cd('{0.1, 0.2, 0.4, 1.0}',info_weighted_tk, query, 1) DESC LIMIT 1)
-AND data_results.id = '%s'
-RETURNING r.id, r.body_part, r.priority, r.contrast, data_results.p5_flag, r.info;
+AND data_request.id = '%s'
+RETURNING r.id, r.body_part, r.priority, r.contrast, data_request.p5_flag, r.info;
 """
 
 update_tags = """
-UPDATE data_results
+UPDATE data_request
 SET tags = array_tag FROM (
 SELECT array_agg(tag) AS array_tag FROM (
 SELECT tag from specialty_tags
@@ -80,13 +80,13 @@ def handler(event, context):
     }
 
     with psql.conn.cursor() as cur: 
-        # insert into data_results one by one
+        # insert into data_request one by one
         try:
             cur.execute(insert_cmd, (v["CIO_ID"], json.dumps(v), v["p5"]))
             if "anatomy" not in v.keys():
-                # No anatomy found => sys_priority = P99
+                # No anatomy found => ai_priority = P99
                 logger.info("No anatomy found for CIO ID: ", v["CIO_ID"])
-                cur.execute(update_sys_priority, ('P99',v["CIO_ID"]))
+                cur.execute(update_ai_priority, ('P99',v["CIO_ID"]))
                 psql.conn.commit()
                 return {"rule_id": "N/A", 'headers': headers, "priority": "P99"}
             else:
@@ -96,7 +96,7 @@ def handler(event, context):
                 cur.execute(command)
                 ret = cur.fetchall() 
                 if not ret: 
-                    cur.execute(update_sys_priority, ('P98', v["CIO_ID"]))
+                    cur.execute(update_ai_priority, ('P98', v["CIO_ID"]))
                     psql.conn.commit()
                     return {"rule_id": "N/A", 'headers': headers, "priority": "P98"}
                 cur.execute(update_tags, (ret[0][5], v["CIO_ID"]))

@@ -13,14 +13,21 @@ start = time.time()
 data_df = pd.read_csv('../csv/requisition_data_200.csv', skip_blank_lines=True).fillna({'Req # CIO': '-1'}).astype('object')
 # Format columns that don't need comprehend medical and preprocess the text 
 data_df['CIO_ID'] = data_df['Req # CIO']
+data_df['dob'] = data_df['DOB \n(yyyy-mm-dd)']
 data_df['age'] = data_df['DOB \n(yyyy-mm-dd)'].apply(dob2age)
 data_df['height'] = data_df['Height \n(eg: ft.in)'].astype(str) + \
     ' ' + data_df['INCH - CM']
 data_df['weight'] = data_df["Weight"].astype(str) + ' ' + data_df['KG - LBS']
+
+data_df['height RAW'] = data_df['height']
+data_df['weight RAW'] = data_df['weight']
+
 data_df['height'] = data_df['height'].apply(convert2CM)
 data_df['weight'] = data_df['weight'].apply(convert2KG)
+data_df['Exam Requested RAW'] = data_df['Exam Requested (Free Text)']
 data_df['Exam Requested'] = preProcessText(data_df['Exam Requested (Free Text)'])
 data_df['priority'] = data_df['Radiologist Priority ']
+data_df['Reason for Exam RAW'] = data_df['Reason for Exam/Relevant Clinical History (Free Text)']
 data_df['Reason for Exam/Relevant Clinical History'] = preProcessText(data_df['Reason for Exam/Relevant Clinical History (Free Text)'])
 data_df['Hip & Knee'] = preProcessText(data_df['Appropriateness Checklist - Hip & Knee'])
 data_df['Spine'] = preProcessText(data_df['Appropriateness Checklist - Spine'])
@@ -38,7 +45,40 @@ formatted_df.loc[:,'other_info'] = ''
 # Obtain data from postgres 
 conn = postgresql.connect() 
 conj_list = queryTable(conn, "conjunctions")
-conn.close() 
+
+get_result_cmd = """
+SELECT *
+FROM data_request
+WHERE id='%s';
+"""
+
+insert_new_request_cmd = """
+INSERT INTO data_request(id, state, dob, height, weight, exam_requested, reason_for_exam) VALUES 
+('%s', 'received', '%s', '%s', '%s', '%s', '%s')
+ON CONFLICT (id)
+DO UPDATE SET
+    dob = EXCLUDED.dob,
+    height = EXCLUDED.height,
+    weight = EXCLUDED.weight,
+    exam_requested = EXCLUDED.exam_requested,
+    reason_for_exam = EXCLUDED.reason_for_exam,
+    state='received_duplicate',
+    error='',
+    info=null,
+    p5_flag=null,
+    rules_id=null,
+    phys_priority='',
+    ai_priority='',
+    final_priority='',
+    contrast=null,
+    tags=null,
+    phys_contrast=null;
+"""
+
+insert_history_request_cmd = """
+INSERT INTO request_history(id_data_request, history_type, dob, height, weight, exam_requested, reason_for_exam) VALUES 
+('%s', 'request', '%s', '%s', '%s', '%s', '%s')
+"""
 
 for row in range(len(formatted_df.index)):
     print("row is :", row)
@@ -53,6 +93,46 @@ for row in range(len(formatted_df.index)):
     formatted_df.loc[row,'CIO_ID'] = findId(f'{formatted_df["CIO_ID"][row]}')
     # Change Unidentified priority to code U/I 
     formatted_df.loc[row,'priority'] = findUnidentified(f'{formatted_df["priority"][row]}')
+
+    with conn.cursor() as cur:
+        try:
+            cio = formatted_df.loc[row, 'CIO_ID']
+            dob = data_df.loc[row, 'dob']
+            hgt = data_df.loc[row, "height"]
+            weight = data_df.loc[row, "weight"]
+            exam = data_df.loc[row, 'Exam Requested RAW']
+            reason = data_df.loc[row, 'Reason for Exam RAW']
+
+            # if exists, then need to wipe previous results data first re-run Rules engine on new request
+            #
+            # command = get_result_cmd % cio
+            # print(command)
+            # cur.execute(command)
+            # ret = cur.fetchall()
+            # if ret:
+            #     # Duplicate
+            #     command = insert_new_request_cmd % cio
+            #     cur.execute(command)
+            # else:
+
+            # New request or Duplicate wipes previous results data first to re-run Rules engine on new request
+            command = insert_new_request_cmd % (cio, data_df.loc[row,'dob'],
+                                                data_df.loc[row,"height RAW"], data_df.loc[row,"weight RAW"],
+                                                data_df.loc[row,'Exam Requested RAW'],
+                                                data_df.loc[row,'Reason for Exam RAW'])
+            print(command)
+            cur.execute(command)
+
+            command = insert_history_request_cmd % (formatted_df.loc[row,'CIO_ID'], data_df.loc[row,'dob'],
+                                                    data_df.loc[row,"height RAW"], data_df.loc[row,"weight RAW"],
+                                                    data_df.loc[row,'Exam Requested RAW'],
+                                                    data_df.loc[row,'Reason for Exam RAW'])
+            print(command)
+            cur.execute(command)
+            conn.commit()
+        except Exception as error:
+            print(error)
+            print("Postgrest DB error - Exception Type: %s" % type(error))
 
     # Parse the Exam Requested Column into Comprehend Medical to find Anatomy Entities
     anatomy_json = find_all_entities(checkSpelling(f'{data_df["Exam Requested"][row]}'))
