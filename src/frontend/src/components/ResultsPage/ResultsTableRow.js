@@ -152,7 +152,16 @@ class ResultsTableRow extends React.Component {
           onClick={() => this.props.handleRowClick(index)}
           key={"row-data-" + index}
           disabled={this.props.loading}
-          error={this.props.result.error && this.props.result.error !== ""}
+          error={
+            (this.props.result.error && this.props.result.error !== "") ||
+            state === "deleted"
+          }
+          warning={state === "received" || state === "received_duplicate"}
+          positive={
+            state === "ai_priority_processed" ||
+            state === "final_priority_received" ||
+            state === "labelled"
+          }
         >
           <Table.Cell singleLine>
             {this.renderItemCaret(this.props.expanded)}
@@ -160,28 +169,36 @@ class ResultsTableRow extends React.Component {
           </Table.Cell>
           <Table.Cell>{state}</Table.Cell>
           <Table.Cell>
-            {this.props.result.dob ? this.props.result.dob : "N/A"}
-          </Table.Cell>
-          <Table.Cell>
-            {this.props.result.height ? this.props.result.height : "N/A"}
-          </Table.Cell>
-          <Table.Cell>
-            {this.props.result.weight ? this.props.result.weight : "N/A"}
-          </Table.Cell>
-          <Table.Cell>
-            {this.props.result.reason_for_exam
-              ? this.props.result.reason_for_exam
+            {this.props.result.request.dob
+              ? this.props.result.request.dob
               : "N/A"}
           </Table.Cell>
           <Table.Cell>
-            {this.props.result.exam_requested
-              ? this.props.result.exam_requested
+            {this.props.result.request.height
+              ? this.props.result.request.height
+              : "N/A"}
+          </Table.Cell>
+          <Table.Cell>
+            {this.props.result.request.weight
+              ? this.props.result.request.weight
+              : "N/A"}
+          </Table.Cell>
+          <Table.Cell>
+            {this.props.result.request.reason_for_exam
+              ? this.props.result.request.reason_for_exam
+              : "N/A"}
+          </Table.Cell>
+          <Table.Cell>
+            {this.props.result.request.exam_requested
+              ? this.props.result.request.exam_requested
               : "N/A"}
           </Table.Cell>
           <Table.Cell>
             {this.props.result.rules_id ? this.props.result.rules_id : "N/A"}
           </Table.Cell>
-          <Table.Cell>{this.props.result.priority}</Table.Cell>
+          <Table.Cell>
+            {this.props.result.priority ? this.props.result.priority : "N/A"}
+          </Table.Cell>
           <Table.Cell>
             {this.props.result.contrast !== null
               ? this.props.result.contrast.toString()

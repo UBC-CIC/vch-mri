@@ -10,8 +10,8 @@ import string
 import logging
 import uuid
 from datetime import datetime, date
-from spellchecker import SpellChecker 
-import psycopg2 
+from spellchecker import SpellChecker
+import psycopg2
 from psycopg2 import sql
 import postgresql
 
@@ -67,6 +67,7 @@ update_request_error_cmd = """
     RETURNING id
     """
 
+
 def convert2CM(height):
     if not isinstance(height, str):
         return 0
@@ -76,14 +77,16 @@ def convert2CM(height):
         if unit == 'CM':
             return float(parts[0])
         elif unit == 'IN':
-            quantity_parts = parts[0].replace("'", ' ').replace('"', ' ').split()
-            foot = quantity_parts[0]
-            inch = 0
-            if len(quantity_parts) == 2:
-                inch = quantity_parts[1]
-            return float(foot) * 30.48 + float(inch) * 2.54
+            return float(parts[0]) * 2.54
+            # quantity_parts = parts[0].replace("'", ' ').replace('"', ' ').split()
+            # foot = quantity_parts[0]
+            # inch = 0
+            # if len(quantity_parts) == 2:
+            #     inch = quantity_parts[1]
+            # return float(foot) * 30.48 + float(inch) * 2.54
     except:
         return 0
+
 
 def convert2KG(weight):
     if not isinstance(weight, str):
@@ -98,6 +101,7 @@ def convert2KG(weight):
     except:
         return 0
 
+
 def dob2age(dob):
     try:
         birthdate = datetime.strptime(dob, '%Y-%m-%d')
@@ -107,17 +111,19 @@ def dob2age(dob):
     except:
         return 0
 
+
 def contains_word(sample, text):
     return f' {sample} ' in f' {text} '
-    
+
+
 def preProcessText(col):
     """
     Takes in a pandas.Series and preprocesses the text
     """
-    reponct = string.punctuation.replace("?","").replace("/","")
+    reponct = string.punctuation.replace("?", "").replace("/", "")
     extr = col.strip()
     extr = re.sub('<.*>', '', extr)
-    extr = extr.translate(str.maketrans('','',reponct))
+    extr = extr.translate(str.maketrans('', '', reponct))
     extr = re.sub('[^0-9a-zA-Z?/ ]+', ' ', extr)
     extr = re.sub('\s+', ' ', extr)
     extr = extr.lower()
@@ -133,10 +139,10 @@ def replace_conjunctions(conj_list, text: str, info_list):
     # raise Exception('replace_conjunctions ex test')
     temp_text = f' {text} '
     for conj in conj_list:
-        if contains_word(conj[0],text):
+        if contains_word(conj[0], text):
             info_list.append(conj[1])
             temp_text = temp_text.replace(f' {conj[0]} ', f' {conj[1]} ')
-    return temp_text[1:len(temp_text)-1]
+    return temp_text[1:len(temp_text) - 1]
 
 
 def find_all_entities(data: str):
@@ -179,7 +185,7 @@ def infer_icd10_cm(data: str, med_cond, diagnosis, symptoms):
                     if trait['Score'] > 0.4:
                         if trait['Name'] == 'NEGATION':
                             category = 'NEG'
-                            break #don't save anything for negation
+                            break  # don't save anything for negation
                         elif trait['Name'] == 'SYMPTOM':
                             category = 'SYMP'
                         elif trait['Name'] == 'DIAGNOSIS':
@@ -199,7 +205,8 @@ def infer_icd10_cm(data: str, med_cond, diagnosis, symptoms):
         message = template.format(type(ex).__name__, ex.args)
         logger.error(message)
 
-def find_key_phrases(data:str, key_phrases, icd10cm_list, anatomy_list):
+
+def find_key_phrases(data: str, key_phrases, icd10cm_list, anatomy_list):
     """
     :data type: string to pass through Comprehend Detect Key Phrases
     :key_phrases type: List[]
@@ -235,6 +242,7 @@ def find_key_phrases(data:str, key_phrases, icd10cm_list, anatomy_list):
         message = template.format(type(ex).__name__, ex.args)
         logger.error(message)
 
+
 def recursively_prune_dict_keys(obj, keep):
     if isinstance(obj, dict):
         return {k: recursively_prune_dict_keys(v, keep) for k, v in obj.items() if k in keep}
@@ -242,6 +250,7 @@ def recursively_prune_dict_keys(obj, keep):
         return [recursively_prune_dict_keys(item, keep) for item in obj]
     else:
         return obj
+
 
 def error_handler(cio, message):
     # user_error = re.escape(message)
@@ -262,23 +271,22 @@ def error_handler(cio, message):
             "body": f'{user_error}',
             "headers": {"Content-Type": "application/json"}}
 
+
 def handler(event, context):
     logger.info(event)
     if 'body' not in event:
-        logger.error( 'Missing parameters')
-        return {"isBase64Encoded": False, "statusCode": 400, "body": "Missing Body Parameter", "headers": {"Content-Type": "application/json"}}
+        logger.error('Missing parameters')
+        return {"isBase64Encoded": False, "statusCode": 400, "body": "Missing Body Parameter",
+                "headers": {"Content-Type": "application/json"}}
 
-    data_df = json.loads(event['body']) # use for postman tests
+    data_df = json.loads(event['body'])  # use for postman tests
     # data_df = event['body'] # use for console tests
     logger.info(data_df)
-    
+
     if 'ReqCIO' not in data_df or not data_df['ReqCIO']:
         data_df['CIO_ID'] = str(uuid.uuid4())
-    else: 
+    else:
         data_df['CIO_ID'] = (data_df['ReqCIO'])
-
-
-
 
     ##########################################
     # TODO: Parameter validation
@@ -333,7 +341,7 @@ def handler(event, context):
 
     if data_df['Radiologist Priority'].lower() == 'unidentified':
         data_df['priority'] = 'U/I'
-    else: 
+    else:
         data_df['priority'] = data_df['Radiologist Priority']
 
     # Format columns that don't need comprehend medical and preprocess the text
@@ -346,9 +354,9 @@ def handler(event, context):
     data_df['Reason for Exam/Relevant Clinical History'] = preProcessText(reason_for_exam)
     # data_df['Spine'] = preProcessText(data_df['Appropriateness Checklist - Spine'])
     # data_df['Hip & Knee'] = preProcessText(data_df['Appropriateness Checklist - Hip & Knee'])
-    
+
     # New Dataframe 
-    template = ['CIO_ID', 'height', 'weight', 'Sex','age', 'Preferred MRI Site', 'priority']
+    template = ['CIO_ID', 'height', 'weight', 'Sex', 'age', 'Preferred MRI Site', 'priority']
     formatted_df = recursively_prune_dict_keys(data_df, template)
     formatted_df['medical_condition'] = ''
     formatted_df['diagnosis'] = ''
@@ -357,7 +365,7 @@ def handler(event, context):
     formatted_df['phrases'] = ''
     formatted_df['other_info'] = ''
     formatted_df['p5'] = 'f'
-    
+
     anatomy_list = []
     medical_conditions = []
     diagnosis = []
@@ -377,19 +385,20 @@ def handler(event, context):
     except Exception as error:
         return error_handler(cio, "replace_conjunctions - Exception Type: %s" % type(error))
 
-    for obj in anatomy_json: 
-        if obj['Category'] == 'ANATOMY' or obj['Category'] == 'TEST_TREATMENT_PROCEDURE' or obj['Category'] == 'MEDICAL_CONDITION':
+    for obj in anatomy_json:
+        if obj['Category'] == 'ANATOMY' or obj['Category'] == 'TEST_TREATMENT_PROCEDURE' or obj[
+            'Category'] == 'MEDICAL_CONDITION':
             anatomy_list.append(obj['Text'])
         elif obj['Score'] > 0.4 and obj['Category'] == 'TIME_EXPRESSION' and obj['Type'] == 'TIME_TO_TEST_NAME':
-            formatted_df['p5'] = 't' 
-        # if(contains_word('hip',anatomy) or contains_word('knee', anatomy)):
+            formatted_df['p5'] = 't'
+            # if(contains_word('hip',anatomy) or contains_word('knee', anatomy)):
         #     # apply comprehend to knee/hip column
         #     formatted_df['Hip & Knee'][row] = find_entities(f'{data_df["Hip & Knee"][row]}')
         # elif(contains_word('spine',anatomy)):
         #     # apply comprehend to spine column
         #     formatted_df['Spine'][row] = find_entities(f'{data_df["Appropriateness Checklist - Spine"][row]}')
     infer_icd10_cm(preprocessed_text, medical_conditions, diagnosis, symptoms)
-    find_key_phrases(preprocessed_text, key_phrases, medical_conditions+diagnosis+symptoms, anatomy_list)
+    find_key_phrases(preprocessed_text, key_phrases, medical_conditions + diagnosis + symptoms, anatomy_list)
 
     formatted_df['anatomy'] = anatomy_list
     formatted_df['medical_condition'] = medical_conditions
@@ -397,29 +406,36 @@ def handler(event, context):
     formatted_df['symptoms'] = symptoms
     formatted_df['phrases'] = key_phrases
     formatted_df['other_info'] = other_info
-    
+
     # formatted_df.to_json('sample_output.json', orient='index')
     # print("output is: ", formatted_df)
 
-    debug = os.getenv('LOCAL_DEBUG')
-    if debug is not None:
-        # “generated Lambdas are suffixed with an ID to keep them unique between multiple
-        # deployments (e.g. FunctionB-123ABC4DE5F6A), so a Lambda named "FunctionB" doesn't exist”
-        # https://stackoverflow.com/questions/60181387/how-to-invoke-aws-lambda-from-another-lambda-within-sam-local
-        lambda_client = boto3.client('lambda',
-                                    endpoint_url="http://host.docker.internal:5001",
-                                    use_ssl=False,
-                                    verify=False,
-                                    config=Config(signature_version=UNSIGNED,
-                                                read_timeout=10000,
-                                                retries={'max_attempts': 0}))
-
     try:
-        rules_response = lambda_client.invoke(
+        debug = os.getenv('LOCAL_DEBUG')
+        if debug is not None:
+            logger.info('LOCAL_DEBUG')
+            # “generated Lambdas are suffixed with an ID to keep them unique between multiple
+            # deployments (e.g. FunctionB-123ABC4DE5F6A), so a Lambda named "FunctionB" doesn't exist”
+            # https://stackoverflow.com/questions/60181387/how-to-invoke-aws-lambda-from-another-lambda-within-sam-local
+            lambda_client_local = boto3.client('lambda',
+                                               endpoint_url="http://host.docker.internal:5001",
+                                               use_ssl=False,
+                                               verify=False,
+                                               config=Config(signature_version=UNSIGNED,
+                                                             read_timeout=10000,
+                                                             retries={'max_attempts': 0}))
+            rules_response = lambda_client_local.invoke(
                 FunctionName=RuleProcessingLambdaName,
                 InvocationType='RequestResponse',
                 Payload=json.dumps(formatted_df)
             )
+        else:
+            rules_response = lambda_client.invoke(
+                FunctionName=RuleProcessingLambdaName,
+                InvocationType='RequestResponse',
+                Payload=json.dumps(formatted_df)
+            )
+
         if rules_response['ResponseMetadata']['HTTPStatusCode'] != 200:
             return rules_response
 
@@ -437,5 +453,3 @@ def handler(event, context):
         return response
     except Exception as error:
         return error_handler(cio, "RuleProcessingLambda - Exception Type: %s" % type(error))
-
-

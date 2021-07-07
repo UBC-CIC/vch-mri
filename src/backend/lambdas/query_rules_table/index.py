@@ -2,15 +2,16 @@ import postgresql
 import boto3
 from botocore.config import Config
 from botocore import UNSIGNED
-import logging 
-import json 
-import os 
+import logging
+import json
+import os
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 lambda_client = boto3.client('lambda')
 UpdateWeightLambdaName = os.getenv('UPDATE_WEIGHTS_LAMBDA')
+
 
 def update_bodypart_tokens(cur):
     cmd = """
@@ -19,6 +20,7 @@ def update_bodypart_tokens(cur):
     """
     cur.execute(cmd)
 
+
 def queryRules(cur, count):
     cmd = """
     SELECT id, body_part, contrast, priority, info, active 
@@ -26,10 +28,11 @@ def queryRules(cur, count):
     ORDER BY id
     """
     cur.execute(cmd)
-    if count == -1: 
+    if count == -1:
         return cur.fetchall()
-    else: 
+    else:
         return cur.fetchmany(count)
+
 
 def queryRulesID(cur, id):
     cmd = """
@@ -42,12 +45,13 @@ def queryRulesID(cur, id):
     logger.info(id)
     return cur.fetchall()
 
+
 def addRule(cur, values):
     cmd = """
     INSERT INTO mri_rules(body_part, info, priority, contrast) 
     VALUES """
     param_values = []
-    for value in values: 
+    for value in values:
         cmd += "(%s, %s, %s, %s),"
         param_values.extend([value['body_part'], value['info'], value['priority'], value['contrast']])
     cmd = cmd[:-1]
@@ -55,7 +59,8 @@ def addRule(cur, values):
     cur.execute(cmd, param_values)
     ret = cur.fetchall()
     update_bodypart_tokens(cur)
-    return ret 
+    return ret
+
 
 def updateRule(cur, values):
     cmd = """
@@ -72,11 +77,13 @@ def updateRule(cur, values):
     update_bodypart_tokens(cur)
     return ret
 
+
 def setRuleActivity(cur, id, active):
     cmd = """
     UPDATE mri_rules SET active = %s
     WHERE id = %s"""
-    cur.execute(cmd, (active,id))
+    cur.execute(cmd, (active, id))
+
 
 def applyWeight():
     IS_LOCAL = os.getenv('IS_LOCAL')
@@ -85,27 +92,34 @@ def applyWeight():
 
     debug = os.getenv('LOCAL_DEBUG')
     if debug is not None:
-        # “generated Lambdas are suffixed with an ID to keep them unique between multiple deployments (e.g. FunctionB-123ABC4DE5F6A),
-        #   so a Lamba named "FunctionB" doesn't exist”
+        # “generated Lambdas are suffixed with an ID to keep them unique between multiple deployments
+        # (e.g. FunctionB-123ABC4DE5F6A), so a Lamba named "FunctionB" doesn't exist”
         # https://stackoverflow.com/questions/60181387/how-to-invoke-aws-lambda-from-another-lambda-within-sam-local
-        lambda_client = boto3.client('lambda',
-                                    endpoint_url="http://host.docker.internal:5001",
-                                    use_ssl=False,
-                                    verify=False,
-                                    config=Config(signature_version=UNSIGNED,
-                                                read_timeout=10000,
-                                                retries={'max_attempts': 0}))
-    response = lambda_client.invoke(
+        lambda_client_local = boto3.client('lambda',
+                                           endpoint_url="http://host.docker.internal:5001",
+                                           use_ssl=False,
+                                           verify=False,
+                                           config=Config(signature_version=UNSIGNED,
+                                                         read_timeout=10000,
+                                                         retries={'max_attempts': 0}))
+        response = lambda_client_local.invoke(
             FunctionName=UpdateWeightLambdaName,
             InvocationType='RequestResponse',
-    )
+        )
+    else:
+        response = lambda_client.invoke(
+            FunctionName=UpdateWeightLambdaName,
+            InvocationType='RequestResponse',
+        )
+
     ret = json.loads(response['Payload'].read())
     if ret['result'] == False:
         logger.error("Apply Weight Failed")
 
+
 def parseResponse(response):
     resp_list = []
-    for resp_tuple in response: 
+    for resp_tuple in response:
         resp = {}
         resp['id'] = resp_tuple[0]
         resp['body_part'] = resp_tuple[1]
@@ -116,14 +130,15 @@ def parseResponse(response):
         resp_list.append(resp)
     return resp_list
 
+
 def handler(event, context):
     logger.info(event)
     if 'body' not in event:
-        logger.error( 'Missing parameters')
-        return {"isBase64Encoded": False, "statusCode": 400, "body": "Missing Body Parameter", "headers": {"Content-Type": "application/json"}}
+        logger.error('Missing parameters')
+        return {"isBase64Encoded": False, "statusCode": 400, "body": "Missing Body Parameter",
+                "headers": {"Content-Type": "application/json"}}
 
-
-    data = json.loads(event['body']) # use for postman tests
+    data = json.loads(event['body'])  # use for postman tests
     # data = event['body'] # use for console tests
     logger.info(data)
     psql = postgresql.PostgreSQL()
@@ -136,13 +151,13 @@ def handler(event, context):
     }
 
     with psql.conn.cursor() as cur:
-        try: 
+        try:
             if data['operation'] == 'GET':
                 if 'id' in data.keys():
                     response = queryRulesID(cur, data['id'])
-                else: 
+                else:
                     response = queryRules(cur, data['count'])
-                
+
                 resp_dict = {'result': True, 'headers': headers, 'data': []}
                 logger.info(response)
                 resp_list = parseResponse(response)
@@ -152,14 +167,14 @@ def handler(event, context):
             elif data['operation'] == 'ADD':
                 response = addRule(cur, data['values'])
                 resp_list = parseResponse(response)
-            elif data['operation'] == 'UPDATE': 
+            elif data['operation'] == 'UPDATE':
                 response = updateRule(cur, data['values'])
                 resp_list = parseResponse(response)
             elif data['operation'] == 'DEACTIVATE':
                 setRuleActivity(cur, data['id'], 'f')
             elif data['operation'] == 'ACTIVATE':
                 setRuleActivity(cur, data['id'], 't')
-            psql.commit() 
+            psql.commit()
             if data['operation'] == 'ADD' or data['operation'] == 'UPDATE':
                 logger.info("Applying weight")
                 applyWeight()
@@ -167,6 +182,6 @@ def handler(event, context):
         except Exception as error:
             logger.error(error)
             logger.error("Exception Type: %s" % type(error))
-            return {"isBase64Encoded": False, "statusCode": 400, "body": f'{type(error)}', "headers": {"Content-Type": "application/json"}}
+            return {"isBase64Encoded": False, "statusCode": 400, "body": f'{type(error)}',
+                    "headers": {"Content-Type": "application/json"}}
     return {'result': True, 'headers': headers}
-    

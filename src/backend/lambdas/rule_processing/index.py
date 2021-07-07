@@ -67,6 +67,7 @@ def searchText(data, *data_keys):
                 value_set.add(word)
     return (' | ').join(value_set)
 
+
 def handler(event, context):
     logger.info(event)
     v = event
@@ -81,7 +82,9 @@ def handler(event, context):
 
     with psql.conn.cursor() as cur: 
         # insert into data_request one by one
+        logger.info("insert into data_request one by one")
         try:
+            logger.info(json.dumps(v))
             cur.execute(insert_cmd, (v["CIO_ID"], json.dumps(v), v["p5"]))
             if "anatomy" not in v.keys():
                 # No anatomy found => ai_priority = P99
