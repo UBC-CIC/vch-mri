@@ -105,6 +105,7 @@ class RequestsTable extends React.Component {
   handleClickCollapseAll = () => {
     this.setState({ showAll: !this.state.showAll });
   };
+
   renderItemDetails(item) {
     return (
       <Table celled striped>
@@ -178,10 +179,10 @@ class RequestsTable extends React.Component {
     const clickCallback = () => this.handleRowClick(index);
     const itemRows = [
       <Table.Row onClick={clickCallback} key={"row-data-" + index}>
-        <Table.Cell>{this.renderItemCaret(index)}</Table.Cell>
+        <Table.Cell>{this.renderItemCaret(index)}1000838b</Table.Cell>
         <Table.Cell>{item.date}</Table.Cell>
         <Table.Cell>{item.total}</Table.Cell>
-        <Table.Cell>{item.status}</Table.Cell>
+        <Table.Cell singleLine>{item.status}</Table.Cell>
         <Table.Cell>{item.status}</Table.Cell>
         <Table.Cell>{item.status}</Table.Cell>
         <Table.Cell>

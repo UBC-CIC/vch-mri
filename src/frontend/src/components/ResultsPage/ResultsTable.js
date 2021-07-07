@@ -1,21 +1,25 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Table, Pagination, Accordion } from "semantic-ui-react";
+import { Table, Pagination } from "semantic-ui-react";
 import {
   changeResultSort,
   getResultsByPage,
 } from "../../actions/ResultActions";
 import { sendSuccessToast, sendErrorToast } from "../../helpers";
 import ResultsTableRow from "./ResultsTableRow";
+import { Icon, Button } from "semantic-ui-react";
 
 class ResultsTable extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       activePage: 1,
+      expandedRows: [],
+      showAll: false,
     };
 
     this.handlePaginationChange = this.handlePaginationChange.bind(this);
+    this.handleRowClick = this.handleRowClick.bind(this);
   }
   componentDidMount() {
     this.props.getResultsByPage(this.state.activePage);
@@ -35,10 +39,38 @@ class ResultsTable extends React.Component {
     });
   };
 
+  handleRowClick(rowId) {
+    console.log("handleRowClick table");
+    console.log(rowId);
+    const currentExpandedRows = this.state.expandedRows;
+    const isRowCurrentlyExpanded = currentExpandedRows.includes(rowId);
+
+    const newExpandedRows = isRowCurrentlyExpanded
+      ? currentExpandedRows.filter((id) => id !== rowId)
+      : currentExpandedRows.concat(rowId);
+
+    this.setState({ expandedRows: newExpandedRows });
+  }
+
+  handleClickCollapseAll = () => {
+    this.setState({ showAll: !this.state.showAll });
+  };
+
   render() {
+    console.log("showAll");
+    console.log(this.state.showAll);
     return (
-      <Accordion fluid={true} as={Table}>
-        <Table celled compact sortable>
+      <>
+        <Button
+          color="blue"
+          size="huge"
+          onClick={this.handleClickCollapseAll}
+          icon
+          labelPosition="right"
+        >
+          <Icon name="arrow circle right" /> Show All
+        </Button>
+        <Table celled compact sortable striped>
           <Table.Header fullWidth>
             <Table.Row>
               <Table.HeaderCell
@@ -52,6 +84,18 @@ class ResultsTable extends React.Component {
                 }}
               >
                 reqCIO
+              </Table.HeaderCell>
+              <Table.HeaderCell
+                sorted={
+                  this.props.sortedColumn === "state"
+                    ? this.props.sortDirection
+                    : null
+                }
+                onClick={() => {
+                  this.props.changeResultSort("state");
+                }}
+              >
+                State
               </Table.HeaderCell>
               <Table.HeaderCell
                 collapsing
@@ -146,7 +190,7 @@ class ResultsTable extends React.Component {
               >
                 P5 Flag
               </Table.HeaderCell>
-              <Table.HeaderCell
+              {/* <Table.HeaderCell
                 sorted={
                   this.props.sortedColumn === "phys_priority"
                     ? this.props.sortDirection
@@ -169,8 +213,8 @@ class ResultsTable extends React.Component {
                 }}
               >
                 Physician Contrast
-              </Table.HeaderCell>
-              <Table.HeaderCell>Tags</Table.HeaderCell>
+              </Table.HeaderCell> */}
+              <Table.HeaderCell>Specialty Exam Tags</Table.HeaderCell>
               <Table.HeaderCell
                 sorted={
                   this.props.sortedColumn === "created_at"
@@ -187,9 +231,17 @@ class ResultsTable extends React.Component {
             </Table.Row>
           </Table.Header>
 
+          {/* <Table.Body>{allItemRows}</Table.Body> */}
           <Table.Body>
             {this.props.results.map((result, index) => (
-              <ResultsTableRow result={result} />
+              <ResultsTableRow
+                result={result}
+                index={index}
+                handleRowClick={this.handleRowClick}
+                expanded={
+                  this.state.showAll || this.state.expandedRows.includes(index)
+                }
+              />
             ))}
           </Table.Body>
 
@@ -208,7 +260,7 @@ class ResultsTable extends React.Component {
             </Table.Row>
           </Table.Footer>
         </Table>
-      </Accordion>
+      </>
     );
   }
 }

@@ -1,8 +1,9 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Form, Table } from "semantic-ui-react";
+import { Icon, Form, Table } from "semantic-ui-react";
 import { modifyResult } from "../../actions/ResultActions";
 import ResultView from "./ResultView";
+import ResultsTableRowExpansion from "./ResultsTableRowExpansion";
 
 class ResultsTableRow extends React.Component {
   constructor(props) {
@@ -55,11 +56,109 @@ class ResultsTableRow extends React.Component {
     this.setState({ activeIndex: newIndex });
   };
 
+  renderItemCaret(expanded) {
+    if (expanded) {
+      return <Icon name="caret down" />;
+    } else {
+      return <Icon name="caret right" />;
+    }
+  }
+
+  renderItemDetails(item) {
+    return (
+      <Table celled striped>
+        <Table.Header>
+          <Table.Row>
+            <Table.HeaderCell colSpan="8">Git Repository</Table.HeaderCell>
+            <Table.HeaderCell colSpan="2">Git Repository2</Table.HeaderCell>
+            <Table.HeaderCell colSpan="2">Git Repository3</Table.HeaderCell>
+          </Table.Row>
+        </Table.Header>
+
+        <Table.Body>
+          <Table.Row>
+            <Table.Cell colSpan="8">
+              <Icon name="folder" /> node_modules
+            </Table.Cell>
+            <Table.Cell colSpan="2">Initial commit</Table.Cell>
+            <Table.Cell colSpan="2" textAlign="right">
+              10 hours ago
+            </Table.Cell>
+          </Table.Row>
+          <Table.Row>
+            <Table.Cell>
+              <Icon name="folder" /> test
+            </Table.Cell>
+            <Table.Cell>Initial commit</Table.Cell>
+            <Table.Cell textAlign="right">10 hours ago</Table.Cell>
+          </Table.Row>
+          <Table.Row>
+            <Table.Cell>
+              <Icon name="folder" /> build
+            </Table.Cell>
+            <Table.Cell>Initial commit</Table.Cell>
+            <Table.Cell textAlign="right">10 hours ago</Table.Cell>
+          </Table.Row>
+          <Table.Row>
+            <Table.Cell>
+              <Icon name="file outline" /> package.json
+            </Table.Cell>
+            <Table.Cell>Initial commit</Table.Cell>
+            <Table.Cell textAlign="right">10 hours ago</Table.Cell>
+          </Table.Row>
+          <Table.Row>
+            <Table.Cell>
+              <Icon name="file outline" /> Gruntfile.js
+            </Table.Cell>
+            <Table.Cell>Initial commit</Table.Cell>
+            <Table.Cell textAlign="right">10 hours ago</Table.Cell>
+          </Table.Row>
+        </Table.Body>
+      </Table>
+      // <Segment basic>
+      //   <Grid columns={3}>
+      //     <Grid.Column>
+      //       <span>Name: {item.name}</span>
+      //     </Grid.Column>
+
+      //     <Grid.Column>
+      //       <span>Point: {item.points}</span>
+      //     </Grid.Column>
+
+      //     <Grid.Column>
+      //       <span>Percent: {item.percent}</span>
+      //     </Grid.Column>
+      //   </Grid>
+      // </Segment>
+    );
+  }
+
   render() {
+    console.log("expanded");
+    console.log(this.props.expanded);
+    // console.log(ResultsTableRow);
+    console.log(this.props.result.error);
+
+    const index = this.props.index;
+    console.log(this.props.index);
+    let state = this.props.result.state;
+    if (this.props.result.error && this.props.result.error !== "") {
+      //  error state
+      state = `"${this.props.result.error}"`;
+    }
     return (
       <>
-        <Table.Row disabled={this.props.loading}>
-          <Table.Cell>{this.props.result.id}</Table.Cell>
+        <Table.Row
+          onClick={() => this.props.handleRowClick(index)}
+          key={"row-data-" + index}
+          disabled={this.props.loading}
+          error={this.props.result.error && this.props.result.error !== ""}
+        >
+          <Table.Cell singleLine>
+            {this.renderItemCaret(this.props.expanded)}
+            {this.props.result.id}
+          </Table.Cell>
+          <Table.Cell>{state}</Table.Cell>
           <Table.Cell>
             {this.props.result.dob ? this.props.result.dob : "N/A"}
           </Table.Cell>
@@ -93,7 +192,7 @@ class ResultsTableRow extends React.Component {
               ? this.props.result.p5_flag.toString()
               : "none"}
           </Table.Cell>
-          <Table.Cell>
+          {/* <Table.Cell>
             <Form.Dropdown
               fluid
               selection
@@ -123,7 +222,7 @@ class ResultsTableRow extends React.Component {
               ]}
               onChange={this.handleSelectChange}
             />
-          </Table.Cell>
+          </Table.Cell> */}
           <Table.Cell>
             {this.props.result.tags
               ? this.props.result.tags.join(", ")
@@ -134,6 +233,14 @@ class ResultsTableRow extends React.Component {
             <ResultView info={this.props.result.info} />
           </Table.Cell>
         </Table.Row>
+        {this.props.expanded && (
+          <Table.Row key={"row-expanded-" + index}>
+            <Table.Cell colSpan="12">
+              {/* {this.renderItemDetails(this.props.result)} */}
+              <ResultsTableRowExpansion result={this.props.result} />
+            </Table.Cell>
+          </Table.Row>
+        )}
       </>
     );
   }

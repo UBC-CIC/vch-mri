@@ -12,7 +12,7 @@ logger.setLevel(logging.INFO)
 def queryResults(cur, page):
     cmd = """
     SELECT id, info, rules_id, ai_priority, contrast, p5_flag, tags, phys_priority, phys_contrast, created_at,
-        dob, height, weight, reason_for_exam, exam_requested
+        dob, height, weight, reason_for_exam, exam_requested, error, state
     FROM data_request
     ORDER BY created_at DESC
     LIMIT 50 OFFSET %s
@@ -34,7 +34,7 @@ def queryPageCount(cur):
 def queryResultsID(cur, id):
     cmd = """
     SELECT id, info, rules_id, ai_priority, contrast, p5_flag, tags, phys_priority, phys_contrast, created_at,
-        dob, height, weight, reason_for_exam, exam_requested
+        dob, height, weight, reason_for_exam, exam_requested, error, state
     FROM data_request
     WHERE id = %s
     """
@@ -87,6 +87,9 @@ def parseResponse(response):
     resp_list = []
     for resp_tuple in response:
         resp = {}
+        rule = {}
+        request = {}
+        rule[''] = resp_tuple[2]
         resp['id'] = resp_tuple[0]
         resp['info'] = resp_tuple[1]
         resp['rules_id'] = resp_tuple[2]
@@ -102,6 +105,8 @@ def parseResponse(response):
         resp['weight'] = resp_tuple[12]
         resp['reason_for_exam'] = resp_tuple[13]
         resp['exam_requested'] = resp_tuple[14]
+        resp['error'] = resp_tuple[15]
+        resp['state'] = resp_tuple[16]
         resp_list.append(resp)
     return resp_list
 

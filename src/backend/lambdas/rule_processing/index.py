@@ -24,7 +24,7 @@ WHERE id = %s;
 
 update_cmd = """
 UPDATE data_request
-SET rules_id = r.id , ai_priority = r.priority, contrast = r.contrast
+SET state = 'ai_priority_processed', rules_id = r.id , ai_priority = r.priority, contrast = r.contrast
 FROM mri_rules r WHERE r.id = (
 SELECT id
 FROM mri_rules, to_tsquery('ths_search','%s') query 
@@ -91,8 +91,10 @@ def handler(event, context):
                 return {"rule_id": "N/A", 'headers': headers, "priority": "P99"}
             else:
                 anatomy_str  = searchAnatomy(v["anatomy"])
-                info_str = searchText(v, "anatomy", "medical_condition", "diagnosis", "symptoms", "phrases", "other_info")
+                info_str = searchText(v, "anatomy", "medical_condition", "diagnosis", "symptoms", "phrases",
+                                      "other_info")
                 command = (update_cmd % info_str) + anatomy_str + (update_cmd_end % v["CIO_ID"])
+                logger.info(command)
                 cur.execute(command)
                 ret = cur.fetchall() 
                 if not ret: 

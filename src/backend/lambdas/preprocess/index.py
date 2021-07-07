@@ -23,42 +23,49 @@ lambda_client = boto3.client('lambda')
 
 RuleProcessingLambdaName = os.getenv('RULE_PROCESSING_LAMBDA')
 
-spell = SpellChecker() 
+spell = SpellChecker()
 psql = postgresql.PostgreSQL()
 conj_list = psql.queryTable("conjunctions")
 spelling_list = [x[0] for x in psql.queryTable('spellchecker')]
-# Add words to spell list 
+# Add words to spell list
 spell.word_frequency.load_words(spelling_list)
 
 insert_new_request_cmd = """
-INSERT INTO data_request(id, state, dob, height, weight, exam_requested, reason_for_exam) VALUES 
-('%s', 'received', '%s', '%s', '%s', '%s', '%s')
-ON CONFLICT (id)
-DO UPDATE SET
-    dob = EXCLUDED.dob,
-    height = EXCLUDED.height,
-    weight = EXCLUDED.weight,
-    exam_requested = EXCLUDED.exam_requested,
-    reason_for_exam = EXCLUDED.reason_for_exam,
-    state='received_duplicate',
-    error='',
-    info=null,
-    p5_flag=null,
-    rules_id=null,
-    phys_priority='',
-    ai_priority='',
-    final_priority='',
-    contrast=null,
-    tags=null,
-    phys_contrast=null;
-"""
+    INSERT INTO data_request(id, state, dob, height, weight, exam_requested, reason_for_exam) VALUES 
+    (%s, 'received', %s, %s, %s, %s, %s)
+    ON CONFLICT (id)
+    DO UPDATE SET
+        dob = EXCLUDED.dob,
+        height = EXCLUDED.height,
+        weight = EXCLUDED.weight,
+        exam_requested = EXCLUDED.exam_requested,
+        reason_for_exam = EXCLUDED.reason_for_exam,
+        state='received_duplicate',
+        error='',
+        info=null,
+        p5_flag=null,
+        rules_id=null,
+        phys_priority='',
+        ai_priority='',
+        final_priority='',
+        contrast=null,
+        tags=null,
+        phys_contrast=null;
+    """
 
 insert_history_request_cmd = """
-INSERT INTO request_history(id_data_request, history_type, dob, height, weight, exam_requested, reason_for_exam,
-    cognito_user_id, cognito_user_fullname)
-VALUES 
-('%s', 'request', '%s', '%s', '%s', '%s', '%s', '%s', '%s')
-"""
+    INSERT INTO request_history(id_data_request, history_type, dob, height, weight, exam_requested, reason_for_exam,
+        cognito_user_id, cognito_user_fullname)
+    VALUES 
+    (%s, 'request', %s, %s, %s, %s, %s, %s, %s)
+    """
+
+update_request_error_cmd = """
+    UPDATE data_request 
+    SET error = %s
+    WHERE id = %s
+    RETURNING id
+    """
 
 def convert2CM(height):
     if not isinstance(height, str):
@@ -116,11 +123,14 @@ def preProcessText(col):
     extr = extr.lower()
     return extr
 
+
 def checkSpelling(text: str):
     words = text.split()
     return ' '.join([spell.correction(word) for word in words])
 
-def replace_conjunctions(conj_list, text: str, info_list): 
+
+def replace_conjunctions(conj_list, text: str, info_list):
+    # raise Exception('replace_conjunctions ex test')
     temp_text = f' {text} '
     for conj in conj_list:
         if contains_word(conj[0],text):
@@ -128,7 +138,9 @@ def replace_conjunctions(conj_list, text: str, info_list):
             temp_text = temp_text.replace(f' {conj[0]} ', f' {conj[1]} ')
     return temp_text[1:len(temp_text)-1]
 
+
 def find_all_entities(data: str):
+    # raise Exception('find_all_entities ex test')
     if not data:
         return []
     try:
@@ -138,6 +150,8 @@ def find_all_entities(data: str):
         template = "An exception of type {0} occurred. Arguments:\n{1!r}"
         message = template.format(type(ex).__name__, ex.args)
         logger.error(message)
+        raise Exception(message)
+
 
 def infer_icd10_cm(data: str, med_cond, diagnosis, symptoms):
     """
@@ -229,6 +243,25 @@ def recursively_prune_dict_keys(obj, keep):
     else:
         return obj
 
+def error_handler(cio, message):
+    # user_error = re.escape(message)
+    with psql.conn.cursor() as cur:
+        try:
+            user_error = message
+            data = (f'{user_error}', cio)
+            command = update_request_error_cmd % data
+            logger.info(command)
+            cur.execute(update_request_error_cmd, data)
+            psql.conn.commit()
+
+        except Exception as error:
+            logger.error(error)
+            user_error = "Postgrest DB error - Exception Type: %s" % user_error
+    return {"isBase64Encoded": False,
+            "statusCode": 500,
+            "body": f'{user_error}',
+            "headers": {"Content-Type": "application/json"}}
+
 def handler(event, context):
     logger.info(event)
     if 'body' not in event:
@@ -273,26 +306,30 @@ def handler(event, context):
     logger.info('Store request in the DB immediately')
     with psql.conn.cursor() as cur:
         try:
-            command = insert_new_request_cmd % (data_df["CIO_ID"], dob, height, weight, exam_requested,
-                                                reason_for_exam)
-            logger.info(command)
-            cur.execute(command)
+            # Insert new request
+            data = (data_df["CIO_ID"], dob, height, weight, exam_requested, reason_for_exam)
 
-            command = insert_history_request_cmd % (data_df["CIO_ID"], dob, height, weight, exam_requested,
-                                                    reason_for_exam, cognito_user_id, cognito_user_fullname)
+            command = insert_new_request_cmd % data
             logger.info(command)
-            cur.execute(command)
+
+            cur.execute(insert_new_request_cmd, data)
+
+            # Insert request history
+            data = (data_df["CIO_ID"], dob, height, weight, exam_requested, reason_for_exam,
+                    cognito_user_id, cognito_user_fullname)
+            command = insert_history_request_cmd % data
+            logger.info(command)
+
+            cur.execute(insert_history_request_cmd, data)
 
             psql.conn.commit()
         except Exception as error:
             logger.error(error)
-            logger.error("Postgrest DB error - Exception Type: %s" % type(error))
-            return {"isBase64Encoded": False, "statusCode": 400, "body": f'{type(error)}',
+            user_error = "Postgrest DB error - Exception Type: %s" % type(error)
+            logger.error(user_error)
+            return {"isBase64Encoded": False, "statusCode": 500,
+                    "body": f'{user_error}',
                     "headers": {"Content-Type": "application/json"}}
-
-    return {"isBase64Encoded": False, "statusCode": 400, "body": "debubging",
-            "headers": {"Content-Type": "application/json"}}
-
 
     if data_df['Radiologist Priority'].lower() == 'unidentified':
         data_df['priority'] = 'U/I'
@@ -327,9 +364,19 @@ def handler(event, context):
     symptoms = []
     key_phrases = []
     other_info = []
+
     # Parse the Exam Requested Column into Comprehend Medical to find Anatomy Entities
-    anatomy_json = find_all_entities(checkSpelling(f'{data_df["Exam Requested"]}'))
-    preprocessed_text = replace_conjunctions(conj_list,f'{data_df["Reason for Exam/Relevant Clinical History"]}',other_info)
+    try:
+        anatomy_json = find_all_entities(checkSpelling(f'{data_df["Exam Requested"]}'))
+    except Exception as error:
+        return error_handler(cio, "find_all_entities - Exception Type: %s" % type(error))
+
+    try:
+        preprocessed_text = replace_conjunctions(conj_list, f'{data_df["Reason for Exam/Relevant Clinical History"]}',
+                                                 other_info)
+    except Exception as error:
+        return error_handler(cio, "replace_conjunctions - Exception Type: %s" % type(error))
+
     for obj in anatomy_json: 
         if obj['Category'] == 'ANATOMY' or obj['Category'] == 'TEST_TREATMENT_PROCEDURE' or obj['Category'] == 'MEDICAL_CONDITION':
             anatomy_list.append(obj['Text'])
@@ -351,13 +398,13 @@ def handler(event, context):
     formatted_df['phrases'] = key_phrases
     formatted_df['other_info'] = other_info
     
-    #formatted_df.to_json('sample_output.json', orient='index')
-    #print("output is: ", formatted_df)
+    # formatted_df.to_json('sample_output.json', orient='index')
+    # print("output is: ", formatted_df)
 
     debug = os.getenv('LOCAL_DEBUG')
     if debug is not None:
-        # “generated Lambdas are suffixed with an ID to keep them unique between multiple deployments (e.g. FunctionB-123ABC4DE5F6A),
-        #   so a Lamba named "FunctionB" doesn't exist”
+        # “generated Lambdas are suffixed with an ID to keep them unique between multiple
+        # deployments (e.g. FunctionB-123ABC4DE5F6A), so a Lambda named "FunctionB" doesn't exist”
         # https://stackoverflow.com/questions/60181387/how-to-invoke-aws-lambda-from-another-lambda-within-sam-local
         lambda_client = boto3.client('lambda',
                                     endpoint_url="http://host.docker.internal:5001",
@@ -367,25 +414,28 @@ def handler(event, context):
                                                 read_timeout=10000,
                                                 retries={'max_attempts': 0}))
 
-    rules_response = lambda_client.invoke(
-            FunctionName=RuleProcessingLambdaName,
-            InvocationType='RequestResponse',
-            Payload=json.dumps(formatted_df)
-        )
+    try:
+        rules_response = lambda_client.invoke(
+                FunctionName=RuleProcessingLambdaName,
+                InvocationType='RequestResponse',
+                Payload=json.dumps(formatted_df)
+            )
+        if rules_response['ResponseMetadata']['HTTPStatusCode'] != 200:
+            return rules_response
 
-    if rules_response['ResponseMetadata']['HTTPStatusCode'] != 200: 
-        return rules_response
-
-    data = json.loads(rules_response['Payload'].read())
-    
-    response = { 
-        'result': data, 
-        'context': formatted_df,
-        'headers': {
-            'Access-Control-Allow-Headers': 'Content-Type',
-            'Access-Control-Allow-Origin': 'http://localhost:3000',
-            'Access-Control-Allow-Methods': 'OPTIONS,POST,GET'
+        data = json.loads(rules_response['Payload'].read())
+        response = {
+            'result': data,
+            'context': formatted_df,
+            'headers': {
+                'Access-Control-Allow-Headers': 'Content-Type',
+                'Access-Control-Allow-Origin': 'http://localhost:3000',
+                'Access-Control-Allow-Methods': 'OPTIONS,POST,GET'
+            }
         }
-    }
-    
-    return response
+
+        return response
+    except Exception as error:
+        return error_handler(cio, "RuleProcessingLambda - Exception Type: %s" % type(error))
+
+

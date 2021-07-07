@@ -31,6 +31,7 @@ CREATE TABLE IF NOT EXISTS mri_rules (
     active BOOLEAN DEFAULT TRUE
 ); 
 
+-- Error state is when error string exists, then we can know *when* the error occurred eg during ai priority processing etc
 CREATE TYPE enum_requests_state AS ENUM ('received', 'received_duplicate', 'deleted', 'ai_priority_processed', 'final_priority_received', 'labelled');
 
 CREATE TABLE IF NOT EXISTS data_request ( 
