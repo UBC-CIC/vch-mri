@@ -28,7 +28,7 @@ class ResultsTableRowExpansion extends React.Component {
           </Table.Row>
           <Table.Row>
             <Table.Cell>
-              <Icon name="folder" /> test
+              <Icon name="folder" /> test2
             </Table.Cell>
             <Table.Cell>Initial commit</Table.Cell>
             <Table.Cell textAlign="right">10 hours ago</Table.Cell>
