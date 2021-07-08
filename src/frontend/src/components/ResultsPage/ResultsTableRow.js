@@ -241,7 +241,7 @@ class ResultsTableRow extends React.Component {
           </Table.Cell> */}
           <Table.Cell>{this.props.result.date_created}</Table.Cell>
           <Table.Cell textAlign="right" collapsing>
-            <ResultView info={this.props.result.info} />
+            <ResultView info={this.props.result.info_json} />
           </Table.Cell>
         </Table.Row>
         {this.props.expanded && (
