@@ -14,8 +14,8 @@ class ResultsTableRowExpansion extends React.Component {
           <Table.Row>
             <Table.HeaderCell colSpan="4">Original Request</Table.HeaderCell>
             <Table.HeaderCell colSpan="4">
-              Post AWS Comprehend (sent to Rules engine for AI priority
-              determination)
+              After AWS Comprehend (this info is sent to the Rules engine for AI
+              priority determination)
             </Table.HeaderCell>
             <Table.HeaderCell>Rule - AI match</Table.HeaderCell>
           </Table.Row>
