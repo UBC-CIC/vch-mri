@@ -12,10 +12,11 @@ logger.setLevel(logging.INFO)
 def queryResults(cur, page):
     cmd = """
     SELECT req.id, req.info, rules_id, ai_priority, req.contrast, p5_flag, tags, phys_priority, phys_contrast,
-        created_at, dob, height, weight, reason_for_exam, exam_requested, error, state,
+        created_at, age, height, weight, request, error, state,
         rules.body_part, rules.bp_tk, rules.info_weighted_tk, rules.priority, rules.contrast as rules_contrast
     FROM data_request as req
     LEFT JOIN mri_rules as rules on rules_id = rules.id
+    ORDER BY req.updated_at DESC
     LIMIT 50 OFFSET %s
     """
     offset = (int(page) - 1) * 50
@@ -39,6 +40,7 @@ def queryResultsID(cur, id):
         rules.body_part, rules.bp_tk, rules.info_weighted_tk, rules.priority, rules.contrast as rules_contrast
     FROM data_request as req
     LEFT JOIN mri_rules as rules on rules_id = rules.id
+    ORDER BY req.created_at DESC
     WHERE req.id = %s
     """
     cur.execute(cmd, [id])
@@ -95,21 +97,14 @@ def parseResponse(response):
 
         # Rule
         rule['rules_id'] = resp_tuple[2]
-        rule['priority'] = resp_tuple[20]
-        rule['contrast'] = resp_tuple[21]
-        rule['body_part'] = resp_tuple[17]
-        rule['bp_tk'] = resp_tuple[18]
-        rule['info_weighted_tk'] = resp_tuple[19]
-
-        # Request
-        request['dob'] = resp_tuple[10]
-        request['height'] = resp_tuple[11]
-        request['weight'] = resp_tuple[12]
-        request['reason_for_exam'] = resp_tuple[13]
-        request['exam_requested'] = resp_tuple[14]
+        rule['priority'] = resp_tuple[19]
+        rule['contrast'] = resp_tuple[20]
+        rule['body_part'] = resp_tuple[16]
+        rule['bp_tk'] = resp_tuple[17]
+        rule['info_weighted_tk'] = resp_tuple[18]
 
         resp['id'] = resp_tuple[0]
-        resp['info'] = resp_tuple[1]        # pre-process info
+        resp['info_json'] = resp_tuple[1]        # pre-process info
         resp['rules_id'] = resp_tuple[2]
         resp['priority'] = resp_tuple[3]
         resp['contrast'] = resp_tuple[4]
@@ -118,8 +113,12 @@ def parseResponse(response):
         resp['phys_priority'] = resp_tuple[7]
         resp['phys_contrast'] = resp_tuple[8]
         resp['date_created'] = datetime_to_json(resp_tuple[9])
-        resp['error'] = resp_tuple[15]
-        resp['state'] = resp_tuple[16]
+        resp['age'] = resp_tuple[10]
+        resp['height'] = resp_tuple[11]
+        resp['weight'] = resp_tuple[12]
+        resp['request_json'] = resp_tuple[13]   # Request
+        resp['error'] = resp_tuple[14]
+        resp['state'] = resp_tuple[15]
 
         resp['rule'] = rule
         resp['request'] = request

@@ -4,8 +4,8 @@ import { Table, Container } from "semantic-ui-react";
 class ResultsTableRowExpansion extends React.Component {
   render() {
     const result = this.props.result;
-    const request = result.request;
-    const info = result.info;
+    const request = result.request_json;
+    const info = result.info_json;
     const rule = result.rule;
 
     return (
@@ -14,8 +14,8 @@ class ResultsTableRowExpansion extends React.Component {
           <Table.Row>
             <Table.HeaderCell colSpan="4">Original Request</Table.HeaderCell>
             <Table.HeaderCell colSpan="4">
-              Pre-processed Request (this info is sent to Rules engine for AI
-              priority)
+              Post AWS Comprehend (sent to Rules engine for AI priority
+              determination)
             </Table.HeaderCell>
             <Table.HeaderCell>Rule - AI match</Table.HeaderCell>
           </Table.Row>
@@ -26,11 +26,11 @@ class ResultsTableRowExpansion extends React.Component {
               {/* <Container textAlign="left"> */}
               {request ? (
                 <>
-                  <p>{`DOB: ${request.dob}`}</p>
-                  <p>{`Height: ${request.height}`}</p>
-                  <p>{`Weight: ${request.weight}`}</p>
-                  <p>{`Reason for Exam: ${request.reason_for_exam}`}</p>
-                  <p>{`Exam Requested: ${request.exam_requested}`}</p>
+                  <p>{`DOB: ${request.DOB}`}</p>
+                  <p>{`Height: ${request.Height} ${request["inch-cm"]}`}</p>
+                  <p>{`Weight: ${request.weight} ${request["kg-lbs"]}`}</p>
+                  <p>{`Reason for Exam: ${request["Reason for Exam"]}`}</p>
+                  <p>{`Exam Requested: ${request["Exam Requested"]}`}</p>
                 </>
               ) : (
                 <p>Request error.</p>
@@ -78,6 +78,9 @@ class ResultsTableRowExpansion extends React.Component {
                   <p>{`Rule ID: ${rule.rules_id}`}</p>
                   <p>{`Priority: ${rule.priority}`}</p>
                   <p>{`Contrast: ${rule.contrast}`}</p>
+                  {result.tags && result.tags > 0 && (
+                    <p>{`Specialty Exam Tags: ${result.tags.join(", ")}`}</p>
+                  )}
                   <p>{`Body Parts: ${rule.body_part}`}</p>
                   <p>{`bp_tk: ${rule.bp_tk}`}</p>
                   <p>{`info_weighted_tk: ${rule.info_weighted_tk}`}</p>

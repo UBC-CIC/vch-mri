@@ -42,9 +42,9 @@ class Navbar extends React.Component {
             to="/dashboard"
           />
           <Menu.Item name="Book An MRI" as={NavLink} to="/dashboard/booking" />
-          <Menu.Item name="Rules" as={NavLink} to="/dashboard/rules" />
-          <Menu.Item name="Requests" as={NavLink} to="/dashboard/requests" />
           <Menu.Item name="Results" as={NavLink} to="/dashboard/results" />
+          <Menu.Item name="Labelling" as={NavLink} to="/dashboard/requests" />
+          <Menu.Item name="Rules" as={NavLink} to="/dashboard/rules" />
           <Menu.Item
             name="Spellchecker"
             as={NavLink}

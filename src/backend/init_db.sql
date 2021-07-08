@@ -39,11 +39,10 @@ CREATE TABLE IF NOT EXISTS data_request (
     state enum_requests_state,
     error VARCHAR,
     notes VARCHAR,
-    dob VARCHAR,    -- current request
+    age VARCHAR,    -- current request
     height VARCHAR,
     weight VARCHAR,
-    exam_requested VARCHAR,
-    reason_for_exam VARCHAR,
+    request JSON,   -- original request JSON
     info JSON,     -- processed current request data prior sending to Rules engine
     p5_flag BOOLEAN, 
     rules_id INT, 

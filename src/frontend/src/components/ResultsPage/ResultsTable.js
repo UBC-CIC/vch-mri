@@ -100,15 +100,15 @@ class ResultsTable extends React.Component {
               <Table.HeaderCell
                 collapsing
                 sorted={
-                  this.props.sortedColumn === "dob"
+                  this.props.sortedColumn === "age"
                     ? this.props.sortDirection
                     : null
                 }
                 onClick={() => {
-                  this.props.changeResultSort("dob");
+                  this.props.changeResultSort("age");
                 }}
               >
-                DOB
+                Age
               </Table.HeaderCell>
               <Table.HeaderCell
                 collapsing
@@ -121,7 +121,7 @@ class ResultsTable extends React.Component {
                   this.props.changeResultSort("height");
                 }}
               >
-                Height
+                Height (CM)
               </Table.HeaderCell>
               <Table.HeaderCell
                 collapsing
@@ -134,7 +134,7 @@ class ResultsTable extends React.Component {
                   this.props.changeResultSort("weight");
                 }}
               >
-                Weight
+                Weight (KG)
               </Table.HeaderCell>
               <Table.HeaderCell>Reason for Exam</Table.HeaderCell>
               <Table.HeaderCell>Exam Requested</Table.HeaderCell>
@@ -214,7 +214,7 @@ class ResultsTable extends React.Component {
               >
                 Physician Contrast
               </Table.HeaderCell> */}
-              <Table.HeaderCell>Specialty Exam Tags</Table.HeaderCell>
+              {/* <Table.HeaderCell>Specialty Exam Tags</Table.HeaderCell> */}
               <Table.HeaderCell
                 sorted={
                   this.props.sortedColumn === "created_at"

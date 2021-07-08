@@ -31,15 +31,14 @@ spelling_list = [x[0] for x in psql.queryTable('spellchecker')]
 spell.word_frequency.load_words(spelling_list)
 
 insert_new_request_cmd = """
-    INSERT INTO data_request(id, state, dob, height, weight, exam_requested, reason_for_exam) VALUES 
-    (%s, 'received', %s, %s, %s, %s, %s)
+    INSERT INTO data_request(id, state, age, height, weight, request) VALUES 
+    (%s, 'received', %s, %s, %s, %s)
     ON CONFLICT (id)
     DO UPDATE SET
-        dob = EXCLUDED.dob,
+        age = EXCLUDED.age,
         height = EXCLUDED.height,
         weight = EXCLUDED.weight,
-        exam_requested = EXCLUDED.exam_requested,
-        reason_for_exam = EXCLUDED.reason_for_exam,
+        request = EXCLUDED.request, 
         state='received_duplicate',
         error='',
         info=null,
@@ -302,20 +301,32 @@ def handler(event, context):
     logger.info(cio)
     dob = data_df['DOB']
     logger.info(dob)
-    height = data_df['Height'] + ' ' + data_df['inch-cm']
-    logger.info(height)
-    weight = data_df['Weight'] + ' ' + data_df['kg-lbs']
-    logger.info(weight)
+    req_height = data_df['Height'] + ' ' + data_df['inch-cm']
+    logger.info(req_height)
+    req_weight = data_df['Weight'] + ' ' + data_df['kg-lbs']
+    logger.info(req_weight)
     exam_requested = data_df['Exam Requested']
     logger.info(exam_requested)
     reason_for_exam = data_df['Reason for Exam']
     logger.info(reason_for_exam)
 
+    # Convert these easy fields first
+    data_df['age'] = dob2age(dob)
+    age = data_df['age']
+    logger.info(age)
+    data_df['height'] = convert2CM(req_height)
+    height = data_df['height']
+    data_df['weight'] = convert2KG(req_weight)
+    weight = data_df['weight']
+
     logger.info('Store request in the DB immediately')
     with psql.conn.cursor() as cur:
         try:
             # Insert new request
-            data = (data_df["CIO_ID"], dob, height, weight, exam_requested, reason_for_exam)
+            logger.info("event['body']")
+            logger.info(event['body'])
+            logger.info(data_df)
+            data = (data_df["CIO_ID"], age, height, weight, json.dumps(data_df))
 
             command = insert_new_request_cmd % data
             logger.info(command)
@@ -323,7 +334,7 @@ def handler(event, context):
             cur.execute(insert_new_request_cmd, data)
 
             # Insert request history
-            data = (data_df["CIO_ID"], dob, height, weight, exam_requested, reason_for_exam,
+            data = (data_df["CIO_ID"], dob, req_height, req_weight, exam_requested, reason_for_exam,
                     cognito_user_id, cognito_user_fullname)
             command = insert_history_request_cmd % data
             logger.info(command)
@@ -345,11 +356,6 @@ def handler(event, context):
         data_df['priority'] = data_df['Radiologist Priority']
 
     # Format columns that don't need comprehend medical and preprocess the text
-    data_df['age'] = dob2age(dob)
-    data_df['height'] = height
-    data_df['weight'] = weight
-    data_df['height'] = convert2CM(data_df['height'])
-    data_df['weight'] = convert2KG(data_df['weight'])
     data_df['Exam Requested'] = preProcessText(exam_requested)
     data_df['Reason for Exam/Relevant Clinical History'] = preProcessText(reason_for_exam)
     # data_df['Spine'] = preProcessText(data_df['Appropriateness Checklist - Spine'])

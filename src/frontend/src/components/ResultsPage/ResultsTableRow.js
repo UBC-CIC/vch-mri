@@ -169,28 +169,22 @@ class ResultsTableRow extends React.Component {
           </Table.Cell>
           <Table.Cell>{state}</Table.Cell>
           <Table.Cell>
-            {this.props.result.request.dob
-              ? this.props.result.request.dob
+            {this.props.result.age ? this.props.result.age : "N/A"}
+          </Table.Cell>
+          <Table.Cell>
+            {this.props.result.height ? this.props.result.height : "N/A"}
+          </Table.Cell>
+          <Table.Cell>
+            {this.props.result.weight ? this.props.result.weight : "N/A"}
+          </Table.Cell>
+          <Table.Cell>
+            {this.props.result.request_json
+              ? this.props.result.request_json["Reason for Exam"]
               : "N/A"}
           </Table.Cell>
           <Table.Cell>
-            {this.props.result.request.height
-              ? this.props.result.request.height
-              : "N/A"}
-          </Table.Cell>
-          <Table.Cell>
-            {this.props.result.request.weight
-              ? this.props.result.request.weight
-              : "N/A"}
-          </Table.Cell>
-          <Table.Cell>
-            {this.props.result.request.reason_for_exam
-              ? this.props.result.request.reason_for_exam
-              : "N/A"}
-          </Table.Cell>
-          <Table.Cell>
-            {this.props.result.request.exam_requested
-              ? this.props.result.request.exam_requested
+            {this.props.result.request_json
+              ? this.props.result.request_json["Exam Requested"]
               : "N/A"}
           </Table.Cell>
           <Table.Cell>
@@ -240,11 +234,11 @@ class ResultsTableRow extends React.Component {
               onChange={this.handleSelectChange}
             />
           </Table.Cell> */}
-          <Table.Cell>
+          {/* <Table.Cell>
             {this.props.result.tags
               ? this.props.result.tags.join(", ")
               : "none"}
-          </Table.Cell>
+          </Table.Cell> */}
           <Table.Cell>{this.props.result.date_created}</Table.Cell>
           <Table.Cell textAlign="right" collapsing>
             <ResultView info={this.props.result.info} />
