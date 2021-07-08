@@ -21,7 +21,8 @@ class ResultsTable extends React.Component {
     this.handlePaginationChange = this.handlePaginationChange.bind(this);
     this.handleRowClick = this.handleRowClick.bind(this);
   }
-  componentDidMount() {
+
+  async componentDidMount() {
     this.props.getResultsByPage(this.state.activePage);
   }
 
@@ -226,6 +227,18 @@ class ResultsTable extends React.Component {
                 }}
               >
                 Date Created
+              </Table.HeaderCell>
+              <Table.HeaderCell
+                sorted={
+                  this.props.sortedColumn === "updated_at"
+                    ? this.props.sortDirection
+                    : null
+                }
+                onClick={() => {
+                  this.props.changeResultSort("updated_at");
+                }}
+              >
+                Date Modified
               </Table.HeaderCell>
               <Table.HeaderCell collapsing />
             </Table.Row>

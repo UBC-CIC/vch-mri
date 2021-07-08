@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS data_request (
     state enum_requests_state,
     error VARCHAR,
     notes VARCHAR,
-    age VARCHAR,    -- current request
+    age VARCHAR,    -- current request converted age, hgt, wgt
     height VARCHAR,
     weight VARCHAR,
     request JSON,   -- original request JSON

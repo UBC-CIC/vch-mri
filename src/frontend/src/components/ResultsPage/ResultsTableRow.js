@@ -240,6 +240,7 @@ class ResultsTableRow extends React.Component {
               : "none"}
           </Table.Cell> */}
           <Table.Cell>{this.props.result.date_created}</Table.Cell>
+          <Table.Cell>{this.props.result.date_updated}</Table.Cell>
           <Table.Cell textAlign="right" collapsing>
             <ResultView info={this.props.result.info_json} />
           </Table.Cell>
