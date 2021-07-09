@@ -14,7 +14,7 @@ def queryResults(cur, page):
     SELECT req.id, req.info, rules_id, ai_priority, req.contrast, p5_flag, tags, phys_priority, phys_contrast,
         created_at, age, height, weight, request, error, state,
         rules.body_part, rules.bp_tk, rules.info_weighted_tk, rules.priority, rules.contrast as rules_contrast,
-        updated_at
+        updated_at, rules.info
     FROM data_request as req
     LEFT JOIN mri_rules as rules on rules_id = rules.id
     ORDER BY req.updated_at DESC
@@ -39,7 +39,7 @@ def queryResultsID(cur, id):
     SELECT req.id, req.info, rules_id, ai_priority, req.contrast, p5_flag, tags, phys_priority, phys_contrast,
         created_at, dob, height, weight, reason_for_exam, exam_requested, error, state,
         rules.body_part, rules.bp_tk, rules.info_weighted_tk, rules.priority, rules.contrast as rules_contrast,
-        updated_at
+        updated_at, rules.info
     FROM data_request as req
     LEFT JOIN mri_rules as rules on rules_id = rules.id
     ORDER BY req.created_at DESC
@@ -83,6 +83,28 @@ def getResultCount(cur, interval):
     return cur.fetchall()[0][0]
 
 
+def queryRequestHistory(cur, id_data_request):
+    cmd = """
+    SELECT id_data_request, description, cognito_user_id, cognito_user_fullname, dob, height, weight,
+        exam_requested, reason_for_exam, mod_info, created_at, history_type
+    FROM request_history
+    WHERE id_data_request = '%s'
+    ORDER BY created_at DESC
+    """
+    # cur.execute(cmd, id_data_request)
+    command = cmd % id_data_request
+    logger.info(command)
+    cur.execute(command)
+    return cur.fetchall()
+
+
+# insert_new_request_cmd = """
+#     SELECT *
+#     FROM request_history
+#     WHERE id_data_request = '%s'
+#     ORDER BY created_at DESC"""
+
+
 def datetime_to_json(obj):
     if isinstance(obj, (datetime, date)):
         return obj.strftime("%Y-%m-%d %H:%M:%S")
@@ -99,6 +121,7 @@ def parseResponse(response):
 
         # Rule
         rule['rules_id'] = resp_tuple[2]
+        rule['info'] = resp_tuple[22]
         rule['priority'] = resp_tuple[19]
         rule['rules_contrast'] = resp_tuple[20]
         rule['body_part'] = resp_tuple[16]
@@ -125,8 +148,40 @@ def parseResponse(response):
 
         resp['rule'] = rule
         resp['request'] = request
+        resp['history'] = {}
         resp_list.append(resp)
     return resp_list
+
+
+def parseResponseHistory(history):
+    logger.info('history')
+    logger.info(history)
+
+    history_list = []
+    for history_tuple in history:
+        history_item = {}
+
+        # history_item['id_data_request'] = history_tuple[0]
+        history_item['history_type'] = history_tuple[11]
+        history_item['description'] = history_tuple[1]
+        history_item['cognito_user_id'] = history_tuple[2]
+        history_item['cognito_user_fullname'] = history_tuple[3]
+        history_item['dob'] = history_tuple[4]
+        history_item['height'] = history_tuple[5]
+        history_item['weight'] = history_tuple[6]
+        history_item['exam_requested'] = history_tuple[7]
+        history_item['reason_for_exam'] = history_tuple[8]
+        history_item['mod_info'] = history_tuple[9]
+        history_item['date_created'] = datetime_to_json(history_tuple[10])
+
+        history_list.append(history_item)
+    return history_list
+
+
+def datetime_handler(x):
+    if isinstance(x, datetime):
+        return x.isoformat()
+    raise TypeError("Unknown type")
 
 
 def handler(event, context):
@@ -150,6 +205,13 @@ def handler(event, context):
 
     with psql.conn.cursor() as cur:
         try:
+            # command = insert_new_request_cmd % '10009'
+            # cur.execute(command)
+            # history2 = cur.fetchall()
+            # # cur.execute(insert_new_request_cmd, '10009')
+            # logger.info('history2')
+            # logger.info(history2)
+
             resp_dict = {'result': True,
                          'headers': headers,
                          'data': []}
@@ -158,6 +220,26 @@ def handler(event, context):
                     response = parseResponse(queryResultsID(cur, data['id']))
                 else:
                     response = parseResponse(queryResults(cur, data['page']))
+                    # logger.info('parseResponse')
+                    # logger.info(response)
+                    for resp in response:
+                        logger.info('resp')
+                        logger.info(resp)
+                        resp['history'] = parseResponseHistory(queryRequestHistory(cur, resp['id']))
+                        logger.info(resp['history'])
+                        # cio_id = resp['id']
+                        # command = insert_new_request_cmd % cio_id
+                        # logger.info(command)
+                        # cur.execute(command)
+                        #
+                        # # cur.execute(insert_new_request_cmd, cio_id)
+                        # history = cur.fetchall()
+                        # logger.info('history')
+                        # logger.info(history)
+                        # # history = queryRequestHistory(cur, cio_id)
+                        # resp['history'] = json.dumps(history, default=datetime_handler)
+                        # logger.info('resp history')
+                        # logger.info(resp['history'])
                     resp_dict['total_pgs'] = queryPageCount(cur)
             elif data['operation'] == 'UPDATE':
                 response = updateResults(cur, data['id'], data['phys_priority'], data['phys_contrast'])

@@ -76,6 +76,7 @@ class ResultsTableRowExpansion extends React.Component {
               {rule.rules_id ? (
                 <>
                   <p>{`Rule ID: ${rule.rules_id}`}</p>
+                  <p>{`Info: ${rule.info}`}</p>
                   <p>{`Priority: ${rule.priority}`}</p>
                   <p>{`Contrast: ${rule.contrast}`}</p>
                   {result.tags && result.tags > 0 && (

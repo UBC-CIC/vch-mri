@@ -1,8 +1,8 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Icon, Form, Table } from "semantic-ui-react";
+import { Icon, Table } from "semantic-ui-react";
 import { modifyResult } from "../../actions/ResultActions";
-import ResultView from "./ResultView";
+import ResultsHistoryView from "./ResultsHistoryView";
 import ResultsTableRowExpansion from "./ResultsTableRowExpansion";
 
 class ResultsTableRow extends React.Component {
@@ -62,75 +62,6 @@ class ResultsTableRow extends React.Component {
     } else {
       return <Icon name="caret right" />;
     }
-  }
-
-  renderItemDetails(item) {
-    return (
-      <Table celled striped>
-        <Table.Header>
-          <Table.Row>
-            <Table.HeaderCell colSpan="8">Git Repository</Table.HeaderCell>
-            <Table.HeaderCell colSpan="2">Git Repository2</Table.HeaderCell>
-            <Table.HeaderCell colSpan="2">Git Repository3</Table.HeaderCell>
-          </Table.Row>
-        </Table.Header>
-
-        <Table.Body>
-          <Table.Row>
-            <Table.Cell colSpan="8">
-              <Icon name="folder" /> node_modules
-            </Table.Cell>
-            <Table.Cell colSpan="2">Initial commit</Table.Cell>
-            <Table.Cell colSpan="2" textAlign="right">
-              10 hours ago
-            </Table.Cell>
-          </Table.Row>
-          <Table.Row>
-            <Table.Cell>
-              <Icon name="folder" /> test
-            </Table.Cell>
-            <Table.Cell>Initial commit</Table.Cell>
-            <Table.Cell textAlign="right">10 hours ago</Table.Cell>
-          </Table.Row>
-          <Table.Row>
-            <Table.Cell>
-              <Icon name="folder" /> build
-            </Table.Cell>
-            <Table.Cell>Initial commit</Table.Cell>
-            <Table.Cell textAlign="right">10 hours ago</Table.Cell>
-          </Table.Row>
-          <Table.Row>
-            <Table.Cell>
-              <Icon name="file outline" /> package.json
-            </Table.Cell>
-            <Table.Cell>Initial commit</Table.Cell>
-            <Table.Cell textAlign="right">10 hours ago</Table.Cell>
-          </Table.Row>
-          <Table.Row>
-            <Table.Cell>
-              <Icon name="file outline" /> Gruntfile.js
-            </Table.Cell>
-            <Table.Cell>Initial commit</Table.Cell>
-            <Table.Cell textAlign="right">10 hours ago</Table.Cell>
-          </Table.Row>
-        </Table.Body>
-      </Table>
-      // <Segment basic>
-      //   <Grid columns={3}>
-      //     <Grid.Column>
-      //       <span>Name: {item.name}</span>
-      //     </Grid.Column>
-
-      //     <Grid.Column>
-      //       <span>Point: {item.points}</span>
-      //     </Grid.Column>
-
-      //     <Grid.Column>
-      //       <span>Percent: {item.percent}</span>
-      //     </Grid.Column>
-      //   </Grid>
-      // </Segment>
-    );
   }
 
   render() {
@@ -242,7 +173,7 @@ class ResultsTableRow extends React.Component {
           <Table.Cell>{this.props.result.date_created}</Table.Cell>
           <Table.Cell>{this.props.result.date_updated}</Table.Cell>
           <Table.Cell textAlign="right" collapsing>
-            <ResultView info={this.props.result.info_json} />
+            <ResultsHistoryView history={this.props.result.history} />
           </Table.Cell>
         </Table.Row>
         {this.props.expanded && (

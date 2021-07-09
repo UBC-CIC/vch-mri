@@ -73,7 +73,7 @@ class ResultsTable extends React.Component {
         </Button>
         <Table celled compact sortable striped>
           <Table.Header fullWidth>
-            <Table.Row>
+            <Table.Row key={"row-header"}>
               <Table.HeaderCell
                 sorted={
                   this.props.sortedColumn === "id"
@@ -240,7 +240,7 @@ class ResultsTable extends React.Component {
               >
                 Date Modified
               </Table.HeaderCell>
-              <Table.HeaderCell collapsing />
+              <Table.HeaderCell collapsing>History</Table.HeaderCell>
             </Table.Row>
           </Table.Header>
 
@@ -259,7 +259,7 @@ class ResultsTable extends React.Component {
           </Table.Body>
 
           <Table.Footer fullWidth>
-            <Table.Row>
+            <Table.Row key={"row-footer"}>
               <Table.HeaderCell colSpan="10">
                 {this.props.totalPages && (
                   <Pagination
