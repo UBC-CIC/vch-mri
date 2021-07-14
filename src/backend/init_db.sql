@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS mri_rules (
 ); 
 
 -- Error state is when error string exists, then we can know *when* the error occurred eg during ai priority processing etc
-CREATE TYPE enum_requests_state AS ENUM ('received', 'received_duplicate', 'deleted', 'ai_priority_processed', 'final_priority_received', 'labelled');
+CREATE TYPE enum_requests_state AS ENUM ('received', 'received_duplicate', 'deleted', 'ai_priority_processed', 'final_priority_received', 'labelled_priority');
 
 CREATE TABLE IF NOT EXISTS data_request ( 
     id VARCHAR(36) PRIMARY KEY,
@@ -44,14 +44,18 @@ CREATE TABLE IF NOT EXISTS data_request (
     weight VARCHAR,
     request JSON,   -- original request JSON
     info JSON,     -- processed current request data prior sending to Rules engine
-    p5_flag BOOLEAN, 
-    rules_id INT, 
-    phys_priority VARCHAR(3),
+    ai_rule_candidates INT[]        -- AI determined
+    ai_rule_id INT,
     ai_priority VARCHAR(3),
-    final_priority VARCHAR(3),
-    contrast BOOLEAN,
-    tags VARCHAR[],
-    phys_contrast BOOLEAN,
+    ai_contrast BOOLEAN,
+    ai_tags VARCHAR[],              -- Matches specialty_tags table
+    p5_flag BOOLEAN,
+    final_priority VARCHAR(3),      -- Final priority from hospital site (LMMI)
+    final_contrast BOOLEAN,
+    labelled_rule_id INT,           -- Final overrides by SapienML
+    labelled_priority VARCHAR(3),   
+    labelled_contrast BOOLEAN,
+    labelled_notes VARCHAR,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     FOREIGN KEY (rules_id) REFERENCES mri_rules(id)
@@ -71,6 +75,7 @@ CREATE TABLE IF NOT EXISTS request_history (
     weight VARCHAR,
     exam_requested VARCHAR,
     reason_for_exam VARCHAR,
+    initial_priority VARCHAR(3),
     mod_info JSON,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     FOREIGN KEY (id_data_request) REFERENCES data_request(id) ON DELETE CASCADE

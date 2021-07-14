@@ -73,8 +73,10 @@ export const results = (state = initialState, action) => {
           result.id === updResult.id
             ? {
                 ...result,
-                phys_priority: updResult.phys_priority,
-                phys_contrast: updResult.phys_contrast,
+                labelled_rule_id: updResult.labelled_rule_id,
+                labelled_priority: updResult.labelled_priority,
+                labelled_contrast: updResult.labelled_contrast,
+                labelled_notes: updResult.labelled_notes,
               }
             : result
         ),

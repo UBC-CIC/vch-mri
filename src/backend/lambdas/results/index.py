@@ -11,12 +11,11 @@ logger.setLevel(logging.INFO)
 
 def queryResults(cur, page):
     cmd = """
-    SELECT req.id, req.info, rules_id, ai_priority, req.contrast, p5_flag, tags, phys_priority, phys_contrast,
-        created_at, age, height, weight, request, error, state,
-        rules.body_part, rules.bp_tk, rules.info_weighted_tk, rules.priority, rules.contrast as rules_contrast,
-        updated_at, rules.info
+    SELECT req.id, state, error, request, age, height, weight, req.info, created_at, updated_at,
+        ai_rule_candidates, ai_rule_id, ai_priority, ai_contrast, p5_flag, ai_tags,
+        final_priority, final_contrast,
+        labelled_rule_id, labelled_priority, labelled_contrast, labelled_notes
     FROM data_request as req
-    LEFT JOIN mri_rules as rules on rules_id = rules.id
     ORDER BY req.updated_at DESC
     LIMIT 50 OFFSET %s
     """
@@ -36,27 +35,38 @@ def queryPageCount(cur):
 
 def queryResultsID(cur, id):
     cmd = """
-    SELECT req.id, req.info, rules_id, ai_priority, req.contrast, p5_flag, tags, phys_priority, phys_contrast,
-        created_at, dob, height, weight, reason_for_exam, exam_requested, error, state,
-        rules.body_part, rules.bp_tk, rules.info_weighted_tk, rules.priority, rules.contrast as rules_contrast,
-        updated_at, rules.info
+    SELECT req.id, state, error, request, age, height, weight, req.info, created_at, updated_at,
+        ai_rule_candidates, ai_rule_id, ai_priority, ai_contrast, p5_flag, ai_tags,
+        final_priority, final_contrast,
+        labelled_rule_id, labelled_priority, labelled_contrast, labelled_notes
     FROM data_request as req
-    LEFT JOIN mri_rules as rules on rules_id = rules.id
-    ORDER BY req.created_at DESC
     WHERE req.id = %s
+    ORDER BY req.updated_at DESC
     """
     cur.execute(cmd, [id])
     return cur.fetchall()
 
 
-def updateResults(cur, id, priority, contrast):
+def updateFinalResults(cur, id, priority, contrast):
     cmd = """
     UPDATE data_request 
-    SET phys_priority = %s, phys_contrast = %s
+    SET final_priority = %s, final_contrast = %s
     WHERE id = %s
-    RETURNING id, phys_priority, phys_contrast
+    RETURNING id, final_priority, final_contrast
     """
     cur.execute(cmd, (priority, contrast, id))
+    return cur.fetchall()
+
+
+def updateLabelledResults(cur, id, rule_id, priority, contrast, notes):
+    cmd = """
+    UPDATE data_request 
+    SET labelled_rule_id = %s,  labelled_priority = %s, labelled_contrast = %s, labelled_notes = %s,
+        state = 'labelled_priority'
+    WHERE id = %s
+    RETURNING id, labelled_rule_id, labelled_priority, labelled_contrast, labelled_notes
+    """
+    cur.execute(cmd, (rule_id, priority, contrast, notes, id))
     return cur.fetchall()
 
 
@@ -98,6 +108,19 @@ def queryRequestHistory(cur, id_data_request):
     return cur.fetchall()
 
 
+def queryRequestRule(cur, id_data_request):
+    cmd = """
+    SELECT rules.id, rules.body_part, rules.bp_tk, rules.info_weighted_tk, rules.priority,
+    rules.contrast as rules_contrast, rules.info
+    FROM mri_rules as rules
+    WHERE rules.id = %s
+    """
+    # cur.execute(cmd, id_data_request)
+    command = cmd % id_data_request
+    logger.info(command)
+    cur.execute(command)
+    return cur.fetchall()
+
 # insert_new_request_cmd = """
 #     SELECT *
 #     FROM request_history
@@ -116,39 +139,45 @@ def parseResponse(response):
     resp_list = []
     for resp_tuple in response:
         resp = {}
-        rule = {}
-        request = {}
 
-        # Rule
-        rule['rules_id'] = resp_tuple[2]
-        rule['info'] = resp_tuple[22]
-        rule['priority'] = resp_tuple[19]
-        rule['rules_contrast'] = resp_tuple[20]
-        rule['body_part'] = resp_tuple[16]
-        rule['bp_tk'] = resp_tuple[17]
-        rule['info_weighted_tk'] = resp_tuple[18]
+        # Rule - filled in queryAndParseResponseRuleCandidates
+        # rule['rules_id'] = resp_tuple[2]
+        # rule['info'] = resp_tuple[22]
+        # rule['priority'] = resp_tuple[19]
+        # rule['contrast'] = resp_tuple[20]
+        # rule['body_part'] = resp_tuple[16]
+        # rule['bp_tk'] = resp_tuple[17]
+        # rule['info_weighted_tk'] = resp_tuple[18]
 
         resp['id'] = resp_tuple[0]
-        resp['info_json'] = resp_tuple[1]        # pre-process info
-        resp['rules_id'] = resp_tuple[2]
-        resp['priority'] = resp_tuple[3]
-        resp['contrast'] = resp_tuple[4]
-        resp['p5_flag'] = resp_tuple[5]
-        resp['tags'] = resp_tuple[6]
-        resp['phys_priority'] = resp_tuple[7]
-        resp['phys_contrast'] = resp_tuple[8]
-        resp['date_created'] = datetime_to_json(resp_tuple[9])
-        resp['date_updated'] = datetime_to_json(resp_tuple[21])
-        resp['age'] = resp_tuple[10]
-        resp['height'] = resp_tuple[11]
-        resp['weight'] = resp_tuple[12]
-        resp['request_json'] = resp_tuple[13]   # Request
-        resp['error'] = resp_tuple[14]
-        resp['state'] = resp_tuple[15]
+        resp['state'] = resp_tuple[1]
+        resp['error'] = resp_tuple[2]
+        resp['request_json'] = resp_tuple[3]   # Request
+        resp['age'] = resp_tuple[4]
+        resp['height'] = resp_tuple[5]
+        resp['weight'] = resp_tuple[6]
+        resp['info_json'] = resp_tuple[7]        # pre-process info
+        resp['date_created'] = datetime_to_json(resp_tuple[8])
+        resp['date_updated'] = datetime_to_json(resp_tuple[9])
 
-        resp['rule'] = rule
-        resp['request'] = request
+        resp['rule_candidates_array'] = resp_tuple[10]  # array of rule id's
+        resp['ai_rule_candidates'] = {}   # Filled later
+        resp['ai_rule_id'] = resp_tuple[11]
+        resp['ai_priority'] = resp_tuple[12]
+        resp['ai_contrast'] = resp_tuple[13]
+        resp['p5_flag'] = resp_tuple[14]
+        resp['ai_tags'] = resp_tuple[15]
+
+        resp['final_priority'] = resp_tuple[16]
+        resp['final_contrast'] = resp_tuple[17]
+
+        resp['labelled_rule_id'] = resp_tuple[18]
+        resp['labelled_priority'] = resp_tuple[19]
+        resp['labelled_contrast'] = resp_tuple[20]
+        resp['labelled_notes'] = resp_tuple[21]
+
         resp['history'] = {}
+
         resp_list.append(resp)
     return resp_list
 
@@ -176,6 +205,36 @@ def parseResponseHistory(history):
 
         history_list.append(history_item)
     return history_list
+
+
+def queryAndParseResponseRuleCandidates(cur, rule_candidates):
+    logger.info('queryAndParseResponseRuleCandidates')
+    logger.info(rule_candidates)
+
+    rule_list = []
+    if rule_candidates is None:
+        return rule_list
+
+    for rule_candidate in rule_candidates:
+        ret_rules = queryRequestRule(cur, rule_candidate)
+        if len(ret_rules) > 0:
+            ret_rule = ret_rules[0]
+            logger.info('ret_rule')
+            logger.info(ret_rule)
+
+            # Rule
+            rule = {}
+            rule['rules_id'] = ret_rule[0]
+            rule['body_part'] = ret_rule[1]
+            rule['bp_tk'] = ret_rule[2]
+            rule['info_weighted_tk'] = ret_rule[3]
+            rule['priority'] = ret_rule[4]
+            rule['contrast'] = ret_rule[5]
+            rule['info'] = ret_rule[6]
+
+            rule_list.append(rule)
+
+    return rule_list
 
 
 def datetime_handler(x):
@@ -217,33 +276,54 @@ def handler(event, context):
                          'data': []}
             if data['operation'] == 'GET':
                 if 'id' in data.keys():
+                    # TODO possible bug here as we should pass page here too - actually it only returns 1 max?
+                    # Thus searching for 4: only returns exactly matching 4 and not '44', '445 for ex
                     response = parseResponse(queryResultsID(cur, data['id']))
                 else:
                     response = parseResponse(queryResults(cur, data['page']))
                     # logger.info('parseResponse')
                     # logger.info(response)
-                    for resp in response:
-                        logger.info('resp')
-                        logger.info(resp)
-                        resp['history'] = parseResponseHistory(queryRequestHistory(cur, resp['id']))
-                        logger.info(resp['history'])
-                        # cio_id = resp['id']
-                        # command = insert_new_request_cmd % cio_id
-                        # logger.info(command)
-                        # cur.execute(command)
-                        #
-                        # # cur.execute(insert_new_request_cmd, cio_id)
-                        # history = cur.fetchall()
-                        # logger.info('history')
-                        # logger.info(history)
-                        # # history = queryRequestHistory(cur, cio_id)
-                        # resp['history'] = json.dumps(history, default=datetime_handler)
-                        # logger.info('resp history')
-                        # logger.info(resp['history'])
                     resp_dict['total_pgs'] = queryPageCount(cur)
-            elif data['operation'] == 'UPDATE':
-                response = updateResults(cur, data['id'], data['phys_priority'], data['phys_contrast'])
-                response = [{'id': response[0][0], 'phys_priority': response[0][1], 'phys_contrast': response[0][2]}]
+
+                for resp in response:
+                    logger.info('resp')
+                    logger.info(resp)
+                    resp['history'] = parseResponseHistory(queryRequestHistory(cur, resp['id']))
+                    logger.info(resp['history'])
+                    # cio_id = resp['id']
+                    # command = insert_new_request_cmd % cio_id
+                    # logger.info(command)
+                    # cur.execute(command)
+                    #
+                    # # cur.execute(insert_new_request_cmd, cio_id)
+                    # history = cur.fetchall()
+                    # logger.info('history')
+                    # logger.info(history)
+                    # # history = queryRequestHistory(cur, cio_id)
+                    # resp['history'] = json.dumps(history, default=datetime_handler)
+                    # logger.info('resp history')
+                    # logger.info(resp['history'])
+                    resp['ai_rule_candidates'] = queryAndParseResponseRuleCandidates(cur, resp['rule_candidates_array'])
+
+            elif data['operation'] == 'UPDATE_FINAL':
+                response = updateFinalResults(cur, data['id'], data['final_priority'], data['final_contrast'])
+                response = [{'id': response[0][0], 'final_priority': response[0][1], 'final_contrast': response[0][2]}]
+
+            elif data['operation'] == 'UPDATE_LABELLING':
+                response = updateLabelledResults(
+                    cur,
+                    data['id'],
+                    data['labelled_rule_id'],
+                    data['labelled_priority'],
+                    data['labelled_contrast'],
+                    data['labelled_notes'])
+                response = [{
+                    'id': response[0][0],
+                    'labelled_rule_id': response[0][1],
+                    'labelled_priority': response[0][2],
+                    'labelled_contrast': response[0][3],
+                    'labelled_notes': response[0][4]}]
+
             elif data['operation'] == 'GET_DATA':
                 daily = getResultCount(cur, 'DAILY')
                 weekly = getResultCount(cur, 'WEEKLY')

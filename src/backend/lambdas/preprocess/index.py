@@ -42,21 +42,25 @@ insert_new_request_cmd = """
         state='received_duplicate',
         error='',
         info=null,
-        p5_flag=null,
-        rules_id=null,
-        phys_priority='',
+        ai_rule_candidates=null,
+        ai_rule_id=null,
         ai_priority='',
-        final_priority='',
-        contrast=null,
-        tags=null,
-        phys_contrast=null;
+        ai_contrast=null,
+        ai_tags=null,
+        p5_flag=null,
+        final_priority = '',
+        final_contrast = null,
+        labelled_rule_id = null,
+        labelled_priority = '',
+        labelled_contrast = null,
+        labelled_notes = ''
     """
 
 insert_history_request_cmd = """
     INSERT INTO request_history(id_data_request, history_type, dob, height, weight, exam_requested, reason_for_exam,
-        cognito_user_id, cognito_user_fullname)
+        initial_priority, cognito_user_id, cognito_user_fullname)
     VALUES 
-    (%s, 'request', %s, %s, %s, %s, %s, %s, %s)
+    (%s, 'request', %s, %s, %s, %s, %s, %s, %s, %s)
     """
 
 update_request_error_cmd = """
@@ -309,6 +313,8 @@ def handler(event, context):
     logger.info(exam_requested)
     reason_for_exam = data_df['Reason for Exam']
     logger.info(reason_for_exam)
+    radiologist_priority = data_df['Radiologist Priority']
+    logger.info(radiologist_priority)
 
     # Convert these easy fields first
     data_df['age'] = dob2age(dob)
@@ -335,7 +341,7 @@ def handler(event, context):
 
             # Insert request history
             data = (data_df["CIO_ID"], dob, req_height, req_weight, exam_requested, reason_for_exam,
-                    cognito_user_id, cognito_user_fullname)
+                    radiologist_priority, cognito_user_id, cognito_user_fullname)
             command = insert_history_request_cmd % data
             logger.info(command)
 

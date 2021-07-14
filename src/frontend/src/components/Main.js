@@ -3,7 +3,7 @@ import Navbar from "./Navbar";
 import { Route, Switch, withRouter } from "react-router-dom";
 import HomePage from "./HomePage";
 import BookingPage from "./BookingPage/BookingPage";
-import RequestsPage from "./RequestsPage/RequestsPage";
+import LabellingPage from "./LabellingPage/LabellingPage";
 import ResultsPage from "./ResultsPage/ResultsPage";
 import RulesPage from "./RulesPage/RulesPage";
 import SpellcheckerPage from "./SpellcheckerPage/SpellcheckerPage";
@@ -19,7 +19,7 @@ class Main extends React.Component {
         <Navbar />
         <Route exact path="/dashboard" component={HomePage} />
         <Route path="/dashboard/booking" component={BookingPage} />
-        <Route path="/dashboard/requests" component={RequestsPage} />
+        <Route path="/dashboard/labelling" component={LabellingPage} />
         <Route path="/dashboard/results" component={ResultsPage} />
         <Route path="/dashboard/rules" component={RulesPage} />
         <Route path="/dashboard/spellcheck" component={SpellcheckerPage} />

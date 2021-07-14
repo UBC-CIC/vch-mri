@@ -1,58 +1,88 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Icon, Table } from "semantic-ui-react";
+import { Form, Icon, Table, TextArea } from "semantic-ui-react";
 import { modifyResult } from "../../actions/ResultActions";
-import ResultsHistoryView from "./ResultsHistoryView";
+import ResultsHistoryView from "../ResultsPage/ResultsHistoryView";
+import ResultsTableRowExpansion from "./ResultsRowExpansion/ResultsTableRowExpansion";
 
-class ResultsTableRow extends React.Component {
+class LabellingTableRow extends React.Component {
   constructor(props) {
     super(props);
+    const result = this.props.result;
+
     this.state = {
       activeIndex: 0,
-      phys_priority:
-        this.props.result.phys_priority !== null
-          ? this.props.result.phys_priority
-          : "e",
-      phys_contrast:
-        this.props.result.phys_contrast !== null
-          ? this.props.result.phys_contrast
-          : "e",
+      labelled_rule_id:
+        result.labelled_rule_id !== null ? result.labelled_rule_id : "e",
+      labelled_priority:
+        result.labelled_priority !== null ? result.labelled_priority : "e",
+      labelled_contrast:
+        result.labelled_contrast !== null ? result.labelled_contrast : "e",
+      labelled_notes: result.labelled_notes,
     };
 
     this.handleSelectChange = this.handleSelectChange.bind(this);
+    this.handleChangeNote = this.handleChangeNote.bind(this);
+    this.handleRowClick = this.handleRowClick.bind(this);
   }
 
   componentWillReceiveProps(nextProps, nextContext) {
     this.setState({
-      phys_priority:
-        nextProps.result.phys_priority !== null
-          ? nextProps.result.phys_priority
+      labelled_rule_id:
+        nextProps.result.labelled_rule_id !== null
+          ? nextProps.result.labelled_rule_id
           : "e",
-      phys_contrast:
-        nextProps.result.phys_contrast !== null
-          ? nextProps.result.phys_contrast
+      labelled_priority:
+        nextProps.result.labelled_priority !== null
+          ? nextProps.result.labelled_priority
           : "e",
+      labelled_contrast:
+        nextProps.result.labelled_contrast !== null
+          ? nextProps.result.labelled_contrast
+          : "e",
+      labelled_notes: nextProps.result.labelled_notes,
     });
   }
 
   handleSelectChange(e, { name, value }) {
+    // console.log("handleSelectChange");
+    // console.log(name);
+    // console.log(value);
     this.setState({ [name]: value }, () => {
       this.props.modifyResult({
         id: this.props.result.id,
-        phys_priority:
-          this.state.phys_priority === "e" ? null : this.state.phys_priority,
-        phys_contrast:
-          this.state.phys_contrast === "e" ? null : this.state.phys_contrast,
+        labelled_rule_id:
+          this.state.labelled_rule_id === "e"
+            ? null
+            : this.state.labelled_rule_id,
+        labelled_priority:
+          this.state.labelled_priority === "e"
+            ? null
+            : this.state.labelled_priority,
+        labelled_contrast:
+          this.state.labelled_contrast === "e"
+            ? null
+            : this.state.labelled_contrast,
+        labelled_notes: this.state.labelled_notes,
       });
     });
   }
 
-  handleClick = (e, titleProps) => {
-    const { index } = titleProps;
-    const activeIndex = this.state.activeIndex;
-    const newIndex = activeIndex === index ? -1 : index;
+  handleChangeNote(e, value) {
+    console.log("handleChangeNote");
+    console.log(value);
+  }
 
-    this.setState({ activeIndex: newIndex });
+  handleRowClick(e, rowId) {
+    console.log("handleRowClick row");
+    console.log(e);
+    console.log(rowId);
+    // console.log(e.target.key);
+    this.props.handleRowClick(e, rowId);
+  }
+
+  handleClickCollapseAll = () => {
+    this.setState({ showAll: !this.state.showAll });
   };
 
   renderItemCaret(expanded) {
@@ -64,13 +94,13 @@ class ResultsTableRow extends React.Component {
   }
 
   render() {
-    console.log("expanded");
-    console.log(this.props.expanded);
-    // console.log(ResultsTableRow);
-    console.log(this.props.result.error);
+    // console.log("expanded");
+    // console.log(this.props.expanded);
+    // // console.log(ResultsTableRow);
+    // console.log(this.props.result.error);
 
     const index = this.props.index;
-    console.log(this.props.index);
+    // console.log(this.props.index);
 
     const result = this.props.result;
 
@@ -95,10 +125,13 @@ class ResultsTableRow extends React.Component {
       default:
         break;
     }
+
     return (
       <>
         <Table.Row
-          onClick={() => this.props.handleRowClick(index)}
+          //   onClick={() => this.handleRowClick(index)}
+          //   onClick={(e) => alert(e.target.value)}
+          onClick={(e) => this.props.handleRowClick(e, index)}
           key={"row-data-" + index}
           disabled={this.props.loading}
           error={(result.error && result.error !== "") || state === "deleted"}
@@ -110,11 +143,11 @@ class ResultsTableRow extends React.Component {
           }
         >
           <Table.Cell singleLine>
-            {/* {this.renderItemCaret(this.props.expanded)} */}
+            {this.renderItemCaret(this.props.expanded)}
             {result.id}
           </Table.Cell>
           <Table.Cell>{state}</Table.Cell>
-          <Table.Cell>{result.age ? result.age : "N/A"}</Table.Cell>
+          {/* <Table.Cell>{result.age ? result.age : "N/A"}</Table.Cell>
           <Table.Cell>{result.height ? result.height : "N/A"}</Table.Cell>
           <Table.Cell>{result.weight ? result.weight : "N/A"}</Table.Cell>
           <Table.Cell>
@@ -126,7 +159,7 @@ class ResultsTableRow extends React.Component {
             {result.request_json
               ? result.request_json["Exam Requested"]
               : "N/A"}
-          </Table.Cell>
+          </Table.Cell> */}
           <Table.Cell>
             {result.ai_rule_id ? result.ai_rule_id : " - "}
           </Table.Cell>
@@ -138,12 +171,6 @@ class ResultsTableRow extends React.Component {
               ? result.ai_contrast.toString()
               : " - "}
           </Table.Cell>
-          {/* <Table.Cell>
-            {result.p5_flag !== null ? result.p5_flag.toString() : "none"}
-          </Table.Cell> */}
-          <Table.Cell>
-            {result.ai_tags ? result.ai_tags.join(", ") : "none"}
-          </Table.Cell>
           <Table.Cell>
             {result.final_priority ? result.final_priority : " - "}
           </Table.Cell>
@@ -153,24 +180,30 @@ class ResultsTableRow extends React.Component {
               : " - "}
           </Table.Cell>
           <Table.Cell>
-            {result.labelled_rule_id ? result.labelled_rule_id : " - "}
-          </Table.Cell>
-          <Table.Cell>
-            {result.labelled_priority ? result.labelled_priority : " - "}
-          </Table.Cell>
-          <Table.Cell>
-            {result.labelled_contrast !== null
-              ? result.labelled_contrast.toString()
-              : " - "}
-          </Table.Cell>
-          {/* <Table.Cell>
             <Form.Dropdown
               fluid
               selection
-              name="phys_priority"
-              value={this.state.phys_priority}
+              name="labelled_rule_id"
+              value={result.labelled_rule_id ? result.labelled_rule_id : "e"}
               options={[
-                { key: "e", text: "none", value: "e" },
+                { key: "e", text: "-", value: "e" },
+                {
+                  key: "P1",
+                  text: "This will list all the rule IDs",
+                  value: "P1",
+                },
+              ]}
+              onChange={this.handleSelectChange}
+            />
+          </Table.Cell>
+          <Table.Cell>
+            <Form.Dropdown
+              fluid
+              selection
+              name="labelled_priority"
+              value={result.labelled_priority ? result.labelled_priority : "e"}
+              options={[
+                { key: "e", text: "-", value: "e" },
                 { key: "P1", text: "P1", value: "P1" },
                 { key: "P2", text: "P2", value: "P2" },
                 { key: "P3", text: "P3", value: "P3" },
@@ -184,15 +217,27 @@ class ResultsTableRow extends React.Component {
             <Form.Dropdown
               fluid
               selection
-              name="phys_contrast"
-              value={this.state.phys_contrast}
+              name="labelled_contrast"
+              value={result.labelled_contrast ? result.labelled_contrast : "e"}
               options={[
-                { key: "e", text: "none", value: "e" },
+                { key: "e", text: "-", value: "e" },
                 { key: true, text: "true", value: true },
                 { key: false, text: "false", value: false },
               ]}
               onChange={this.handleSelectChange}
             />
+          </Table.Cell>
+          <Table.Cell>
+            <TextArea
+              placeholder="Labelling notes"
+              onChange={this.handleChangeNote}
+            />
+          </Table.Cell>
+          {/* <Table.Cell>
+            {result.p5_flag !== null ? result.p5_flag.toString() : "none"}
+          </Table.Cell> */}
+          {/* <Table.Cell>
+            {result.ai_tags ? result.ai_tags.join(", ") : "none"}
           </Table.Cell> */}
           <Table.Cell>{result.date_created}</Table.Cell>
           <Table.Cell>{result.date_updated}</Table.Cell>
@@ -200,6 +245,16 @@ class ResultsTableRow extends React.Component {
             <ResultsHistoryView history={result.history} />
           </Table.Cell>
         </Table.Row>
+        {this.props.expanded && (
+          <Table.Row key={"row-expanded-" + index}>
+            <Table.Cell colSpan="10">
+              <div style={{ padding: "1.5em" }}>
+                {/* {this.renderItemDetails(result)} */}
+                <ResultsTableRowExpansion result={result} />
+              </div>
+            </Table.Cell>
+          </Table.Row>
+        )}
       </>
     );
   }
@@ -216,4 +271,4 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, { modifyResult })(ResultsTableRow);
+export default connect(mapStateToProps, { modifyResult })(LabellingTableRow);

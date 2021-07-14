@@ -1,9 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Icon, Table } from "semantic-ui-react";
+import { Table } from "semantic-ui-react";
 import { modifyResult } from "../../actions/ResultActions";
-import ResultsHistoryView from "./ResultsHistoryView";
-import ResultsTableRowExpansion from "./ResultsTableRowExpansion";
 
 class ResultsHistoryViewRow extends React.Component {
   constructor(props) {
@@ -14,12 +12,12 @@ class ResultsHistoryViewRow extends React.Component {
   }
 
   render() {
-    console.log("history");
-    console.log(this.props.history);
+    // console.log("history");
+    // console.log(this.props.history);
     const history = this.props.history;
 
     const index = this.props.index;
-    console.log(this.props.index);
+    // console.log(this.props.index);
 
     return (
       <>

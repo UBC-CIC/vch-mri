@@ -7,7 +7,7 @@ const initialState = {
   id: "",
 };
 
-class RequestsearchBar extends React.Component {
+class LabellingSearchBar extends React.Component {
   constructor(props) {
     super(props);
     this.state = initialState;
@@ -64,5 +64,5 @@ const mapStateToProps = (state) => {
 };
 
 export default connect(mapStateToProps, { getResultByID, getResultsByPage })(
-  RequestsearchBar
+  LabellingSearchBar
 );

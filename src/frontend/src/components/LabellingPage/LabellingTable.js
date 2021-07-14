@@ -6,10 +6,10 @@ import {
   getResultsByPage,
 } from "../../actions/ResultActions";
 import { sendSuccessToast, sendErrorToast } from "../../helpers";
-import ResultsTableRow from "./ResultsTableRow";
+import LabellingTableRow from "./LabellingTableRow";
 import { Icon, Button } from "semantic-ui-react";
 
-class ResultsTable extends React.Component {
+class LabellingTable extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -27,9 +27,9 @@ class ResultsTable extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    if (this.props.error) {
+    if (this.props.error && prevProps.error !== this.props.error) {
       sendErrorToast(this.props.error.message);
-    } else if (this.props.success) {
+    } else if (this.props.success && prevProps.success !== this.props.success) {
       sendSuccessToast(this.props.success);
     }
   }
@@ -40,9 +40,9 @@ class ResultsTable extends React.Component {
     });
   };
 
-  handleRowClick(rowId) {
-    console.log("handleRowClick table");
-    console.log(rowId);
+  handleRowClick(e, rowId) {
+    if (e.target.tagName !== "TD") return;
+
     const currentExpandedRows = this.state.expandedRows;
     const isRowCurrentlyExpanded = currentExpandedRows.includes(rowId);
 
@@ -58,11 +58,9 @@ class ResultsTable extends React.Component {
   };
 
   render() {
-    console.log("showAll");
-    console.log(this.state.showAll);
     return (
       <>
-        {/* <Button
+        <Button
           color="blue"
           size="huge"
           onClick={this.handleClickCollapseAll}
@@ -70,14 +68,14 @@ class ResultsTable extends React.Component {
           labelPosition="right"
         >
           <Icon name="arrow circle right" /> Show All
-        </Button> */}
+        </Button>
         <Table celled compact sortable striped>
           <Table.Header fullWidth>
             <Table.Row key={"row-header1"}>
-              <Table.HeaderCell colSpan="7" />
-              <Table.HeaderCell colSpan="4">AI Results</Table.HeaderCell>
+              <Table.HeaderCell colSpan="2" />
+              <Table.HeaderCell colSpan="3">AI Results</Table.HeaderCell>
               <Table.HeaderCell colSpan="2">Physician Results</Table.HeaderCell>
-              <Table.HeaderCell colSpan="3">Labelled Override</Table.HeaderCell>
+              <Table.HeaderCell colSpan="4">Labelled Override</Table.HeaderCell>
             </Table.Row>
             <Table.Row key={"row-header2"}>
               <Table.HeaderCell
@@ -104,7 +102,7 @@ class ResultsTable extends React.Component {
               >
                 State
               </Table.HeaderCell>
-              <Table.HeaderCell
+              {/* <Table.HeaderCell
                 collapsing
                 sorted={
                   this.props.sortedColumn === "age"
@@ -144,7 +142,7 @@ class ResultsTable extends React.Component {
                 Weight (KG)
               </Table.HeaderCell>
               <Table.HeaderCell>Reason for Exam</Table.HeaderCell>
-              <Table.HeaderCell>Exam Requested</Table.HeaderCell>
+              <Table.HeaderCell>Exam Requested</Table.HeaderCell> */}
               <Table.HeaderCell
                 collapsing
                 sorted={
@@ -184,7 +182,6 @@ class ResultsTable extends React.Component {
               >
                 Contrast
               </Table.HeaderCell>
-              <Table.HeaderCell>Sp. Exam</Table.HeaderCell>
               <Table.HeaderCell
                 collapsing
                 sorted={
@@ -250,6 +247,7 @@ class ResultsTable extends React.Component {
               >
                 Contrast
               </Table.HeaderCell>
+              <Table.HeaderCell>Note</Table.HeaderCell>
               {/* <Table.HeaderCell
                 collapsing
                 sorted={
@@ -263,30 +261,7 @@ class ResultsTable extends React.Component {
               >
                 P5 Flag
               </Table.HeaderCell> */}
-              {/* <Table.HeaderCell
-                sorted={
-                  this.props.sortedColumn === "phys_priority"
-                    ? this.props.sortDirection
-                    : null
-                }
-                onClick={() => {
-                  this.props.changeResultSort("phys_priority");
-                }}
-              >
-                Physician Priority
-              </Table.HeaderCell>
-              <Table.HeaderCell
-                sorted={
-                  this.props.sortedColumn === "phys_contrast"
-                    ? this.props.sortDirection
-                    : null
-                }
-                onClick={() => {
-                  this.props.changeResultSort("phys_contrast");
-                }}
-              >
-                Physician Contrast
-              </Table.HeaderCell> */}
+              {/* <Table.HeaderCell>Sp. Exams</Table.HeaderCell> */}
               <Table.HeaderCell
                 sorted={
                   this.props.sortedColumn === "created_at"
@@ -318,7 +293,7 @@ class ResultsTable extends React.Component {
           {/* <Table.Body>{allItemRows}</Table.Body> */}
           <Table.Body>
             {this.props.results.map((result, index) => (
-              <ResultsTableRow
+              <LabellingTableRow
                 result={result}
                 index={index}
                 handleRowClick={this.handleRowClick}
@@ -362,5 +337,5 @@ const mapStateToProps = (state) => {
 };
 
 export default connect(mapStateToProps, { changeResultSort, getResultsByPage })(
-  ResultsTable
+  LabellingTable
 );

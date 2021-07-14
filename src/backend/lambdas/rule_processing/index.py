@@ -24,7 +24,7 @@ WHERE id = %s;
 
 update_cmd = """
 UPDATE data_request
-SET state = 'ai_priority_processed', rules_id = r.id , ai_priority = r.priority, contrast = r.contrast
+SET state = 'ai_priority_processed', ai_rule_id = r.id , ai_priority = r.priority, ai_contrast = r.contrast
 FROM mri_rules r WHERE r.id = (
 SELECT id
 FROM mri_rules, to_tsquery('ths_search','%s') query 
@@ -38,15 +38,43 @@ AND data_request.id = '%s'
 RETURNING r.id, r.body_part, r.priority, r.contrast, data_request.p5_flag, r.info;
 """
 
+set_rule_candidates_cmd = """
+    UPDATE data_request
+    SET ai_rule_candidates = 
+    (select array (SELECT id
+    FROM mri_rules, to_tsquery('ths_search','%s') query 
+    WHERE info_weighted_tk @@ query
+    AND active = 't'
+    %s
+    ORDER BY ts_rank_cd('{0.1, 0.2, 0.4, 1.0}',info_weighted_tk, query, 1) DESC))
+    WHERE data_request.id = '%s'
+    """
+
+update_rule_priority_cmd = """
+UPDATE data_request
+SET state = 'ai_priority_processed', ai_rule_id = r.id , ai_priority = r.priority, ai_contrast = r.contrast
+FROM mri_rules r WHERE r.id = (
+SELECT id
+FROM mri_rules, to_tsquery('ths_search','%s') query 
+WHERE info_weighted_tk @@ query
+AND active = 't'
+"""
+
+update_cmd_end = """
+ORDER BY ts_rank_cd('{0.1, 0.2, 0.4, 1.0}',info_weighted_tk, query, 1) DESC LIMIT 1)
+AND data_request.id = '%s'
+RETURNING r.id, r.body_part, r.priority, r.contrast, data_request.p5_flag, r.info;
+"""
 update_tags = """
 UPDATE data_request
-SET tags = array_tag FROM (
+SET ai_tags = array_tag FROM (
 SELECT array_agg(tag) AS array_tag FROM (
 SELECT tag from specialty_tags
 WHERE %s ~* tag) AS x) AS y
 where id = %s
-RETURNING tags;
+RETURNING ai_tags;
 """
+
 
 def searchAnatomy(data):        
     anatomy_list = []
@@ -58,6 +86,7 @@ def searchAnatomy(data):
     body_parts = ' | '.join(anatomy_list)
     anatomy_cmd = "AND bp_tk @@ to_tsquery('ths_search','%s')" % body_parts
     return anatomy_cmd 
+
 
 def searchText(data, *data_keys):
     value_set = set()
@@ -93,9 +122,16 @@ def handler(event, context):
                 psql.conn.commit()
                 return {"rule_id": "N/A", 'headers': headers, "priority": "P99"}
             else:
+                # Determine Rule matches
                 anatomy_str  = searchAnatomy(v["anatomy"])
                 info_str = searchText(v, "anatomy", "medical_condition", "diagnosis", "symptoms", "phrases",
                                       "other_info")
+
+                # Get all rankings first and store array
+                command = (set_rule_candidates_cmd % (info_str, anatomy_str, v["CIO_ID"]))
+                cur.execute(command)
+
+                # Determine and store highest ranking AI rule
                 command = (update_cmd % info_str) + anatomy_str + (update_cmd_end % v["CIO_ID"])
                 logger.info(command)
                 cur.execute(command)
@@ -104,12 +140,30 @@ def handler(event, context):
                     cur.execute(update_ai_priority, ('P98', v["CIO_ID"]))
                     psql.conn.commit()
                     return {"rule_id": "N/A", 'headers': headers, "priority": "P98"}
+
+                logger.info(ret)
+                # Specialty Tags
                 cur.execute(update_tags, (ret[0][5], v["CIO_ID"]))
                 tags = cur.fetchall()
+
             # commit the changes
             psql.conn.commit()
-            return {"rule_id": ret[0][0], 'headers': headers, "anatomy": ret[0][1], "priority": ret[0][2], "contrast": ret[0][3], "p5_flag": ret[0][4], "specialty_exams": tags[0][0]}
+            return {
+                "rule_id": ret[0][0],
+                'headers': headers,
+                "anatomy": ret[0][1],
+                "priority": ret[0][2],
+                "contrast": ret[0][3],
+                "p5_flag": ret[0][4],
+                "specialty_exams": tags[0][0]
+            }
+
         except Exception as error:
             logger.error(error)
             logger.error("Exception Type: %s" % type(error))         
-            return {"isBase64Encoded": False, "statusCode": 500, "body": f'{type(error)}', "headers": {"Content-Type": "application/json"}}
+            return {
+                "isBase64Encoded": False,
+                "statusCode": 500,
+                "body": f'{type(error)}',
+                "headers": {"Content-Type": "application/json"}
+            }
