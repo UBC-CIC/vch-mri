@@ -80,7 +80,7 @@ class ResultsTableRowExpansion extends React.Component {
         <Table celled compact striped>
           <Table.Header>
             <Table.Row>
-              <Table.HeaderCell colSpan="10">
+              <Table.HeaderCell colSpan="7">
                 AI Rule candidates in order of highest (topmost) to lowest rank
                 (bottom)
               </Table.HeaderCell>
