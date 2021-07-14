@@ -8,7 +8,7 @@ class ResultsTableRowExpansion extends React.Component {
     const request = result.request_json;
     const info = result.info_json;
     const ruleCandidates = result.ai_rule_candidates;
-    console.log(result);
+    // console.log(result);
 
     return (
       <>

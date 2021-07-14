@@ -5,12 +5,8 @@ import { modifyResult } from "../../../actions/ResultActions";
 
 class RuleCandidatesRow extends React.Component {
   render() {
-    console.log("candidate");
-    console.log(this.props.candidate);
     const candidate = this.props.candidate;
-
     const index = this.props.index;
-    console.log(this.props.index);
 
     return (
       <Table.Row

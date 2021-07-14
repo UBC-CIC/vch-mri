@@ -247,7 +247,7 @@ class LabellingTable extends React.Component {
               >
                 Contrast
               </Table.HeaderCell>
-              <Table.HeaderCell>Note</Table.HeaderCell>
+              <Table.HeaderCell>Notes (auto-saves after 2s)</Table.HeaderCell>
               {/* <Table.HeaderCell
                 collapsing
                 sorted={

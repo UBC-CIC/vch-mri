@@ -5,6 +5,12 @@ import { modifyResult } from "../../actions/ResultActions";
 import ResultsHistoryView from "../ResultsPage/ResultsHistoryView";
 import ResultsTableRowExpansion from "./ResultsRowExpansion/ResultsTableRowExpansion";
 
+const SavingState = Object.freeze({
+  NOT_SAVED: 0,
+  SAVING: 1,
+  SAVED: 2,
+});
+
 class LabellingTableRow extends React.Component {
   constructor(props) {
     super(props);
@@ -12,6 +18,7 @@ class LabellingTableRow extends React.Component {
 
     this.state = {
       activeIndex: 0,
+      saving: SavingState.NOT_SAVED,
       labelled_rule_id:
         result.labelled_rule_id !== null ? result.labelled_rule_id : "e",
       labelled_priority:
@@ -24,6 +31,11 @@ class LabellingTableRow extends React.Component {
     this.handleSelectChange = this.handleSelectChange.bind(this);
     this.handleChangeNote = this.handleChangeNote.bind(this);
     this.handleRowClick = this.handleRowClick.bind(this);
+    this.timerChangeNote = this.timerChangeNote.bind(this);
+  }
+
+  componentDidMount() {
+    this.timer = null;
   }
 
   componentWillReceiveProps(nextProps, nextContext) {
@@ -49,29 +61,52 @@ class LabellingTableRow extends React.Component {
     // console.log(name);
     // console.log(value);
     this.setState({ [name]: value }, () => {
-      this.props.modifyResult({
-        id: this.props.result.id,
-        labelled_rule_id:
-          this.state.labelled_rule_id === "e"
-            ? null
-            : this.state.labelled_rule_id,
-        labelled_priority:
-          this.state.labelled_priority === "e"
-            ? null
-            : this.state.labelled_priority,
-        labelled_contrast:
-          this.state.labelled_contrast === "e"
-            ? null
-            : this.state.labelled_contrast,
-        labelled_notes: this.state.labelled_notes,
-      });
+      this.props.modifyResult(
+        this.preparePayloadModifyResult(this.props.result.id)
+      );
     });
   }
 
-  handleChangeNote(e, value) {
+  handleChangeNote(e) {
     console.log("handleChangeNote");
-    console.log(value);
+    // console.log(e.target.value);
+    const value = e.target.value;
+
+    clearTimeout(this.timer);
+    this.setState({ labelled_notes: value, saving: SavingState.NOT_SAVED });
+
+    this.timer = setTimeout(() => {
+      console.log("SAVING note now...");
+      this.setState({ labelled_notes: value, saving: SavingState.SAVING });
+
+      // calls API
+      this.props.modifyResult(
+        this.preparePayloadModifyResult(this.props.result.id)
+      );
+      this.setState({ saving: SavingState.SAVED });
+    }, 2000);
   }
+
+  preparePayloadModifyResult(index) {
+    return {
+      id: index,
+      labelled_rule_id:
+        this.state.labelled_rule_id === "e"
+          ? null
+          : this.state.labelled_rule_id,
+      labelled_priority:
+        this.state.labelled_priority === "e"
+          ? null
+          : this.state.labelled_priority,
+      labelled_contrast:
+        this.state.labelled_contrast === "e"
+          ? null
+          : this.state.labelled_contrast,
+      labelled_notes: this.state.labelled_notes,
+    };
+  }
+
+  timerChangeNote(e, value) {}
 
   handleRowClick(e, rowId) {
     console.log("handleRowClick row");
@@ -230,6 +265,7 @@ class LabellingTableRow extends React.Component {
           <Table.Cell>
             <TextArea
               placeholder="Labelling notes"
+              value={this.state.labelled_notes}
               onChange={this.handleChangeNote}
             />
           </Table.Cell>

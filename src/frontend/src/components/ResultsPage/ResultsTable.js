@@ -41,8 +41,6 @@ class ResultsTable extends React.Component {
   };
 
   handleRowClick(rowId) {
-    console.log("handleRowClick table");
-    console.log(rowId);
     const currentExpandedRows = this.state.expandedRows;
     const isRowCurrentlyExpanded = currentExpandedRows.includes(rowId);
 
@@ -58,8 +56,6 @@ class ResultsTable extends React.Component {
   };
 
   render() {
-    console.log("showAll");
-    console.log(this.state.showAll);
     return (
       <>
         {/* <Button

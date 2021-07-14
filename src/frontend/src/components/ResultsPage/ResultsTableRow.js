@@ -64,14 +64,7 @@ class ResultsTableRow extends React.Component {
   }
 
   render() {
-    console.log("expanded");
-    console.log(this.props.expanded);
-    // console.log(ResultsTableRow);
-    console.log(this.props.result.error);
-
     const index = this.props.index;
-    console.log(this.props.index);
-
     const result = this.props.result;
 
     let state = result.state;
