@@ -15,16 +15,15 @@ class ResultsTableRowExpansion extends React.Component {
         <Table celled compact striped>
           <Table.Header>
             <Table.Row>
-              <Table.HeaderCell colSpan="4">Original Request</Table.HeaderCell>
-              <Table.HeaderCell colSpan="4">
-                After AWS Comprehend (this info is sent to the Rules engine for
-                AI priority determination)
+              <Table.HeaderCell width="4">Original Request</Table.HeaderCell>
+              <Table.HeaderCell width="4">
+                After AWS Comprehend (sent to the Rules engine)
               </Table.HeaderCell>
             </Table.Row>
           </Table.Header>
           <Table.Body>
             <Table.Row>
-              <Table.Cell colSpan="4">
+              <Table.Cell>
                 {/* <Container textAlign="left"> */}
                 {request ? (
                   <>
@@ -39,7 +38,7 @@ class ResultsTableRowExpansion extends React.Component {
                 )}
                 {/* </Container> */}
               </Table.Cell>
-              <Table.Cell colSpan="4">
+              <Table.Cell>
                 {/* <Container textAlign="left"> */}
                 {info ? (
                   <>

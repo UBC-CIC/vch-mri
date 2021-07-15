@@ -292,7 +292,7 @@ class LabellingTableRow extends React.Component {
         </Table.Row>
         {this.props.expanded && (
           <Table.Row key={"row-expanded-" + index}>
-            <Table.Cell colSpan="8">
+            <Table.Cell colSpan="12">
               <div style={{ padding: "1.5em" }}>
                 {/* {this.renderItemDetails(result)} */}
                 <ResultsTableRowExpansion result={result} />
