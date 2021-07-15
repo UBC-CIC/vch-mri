@@ -14,6 +14,8 @@ import {
   CHANGE_RESULT_SORT,
 } from "../constants/resultConstants";
 import axios from "axios";
+// TODO for sample data local testing instead of waiting Lambda containers to load ~5secs
+// import SampleData from "../data/SampleData";
 
 export const getResultByIDStarted = () => {
   return {
@@ -124,12 +126,15 @@ export const getResultsByPage = (pageIndex) => {
   return (dispatch) => {
     dispatch(getResultsByPageStarted());
 
+    // TODO for sample data local testing instead of waiting Lambda containers to load ~5secs
+    // dispatch(getResultsByPageSuccess(SampleData));
     axios
       .post(`${process.env.REACT_APP_HTTP_API_URL}/results`, {
         operation: "GET",
         page: pageIndex,
       })
       .then((response) => {
+        console.log(response.data);
         dispatch(getResultsByPageSuccess(response.data));
       })
       .catch((e) => {
