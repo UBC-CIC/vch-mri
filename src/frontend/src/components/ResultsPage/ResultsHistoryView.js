@@ -22,7 +22,8 @@ class ResultsHistoryView extends React.Component {
   render() {
     return (
       <Modal
-        // style={{ maxWidth: 500 }}
+        // style={{ maxWidth: "100%" }}
+        size="large"
         onClose={() => this.setState({ open: false })}
         onOpen={() => this.setState({ open: true })}
         open={this.state.open}
@@ -37,18 +38,13 @@ class ResultsHistoryView extends React.Component {
         </Header>
         <Modal.Content>
           <Container textAlign="left">
-            <Table celled compact striped>
-              <Table.Header>
+            <Table collapsing celled compact striped size="large">
+              <Table.Header fullWidth>
                 <Table.Row>
                   <Table.HeaderCell>Type</Table.HeaderCell>
                   <Table.HeaderCell>Description</Table.HeaderCell>
                   <Table.HeaderCell>Modified by User</Table.HeaderCell>
-                  <Table.HeaderCell>DOB</Table.HeaderCell>
-                  <Table.HeaderCell>Height</Table.HeaderCell>
-                  <Table.HeaderCell>Weight</Table.HeaderCell>
-                  <Table.HeaderCell>Reason for Exam</Table.HeaderCell>
-                  <Table.HeaderCell>Exam Requested</Table.HeaderCell>
-                  <Table.HeaderCell>Modified field</Table.HeaderCell>
+                  <Table.HeaderCell>Changes</Table.HeaderCell>
                   <Table.HeaderCell>Date Modified</Table.HeaderCell>
                 </Table.Row>
               </Table.Header>

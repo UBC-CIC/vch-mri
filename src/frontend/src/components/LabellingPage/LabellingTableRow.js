@@ -4,6 +4,9 @@ import { Form, Icon, Table, TextArea } from "semantic-ui-react";
 import { modifyResult } from "../../actions/ResultActions";
 import ResultsHistoryView from "../ResultsPage/ResultsHistoryView";
 import ResultsTableRowExpansion from "./ResultsRowExpansion/ResultsTableRowExpansion";
+import { AUTH_USER_ID_TOKEN_KEY } from "../../constants/userConstant";
+import { Cache } from "aws-amplify";
+import jwt_decode from "jwt-decode";
 
 const SavingState = Object.freeze({
   NOT_SAVED: 0,
@@ -30,7 +33,6 @@ class LabellingTableRow extends React.Component {
 
     this.handleSelectChange = this.handleSelectChange.bind(this);
     this.handleChangeNote = this.handleChangeNote.bind(this);
-    this.handleRowClick = this.handleRowClick.bind(this);
     this.timerChangeNote = this.timerChangeNote.bind(this);
   }
 
@@ -68,7 +70,7 @@ class LabellingTableRow extends React.Component {
   }
 
   handleChangeNote(e) {
-    console.log("handleChangeNote");
+    // console.log("handleChangeNote");
     // console.log(e.target.value);
     const value = e.target.value;
 
@@ -88,6 +90,9 @@ class LabellingTableRow extends React.Component {
   }
 
   preparePayloadModifyResult(index) {
+    const storedUser = jwt_decode(Cache.getItem(AUTH_USER_ID_TOKEN_KEY));
+    console.log(storedUser);
+
     return {
       id: index,
       labelled_rule_id:
@@ -103,18 +108,12 @@ class LabellingTableRow extends React.Component {
           ? null
           : this.state.labelled_contrast,
       labelled_notes: this.state.labelled_notes,
+      cognito_user_id: storedUser.sub,
+      cognito_user_fullname: storedUser.name.trim(),
     };
   }
 
   timerChangeNote(e, value) {}
-
-  handleRowClick(e, rowId) {
-    console.log("handleRowClick row");
-    console.log(e);
-    console.log(rowId);
-    // console.log(e.target.key);
-    this.props.handleRowClick(e, rowId);
-  }
 
   handleClickCollapseAll = () => {
     this.setState({ showAll: !this.state.showAll });

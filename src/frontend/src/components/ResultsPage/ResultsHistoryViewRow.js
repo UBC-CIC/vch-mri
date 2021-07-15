@@ -9,6 +9,87 @@ class ResultsHistoryViewRow extends React.Component {
     this.state = {
       activeIndex: 0,
     };
+    this.HistoryCell = this.HistoryCell.bind(this);
+  }
+
+  HistoryCell() {
+    const history = this.props.history;
+    switch (history.history_type) {
+      case "request":
+        return (
+          <Table.Cell>
+            {history ? (
+              <>
+                <p>
+                  <b>DOB: </b>
+                  {history.dob}
+                </p>
+                <p>
+                  <b>Height: </b>
+                  {history.height}
+                </p>
+                <p>
+                  <b>Weight: </b>
+                  {history.weight}
+                </p>
+                <p>
+                  <b>Reason for Exam: </b>
+                  {history.reason_for_exam}
+                </p>
+                <p>
+                  <b>Exam Requested: </b>
+                  {history.exam_requested}
+                </p>
+              </>
+            ) : (
+              <p>Request error.</p>
+            )}
+          </Table.Cell>
+        );
+      case "modification":
+        const info = history.mod_info;
+        return (
+          <Table.Cell>
+            {info ? (
+              <>
+                <p>
+                  <b>Labelling:</b>
+                </p>
+                <p>
+                  <b>Rule ID: </b>
+                  {info.labelled_rule_id ? info.labelled_rule_id : " - "}
+                </p>
+                <p>
+                  <b>Priority: </b>
+                  {info.labelled_priority ? info.labelled_priority : " - "}
+                </p>
+                <p>
+                  <b>Contrast: </b>
+                  {info.labelled_contrast
+                    ? info.labelled_contrast.toString()
+                    : " - "}
+                </p>
+                <p>
+                  <b>Notes: </b>
+                  {info.labelled_notes && info.labelled_notes !== ""
+                    ? info.labelled_notes
+                    : " - "}
+                </p>
+              </>
+            ) : (
+              <p>Modification error.</p>
+            )}
+          </Table.Cell>
+        );
+      case "delete":
+        return (
+          <Table.Cell>
+            <p>{`DELETED:`}</p>
+          </Table.Cell>
+        );
+      default:
+        break;
+    }
   }
 
   render() {
@@ -25,34 +106,8 @@ class ResultsHistoryViewRow extends React.Component {
           <Table.Cell>{history.history_type}</Table.Cell>
           <Table.Cell>{history.description}</Table.Cell>
           <Table.Cell>{history.cognito_user_fullname}</Table.Cell>
-          <Table.Cell>{history.dob ? history.dob : "N/A"}</Table.Cell>
-          <Table.Cell>{history.height ? history.height : "N/A"}</Table.Cell>
-          <Table.Cell>{history.weight ? history.weight : "N/A"}</Table.Cell>
-          <Table.Cell>
-            {history.reason_for_exam ? history.reason_for_exam : "N/A"}
-          </Table.Cell>
-          <Table.Cell>
-            {history.exam_requested ? history.exam_requested : "N/A"}
-          </Table.Cell>
-          {/* <Table.Cell>N/A</Table.Cell> */}
-          <Table.Cell>
-            {history.mod_info ? JSON.stringify(history.mod_info) : "N/A"}
-          </Table.Cell>
+          <this.HistoryCell />
           <Table.Cell>{history.date_created}</Table.Cell>
-          {/* {history.state === 'modification'
-        &&
-          <>
-            <Table.Cell>{history.description}</Table.Cell>
-            <Table.Cell>{history.cognito_user_fullname}</Table.Cell>
-            <Table.Cell>{history.dob ? history.dob : "N/A"}</Table.Cell>
-            <Table.Cell>
-                {history.exam_requested ? history.exam_requested : "N/A"}
-            </Table.Cell>
-            <Table.Cell>
-                {history.reason_for_exam ? history.reason_for_exam : "N/A"}
-            </Table.Cell>
-          </>
-        } */}
         </Table.Row>
       </>
     );

@@ -173,11 +173,7 @@ export const modifyResult = (state) => {
     axios
       .post(`${process.env.REACT_APP_HTTP_API_URL}/results`, {
         operation: "UPDATE_LABELLING",
-        id: state.id,
-        labelled_rule_id: state.labelled_rule_id,
-        labelled_priority: state.labelled_priority,
-        labelled_contrast: state.labelled_contrast,
-        labelled_notes: state.labelled_notes,
+        ...state,
       })
       .then((response) => {
         dispatch(modifyResultSuccess(response.data));

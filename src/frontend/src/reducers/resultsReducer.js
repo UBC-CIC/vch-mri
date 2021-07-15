@@ -69,17 +69,29 @@ export const results = (state = initialState, action) => {
       const updResult = action.response.data[0];
       return {
         ...state,
-        resultsList: state.resultsList.map((result) =>
-          result.id === updResult.id
-            ? {
-                ...result,
-                labelled_rule_id: updResult.labelled_rule_id,
-                labelled_priority: updResult.labelled_priority,
-                labelled_contrast: updResult.labelled_contrast,
-                labelled_notes: updResult.labelled_notes,
-              }
-            : result
-        ),
+        resultsList: state.resultsList.map((result) => {
+          let ret = result;
+          if (result.id === updResult.id) {
+            if (result.history && result.history.length > 0) {
+              const history = {
+                history_type: updResult.history_type,
+                description: updResult.description,
+                mod_info: updResult.mod_info,
+                cognito_user_fullname: updResult.cognito_user_fullname,
+                date_created: updResult.date_created,
+              };
+              result.history.unshift(history);
+            }
+            ret = {
+              ...result,
+              labelled_rule_id: updResult.labelled_rule_id,
+              labelled_priority: updResult.labelled_priority,
+              labelled_contrast: updResult.labelled_contrast,
+              labelled_notes: updResult.labelled_notes,
+            };
+          }
+          return ret;
+        }),
         loading: false,
         success: "MRI Result values have been successfully modified!",
       };

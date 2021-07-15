@@ -121,11 +121,73 @@ def queryRequestRule(cur, id_data_request):
     cur.execute(command)
     return cur.fetchall()
 
+
 # insert_new_request_cmd = """
 #     SELECT *
 #     FROM request_history
 #     WHERE id_data_request = '%s'
 #     ORDER BY created_at DESC"""
+
+
+insert_history_cmd = """
+   INSERT INTO request_history(id_data_request, history_type, description, mod_info,
+       cognito_user_id, cognito_user_fullname)
+   VALUES (%s, 'modification', %s, %s, %s, %s)
+   RETURNING history_type, description, mod_info, cognito_user_fullname, created_at
+   """
+
+
+def update_labelling(cur, data):
+    cognito_user_id = ''
+    if 'cognito_user_id' in data and data['cognito_user_id']:
+        cognito_user_id = data["cognito_user_id"]
+        logger.info(cognito_user_id)
+    cognito_user_fullname = ''
+    if 'cognito_user_fullname' in data and data['cognito_user_fullname']:
+        cognito_user_fullname = data["cognito_user_fullname"]
+        logger.info(cognito_user_fullname)
+
+    # Save labelling fields
+    id = data['id']
+    response = updateLabelledResults(
+        cur,
+        id,
+        data['labelled_rule_id'],
+        data['labelled_priority'],
+        data['labelled_contrast'],
+        data['labelled_notes'])
+
+    ret_update = {
+        'id': response[0][0],
+        'labelled_rule_id': response[0][1],
+        'labelled_priority': response[0][2],
+        'labelled_contrast': response[0][3],
+        'labelled_notes': response[0][4]}
+    logger.info('ret_update ret')
+    logger.info(ret_update)
+
+    # Save history event
+    data = (id, 'Labelling Updated', json.dumps(ret_update), cognito_user_id, cognito_user_fullname)
+
+    command = insert_history_cmd % data
+    logger.info(command)
+
+    cur.execute(insert_history_cmd, data)
+    ret_insert = cur.fetchall()
+    logger.info('ret_insert ret')
+    logger.info(ret_insert)
+
+    ret = [{
+        **ret_update,
+        'history_type': ret_insert[0][0],
+        'description': ret_insert[0][1],
+        'mod_info': ret_insert[0][2],
+        'cognito_user_fullname': ret_insert[0][3],
+        'date_created': datetime_to_json(ret_insert[0][4])}]
+    logger.info('update_labelling ret')
+    logger.info(ret)
+
+    return ret
 
 
 def datetime_to_json(obj):
@@ -152,16 +214,16 @@ def parseResponse(response):
         resp['id'] = resp_tuple[0]
         resp['state'] = resp_tuple[1]
         resp['error'] = resp_tuple[2]
-        resp['request_json'] = resp_tuple[3]   # Request
+        resp['request_json'] = resp_tuple[3]  # Request
         resp['age'] = resp_tuple[4]
         resp['height'] = resp_tuple[5]
         resp['weight'] = resp_tuple[6]
-        resp['info_json'] = resp_tuple[7]        # pre-process info
+        resp['info_json'] = resp_tuple[7]  # pre-process info
         resp['date_created'] = datetime_to_json(resp_tuple[8])
         resp['date_updated'] = datetime_to_json(resp_tuple[9])
 
         resp['rule_candidates_array'] = resp_tuple[10]  # array of rule id's
-        resp['ai_rule_candidates'] = {}   # Filled later
+        resp['ai_rule_candidates'] = {}  # Filled later
         resp['ai_rule_id'] = resp_tuple[11]
         resp['ai_priority'] = resp_tuple[12]
         resp['ai_contrast'] = resp_tuple[13]
@@ -310,19 +372,7 @@ def handler(event, context):
                 response = [{'id': response[0][0], 'final_priority': response[0][1], 'final_contrast': response[0][2]}]
 
             elif data['operation'] == 'UPDATE_LABELLING':
-                response = updateLabelledResults(
-                    cur,
-                    data['id'],
-                    data['labelled_rule_id'],
-                    data['labelled_priority'],
-                    data['labelled_contrast'],
-                    data['labelled_notes'])
-                response = [{
-                    'id': response[0][0],
-                    'labelled_rule_id': response[0][1],
-                    'labelled_priority': response[0][2],
-                    'labelled_contrast': response[0][3],
-                    'labelled_notes': response[0][4]}]
+                response = update_labelling(cur, data)
 
             elif data['operation'] == 'GET_DATA':
                 daily = getResultCount(cur, 'DAILY')
@@ -333,9 +383,11 @@ def handler(event, context):
             logger.info(response)
             resp_dict['data'] = response
             return resp_dict
+
         except Exception as error:
             logger.error(error)
             logger.error("Exception Type: %s" % type(error))
             return {"isBase64Encoded": False, "statusCode": 400, "body": f'{type(error)}',
                     "headers": {"Content-Type": "application/json"}}
+
     return {'result': True, 'headers': headers}
