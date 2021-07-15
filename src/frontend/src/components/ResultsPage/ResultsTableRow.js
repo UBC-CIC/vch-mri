@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Icon, Table } from "semantic-ui-react";
+import { Icon, Table, Popup } from "semantic-ui-react";
 import { modifyResult } from "../../actions/ResultActions";
 import ResultsHistoryView from "./ResultsHistoryView";
 
@@ -68,8 +68,10 @@ class ResultsTableRow extends React.Component {
     const result = this.props.result;
 
     let state = result.state;
+    let error = false;
     if (result.error && result.error !== "") {
       //  error state
+      error = true;
       state = `"${result.error}"`;
     }
     switch (state) {
@@ -106,7 +108,15 @@ class ResultsTableRow extends React.Component {
             {/* {this.renderItemCaret(this.props.expanded)} */}
             {result.id}
           </Table.Cell>
-          <Table.Cell>{state}</Table.Cell>
+          {error && (
+            <Popup
+              content={state}
+              trigger={<Table.Cell>ERROR</Table.Cell>}
+              hoverable
+              style={{ color: "red" }}
+            />
+          )}
+          {!error && <Table.Cell>{state}</Table.Cell>}
           <Table.Cell>{result.age ? result.age : "N/A"}</Table.Cell>
           <Table.Cell>{result.height ? result.height : "N/A"}</Table.Cell>
           <Table.Cell>{result.weight ? result.weight : "N/A"}</Table.Cell>
@@ -137,7 +147,7 @@ class ResultsTableRow extends React.Component {
           <Table.Cell>
             {result.ai_tags ? result.ai_tags.join(", ") : "none"}
           </Table.Cell>
-          <Table.Cell>
+          {/* <Table.Cell>
             {result.final_priority ? result.final_priority : " - "}
           </Table.Cell>
           <Table.Cell>
@@ -155,7 +165,7 @@ class ResultsTableRow extends React.Component {
             {result.labelled_contrast !== null
               ? result.labelled_contrast.toString()
               : " - "}
-          </Table.Cell>
+          </Table.Cell> */}
           {/* <Table.Cell>
             <Form.Dropdown
               fluid
@@ -187,8 +197,8 @@ class ResultsTableRow extends React.Component {
               onChange={this.handleSelectChange}
             />
           </Table.Cell> */}
-          <Table.Cell>{result.date_created}</Table.Cell>
-          <Table.Cell>{result.date_updated}</Table.Cell>
+          {/* <Table.Cell>{result.date_created}</Table.Cell>
+          <Table.Cell>{result.date_updated}</Table.Cell> */}
           <Table.Cell textAlign="right" collapsing>
             <ResultsHistoryView history={result.history} />
           </Table.Cell>

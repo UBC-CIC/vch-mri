@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Form, Icon, Table, TextArea } from "semantic-ui-react";
+import { Form, Icon, Table, TextArea, Popup } from "semantic-ui-react";
 import { modifyResult } from "../../actions/ResultActions";
 import ResultsHistoryView from "../ResultsPage/ResultsHistoryView";
 import ResultsTableRowExpansion from "./ResultsRowExpansion/ResultsTableRowExpansion";
@@ -139,8 +139,10 @@ class LabellingTableRow extends React.Component {
     const result = this.props.result;
 
     let state = result.state;
+    let error = false;
     if (result.error && result.error !== "") {
       //  error state
+      error = true;
       state = `"${result.error}"`;
     }
     switch (state) {
@@ -180,7 +182,15 @@ class LabellingTableRow extends React.Component {
             {this.renderItemCaret(this.props.expanded)}
             {result.id}
           </Table.Cell>
-          <Table.Cell>{state}</Table.Cell>
+          {error && (
+            <Popup
+              content={state}
+              trigger={<Table.Cell>ERROR</Table.Cell>}
+              hoverable
+              style={{ color: "red" }}
+            />
+          )}
+          {!error && <Table.Cell>{state}</Table.Cell>}
           {/* <Table.Cell>{result.age ? result.age : "N/A"}</Table.Cell>
           <Table.Cell>{result.height ? result.height : "N/A"}</Table.Cell>
           <Table.Cell>{result.weight ? result.weight : "N/A"}</Table.Cell>

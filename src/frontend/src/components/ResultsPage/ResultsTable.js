@@ -72,8 +72,8 @@ class ResultsTable extends React.Component {
             <Table.Row key={"row-header1"}>
               <Table.HeaderCell colSpan="7" />
               <Table.HeaderCell colSpan="4">AI Results</Table.HeaderCell>
-              <Table.HeaderCell colSpan="2">Physician Results</Table.HeaderCell>
-              <Table.HeaderCell colSpan="3">Labelled Override</Table.HeaderCell>
+              {/* <Table.HeaderCell colSpan="2">Physician Results</Table.HeaderCell>
+              <Table.HeaderCell colSpan="3">Labelled Override</Table.HeaderCell> */}
             </Table.Row>
             <Table.Row key={"row-header2"}>
               <Table.HeaderCell
@@ -139,8 +139,8 @@ class ResultsTable extends React.Component {
               >
                 Weight (KG)
               </Table.HeaderCell>
-              <Table.HeaderCell>Reason for Exam</Table.HeaderCell>
-              <Table.HeaderCell>Exam Requested</Table.HeaderCell>
+              <Table.HeaderCell width={10}>Reason for Exam</Table.HeaderCell>
+              <Table.HeaderCell width={4}>Exam Requested</Table.HeaderCell>
               <Table.HeaderCell
                 collapsing
                 sorted={
@@ -181,7 +181,7 @@ class ResultsTable extends React.Component {
                 Contrast
               </Table.HeaderCell>
               <Table.HeaderCell>Sp. Exam</Table.HeaderCell>
-              <Table.HeaderCell
+              {/* <Table.HeaderCell
                 collapsing
                 sorted={
                   this.props.sortedColumn === "final_priority"
@@ -245,7 +245,7 @@ class ResultsTable extends React.Component {
                 }}
               >
                 Contrast
-              </Table.HeaderCell>
+              </Table.HeaderCell> */}
               {/* <Table.HeaderCell
                 collapsing
                 sorted={
@@ -283,7 +283,7 @@ class ResultsTable extends React.Component {
               >
                 Physician Contrast
               </Table.HeaderCell> */}
-              <Table.HeaderCell
+              {/* <Table.HeaderCell
                 sorted={
                   this.props.sortedColumn === "created_at"
                     ? this.props.sortDirection
@@ -306,7 +306,7 @@ class ResultsTable extends React.Component {
                 }}
               >
                 Date Modified
-              </Table.HeaderCell>
+              </Table.HeaderCell> */}
               <Table.HeaderCell collapsing>History</Table.HeaderCell>
             </Table.Row>
           </Table.Header>

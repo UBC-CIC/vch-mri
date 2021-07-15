@@ -61,13 +61,15 @@ class LabellingTable extends React.Component {
     return (
       <>
         <Button
+          style={{ margin: "1em 0em 1em 1em" }}
+          floated="right"
           color="blue"
-          size="huge"
+          //   size="large"
           onClick={this.handleClickCollapseAll}
           icon
           labelPosition="right"
         >
-          <Icon name="arrow circle right" /> Show All
+          <Icon name="arrow circle right" /> Expand All
         </Button>
         <Table celled compact sortable striped>
           <Table.Header fullWidth>
@@ -91,6 +93,7 @@ class LabellingTable extends React.Component {
                 reqCIO
               </Table.HeaderCell>
               <Table.HeaderCell
+                width={1}
                 sorted={
                   this.props.sortedColumn === "state"
                     ? this.props.sortDirection

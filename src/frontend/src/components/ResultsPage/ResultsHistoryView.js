@@ -23,7 +23,7 @@ class ResultsHistoryView extends React.Component {
     return (
       <Modal
         // style={{ maxWidth: "100%" }}
-        size="large"
+        // size="large"
         onClose={() => this.setState({ open: false })}
         onOpen={() => this.setState({ open: true })}
         open={this.state.open}
