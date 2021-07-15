@@ -15,7 +15,7 @@ import {
 } from "../constants/resultConstants";
 import axios from "axios";
 // TODO for sample data local testing instead of waiting Lambda containers to load ~5secs
-// import SampleData from "../data/SampleData";
+// import SampleData from "../data/SampleDataResults2Pages";
 
 export const getResultByIDStarted = () => {
   return {

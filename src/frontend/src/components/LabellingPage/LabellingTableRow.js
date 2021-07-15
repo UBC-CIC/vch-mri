@@ -8,6 +8,8 @@ import { AUTH_USER_ID_TOKEN_KEY } from "../../constants/userConstant";
 import { Cache } from "aws-amplify";
 import jwt_decode from "jwt-decode";
 
+import "../../styles/TableLabelling.css";
+
 const SavingState = Object.freeze({
   NOT_SAVED: 0,
   SAVING: 1,
@@ -215,14 +217,18 @@ class LabellingTableRow extends React.Component {
               ? result.ai_contrast.toString()
               : " - "}
           </Table.Cell>
-          <Table.Cell>
-            {result.final_priority ? result.final_priority : " - "}
-          </Table.Cell>
-          <Table.Cell>
-            {result.final_contrast !== null
-              ? result.final_contrast.toString()
-              : " - "}
-          </Table.Cell>
+          {this.props.showPhysicianResults && (
+            <>
+              <Table.Cell>
+                {result.final_priority ? result.final_priority : " - "}
+              </Table.Cell>
+              <Table.Cell>
+                {result.final_contrast !== null
+                  ? result.final_contrast.toString()
+                  : " - "}
+              </Table.Cell>
+            </>
+          )}
           <Table.Cell>
             <Form.Dropdown
               fluid
@@ -284,14 +290,18 @@ class LabellingTableRow extends React.Component {
           {/* <Table.Cell>
             {result.ai_tags ? result.ai_tags.join(", ") : "none"}
           </Table.Cell> */}
-          <Table.Cell>{result.date_created}</Table.Cell>
-          <Table.Cell>{result.date_updated}</Table.Cell>
+          {!this.props.showRules && (
+            <>
+              <Table.Cell>{result.date_created}</Table.Cell>
+              <Table.Cell>{result.date_updated}</Table.Cell>
+            </>
+          )}
           <Table.Cell textAlign="right" collapsing>
             <ResultsHistoryView history={result.history} />
           </Table.Cell>
         </Table.Row>
         {this.props.expanded && (
-          <Table.Row key={"row-expanded-" + index}>
+          <Table.Row active key={"row-expanded-" + index}>
             <Table.Cell colSpan="12">
               <div style={{ padding: "1.5em" }}>
                 {/* {this.renderItemDetails(result)} */}

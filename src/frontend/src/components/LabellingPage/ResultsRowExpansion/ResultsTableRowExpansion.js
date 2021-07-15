@@ -27,7 +27,10 @@ class ResultsTableRowExpansion extends React.Component {
                 {/* <Container textAlign="left"> */}
                 {request ? (
                   <>
-                    <p>{`DOB: ${request.DOB}`}</p>
+                    <p>
+                      <b>DOB: </b>
+                      {request.DOB}
+                    </p>
                     <p>{`Height: ${request.Height} ${request["inch-cm"]}`}</p>
                     <p>{`Weight: ${request.weight} ${request["kg-lbs"]}`}</p>
                     <p>{`Reason for Exam: ${request["Reason for Exam"]}`}</p>
@@ -86,10 +89,10 @@ class ResultsTableRowExpansion extends React.Component {
             </Table.Row>
             <Table.Row>
               <Table.HeaderCell>Rule ID</Table.HeaderCell>
-              <Table.HeaderCell>Info</Table.HeaderCell>
+              <Table.HeaderCell>Body Parts</Table.HeaderCell>
               <Table.HeaderCell>Priority</Table.HeaderCell>
               <Table.HeaderCell>Contrast</Table.HeaderCell>
-              <Table.HeaderCell>Body Parts</Table.HeaderCell>
+              <Table.HeaderCell>Info</Table.HeaderCell>
               <Table.HeaderCell>bp_tk</Table.HeaderCell>
               <Table.HeaderCell>info_weighted_tk</Table.HeaderCell>
             </Table.Row>

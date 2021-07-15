@@ -1,4 +1,5 @@
 const SampleData = {
+  total_pgs: 1.0,
   data: [
     {
       id: "10009aa",

@@ -1,0 +1,14 @@
+TextArea {
+  height: 100%;
+  width: 100%;
+  display: flex;
+}
+
+.tableHeaderStickey {
+  /* text-align: left;
+  background: #eee; */
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0px;
+  z-index: 1;
+}

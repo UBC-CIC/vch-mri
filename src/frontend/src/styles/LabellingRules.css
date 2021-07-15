@@ -1,0 +1,48 @@
+body {
+  font-size: 16px;
+}
+.fieldsLabelling {
+  position: fixed;
+  height: 88vh;
+  width: 63vw;
+  padding: 10px;
+  overflow-x: auto;
+  margin-bottom: 15px;
+}
+
+.fieldsRules {
+  position: fixed;
+  height: 88vh;
+  width: 36vw;
+  padding: 10px;
+  overflow-x: auto;
+  margin-bottom: 15px;
+}
+
+.field {
+  margin-bottom: 15px;
+}
+.field label {
+  display: block;
+  font-weight: bold;
+}
+.field input {
+  display: block;
+  padding: 5px;
+  font-size: 16px;
+  box-sizing: border-box;
+  width: 100%;
+}
+.field span {
+  color: red;
+  font-size: 11px;
+}
+button {
+  font-size: 16px;
+  margin-left: 10px;
+  padding: 5px 20px;
+}
+.App {
+  font-family: sans-serif;
+  text-align: center;
+}

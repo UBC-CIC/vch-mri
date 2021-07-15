@@ -17,12 +17,12 @@ class RuleCandidatesRow extends React.Component {
         <Table.Cell>
           {candidate.rules_id ? candidate.rules_id : "N/A"}
         </Table.Cell>
-        <Table.Cell>{candidate.info}</Table.Cell>
+        <Table.Cell>{candidate.body_part}</Table.Cell>
         <Table.Cell>{candidate.priority}</Table.Cell>
         <Table.Cell>
           {candidate.contrast !== null ? candidate.contrast.toString() : "none"}
         </Table.Cell>
-        <Table.Cell>{candidate.body_part}</Table.Cell>
+        <Table.Cell>{candidate.info}</Table.Cell>
         <Table.Cell>{candidate.bp_tk}</Table.Cell>
         <Table.Cell>{candidate.info_weighted_tk}</Table.Cell>
       </Table.Row>

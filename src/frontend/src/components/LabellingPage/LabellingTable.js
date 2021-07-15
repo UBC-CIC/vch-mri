@@ -15,6 +15,7 @@ class LabellingTable extends React.Component {
     this.state = {
       activePage: 1,
       expandedRows: [],
+      showPhysicianResults: false,
       showAll: false,
     };
 
@@ -65,18 +66,35 @@ class LabellingTable extends React.Component {
           floated="right"
           color="blue"
           //   size="large"
+          onClick={this.props.handleClickShowRules}
+          icon
+          labelPosition="right"
+        >
+          <Icon name="arrow circle right" /> Toggle Rules List
+        </Button>
+        <Button
+          style={{ margin: "1em 0em 1em 1em" }}
+          floated="right"
+          color="blue"
+          //   size="large"
           onClick={this.handleClickCollapseAll}
           icon
           labelPosition="right"
         >
-          <Icon name="arrow circle right" /> Expand All
+          <Icon name="arrow circle right" /> Toggle Expand All
         </Button>
         <Table celled compact sortable striped>
           <Table.Header fullWidth>
             <Table.Row key={"row-header1"}>
               <Table.HeaderCell colSpan="2" />
               <Table.HeaderCell colSpan="3">AI Results</Table.HeaderCell>
-              <Table.HeaderCell colSpan="2">Physician Results</Table.HeaderCell>
+              {this.state.showPhysicianResults && (
+                <>
+                  <Table.HeaderCell colSpan="2">
+                    Physician Results
+                  </Table.HeaderCell>
+                </>
+              )}
               <Table.HeaderCell colSpan="4">Labelled Override</Table.HeaderCell>
             </Table.Row>
             <Table.Row key={"row-header2"}>
@@ -185,32 +203,36 @@ class LabellingTable extends React.Component {
               >
                 Contrast
               </Table.HeaderCell>
-              <Table.HeaderCell
-                collapsing
-                sorted={
-                  this.props.sortedColumn === "final_priority"
-                    ? this.props.sortDirection
-                    : null
-                }
-                onClick={() => {
-                  this.props.changeResultSort("final_priority");
-                }}
-              >
-                Priority
-              </Table.HeaderCell>
-              <Table.HeaderCell
-                collapsing
-                sorted={
-                  this.props.sortedColumn === "final_contrast"
-                    ? this.props.sortDirection
-                    : null
-                }
-                onClick={() => {
-                  this.props.changeResultSort("final_contrast");
-                }}
-              >
-                Contrast
-              </Table.HeaderCell>
+              {this.state.showPhysicianResults && (
+                <>
+                  <Table.HeaderCell
+                    collapsing
+                    sorted={
+                      this.props.sortedColumn === "final_priority"
+                        ? this.props.sortDirection
+                        : null
+                    }
+                    onClick={() => {
+                      this.props.changeResultSort("final_priority");
+                    }}
+                  >
+                    Priority
+                  </Table.HeaderCell>
+                  <Table.HeaderCell
+                    collapsing
+                    sorted={
+                      this.props.sortedColumn === "final_contrast"
+                        ? this.props.sortDirection
+                        : null
+                    }
+                    onClick={() => {
+                      this.props.changeResultSort("final_contrast");
+                    }}
+                  >
+                    Contrast
+                  </Table.HeaderCell>
+                </>
+              )}
               <Table.HeaderCell
                 collapsing
                 sorted={
@@ -265,30 +287,34 @@ class LabellingTable extends React.Component {
                 P5 Flag
               </Table.HeaderCell> */}
               {/* <Table.HeaderCell>Sp. Exams</Table.HeaderCell> */}
-              <Table.HeaderCell
-                sorted={
-                  this.props.sortedColumn === "created_at"
-                    ? this.props.sortDirection
-                    : null
-                }
-                onClick={() => {
-                  this.props.changeResultSort("created_at");
-                }}
-              >
-                Date Created
-              </Table.HeaderCell>
-              <Table.HeaderCell
-                sorted={
-                  this.props.sortedColumn === "updated_at"
-                    ? this.props.sortDirection
-                    : null
-                }
-                onClick={() => {
-                  this.props.changeResultSort("updated_at");
-                }}
-              >
-                Date Modified
-              </Table.HeaderCell>
+              {!this.props.showRules && (
+                <>
+                  <Table.HeaderCell
+                    sorted={
+                      this.props.sortedColumn === "created_at"
+                        ? this.props.sortDirection
+                        : null
+                    }
+                    onClick={() => {
+                      this.props.changeResultSort("created_at");
+                    }}
+                  >
+                    Date Created
+                  </Table.HeaderCell>
+                  <Table.HeaderCell
+                    sorted={
+                      this.props.sortedColumn === "updated_at"
+                        ? this.props.sortDirection
+                        : null
+                    }
+                    onClick={() => {
+                      this.props.changeResultSort("updated_at");
+                    }}
+                  >
+                    Date Modified
+                  </Table.HeaderCell>
+                </>
+              )}
               <Table.HeaderCell collapsing>History</Table.HeaderCell>
             </Table.Row>
           </Table.Header>
@@ -298,6 +324,8 @@ class LabellingTable extends React.Component {
             {this.props.results.map((result, index) => (
               <LabellingTableRow
                 result={result}
+                showRules={this.props.showRules}
+                showPhysicianResults={this.state.showPhysicianResults}
                 index={index}
                 handleRowClick={this.handleRowClick}
                 expanded={
