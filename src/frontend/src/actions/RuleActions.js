@@ -99,6 +99,7 @@ export const toggleActiveRuleFailure = (error) => {
 
 export const getMRIRules = () => {
   return (dispatch) => {
+    console.log("getMRIRules");
     dispatch(getMRIRulesStarted());
 
     // TODO for sample data local testing instead of waiting Lambda containers to load ~5secs

@@ -3,6 +3,8 @@ import LabellingTable from "./LabellingTable";
 import LabellingSearchBar from "./LabellingSearchBar";
 import { Grid, Container, Button, Icon } from "semantic-ui-react";
 import RulesTable from "../RulesPage/RulesTable";
+import { connect } from "react-redux";
+import { getMRIRules } from "../../actions/RuleActions";
 import "../../styles/LabellingRules.css";
 
 class LabellingPage extends React.Component {
@@ -12,6 +14,10 @@ class LabellingPage extends React.Component {
       showRules: true,
     };
   }
+  async componentWillMount() {
+    console.log("componentWillMount");
+    await this.props.getMRIRules();
+  }
 
   handleClickShowRules = () => {
     this.setState({ showRules: !this.state.showRules });
@@ -19,6 +25,15 @@ class LabellingPage extends React.Component {
   };
 
   render() {
+    if (this.props.loading)
+      return <div className="page-container">Loading...</div>;
+
+    let labellingClassname = "fieldsLabellingRules";
+    let labellingWidth = 10;
+    if (!this.state.showRules) {
+      labellingClassname = "fieldsLabelling";
+      labellingWidth = 12;
+    }
     return (
       <div className="page-container">
         <LabellingSearchBar />
@@ -49,23 +64,24 @@ class LabellingPage extends React.Component {
             </Container>
           </>
         )} */}
-        {this.state.showRules && (
-          <>
-            <Grid>
-              <Grid.Column
-                floated="left"
-                width={10}
-                style={{
-                  padding: 20,
-                }}
-              >
-                <div className="fieldsLabelling">
-                  <LabellingTable
-                    showRules={this.state.showRules}
-                    handleClickShowRules={this.handleClickShowRules}
-                  />
-                </div>
-              </Grid.Column>
+        <>
+          <Grid>
+            <Grid.Column
+              floated="left"
+              width={labellingWidth}
+              style={{
+                padding: 20,
+              }}
+            >
+              <div className={labellingClassname}>
+                <LabellingTable
+                  showRules={this.state.showRules}
+                  handleClickShowRules={this.handleClickShowRules}
+                  rulesListDropdown={this.props.rulesListDropdown}
+                />
+              </div>
+            </Grid.Column>
+            {this.state.showRules && (
               <Grid.Column
                 floated="left"
                 width={6}
@@ -74,23 +90,37 @@ class LabellingPage extends React.Component {
                 }}
               >
                 <div className="fieldsRules">
-                  <RulesTable labelling={true} />
+                  <RulesTable labelling={true} rulesLoaded={true} />
                 </div>
               </Grid.Column>
-            </Grid>
-          </>
-        )}
-        {!this.state.showRules && (
+            )}
+          </Grid>
+        </>
+        {/* {!this.state.showRules && (
           <>
             <LabellingTable
               showRules={this.state.showRules}
               handleClickShowRules={this.handleClickShowRules}
             />
           </>
-        )}
+        )} */}
       </div>
     );
   }
 }
 
-export default LabellingPage;
+const mapStateToProps = (state) => {
+  return {
+    rulesListDropdown: state.rules.rulesListDropdown,
+    rules: state.rules.rulesList,
+    loading: state.rules.loading,
+    error: state.rules.error,
+    success: state.rules.success,
+    sortedColumn: state.rules.column,
+    sortDirection: state.rules.direction,
+  };
+};
+
+export default connect(mapStateToProps, {
+  getMRIRules,
+})(LabellingPage);

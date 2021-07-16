@@ -64,7 +64,7 @@ def updateLabelledResults(cur, id, rule_id, priority, contrast, notes):
     SET labelled_rule_id = %s,  labelled_priority = %s, labelled_contrast = %s, labelled_notes = %s,
         state = 'labelled_priority'
     WHERE id = %s
-    RETURNING id, labelled_rule_id, labelled_priority, labelled_contrast, labelled_notes
+    RETURNING id, labelled_rule_id, labelled_priority, labelled_contrast, labelled_notes, state
     """
     cur.execute(cmd, (rule_id, priority, contrast, notes, id))
     return cur.fetchall()
@@ -162,7 +162,8 @@ def update_labelling(cur, data):
         'labelled_rule_id': response[0][1],
         'labelled_priority': response[0][2],
         'labelled_contrast': response[0][3],
-        'labelled_notes': response[0][4]}
+        'labelled_notes': response[0][4],
+        'state': response[0][5]}
     logger.info('ret_update ret')
     logger.info(ret_update)
 

@@ -9,7 +9,10 @@ import { sendErrorToast, sendSuccessToast } from "../../helpers";
 
 class RulesTable extends React.Component {
   componentDidMount() {
-    this.props.getMRIRules();
+    // true - already loaded by parent
+    if (!this.props.rulesLoaded) {
+      this.props.getMRIRules();
+    }
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -25,21 +28,19 @@ class RulesTable extends React.Component {
       <Table celled compact sortable>
         <Table.Header fullWidth>
           <Table.Row>
-            {!this.props.labelling && (
-              <Table.HeaderCell
-                collapsing
-                sorted={
-                  this.props.sortedColumn === "active"
-                    ? this.props.sortDirection
-                    : null
-                }
-                onClick={() => {
-                  this.props.changeRuleSort("active");
-                }}
-              >
-                Active
-              </Table.HeaderCell>
-            )}
+            <Table.HeaderCell
+              collapsing
+              sorted={
+                this.props.sortedColumn === "active"
+                  ? this.props.sortDirection
+                  : null
+              }
+              onClick={() => {
+                this.props.changeRuleSort("active");
+              }}
+            >
+              Active
+            </Table.HeaderCell>
             <Table.HeaderCell
               collapsing
               sorted={

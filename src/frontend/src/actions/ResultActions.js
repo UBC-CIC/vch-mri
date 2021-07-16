@@ -124,6 +124,7 @@ export const getResultByID = (id) => {
 
 export const getResultsByPage = (pageIndex) => {
   return (dispatch) => {
+    console.log("getResultsByPage");
     dispatch(getResultsByPageStarted());
 
     // TODO for sample data local testing instead of waiting Lambda containers to load ~5secs

@@ -29,19 +29,18 @@ class RulesTableRow extends React.Component {
 
   render() {
     return (
-      <Table.Row disabled={this.props.loading}>
-        {!this.props.labelling && (
-          <Table.Cell collapsing>
-            <Checkbox
-              toggle
-              checked={this.state.active}
-              onChange={this.handleToggle}
-              style={{
-                zIndex: 0,
-              }}
-            />
-          </Table.Cell>
-        )}
+      <Table.Row disabled={this.props.loading} error={!this.state.active}>
+        <Table.Cell collapsing>
+          <Checkbox
+            toggle
+            disabled={this.props.labelling}
+            checked={this.state.active}
+            onChange={this.handleToggle}
+            style={{
+              zIndex: 0,
+            }}
+          />
+        </Table.Cell>
         <Table.Cell collapsing>{this.props.id}</Table.Cell>
         <Table.Cell collapsing>{this.props.body_part}</Table.Cell>
         <Table.Cell collapsing>{this.props.contrast.toString()}</Table.Cell>

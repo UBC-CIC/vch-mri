@@ -72,6 +72,7 @@ export const results = (state = initialState, action) => {
         resultsList: state.resultsList.map((result) => {
           let ret = result;
           if (result.id === updResult.id) {
+            result.state = updResult.state;
             if (result.history && result.history.length > 0) {
               const history = {
                 history_type: updResult.history_type,

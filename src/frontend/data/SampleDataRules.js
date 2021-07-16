@@ -22,7 +22,7 @@ const SampleData = {
       contrast: true,
       priority: "P4",
       info: "Aneurysm (Brain and Angio)",
-      active: false,
+      active: true,
     },
     {
       id: 4,
@@ -54,7 +54,7 @@ const SampleData = {
       contrast: true,
       priority: "P3",
       info: "Hepatic mass (likely hemangioma FNH)",
-      active: false,
+      active: true,
     },
     {
       id: 8,
@@ -382,7 +382,7 @@ const SampleData = {
       contrast: true,
       priority: "P3",
       info: "Characterization soft tissue mass likely benign (lipoma)",
-      active: false,
+      active: true,
     },
     {
       id: 49,
@@ -1998,7 +1998,7 @@ const SampleData = {
       contrast: false,
       priority: "P4",
       info: "Chronic Joint Pain",
-      active: false,
+      active: true,
     },
   ],
 };

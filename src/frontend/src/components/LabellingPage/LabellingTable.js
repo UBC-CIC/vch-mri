@@ -324,6 +324,7 @@ class LabellingTable extends React.Component {
             {this.props.results.map((result, index) => (
               <LabellingTableRow
                 result={result}
+                rulesListDropdown={this.props.rulesListDropdown}
                 showRules={this.props.showRules}
                 showPhysicianResults={this.state.showPhysicianResults}
                 index={index}

@@ -233,15 +233,15 @@ class LabellingTableRow extends React.Component {
             <Form.Dropdown
               fluid
               selection
+              search
+              compact
+              lazyLoad
               name="labelled_rule_id"
+              disabled={this.props.loading}
               value={result.labelled_rule_id ? result.labelled_rule_id : "e"}
               options={[
                 { key: "e", text: "-", value: "e" },
-                {
-                  key: "P1",
-                  text: "This will list all the rule IDs",
-                  value: "P1",
-                },
+                ...this.props.rulesListDropdown,
               ]}
               onChange={this.handleSelectChange}
             />
@@ -250,7 +250,9 @@ class LabellingTableRow extends React.Component {
             <Form.Dropdown
               fluid
               selection
+              search
               name="labelled_priority"
+              disabled={this.props.loading}
               value={result.labelled_priority ? result.labelled_priority : "e"}
               options={[
                 { key: "e", text: "-", value: "e" },
@@ -267,7 +269,9 @@ class LabellingTableRow extends React.Component {
             <Form.Dropdown
               fluid
               selection
+              search
               name="labelled_contrast"
+              disabled={this.props.loading}
               value={result.labelled_contrast ? result.labelled_contrast : "e"}
               options={[
                 { key: "e", text: "-", value: "e" },
@@ -279,6 +283,7 @@ class LabellingTableRow extends React.Component {
           </Table.Cell>
           <Table.Cell>
             <TextArea
+              disabled={this.props.loading}
               placeholder="Labelling notes"
               value={this.state.labelled_notes}
               onChange={this.handleChangeNote}
