@@ -313,9 +313,9 @@ class LabellingTable extends React.Component {
                   >
                     Date Modified
                   </Table.HeaderCell>
+                  <Table.HeaderCell collapsing>History</Table.HeaderCell>
                 </>
               )}
-              <Table.HeaderCell collapsing>History</Table.HeaderCell>
             </Table.Row>
           </Table.Header>
 

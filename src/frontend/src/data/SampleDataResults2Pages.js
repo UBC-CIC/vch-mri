@@ -3,7 +3,7 @@ const SampleData = {
   data: [
     {
       id: "12",
-      state: "labelled_priority",
+      state: "received",
       error: "",
       request_json: {
         cognito_user_fullname: "Ken CURL cmd",
@@ -323,7 +323,7 @@ const SampleData = {
     },
     {
       id: "3",
-      state: "labelled_priority",
+      state: "final_priority_received",
       error: "",
       request_json: {
         cognito_user_fullname: "Ken CURL cmd",
@@ -477,7 +477,7 @@ const SampleData = {
     },
     {
       id: "5",
-      state: "labelled_priority",
+      state: "received_duplicate",
       error: "",
       request_json: {
         cognito_user_fullname: "Ken CURL cmd",

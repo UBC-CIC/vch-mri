@@ -67,25 +67,28 @@ class ResultsTableRow extends React.Component {
     const index = this.props.index;
     const result = this.props.result;
 
+    const resState = result.state;
     let state = result.state;
     let error = false;
-    if (result.error && result.error !== "") {
-      //  error state
-      error = true;
-      state = `"${result.error}"`;
-    }
-    switch (state) {
+
+    //  error state
+    if (result.error && result.error !== "") error = true;
+
+    switch (resState) {
+      case "received":
+        state = "Received";
+        break;
       case "received_duplicate":
-        state = "duplicate";
+        state = "Duplicate";
         break;
       case "ai_priority_processed":
-        state = "ai_processed";
+        state = "AI processed";
         break;
       case "final_priority_received":
-        state = "phys_received";
+        state = "Phys. final";
         break;
       case "labelled_priority":
-        state = "labelled";
+        state = "Labelled";
         break;
       default:
         break;
@@ -93,15 +96,18 @@ class ResultsTableRow extends React.Component {
     return (
       <>
         <Table.Row
-          onClick={() => this.props.handleRowClick(index)}
+          onClick={(e) => this.props.handleRowClick(e, index)}
           key={"row-data-" + index}
           disabled={this.props.loading}
-          error={(result.error && result.error !== "") || state === "deleted"}
-          warning={state === "received" || state === "received_duplicate"}
+          error={error || resState === "deleted"}
+          warning={
+            !error &&
+            (resState === "received" || resState === "received_duplicate")
+          }
           positive={
             // state === "ai_priority_processed" ||
             // state === "final_priority_received" ||
-            state === "labelled"
+            resState === "labelled_priority"
           }
         >
           <Table.Cell singleLine>
@@ -110,7 +116,7 @@ class ResultsTableRow extends React.Component {
           </Table.Cell>
           {error && (
             <Popup
-              content={state}
+              content={result.error}
               trigger={<Table.Cell>ERROR</Table.Cell>}
               hoverable
               style={{ color: "red" }}

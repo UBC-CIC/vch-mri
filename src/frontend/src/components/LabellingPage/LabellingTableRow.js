@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Form, Icon, Table, TextArea, Popup } from "semantic-ui-react";
+import { Form, Icon, Table, TextArea, Popup, Button } from "semantic-ui-react";
 import { modifyResult } from "../../actions/ResultActions";
 import ResultsHistoryView from "../ResultsPage/ResultsHistoryView";
 import ResultsTableRowExpansion from "./ResultsRowExpansion/ResultsTableRowExpansion";
@@ -9,6 +9,7 @@ import { Cache } from "aws-amplify";
 import jwt_decode from "jwt-decode";
 
 import "../../styles/TableLabelling.css";
+const BtnTextConfirm = "Confirm AI Result";
 
 const SavingState = Object.freeze({
   NOT_SAVED: 0,
@@ -33,9 +34,11 @@ class LabellingTableRow extends React.Component {
       labelled_notes: result.labelled_notes,
     };
 
+    this.handleAIConfirm = this.handleAIConfirm.bind(this);
     this.handleSelectChange = this.handleSelectChange.bind(this);
     this.handleChangeNote = this.handleChangeNote.bind(this);
     this.timerChangeNote = this.timerChangeNote.bind(this);
+    this.popupButtonAIConfirm = this.popupButtonAIConfirm.bind(this);
   }
 
   componentDidMount() {
@@ -58,6 +61,22 @@ class LabellingTableRow extends React.Component {
           : "e",
       labelled_notes: nextProps.result.labelled_notes,
     });
+  }
+
+  handleAIConfirm(reqId) {
+    console.log("handleAIConfirm");
+    console.log(reqId);
+    this.setState(
+      {
+        labelled_rule_id: "e",
+        labelled_priority: "e",
+        labelled_contrast: "e",
+        labelled_notes: "Confirmed AI result was correct.",
+      },
+      () => {
+        this.props.modifyResult(this.preparePayloadModifyResult(reqId));
+      }
+    );
   }
 
   handleSelectChange(e, { name, value }) {
@@ -93,7 +112,9 @@ class LabellingTableRow extends React.Component {
 
   preparePayloadModifyResult(index) {
     const storedUser = jwt_decode(Cache.getItem(AUTH_USER_ID_TOKEN_KEY));
-    console.log(storedUser);
+    // console.log(storedUser);
+    console.log(this.state.labelled_rule_id);
+    console.log(this.state.labelled_priority);
 
     return {
       id: index,
@@ -129,6 +150,14 @@ class LabellingTableRow extends React.Component {
     }
   }
 
+  popupButtonAIConfirm = (reqId) => (
+    <Button
+      color="green"
+      content={BtnTextConfirm}
+      onClick={() => this.handleAIConfirm(reqId)}
+    />
+  );
+
   render() {
     // console.log("expanded");
     // console.log(this.props.expanded);
@@ -136,29 +165,35 @@ class LabellingTableRow extends React.Component {
     // console.log(this.props.result.error);
 
     const index = this.props.index;
-    // console.log(this.props.index);
-
     const result = this.props.result;
 
+    const resState = result.state;
     let state = result.state;
     let error = false;
-    if (result.error && result.error !== "") {
-      //  error state
-      error = true;
-      state = `"${result.error}"`;
-    }
-    switch (state) {
+
+    //  error state
+    if (result.error && result.error !== "") error = true;
+
+    let disableAIConfirmPopup = true;
+
+    switch (resState) {
+      case "received":
+        state = "Received";
+        break;
       case "received_duplicate":
-        state = "duplicate";
+        state = "Duplicate";
         break;
       case "ai_priority_processed":
-        state = "ai_processed";
+        state = "AI processed";
+        disableAIConfirmPopup = false;
         break;
       case "final_priority_received":
-        state = "phys_received";
+        state = "Phys. final";
+        disableAIConfirmPopup = false;
         break;
       case "labelled_priority":
-        state = "labelled";
+        state = "Labelled";
+        disableAIConfirmPopup = false;
         break;
       default:
         break;
@@ -172,51 +207,86 @@ class LabellingTableRow extends React.Component {
           onClick={(e) => this.props.handleRowClick(e, index)}
           key={"row-data-" + index}
           disabled={this.props.loading}
-          error={(result.error && result.error !== "") || state === "deleted"}
-          warning={state === "received" || state === "received_duplicate"}
+          error={error || resState === "deleted"}
+          warning={
+            !error &&
+            (resState === "received" || resState === "received_duplicate")
+          }
           positive={
             // state === "ai_priority_processed" ||
             // state === "final_priority_received" ||
-            state === "labelled"
+            resState === "labelled_priority"
           }
         >
-          <Table.Cell singleLine>
-            {this.renderItemCaret(this.props.expanded)}
-            {result.id}
-          </Table.Cell>
+          <Popup
+            content={this.popupButtonAIConfirm(result.id)}
+            // content={
+            //   <Button
+            //     color="green"
+            //     content={BtnTextConfirm}
+            //     onClick={() => this.handleAIConfirm(result.id)}
+            //   />
+            // }
+            trigger={
+              <Table.Cell singleLine>
+                {this.renderItemCaret(this.props.expanded)}
+                {result.id}
+              </Table.Cell>
+            }
+            hoverable
+            disabled={disableAIConfirmPopup}
+            style={{ color: "red" }}
+          />
           {error && (
             <Popup
-              content={state}
+              content={result.error}
               trigger={<Table.Cell>ERROR</Table.Cell>}
               hoverable
               style={{ color: "red" }}
             />
           )}
-          {!error && <Table.Cell>{state}</Table.Cell>}
-          {/* <Table.Cell>{result.age ? result.age : "N/A"}</Table.Cell>
-          <Table.Cell>{result.height ? result.height : "N/A"}</Table.Cell>
-          <Table.Cell>{result.weight ? result.weight : "N/A"}</Table.Cell>
-          <Table.Cell>
-            {result.request_json
-              ? result.request_json["Reason for Exam"]
-              : "N/A"}
-          </Table.Cell>
-          <Table.Cell>
-            {result.request_json
-              ? result.request_json["Exam Requested"]
-              : "N/A"}
-          </Table.Cell> */}
-          <Table.Cell>
-            {result.ai_rule_id ? result.ai_rule_id : " - "}
-          </Table.Cell>
-          <Table.Cell>
-            {result.ai_priority ? result.ai_priority : " - "}
-          </Table.Cell>
-          <Table.Cell>
-            {result.ai_contrast !== null
-              ? result.ai_contrast.toString()
-              : " - "}
-          </Table.Cell>
+          <Popup
+            content={this.popupButtonAIConfirm(result.id)}
+            trigger={!error && <Table.Cell>{state}</Table.Cell>}
+            hoverable
+            disabled={disableAIConfirmPopup}
+            style={{ color: "red" }}
+          />
+          <Popup
+            content={this.popupButtonAIConfirm(result.id)}
+            trigger={
+              <Table.Cell>
+                {result.ai_rule_id ? result.ai_rule_id : " - "}
+              </Table.Cell>
+            }
+            disabled={disableAIConfirmPopup}
+            hoverable
+            style={{ color: "red" }}
+          />
+          <Popup
+            content={this.popupButtonAIConfirm(result.id)}
+            trigger={
+              <Table.Cell>
+                {result.ai_priority ? result.ai_priority : " - "}
+              </Table.Cell>
+            }
+            hoverable
+            disabled={disableAIConfirmPopup}
+            style={{ color: "red" }}
+          />
+          <Popup
+            content={this.popupButtonAIConfirm(result.id)}
+            trigger={
+              <Table.Cell>
+                {result.ai_contrast !== null
+                  ? result.ai_contrast.toString()
+                  : " - "}
+              </Table.Cell>
+            }
+            hoverable
+            disabled={disableAIConfirmPopup}
+            style={{ color: "red" }}
+          />
           {this.props.showPhysicianResults && (
             <>
               <Table.Cell>
@@ -299,11 +369,11 @@ class LabellingTableRow extends React.Component {
             <>
               <Table.Cell>{result.date_created}</Table.Cell>
               <Table.Cell>{result.date_updated}</Table.Cell>
+              <Table.Cell textAlign="right" collapsing>
+                <ResultsHistoryView history={result.history} />
+              </Table.Cell>
             </>
           )}
-          <Table.Cell textAlign="right" collapsing>
-            <ResultsHistoryView history={result.history} />
-          </Table.Cell>
         </Table.Row>
         {this.props.expanded && (
           <Table.Row active key={"row-expanded-" + index}>
