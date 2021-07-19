@@ -1,7 +1,7 @@
 import React from "react";
 import LabellingTable from "./LabellingTable";
 import LabellingSearchBar from "./LabellingSearchBar";
-import { Grid, Container, Button, Icon } from "semantic-ui-react";
+import { Grid, Header } from "semantic-ui-react";
 import RulesTable from "../RulesPage/RulesTable";
 import { connect } from "react-redux";
 import { getMRIRules } from "../../actions/RuleActions";
@@ -36,6 +36,9 @@ class LabellingPage extends React.Component {
     }
     return (
       <div className="page-container">
+        <Header as="h1" textAlign="left">
+          Labelling
+        </Header>
         <LabellingSearchBar />
         {/* {this.state.showRules && (
           <>
