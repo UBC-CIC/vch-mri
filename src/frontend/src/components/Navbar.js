@@ -1,5 +1,5 @@
 import React from "react";
-import { Menu, Segment } from "semantic-ui-react";
+import { Menu, Segment, Dropdown } from "semantic-ui-react";
 import { Auth } from "aws-amplify";
 import { NavLink, withRouter } from "react-router-dom";
 import {
@@ -44,7 +44,41 @@ class Navbar extends React.Component {
           <Menu.Item name="Book An MRI" as={NavLink} to="/dashboard/booking" />
           <Menu.Item name="Results" as={NavLink} to="/dashboard/results" />
           <Menu.Item name="Labelling" as={NavLink} to="/dashboard/labelling" />
-          <Menu.Item name="Rules" as={NavLink} to="/dashboard/rules" />
+          <Dropdown item text="Rules">
+            <Dropdown.Menu>
+              <Dropdown.Item text="Rules" as={NavLink} to="/dashboard/rules" />
+              <Dropdown.Item
+                text="Word Weights"
+                as={NavLink}
+                to="/dashboard/weights"
+              />
+            </Dropdown.Menu>
+          </Dropdown>
+          <Dropdown item text="Word Management">
+            <Dropdown.Menu>
+              <Dropdown.Item
+                text="Spellchecker"
+                as={NavLink}
+                to="/dashboard/spellcheck"
+              />
+              <Dropdown.Item
+                text="Conjunctions"
+                as={NavLink}
+                to="/dashboard/conjunctions"
+              />
+              <Dropdown.Item
+                text="Synonyms"
+                as={NavLink}
+                to="/dashboard/synonyms"
+              />
+              <Dropdown.Item
+                text="Specialty Exams"
+                as={NavLink}
+                to="/dashboard/specialtyexams"
+              />
+            </Dropdown.Menu>
+          </Dropdown>
+          {/* <Menu.Item name="Rules" as={NavLink} to="/dashboard/rules" />
           <Menu.Item
             name="Spellchecker"
             as={NavLink}
@@ -61,7 +95,7 @@ class Navbar extends React.Component {
             name="Specialty Exams"
             as={NavLink}
             to="/dashboard/specialtyexams"
-          />
+          /> */}
           <Menu.Menu position="right">
             {/*<Menu.Item>*/}
             {/*    <Input icon='search' placeholder='Search...' />*/}
