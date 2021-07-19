@@ -12,6 +12,7 @@ import {
   MODIFY_RESULT_STARTED,
   MODIFY_RESULT_SUCCESS,
   CHANGE_RESULT_SORT,
+  REQUEST_STATES,
 } from "../constants/resultConstants";
 import _ from "lodash";
 
@@ -73,6 +74,8 @@ export const results = (state = initialState, action) => {
           let ret = result;
           if (result.id === updResult.id) {
             result.state = updResult.state;
+            if (updResult.state === REQUEST_STATES.STATE_ReceivedLabelled)
+              result.state = REQUEST_STATES.STATE_ReceivedNewlyLabelled;
             if (result.history && result.history.length > 0) {
               const history = {
                 history_type: updResult.history_type,

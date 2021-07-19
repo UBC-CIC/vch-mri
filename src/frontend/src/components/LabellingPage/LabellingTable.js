@@ -17,6 +17,7 @@ class LabellingTable extends React.Component {
       expandedRows: [],
       showPhysicianResults: false,
       showAll: false,
+      showLabelled: false,
     };
 
     this.handlePaginationChange = this.handlePaginationChange.bind(this);
@@ -58,6 +59,10 @@ class LabellingTable extends React.Component {
     this.setState({ showAll: !this.state.showAll });
   };
 
+  handleClickShowLabelled = () => {
+    this.setState({ showLabelled: !this.state.showLabelled });
+  };
+
   render() {
     return (
       <>
@@ -82,6 +87,17 @@ class LabellingTable extends React.Component {
           labelPosition="right"
         >
           <Icon name="arrow circle right" /> Toggle Expand All
+        </Button>
+        <Button
+          style={{ margin: "1em 0em 1em 1em" }}
+          floated="right"
+          color="blue"
+          //   size="large"
+          onClick={this.handleClickShowLabelled}
+          icon
+          labelPosition="right"
+        >
+          <Icon name="arrow circle right" /> Toggle Show Labelled
         </Button>
         <Table celled compact sortable striped>
           <Table.Header fullWidth>
@@ -327,6 +343,7 @@ class LabellingTable extends React.Component {
                 rulesListDropdown={this.props.rulesListDropdown}
                 showRules={this.props.showRules}
                 showPhysicianResults={this.state.showPhysicianResults}
+                showLabelled={this.state.showLabelled}
                 index={index}
                 handleRowClick={this.handleRowClick}
                 expanded={

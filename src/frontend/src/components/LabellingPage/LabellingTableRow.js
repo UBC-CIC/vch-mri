@@ -4,12 +4,17 @@ import { Form, Icon, Table, TextArea, Popup, Button } from "semantic-ui-react";
 import { modifyResult } from "../../actions/ResultActions";
 import ResultsHistoryView from "../ResultsPage/ResultsHistoryView";
 import ResultsTableRowExpansion from "./ResultsRowExpansion/ResultsTableRowExpansion";
+import {
+  REQUEST_STATES,
+  NOTE_CONFIRM_AI,
+  BtnTextConfirm,
+  PopupTextNewlyLabel,
+} from "../../constants/resultConstants";
 import { AUTH_USER_ID_TOKEN_KEY } from "../../constants/userConstant";
 import { Cache } from "aws-amplify";
 import jwt_decode from "jwt-decode";
 
 import "../../styles/TableLabelling.css";
-const BtnTextConfirm = "Confirm AI Result";
 
 const SavingState = Object.freeze({
   NOT_SAVED: 0,
@@ -34,10 +39,10 @@ class LabellingTableRow extends React.Component {
       labelled_notes: result.labelled_notes,
     };
 
-    this.handleAIConfirm = this.handleAIConfirm.bind(this);
     this.handleSelectChange = this.handleSelectChange.bind(this);
     this.handleChangeNote = this.handleChangeNote.bind(this);
     this.timerChangeNote = this.timerChangeNote.bind(this);
+    this.handleAIConfirm = this.handleAIConfirm.bind(this);
     this.popupButtonAIConfirm = this.popupButtonAIConfirm.bind(this);
   }
 
@@ -71,7 +76,7 @@ class LabellingTableRow extends React.Component {
         labelled_rule_id: "e",
         labelled_priority: "e",
         labelled_contrast: "e",
-        labelled_notes: "Confirmed AI result was correct.",
+        labelled_notes: NOTE_CONFIRM_AI,
       },
       () => {
         this.props.modifyResult(this.preparePayloadModifyResult(reqId));
@@ -83,11 +88,36 @@ class LabellingTableRow extends React.Component {
     // console.log("handleSelectChange");
     // console.log(name);
     // console.log(value);
-    this.setState({ [name]: value }, () => {
-      this.props.modifyResult(
-        this.preparePayloadModifyResult(this.props.result.id)
+    let labelled_priority = this.state.labelled_priority;
+    let labelled_contrast = this.state.labelled_contrast;
+    let labelled_notes = this.state.labelled_notes;
+
+    if (name === "labelled_rule_id") {
+      const foundRule = this.props.rulesListDropdown.find(
+        (element) => element.value === value
       );
-    });
+
+      console.log("handleSelectChange");
+      console.log(foundRule);
+      labelled_priority = foundRule.priority;
+      labelled_contrast = foundRule.contrast;
+    }
+    // NOT AI confirmed anymore! Wipe the note
+    if (labelled_notes === NOTE_CONFIRM_AI) labelled_notes = "";
+
+    this.setState(
+      {
+        labelled_priority: labelled_priority,
+        labelled_contrast: labelled_contrast,
+        labelled_notes: labelled_notes,
+        [name]: value,
+      },
+      () => {
+        this.props.modifyResult(
+          this.preparePayloadModifyResult(this.props.result.id)
+        );
+      }
+    );
   }
 
   handleChangeNote(e) {
@@ -177,24 +207,33 @@ class LabellingTableRow extends React.Component {
     let disableAIConfirmPopup = true;
 
     switch (resState) {
-      case "received":
+      case REQUEST_STATES.STATE_Received:
         state = "Received";
         break;
-      case "received_duplicate":
+      case REQUEST_STATES.STATE_ReceivedDupe:
         state = "Duplicate";
         break;
-      case "ai_priority_processed":
+      case REQUEST_STATES.STATE_AIProcessed:
         state = "AI processed";
         disableAIConfirmPopup = false;
         break;
-      case "final_priority_received":
+      case REQUEST_STATES.STATE_ReceivedFinal:
         state = "Phys. final";
         disableAIConfirmPopup = false;
         break;
-      case "labelled_priority":
-        state = "Labelled";
+      case REQUEST_STATES.STATE_ReceivedNewlyLabelled:
+        state = "*Labelled";
         disableAIConfirmPopup = false;
         break;
+      case REQUEST_STATES.STATE_ReceivedLabelled:
+        state = "Labelled";
+        disableAIConfirmPopup = false;
+
+        // TODO: check filter but default do NOT show labelled
+        if (!this.props.showLabelled) return null;
+
+        break;
+
       default:
         break;
     }
@@ -202,20 +241,18 @@ class LabellingTableRow extends React.Component {
     return (
       <>
         <Table.Row
-          //   onClick={() => this.handleRowClick(index)}
-          //   onClick={(e) => alert(e.target.value)}
           onClick={(e) => this.props.handleRowClick(e, index)}
           key={"row-data-" + index}
           disabled={this.props.loading}
-          error={error || resState === "deleted"}
+          error={error || resState === REQUEST_STATES.STATE_Deleted}
           warning={
             !error &&
-            (resState === "received" || resState === "received_duplicate")
+            (resState === REQUEST_STATES.STATE_Received ||
+              resState === REQUEST_STATES.STATE_ReceivedDupe)
           }
           positive={
-            // state === "ai_priority_processed" ||
-            // state === "final_priority_received" ||
-            resState === "labelled_priority"
+            resState === REQUEST_STATES.STATE_ReceivedLabelled ||
+            resState === REQUEST_STATES.STATE_ReceivedNewlyLabelled
           }
         >
           <Popup
@@ -237,20 +274,22 @@ class LabellingTableRow extends React.Component {
             disabled={disableAIConfirmPopup}
             style={{ color: "red" }}
           />
-          {error && (
-            <Popup
-              content={result.error}
-              trigger={<Table.Cell>ERROR</Table.Cell>}
-              hoverable
-              style={{ color: "red" }}
-            />
-          )}
           <Popup
-            content={this.popupButtonAIConfirm(result.id)}
+            content={result.error}
+            trigger={error && <Table.Cell>ERROR</Table.Cell>}
+            hoverable
+            style={{ color: "red" }}
+          />
+          <Popup
+            content={
+              resState === REQUEST_STATES.STATE_ReceivedNewlyLabelled
+                ? PopupTextNewlyLabel
+                : this.popupButtonAIConfirm(result.id)
+            }
             trigger={!error && <Table.Cell>{state}</Table.Cell>}
             hoverable
             disabled={disableAIConfirmPopup}
-            style={{ color: "red" }}
+            style={{ color: "green" }}
           />
           <Popup
             content={this.popupButtonAIConfirm(result.id)}
@@ -342,7 +381,11 @@ class LabellingTableRow extends React.Component {
               search
               name="labelled_contrast"
               disabled={this.props.loading}
-              value={result.labelled_contrast ? result.labelled_contrast : "e"}
+              value={
+                result.labelled_contrast !== null
+                  ? result.labelled_contrast
+                  : "e"
+              }
               options={[
                 { key: "e", text: "-", value: "e" },
                 { key: true, text: "true", value: true },
@@ -380,7 +423,12 @@ class LabellingTableRow extends React.Component {
             <Table.Cell colSpan="12">
               <div style={{ padding: "1.5em" }}>
                 {/* {this.renderItemDetails(result)} */}
-                <ResultsTableRowExpansion result={result} />
+                <ResultsTableRowExpansion
+                  result={result}
+                  index={index}
+                  popupButtonAIConfirm={this.popupButtonAIConfirm}
+                  handleAIConfirm={this.handleAIConfirm}
+                />
               </div>
             </Table.Cell>
           </Table.Row>

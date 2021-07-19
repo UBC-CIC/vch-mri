@@ -341,8 +341,10 @@ def handler(event, context):
                 if 'id' in data.keys():
                     # TODO possible bug here as we should pass page here too - actually it only returns 1 max?
                     # Thus searching for 4: only returns exactly matching 4 and not '44', '445 for ex
+                    logger.info('------- REST======REST: GET by ID')
                     response = parseResponse(queryResultsID(cur, data['id']))
                 else:
+                    logger.info('------- REST: GET by page')
                     response = parseResponse(queryResults(cur, data['page']))
                     # logger.info('parseResponse')
                     # logger.info(response)
@@ -369,13 +371,16 @@ def handler(event, context):
                     resp['ai_rule_candidates'] = queryAndParseResponseRuleCandidates(cur, resp['rule_candidates_array'])
 
             elif data['operation'] == 'UPDATE_FINAL':
+                logger.info('------- REST: UPDATE_FINAL')
                 response = updateFinalResults(cur, data['id'], data['final_priority'], data['final_contrast'])
                 response = [{'id': response[0][0], 'final_priority': response[0][1], 'final_contrast': response[0][2]}]
 
             elif data['operation'] == 'UPDATE_LABELLING':
+                logger.info('------- REST: UPDATE_LABELLING')
                 response = update_labelling(cur, data)
 
             elif data['operation'] == 'GET_DATA':
+                logger.info('------- REST: GET_DATA')
                 daily = getResultCount(cur, 'DAILY')
                 weekly = getResultCount(cur, 'WEEKLY')
                 monthly = getResultCount(cur, 'MONTHLY')

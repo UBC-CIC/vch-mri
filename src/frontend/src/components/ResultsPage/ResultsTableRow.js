@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { Icon, Table, Popup } from "semantic-ui-react";
 import { modifyResult } from "../../actions/ResultActions";
 import ResultsHistoryView from "./ResultsHistoryView";
+import { REQUEST_STATES } from "../../constants/resultConstants";
 
 class ResultsTableRow extends React.Component {
   constructor(props) {
@@ -75,19 +76,19 @@ class ResultsTableRow extends React.Component {
     if (result.error && result.error !== "") error = true;
 
     switch (resState) {
-      case "received":
+      case REQUEST_STATES.STATE_Received:
         state = "Received";
         break;
-      case "received_duplicate":
+      case REQUEST_STATES.STATE_ReceivedDupe:
         state = "Duplicate";
         break;
-      case "ai_priority_processed":
+      case REQUEST_STATES.STATE_AIProcessed:
         state = "AI processed";
         break;
-      case "final_priority_received":
+      case REQUEST_STATES.STATE_ReceivedFinal:
         state = "Phys. final";
         break;
-      case "labelled_priority":
+      case REQUEST_STATES.STATE_ReceivedLabelled:
         state = "Labelled";
         break;
       default:
@@ -99,15 +100,15 @@ class ResultsTableRow extends React.Component {
           onClick={(e) => this.props.handleRowClick(e, index)}
           key={"row-data-" + index}
           disabled={this.props.loading}
-          error={error || resState === "deleted"}
+          error={error || resState === REQUEST_STATES.STATE_Deleted}
           warning={
             !error &&
-            (resState === "received" || resState === "received_duplicate")
+            (resState === REQUEST_STATES.STATE_Received ||
+              resState === REQUEST_STATES.STATE_ReceivedDupe)
           }
           positive={
-            // state === "ai_priority_processed" ||
-            // state === "final_priority_received" ||
-            resState === "labelled_priority"
+            resState === REQUEST_STATES.STATE_ReceivedLabelled ||
+            resState === REQUEST_STATES.STATE_ReceivedNewlyLabelled
           }
         >
           <Table.Cell singleLine>

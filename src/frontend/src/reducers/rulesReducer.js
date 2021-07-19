@@ -52,6 +52,8 @@ export const rules = (state = initialState, action) => {
           text: `${element.id}`,
           //   text: `${element.id} - ${element.body_part}`,
           value: element.id,
+          priority: element.priority,
+          contrast: element.contrast,
         });
       });
       return {

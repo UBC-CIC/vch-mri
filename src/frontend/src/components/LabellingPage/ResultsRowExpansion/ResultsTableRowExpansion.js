@@ -100,7 +100,12 @@ class ResultsTableRowExpansion extends React.Component {
           <Table.Body>
             {ruleCandidates &&
               ruleCandidates.map((candidate, index) => (
-                <RuleCandidatesRow candidate={candidate} index={index} />
+                <RuleCandidatesRow
+                  candidate={candidate}
+                  index={index}
+                  popupButtonAIConfirm={this.props.popupButtonAIConfirm}
+                  handleAIConfirm={this.props.handleAIConfirm}
+                />
               ))}
           </Table.Body>
         </Table>

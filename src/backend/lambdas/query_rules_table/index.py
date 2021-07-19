@@ -40,7 +40,7 @@ def queryRulesID(cur, id):
     FROM mri_rules
     WHERE id = %s
     """
-    logger.info("Getting Rule ID")
+    logger.info("Getting Rule ID: " + id)
     cur.execute(cmd, [id])
     logger.info(id)
     return cur.fetchall()
@@ -56,6 +56,10 @@ def addRule(cur, values):
         param_values.extend([value['body_part'], value['info'], value['priority'], value['contrast']])
     cmd = cmd[:-1]
     cmd += " RETURNING id, body_part, contrast, priority, info, active"
+
+    command = cmd % param_values
+    logger.info(command)
+
     cur.execute(cmd, param_values)
     ret = cur.fetchall()
     update_bodypart_tokens(cur)
@@ -72,6 +76,10 @@ def updateRule(cur, values):
         param_values.extend([value['id'], value['body_part'], value['info'], value['priority'], value['contrast']])
     cmd = cmd[:-1]
     cmd += " ) as tmp(id, new_body_part, new_info, new_priority, new_contrast) WHERE CAST(tmp.id AS INTEGER) = mri_rules.id RETURNING mri_rules.id, body_part, contrast, priority, info, active"
+
+    command = cmd % param_values
+    logger.info(command)
+
     cur.execute(cmd, param_values)
     ret = cur.fetchall()
     update_bodypart_tokens(cur)
@@ -149,33 +157,34 @@ def handler(event, context):
         'Access-Control-Allow-Origin': 'http://localhost:3000',
         'Access-Control-Allow-Methods': 'OPTIONS,POST,GET'
     }
-
+    rest_cmd = data['operation']
+    logger.info('------- REST: ' + rest_cmd)
     with psql.conn.cursor() as cur:
         try:
-            if data['operation'] == 'GET':
+            if rest_cmd == 'GET':
                 if 'id' in data.keys():
                     response = queryRulesID(cur, data['id'])
                 else:
                     response = queryRules(cur, data['count'])
 
                 resp_dict = {'result': True, 'headers': headers, 'data': []}
-                logger.info(response)
+                # logger.info(response)
                 resp_list = parseResponse(response)
                 resp_dict['data'] = resp_list
                 return resp_dict
 
-            elif data['operation'] == 'ADD':
+            elif rest_cmd == 'ADD':
                 response = addRule(cur, data['values'])
                 resp_list = parseResponse(response)
-            elif data['operation'] == 'UPDATE':
+            elif rest_cmd == 'UPDATE':
                 response = updateRule(cur, data['values'])
                 resp_list = parseResponse(response)
-            elif data['operation'] == 'DEACTIVATE':
+            elif rest_cmd == 'DEACTIVATE':
                 setRuleActivity(cur, data['id'], 'f')
-            elif data['operation'] == 'ACTIVATE':
+            elif rest_cmd == 'ACTIVATE':
                 setRuleActivity(cur, data['id'], 't')
             psql.commit()
-            if data['operation'] == 'ADD' or data['operation'] == 'UPDATE':
+            if rest_cmd == 'ADD' or rest_cmd == 'UPDATE':
                 logger.info("Applying weight")
                 applyWeight()
                 return {'result': True, 'headers': headers, 'data': resp_list}
