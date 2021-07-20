@@ -425,6 +425,7 @@ class LabellingTableRow extends React.Component {
                 {/* {this.renderItemDetails(result)} */}
                 <ResultsTableRowExpansion
                   result={result}
+                  reqCio={result.id}
                   index={index}
                   popupButtonAIConfirm={this.popupButtonAIConfirm}
                   handleAIConfirm={this.handleAIConfirm}

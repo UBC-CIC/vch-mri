@@ -66,7 +66,12 @@ def updateLabelledResults(cur, id, rule_id, priority, contrast, notes):
     WHERE id = %s
     RETURNING id, labelled_rule_id, labelled_priority, labelled_contrast, labelled_notes, state
     """
-    cur.execute(cmd, (rule_id, priority, contrast, notes, id))
+    params = (rule_id, priority, contrast, notes, id)
+    command = cmd % params
+    logger.info('updateLabelledResults')
+    logger.info(command)
+
+    cur.execute(cmd, params)
     return cur.fetchall()
 
 
@@ -103,7 +108,8 @@ def queryRequestHistory(cur, id_data_request):
     """
     # cur.execute(cmd, id_data_request)
     command = cmd % id_data_request
-    logger.info(command)
+    # logger.info(command)
+
     cur.execute(command)
     return cur.fetchall()
 
@@ -117,7 +123,8 @@ def queryRequestRule(cur, id_data_request):
     """
     # cur.execute(cmd, id_data_request)
     command = cmd % id_data_request
-    logger.info(command)
+    # logger.info(command)
+
     cur.execute(command)
     return cur.fetchall()
 
@@ -138,14 +145,15 @@ insert_history_cmd = """
 
 
 def update_labelling(cur, data):
+    logger.info('--update_labelling()')
     cognito_user_id = ''
     if 'cognito_user_id' in data and data['cognito_user_id']:
         cognito_user_id = data["cognito_user_id"]
-        logger.info(cognito_user_id)
+        # logger.info(cognito_user_id)
     cognito_user_fullname = ''
     if 'cognito_user_fullname' in data and data['cognito_user_fullname']:
         cognito_user_fullname = data["cognito_user_fullname"]
-        logger.info(cognito_user_fullname)
+        # logger.info(cognito_user_fullname)
 
     # Save labelling fields
     id = data['id']
@@ -156,6 +164,7 @@ def update_labelling(cur, data):
         data['labelled_priority'],
         data['labelled_contrast'],
         data['labelled_notes'])
+    logger.info(response)
 
     ret_update = {
         'id': response[0][0],
@@ -164,13 +173,13 @@ def update_labelling(cur, data):
         'labelled_contrast': response[0][3],
         'labelled_notes': response[0][4],
         'state': response[0][5]}
-    logger.info('ret_update ret')
     logger.info(ret_update)
 
     # Save history event
     data = (id, 'Labelling Updated', json.dumps(ret_update), cognito_user_id, cognito_user_fullname)
 
     command = insert_history_cmd % data
+    logger.info('insert_history_cmd')
     logger.info(command)
 
     cur.execute(insert_history_cmd, data)
@@ -246,8 +255,8 @@ def parseResponse(response):
 
 
 def parseResponseHistory(history):
-    logger.info('history')
-    logger.info(history)
+    # logger.info('history')
+    # logger.info(history)
 
     history_list = []
     for history_tuple in history:
@@ -271,8 +280,8 @@ def parseResponseHistory(history):
 
 
 def queryAndParseResponseRuleCandidates(cur, rule_candidates):
-    logger.info('queryAndParseResponseRuleCandidates')
-    logger.info(rule_candidates)
+    # logger.info('queryAndParseResponseRuleCandidates')
+    # logger.info(rule_candidates)
 
     rule_list = []
     if rule_candidates is None:
@@ -282,8 +291,8 @@ def queryAndParseResponseRuleCandidates(cur, rule_candidates):
         ret_rules = queryRequestRule(cur, rule_candidate)
         if len(ret_rules) > 0:
             ret_rule = ret_rules[0]
-            logger.info('ret_rule')
-            logger.info(ret_rule)
+            # logger.info('ret_rule')
+            # logger.info(ret_rule)
 
             # Rule
             rule = {}
@@ -351,10 +360,10 @@ def handler(event, context):
                     resp_dict['total_pgs'] = queryPageCount(cur)
 
                 for resp in response:
-                    logger.info('resp')
-                    logger.info(resp)
+                    # logger.info('resp')
+                    # logger.info(resp)
                     resp['history'] = parseResponseHistory(queryRequestHistory(cur, resp['id']))
-                    logger.info(resp['history'])
+                    # logger.info(resp['history'])
                     # cio_id = resp['id']
                     # command = insert_new_request_cmd % cio_id
                     # logger.info(command)
