@@ -8,6 +8,9 @@ import {
   GET_RESULT_DATA_FAILURE,
   GET_RESULT_DATA_STARTED,
   GET_RESULT_DATA_SUCCESS,
+  GET_STATISTICS_STARTED,
+  GET_STATISTICS_SUCCESS,
+  GET_STATISTICS_FAILURE,
   MODIFY_RESULT_FAILURE,
   MODIFY_RESULT_STARTED,
   MODIFY_RESULT_SUCCESS,
@@ -36,6 +39,7 @@ export const results = (state = initialState, action) => {
     case GET_RESULT_BY_ID_STARTED:
     case GET_RESULTS_BY_PAGE_STARTED:
     case GET_RESULT_DATA_STARTED:
+    case GET_STATISTICS_STARTED:
     case MODIFY_RESULT_STARTED:
       return {
         ...state,
@@ -64,6 +68,12 @@ export const results = (state = initialState, action) => {
       return {
         ...state,
         info: action.response.data[0],
+        loading: false,
+      };
+    case GET_STATISTICS_SUCCESS:
+      return {
+        ...state,
+        statistics: action.response.data,
         loading: false,
       };
     case MODIFY_RESULT_SUCCESS:
@@ -102,6 +112,7 @@ export const results = (state = initialState, action) => {
     case GET_RESULT_BY_ID_FAILURE:
     case GET_RESULTS_BY_PAGE_FAILURE:
     case GET_RESULT_DATA_FAILURE:
+    case GET_STATISTICS_FAILURE:
     case MODIFY_RESULT_FAILURE:
       return {
         ...state,

@@ -8,6 +8,9 @@ import {
   GET_RESULT_DATA_FAILURE,
   GET_RESULT_DATA_STARTED,
   GET_RESULT_DATA_SUCCESS,
+  GET_STATISTICS_STARTED,
+  GET_STATISTICS_SUCCESS,
+  GET_STATISTICS_FAILURE,
   MODIFY_RESULT_FAILURE,
   MODIFY_RESULT_STARTED,
   MODIFY_RESULT_SUCCESS,
@@ -77,6 +80,28 @@ export const getResultDataFailure = (error) => {
   };
 };
 
+// GET_STATISTICS
+export const getStatisticsStarted = () => {
+  return {
+    type: GET_STATISTICS_STARTED,
+  };
+};
+
+export const getStatisticsSuccess = (response) => {
+  return {
+    type: GET_STATISTICS_SUCCESS,
+    response,
+  };
+};
+
+export const getStatisticsFailure = (error) => {
+  return {
+    type: GET_STATISTICS_FAILURE,
+    error,
+  };
+};
+
+// MODIFY_RESULT
 export const modifyResultStarted = () => {
   return {
     type: MODIFY_RESULT_STARTED,
@@ -166,6 +191,26 @@ export const getResultData = () => {
       })
       .catch((e) => {
         dispatch(getResultDataFailure(e));
+      });
+  };
+};
+
+export const getStatistics = (startDate, endDate) => {
+  return async (dispatch) => {
+    dispatch(getStatisticsStarted());
+
+    let url = `${process.env.REACT_APP_HTTP_API_URL}/results`;
+    axios
+      .post(url, {
+        operation: "GET_STATISTICS",
+        start_date: startDate,
+        end_date: endDate,
+      })
+      .then((response) => {
+        dispatch(getStatisticsSuccess(response.data));
+      })
+      .catch((e) => {
+        dispatch(getStatisticsFailure(e));
       });
   };
 };

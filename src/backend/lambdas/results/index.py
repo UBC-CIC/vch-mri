@@ -154,6 +154,7 @@ def parse_statistics(data):
         logger.info(resp)
 
         total += 1
+        overridden_any = False
         overridden_rule = False
         overridden_pri = False
         overridden_con = False
@@ -162,14 +163,17 @@ def parse_statistics(data):
         if resp['labelled_rule_id'] is not None and resp['labelled_rule_id'] != ai_rule_id:
             logger.info('ai_rule_id is overridden')
             resp_list['rule']['overridden'] += 1
+            overridden_any = True
             overridden_rule = True
         if resp['labelled_priority'] is not None and resp['labelled_priority'] != resp['ai_priority']:
             logger.info('ai_priority is overridden')
             resp_list['priority']['overridden'] += 1
+            overridden_any = True
             overridden_pri = True
         if resp['labelled_contrast'] is not None and resp['labelled_contrast'] != resp['ai_contrast']:
             logger.info('ai_contrast is overridden')
             resp_list['contrast']['overridden'] += 1
+            overridden_any = True
             overridden_con = True
 
         try:
@@ -178,6 +182,7 @@ def parse_statistics(data):
             rules[str(ai_rule_id)] = {
                 'rule_id': ai_rule_id,
                 'total': 0,
+                'total_overridden': 0,
                 'overridden_rule': 0,
                 'overridden_pri': 0,
                 'overridden_con': 0
@@ -185,6 +190,8 @@ def parse_statistics(data):
             rule_tuple = rules[str(ai_rule_id)]
 
         rule_tuple['total'] += 1
+        if overridden_any:
+            rule_tuple['total_overridden'] += 1
         if overridden_rule:
             rule_tuple['overridden_rule'] += 1
         if overridden_pri:
