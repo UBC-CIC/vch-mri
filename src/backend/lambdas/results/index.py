@@ -3,7 +3,7 @@ import boto3
 import logging
 import json
 import os
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
@@ -46,6 +46,21 @@ def queryResultsID(cur, id):
     cur.execute(cmd, [id])
     return cur.fetchall()
 
+def queryResultsByDate(cur, start_date, end_date):
+    cmd = """
+    SELECT req.id, state,
+        ai_rule_id, ai_priority, ai_contrast,
+        labelled_rule_id, labelled_priority, labelled_contrast
+    FROM data_request as req
+    WHERE
+        state = 'labelled_priority'
+    AND
+            created_at >= %s
+    AND     created_at < %s
+    ORDER BY req.ai_rule_id ASC
+    """
+    cur.execute(cmd, (start_date, end_date))
+    return cur.fetchall()
 
 def updateFinalResults(cur, id, priority, contrast):
     cmd = """
@@ -73,6 +88,122 @@ def updateLabelledResults(cur, id, rule_id, priority, contrast, notes):
 
     cur.execute(cmd, params)
     return cur.fetchall()
+
+
+def get_statistics(cur, data):
+    logger.info('--get_statistics()')
+
+    # Date format: YYYY-MM-DD
+    start_date = ''
+    if 'start_date' in data and data['start_date']:
+        start_date = data["start_date"]
+    else:
+        # raise TypeError("Unknown start_date")
+        start_date = '1970-01-01'   # epoch
+    iso_start_date = datetime.strptime(start_date, '%Y-%m-%d')
+
+    end_date = ''
+    if 'end_date' in data and data['end_date']:
+        end_date = data["end_date"]
+        iso_end_date = datetime.strptime(end_date, '%Y-%m-%d')
+
+        # inclusive dates; add 1 day
+        iso_end_date += timedelta(days=1)
+    else:
+        # raise TypeError("Unknown end_date")
+        iso_end_date = datetime.now()
+
+    # iso_start_date = datetime_handler(start_date)
+    logger.info(iso_start_date)
+    logger.info(iso_end_date)
+
+    results = queryResultsByDate(cur, iso_start_date, iso_end_date)
+    logger.info(results)
+
+    return parse_statistics(results)
+
+
+def parse_statistics(data):
+    logger.info('parse_statistics')
+    logger.info(data)
+    resp_list = {}
+
+    stat = {'total': 0, 'overridden': 0}
+    resp_list['rule'] = stat
+    resp_list['priority'] = stat.copy()
+    resp_list['contrast'] = stat.copy()
+    resp_list['rules'] = []
+    rules = {}
+
+    total = 0
+
+    for resp_tuple in data:
+        logger.info('resp_tuple')
+        logger.info(resp_tuple)
+        resp = {}
+
+        resp['id'] = resp_tuple[0]
+        resp['state'] = resp_tuple[1]
+        resp['ai_rule_id'] = resp_tuple[2]
+        resp['ai_priority'] = resp_tuple[3]
+        resp['ai_contrast'] = resp_tuple[4]
+        resp['labelled_rule_id'] = resp_tuple[5]
+        resp['labelled_priority'] = resp_tuple[6]
+        resp['labelled_contrast'] = resp_tuple[7]
+
+        logger.info(resp)
+
+        total += 1
+        overridden_rule = False
+        overridden_pri = False
+        overridden_con = False
+
+        ai_rule_id = resp['ai_rule_id']
+        if resp['labelled_rule_id'] is not None and resp['labelled_rule_id'] != ai_rule_id:
+            logger.info('ai_rule_id is overridden')
+            resp_list['rule']['overridden'] += 1
+            overridden_rule = True
+        if resp['labelled_priority'] is not None and resp['labelled_priority'] != resp['ai_priority']:
+            logger.info('ai_priority is overridden')
+            resp_list['priority']['overridden'] += 1
+            overridden_pri = True
+        if resp['labelled_contrast'] is not None and resp['labelled_contrast'] != resp['ai_contrast']:
+            logger.info('ai_contrast is overridden')
+            resp_list['contrast']['overridden'] += 1
+            overridden_con = True
+
+        try:
+            rule_tuple = rules[str(ai_rule_id)]
+        except KeyError as error:
+            rules[str(ai_rule_id)] = {
+                'rule_id': ai_rule_id,
+                'total': 0,
+                'overridden_rule': 0,
+                'overridden_pri': 0,
+                'overridden_con': 0
+            }
+            rule_tuple = rules[str(ai_rule_id)]
+
+        rule_tuple['total'] += 1
+        if overridden_rule:
+            rule_tuple['overridden_rule'] += 1
+        if overridden_pri:
+            rule_tuple['overridden_pri'] += 1
+        if overridden_con:
+            rule_tuple['overridden_con'] += 1
+
+    logger.info('rules')
+    logger.info(rules)
+
+    for rule_tuple in rules:
+        logger.info(rules[rule_tuple])
+        resp_list['rules'].append(rules[rule_tuple])
+
+    resp_list['rule']['total'] = total
+    resp_list['priority']['total'] = total
+    resp_list['contrast']['total'] = total
+
+    return resp_list
 
 
 def getResultCount(cur, interval):
@@ -388,6 +519,10 @@ def handler(event, context):
                 logger.info('------- REST: UPDATE_LABELLING')
                 response = update_labelling(cur, data)
 
+            elif data['operation'] == 'GET_STATISTICS':
+                logger.info('------- REST: GET_STATISTICS')
+                response = get_statistics(cur, data)
+
             elif data['operation'] == 'GET_DATA':
                 logger.info('------- REST: GET_DATA')
                 daily = getResultCount(cur, 'DAILY')
@@ -401,8 +536,9 @@ def handler(event, context):
 
         except Exception as error:
             logger.error(error)
-            logger.error("Exception Type: %s" % type(error))
-            return {"isBase64Encoded": False, "statusCode": 400, "body": f'{type(error)}',
+            error_str = "Exception Type: %s" % type(error)
+            logger.error(error_str)
+            return {"isBase64Encoded": False, "statusCode": 400, "body": f'{repr(error)}',
                     "headers": {"Content-Type": "application/json"}}
 
     return {'result': True, 'headers': headers}
