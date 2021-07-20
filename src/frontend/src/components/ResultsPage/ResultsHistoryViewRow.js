@@ -65,7 +65,7 @@ class ResultsHistoryViewRow extends React.Component {
                 </p>
                 <p>
                   <b>Contrast: </b>
-                  {info.labelled_contrast
+                  {info.labelled_contrast !== null
                     ? info.labelled_contrast.toString()
                     : " - "}
                 </p>
