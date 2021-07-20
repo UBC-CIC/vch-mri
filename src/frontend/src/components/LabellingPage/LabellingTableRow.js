@@ -181,11 +181,16 @@ class LabellingTableRow extends React.Component {
   }
 
   popupButtonAIConfirm = (reqId) => (
-    <Button
-      color="green"
-      content={BtnTextConfirm}
-      onClick={() => this.handleAIConfirm(reqId)}
-    />
+    <>
+      Note: all existing labelling overrides will be cleared.
+      <Button
+        fluid
+        color="green"
+        content={BtnTextConfirm}
+        onClick={() => this.handleAIConfirm(reqId)}
+        style={{ marginTop: "10px" }}
+      />
+    </>
   );
 
   render() {
