@@ -472,6 +472,9 @@ def handler(event, context):
         'Access-Control-Allow-Methods': 'OPTIONS,POST,GET'
     }
 
+    rest_cmd = data['operation']
+    logger.info('------- REST: ' + rest_cmd)
+
     with psql.conn.cursor() as cur:
         try:
             # command = insert_new_request_cmd % '10009'
@@ -484,7 +487,7 @@ def handler(event, context):
             resp_dict = {'result': True,
                          'headers': headers,
                          'data': []}
-            if data['operation'] == 'GET':
+            if rest_cmd == 'GET':
                 if 'id' in data.keys():
                     # TODO possible bug here as we should pass page here too - actually it only returns 1 max?
                     # Thus searching for 4: only returns exactly matching 4 and not '44', '445 for ex
@@ -517,21 +520,17 @@ def handler(event, context):
                     # logger.info(resp['history'])
                     resp['ai_rule_candidates'] = queryAndParseResponseRuleCandidates(cur, resp['rule_candidates_array'])
 
-            elif data['operation'] == 'UPDATE_FINAL':
-                logger.info('------- REST: UPDATE_FINAL')
+            elif rest_cmd == 'UPDATE_FINAL':
                 response = updateFinalResults(cur, data['id'], data['final_priority'], data['final_contrast'])
                 response = [{'id': response[0][0], 'final_priority': response[0][1], 'final_contrast': response[0][2]}]
 
-            elif data['operation'] == 'UPDATE_LABELLING':
-                logger.info('------- REST: UPDATE_LABELLING')
+            elif rest_cmd == 'UPDATE_LABELLING':
                 response = update_labelling(cur, data)
 
-            elif data['operation'] == 'GET_STATISTICS':
-                logger.info('------- REST: GET_STATISTICS')
+            elif rest_cmd == 'GET_STATISTICS':
                 response = get_statistics(cur, data)
 
-            elif data['operation'] == 'GET_DATA':
-                logger.info('------- REST: GET_DATA')
+            elif rest_cmd == 'GET_DATA':
                 daily = getResultCount(cur, 'DAILY')
                 weekly = getResultCount(cur, 'WEEKLY')
                 monthly = getResultCount(cur, 'MONTHLY')

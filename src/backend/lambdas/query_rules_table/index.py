@@ -67,18 +67,25 @@ def addRule(cur, values):
 
 
 def updateRule(cur, values):
+    logger.info('updateRule')
     cmd = """
-    UPDATE mri_rules SET body_part = new_body_part, info = new_info, priority = new_priority, contrast = CAST(new_contrast AS BOOLEAN)
+    UPDATE mri_rules SET body_part = new_body_part, info = new_info, priority = new_priority,
+        contrast = CAST(new_contrast AS BOOLEAN)
     FROM (VALUES """
     param_values = []
     for value in values:
         cmd += "(%s, %s, %s, %s, %s),"
         param_values.extend([value['id'], value['body_part'], value['info'], value['priority'], value['contrast']])
     cmd = cmd[:-1]
-    cmd += " ) as tmp(id, new_body_part, new_info, new_priority, new_contrast) WHERE CAST(tmp.id AS INTEGER) = mri_rules.id RETURNING mri_rules.id, body_part, contrast, priority, info, active"
+    cmd += " ) as tmp(id, new_body_part, new_info, new_priority, new_contrast) " \
+           "WHERE CAST(tmp.id AS INTEGER) = mri_rules.id " \
+           "RETURNING mri_rules.id, body_part, contrast, priority, info, active"
 
-    command = cmd % param_values
-    logger.info(command)
+    # FAILS so just print separately; "not enough arguments for format string"
+    # command = cmd % param_values
+    # logger.info(command)
+    logger.info(cmd)
+    logger.info(param_values)
 
     cur.execute(cmd, param_values)
     ret = cur.fetchall()
