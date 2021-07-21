@@ -19,6 +19,7 @@ import {
 import axios from "axios";
 // TODO for sample data local testing instead of waiting Lambda containers to load ~5secs
 // import SampleData from "../data/SampleDataResults2Pages";
+// import SampleDataStatistics from "../data/SampleDataStatistics";
 
 export const getResultByIDStarted = () => {
   return {
@@ -199,6 +200,7 @@ export const getStatistics = (startDate, endDate) => {
   return async (dispatch) => {
     dispatch(getStatisticsStarted());
 
+    // dispatch(getStatisticsSuccess(SampleDataStatistics));
     let url = `${process.env.REACT_APP_HTTP_API_URL}/results`;
     axios
       .post(url, {
