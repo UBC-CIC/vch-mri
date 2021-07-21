@@ -81,6 +81,47 @@ class ResultsHistoryViewRow extends React.Component {
             )}
           </Table.Cell>
         );
+      case "ai_result":
+        const result = history.mod_info;
+        return (
+          <Table.Cell>
+            {result ? (
+              <>
+                <p>
+                  <b>AI Result:</b>
+                </p>
+                <p>
+                  <b>Rule ID: </b>
+                  {result.rule_id ? result.rule_id : " - "}
+                </p>
+                <p>
+                  <b>Priority: </b>
+                  {result.priority ? result.priority : " - "}
+                </p>
+                <p>
+                  <b>Contrast: </b>
+                  {result.contrast !== null
+                    ? result.contrast.toString()
+                    : " - "}
+                </p>
+                <p>
+                  <b>anatomy: </b>
+                  {result.anatomy ? result.anatomy : " - "}
+                </p>
+                <p>
+                  <b>p5_flag: </b>
+                  {result.p5_flag ? result.p5_flag : " - "}
+                </p>
+                <p>
+                  <b>specialty_exams: </b>
+                  {result.specialty_exams ? result.specialty_exams : " - "}
+                </p>
+              </>
+            ) : (
+              <p>Modification error.</p>
+            )}
+          </Table.Cell>
+        );
       case "delete":
         return (
           <Table.Cell>

@@ -75,6 +75,11 @@ where id = %s
 RETURNING ai_tags;
 """
 
+insert_history_cmd = """
+   INSERT INTO request_history(id_data_request, history_type, description, mod_info)
+   VALUES (%s, 'ai_result', %s, %s)
+   RETURNING history_type, description, mod_info, created_at
+   """
 
 def searchAnatomy(data):        
     anatomy_list = []
@@ -97,6 +102,18 @@ def searchText(data, *data_keys):
     return (' | ').join(value_set)
 
 
+def save_result_history(cur, cio_id, result):
+    logger.info('--save_result_history()')
+    logger.info(result)
+
+    params = (cio_id, 'AI-processed result', json.dumps(result))
+    command = insert_history_cmd % params
+    logger.info('insert_history_cmd')
+    logger.info(command)
+
+    cur.execute(insert_history_cmd, params)
+
+
 def handler(event, context):
     logger.info(event)
     v = event
@@ -109,16 +126,17 @@ def handler(event, context):
         'Access-Control-Allow-Methods': 'OPTIONS,POST,GET'
     }
 
+    cio_id = v["CIO_ID"]
     with psql.conn.cursor() as cur: 
         # insert into data_request one by one
         logger.info("insert into data_request one by one")
         try:
             logger.info(json.dumps(v))
-            cur.execute(insert_cmd, (v["CIO_ID"], json.dumps(v), v["p5"]))
+            cur.execute(insert_cmd, (cio_id, json.dumps(v), v["p5"]))
             if "anatomy" not in v.keys():
                 # No anatomy found => ai_priority = P99
-                logger.info("No anatomy found for CIO ID: ", v["CIO_ID"])
-                cur.execute(update_ai_priority, ('P99',v["CIO_ID"]))
+                logger.info("No anatomy found for CIO ID: ", cio_id)
+                cur.execute(update_ai_priority, ('P99',cio_id))
                 psql.conn.commit()
                 return {"rule_id": "N/A", 'headers': headers, "priority": "P99"}
             else:
@@ -128,35 +146,45 @@ def handler(event, context):
                                       "other_info")
 
                 # Get all rankings first and store array
-                command = (set_rule_candidates_cmd % (info_str, anatomy_str, v["CIO_ID"]))
+                command = (set_rule_candidates_cmd % (info_str, anatomy_str, cio_id))
                 cur.execute(command)
 
                 # Determine and store highest ranking AI rule
-                command = (update_cmd % info_str) + anatomy_str + (update_cmd_end % v["CIO_ID"])
+                command = (update_cmd % info_str) + anatomy_str + (update_cmd_end % cio_id)
                 logger.info(command)
                 cur.execute(command)
                 ret = cur.fetchall() 
                 if not ret: 
-                    cur.execute(update_ai_priority, ('P98', v["CIO_ID"]))
+                    cur.execute(update_ai_priority, ('P98', cio_id))
                     psql.conn.commit()
                     return {"rule_id": "N/A", 'headers': headers, "priority": "P98"}
 
                 logger.info(ret)
                 # Specialty Tags
-                cur.execute(update_tags, (ret[0][5], v["CIO_ID"]))
+                cur.execute(update_tags, (ret[0][5], cio_id))
                 tags = cur.fetchall()
 
-            # commit the changes
-            psql.conn.commit()
-            return {
-                "rule_id": ret[0][0],
-                'headers': headers,
+            rule_id = ret[0][0]
+            priority = ret[0][2]
+            contrast = ret[0][3]
+
+            result = {
+                "rule_id": rule_id,
                 "anatomy": ret[0][1],
-                "priority": ret[0][2],
-                "contrast": ret[0][3],
+                "priority": priority,
+                "contrast": contrast,
                 "p5_flag": ret[0][4],
                 "specialty_exams": tags[0][0]
             }
+
+            # Save AI result history
+            save_result_history(cur, cio_id, result)
+
+            # commit the changes
+            psql.conn.commit()
+
+            result['headers'] = headers
+            return result
 
         except Exception as error:
             logger.error(error)

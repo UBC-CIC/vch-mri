@@ -160,6 +160,8 @@ def parse_statistics(data):
         overridden_con = False
 
         ai_rule_id = resp['ai_rule_id']
+        if ai_rule_id is None:
+            continue
         if resp['labelled_rule_id'] is not None and resp['labelled_rule_id'] != ai_rule_id:
             logger.info('ai_rule_id is overridden')
             resp_list['rule']['overridden'] += 1
