@@ -71,9 +71,9 @@ class HomePage extends React.Component {
               </Statistic>
             </StatisticGroup>
           </Grid.Row>
-          <Grid.Row centered>
-            <Statistics />
-          </Grid.Row>
+          {/* <Grid.Row centered> */}
+          <Statistics />
+          {/* </Grid.Row> */}
         </Grid>
       </div>
     );
