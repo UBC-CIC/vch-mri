@@ -43,7 +43,20 @@ class Navbar extends React.Component {
           />
           <Menu.Item name="Book An MRI" as={NavLink} to="/dashboard/booking" />
           <Menu.Item name="Results" as={NavLink} to="/dashboard/results" />
-          <Menu.Item name="Labelling" as={NavLink} to="/dashboard/labelling" />
+          <Dropdown item text="Labelling">
+            <Dropdown.Menu>
+              <Dropdown.Item
+                text="Labelling"
+                as={NavLink}
+                to="/dashboard/labelling"
+              />
+              <Dropdown.Item
+                text="Results Statistics"
+                as={NavLink}
+                to="/dashboard/statistics"
+              />
+            </Dropdown.Menu>
+          </Dropdown>
           <Dropdown item text="Rules">
             <Dropdown.Menu>
               <Dropdown.Item text="Rules" as={NavLink} to="/dashboard/rules" />

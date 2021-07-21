@@ -16,7 +16,6 @@ import { compose } from "redux";
 import { AUTH_USER_ID_TOKEN_KEY } from "../constants/userConstant";
 import { Cache } from "aws-amplify";
 import jwt_decode from "jwt-decode";
-import Statistics from "./Statistics";
 
 class HomePage extends React.Component {
   componentDidMount() {
@@ -71,9 +70,6 @@ class HomePage extends React.Component {
               </Statistic>
             </StatisticGroup>
           </Grid.Row>
-          {/* <Grid.Row centered> */}
-          <Statistics />
-          {/* </Grid.Row> */}
         </Grid>
       </div>
     );

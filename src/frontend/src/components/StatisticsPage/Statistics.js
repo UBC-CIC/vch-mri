@@ -2,8 +2,8 @@ import React from "react";
 import { Form, Segment, Header, Grid, Statistic } from "semantic-ui-react";
 import { DateInput } from "semantic-ui-calendar-react";
 import { connect } from "react-redux";
-import { getStatistics } from "../actions/ResultActions";
-import { sendErrorToast, sendSuccessToast } from "../helpers";
+import { getStatistics } from "../../actions/ResultActions";
+import { sendErrorToast, sendSuccessToast } from "../../helpers";
 
 class Statistics extends React.Component {
   constructor(props) {
@@ -55,7 +55,7 @@ class Statistics extends React.Component {
         label: `${labelPrefix} Overridden`,
         value: `${data.overridden}/${total}`,
       },
-      { key: `${labelPrefix}Efficacy`, label: "Efficacy", value: percent },
+      { key: `${labelPrefix}Accuracy`, label: "Accuracy", value: percent },
     ];
   }
 
@@ -75,7 +75,7 @@ class Statistics extends React.Component {
         // value: rule.total_overridden,
         value: `${rule.total_overridden}/${total}`,
       },
-      { key: `${ruleId}-Efficacy`, label: "Efficacy", value: percent },
+      { key: `${ruleId}-Accuracy`, label: "Accuracy", value: percent },
     ];
   }
 
@@ -89,7 +89,7 @@ class Statistics extends React.Component {
         <Grid.Row centered>
           <Segment inverted color="blue">
             <Header as="h2" textAlign="center">
-              AI Result Statistics
+              AI Results Statistics
             </Header>
             <Form inverted color="blue" onSubmit={this.handleSubmit}>
               <DateInput
