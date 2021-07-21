@@ -143,7 +143,7 @@ class Statistics extends React.Component {
             </Grid.Row>
           </>
         )}
-        {/* {results && results.rule.total > 0 && (
+        {results && results.rule.total > 0 && (
           <>
             <hr />
             <Grid.Row centered>
@@ -166,7 +166,7 @@ class Statistics extends React.Component {
             </Grid.Row>
             <hr />
           </>
-        )} */}
+        )}
         {results &&
           results.rules &&
           results.rules.length > 0 &&
