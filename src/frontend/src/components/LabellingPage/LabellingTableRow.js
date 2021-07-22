@@ -234,7 +234,10 @@ class LabellingTableRow extends React.Component {
   //     </>
   //   );
 
-  popupButtonAIConfirm = (resState, reqId) => {
+  popupButtonAIConfirm = (
+    reqId,
+    resState = REQUEST_STATES.STATE_AIProcessed
+  ) => {
     let showOnlyRerun = false;
     let gridColumns = 2;
 
@@ -355,7 +358,7 @@ class LabellingTableRow extends React.Component {
           }
         >
           <Popup
-            content={this.popupButtonAIConfirm(resState, result.id)}
+            content={this.popupButtonAIConfirm(result.id, resState)}
             trigger={
               <Table.Cell singleLine>
                 {this.renderItemCaret(this.props.expanded)}
@@ -386,7 +389,7 @@ class LabellingTableRow extends React.Component {
           )}
           {resState !== REQUEST_STATES.STATE_ReceivedNewlyLabelled && (
             <Popup
-              content={this.popupButtonAIConfirm(resState, result.id)}
+              content={this.popupButtonAIConfirm(result.id, resState)}
               trigger={!error && <Table.Cell>{state}</Table.Cell>}
               flowing
               hoverable
@@ -395,7 +398,7 @@ class LabellingTableRow extends React.Component {
             />
           )}
           <Popup
-            content={this.popupButtonAIConfirm(resState, result.id)}
+            content={this.popupButtonAIConfirm(result.id, resState)}
             trigger={
               <Table.Cell>
                 {result.ai_rule_id ? result.ai_rule_id : " - "}
@@ -407,7 +410,7 @@ class LabellingTableRow extends React.Component {
             style={{ color: "red" }}
           />
           <Popup
-            content={this.popupButtonAIConfirm(resState, result.id)}
+            content={this.popupButtonAIConfirm(result.id, resState)}
             trigger={
               <Table.Cell>
                 {result.ai_priority ? result.ai_priority : " - "}
@@ -419,7 +422,7 @@ class LabellingTableRow extends React.Component {
             style={{ color: "red" }}
           />
           <Popup
-            content={this.popupButtonAIConfirm(resState, result.id)}
+            content={this.popupButtonAIConfirm(result.id, resState)}
             trigger={
               <Table.Cell>
                 {result.ai_contrast !== null
