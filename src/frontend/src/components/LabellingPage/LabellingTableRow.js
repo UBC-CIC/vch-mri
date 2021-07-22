@@ -1,6 +1,15 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Form, Icon, Table, TextArea, Popup, Button } from "semantic-ui-react";
+import {
+  Form,
+  Icon,
+  Table,
+  TextArea,
+  Popup,
+  Button,
+  Grid,
+  Header,
+} from "semantic-ui-react";
 import { modifyResult } from "../../actions/ResultActions";
 import ResultsHistoryView from "../ResultsPage/ResultsHistoryView";
 import ResultsTableRowExpansion from "./ResultsRowExpansion/ResultsTableRowExpansion";
@@ -43,6 +52,7 @@ class LabellingTableRow extends React.Component {
     this.handleChangeNote = this.handleChangeNote.bind(this);
     this.timerChangeNote = this.timerChangeNote.bind(this);
     this.handleAIConfirm = this.handleAIConfirm.bind(this);
+    this.handleRerunAI = this.handleRerunAI.bind(this);
     this.popupButtonAIConfirm = this.popupButtonAIConfirm.bind(this);
   }
 
@@ -82,6 +92,22 @@ class LabellingTableRow extends React.Component {
         this.props.modifyResult(this.preparePayloadModifyResult(reqId));
       }
     );
+  }
+
+  handleRerunAI(reqId) {
+    console.log("handleRerunAI");
+    console.log(reqId);
+    // this.setState(
+    //   {
+    //     labelled_rule_id: "e",
+    //     labelled_priority: "e",
+    //     labelled_contrast: "e",
+    //     labelled_notes: NOTE_CONFIRM_AI,
+    //   },
+    //   () => {
+    //     this.props.modifyResult(this.preparePayloadModifyResult(reqId));
+    //   }
+    // );
   }
 
   handleSelectChange(e, { name, value }) {
@@ -180,18 +206,93 @@ class LabellingTableRow extends React.Component {
     }
   }
 
-  popupButtonAIConfirm = (reqId) => (
-    <>
-      Note: all existing labelling overrides will be cleared.
-      <Button
-        fluid
-        color="green"
-        content={BtnTextConfirm}
-        onClick={() => this.handleAIConfirm(reqId)}
-        style={{ marginTop: "10px" }}
-      />
-    </>
-  );
+  //   popupButtonAIConfirm = (resState, reqId) => (
+  //     <>
+  //       <Grid centered divided="vertically">
+  //         <Grid.Row columns={1}>
+  //           <p>Note: all existing labelling overrides will be cleared.</p>
+  //         </Grid.Row>
+  //         <Grid.Row columns={2}>
+  //           <Grid.Column textAlign="center">
+  //             {/* <Header as="h4">{BtnTextConfirm}</Header>
+  //             <p>Note: all existing labelling overrides will be cleared.</p> */}
+  //             <Button
+  //               fluid
+  //               color="green"
+  //               content={BtnTextConfirm}
+  //               onClick={() => this.handleAIConfirm(reqId)}
+  //               style={{ marginTop: "10px" }}
+  //             />
+  //           </Grid.Column>
+  //           <Grid.Column textAlign="center">
+  //             {/* <Header as="h4">Re-run AI</Header>
+  //             <p>
+  //               Note: all existing rule ID's, priority's and constrast's will be
+  //               cleared.
+  //             </p> */}
+  //             <Button
+  //               fluid
+  //               color="green"
+  //               content={"Re-run AI"}
+  //               onClick={() => this.handleAIConfirm(reqId)}
+  //               style={{ marginTop: "10px" }}
+  //             />
+  //           </Grid.Column>
+  //         </Grid.Row>
+  //       </Grid>
+  //     </>
+  //   );
+
+  popupButtonAIConfirm = (resState, reqId) => {
+    let showOnlyRerun = false;
+    let gridColumns = 2;
+
+    switch (resState) {
+      case REQUEST_STATES.STATE_Received:
+      case REQUEST_STATES.STATE_ReceivedDupe:
+        showOnlyRerun = true;
+        gridColumns = 1;
+        break;
+
+      default:
+        break;
+    }
+    return (
+      <>
+        <Grid centered divided="horizontally">
+          {/* <Grid.Row columns={1}>
+            <p>Note: all existing labelling overrides will be cleared.</p>
+          </Grid.Row> */}
+          <Grid.Row columns={gridColumns}>
+            {!showOnlyRerun && (
+              <Grid.Column textAlign="center">
+                <Header as="h4">{BtnTextConfirm}</Header>
+                <p>Existing labelling overrides will be cleared.</p>
+                <Button
+                  // fluid
+                  color="green"
+                  content={BtnTextConfirm}
+                  onClick={() => this.handleAIConfirm(reqId)}
+                  // style={{ marginTop: "10px" }}
+                />
+              </Grid.Column>
+            )}
+            <Grid.Column textAlign="center">
+              <Header as="h4">Re-run AI</Header>
+              <p>Labelling overrides will NOT be cleared.</p>
+              <Button
+                // fluid
+                color="green"
+                content={"Re-run AI"}
+                onClick={() => this.handleRerunAI(reqId)}
+                // style={{ marginTop: "10px" }}
+              />
+            </Grid.Column>
+          </Grid.Row>
+        </Grid>
+      </>
+    );
+  };
 
   render() {
     // console.log("expanded");
@@ -214,9 +315,11 @@ class LabellingTableRow extends React.Component {
     switch (resState) {
       case REQUEST_STATES.STATE_Received:
         state = "Received";
+        disableAIConfirmPopup = false;
         break;
       case REQUEST_STATES.STATE_ReceivedDupe:
         state = "Duplicate";
+        disableAIConfirmPopup = false;
         break;
       case REQUEST_STATES.STATE_AIProcessed:
         state = "AI processed";
@@ -261,22 +364,17 @@ class LabellingTableRow extends React.Component {
           }
         >
           <Popup
-            content={this.popupButtonAIConfirm(result.id)}
-            // content={
-            //   <Button
-            //     color="green"
-            //     content={BtnTextConfirm}
-            //     onClick={() => this.handleAIConfirm(result.id)}
-            //   />
-            // }
+            content={this.popupButtonAIConfirm(resState, result.id)}
             trigger={
               <Table.Cell singleLine>
                 {this.renderItemCaret(this.props.expanded)}
                 {result.id}
               </Table.Cell>
             }
+            flowing
             hoverable
             disabled={disableAIConfirmPopup}
+            // size="tiny"
             style={{ color: "red" }}
           />
           <Popup
@@ -285,41 +383,52 @@ class LabellingTableRow extends React.Component {
             hoverable
             style={{ color: "red" }}
           />
+          {resState === REQUEST_STATES.STATE_ReceivedNewlyLabelled && (
+            <Popup
+              content={PopupTextNewlyLabel}
+              trigger={!error && <Table.Cell>{state}</Table.Cell>}
+              flowing
+              hoverable
+              disabled={disableAIConfirmPopup}
+              style={{ color: "green" }}
+            />
+          )}
+          {resState !== REQUEST_STATES.STATE_ReceivedNewlyLabelled && (
+            <Popup
+              content={this.popupButtonAIConfirm(resState, result.id)}
+              trigger={!error && <Table.Cell>{state}</Table.Cell>}
+              flowing
+              hoverable
+              disabled={disableAIConfirmPopup}
+              style={{ color: "red" }}
+            />
+          )}
           <Popup
-            content={
-              resState === REQUEST_STATES.STATE_ReceivedNewlyLabelled
-                ? PopupTextNewlyLabel
-                : this.popupButtonAIConfirm(result.id)
-            }
-            trigger={!error && <Table.Cell>{state}</Table.Cell>}
-            hoverable
-            disabled={disableAIConfirmPopup}
-            style={{ color: "green" }}
-          />
-          <Popup
-            content={this.popupButtonAIConfirm(result.id)}
+            content={this.popupButtonAIConfirm(resState, result.id)}
             trigger={
               <Table.Cell>
                 {result.ai_rule_id ? result.ai_rule_id : " - "}
               </Table.Cell>
             }
+            flowing
             disabled={disableAIConfirmPopup}
             hoverable
             style={{ color: "red" }}
           />
           <Popup
-            content={this.popupButtonAIConfirm(result.id)}
+            content={this.popupButtonAIConfirm(resState, result.id)}
             trigger={
               <Table.Cell>
                 {result.ai_priority ? result.ai_priority : " - "}
               </Table.Cell>
             }
+            flowing
             hoverable
             disabled={disableAIConfirmPopup}
             style={{ color: "red" }}
           />
           <Popup
-            content={this.popupButtonAIConfirm(result.id)}
+            content={this.popupButtonAIConfirm(resState, result.id)}
             trigger={
               <Table.Cell>
                 {result.ai_contrast !== null
@@ -327,6 +436,7 @@ class LabellingTableRow extends React.Component {
                   : " - "}
               </Table.Cell>
             }
+            flowing
             hoverable
             disabled={disableAIConfirmPopup}
             style={{ color: "red" }}

@@ -32,6 +32,7 @@ class RuleCandidatesRow extends React.Component {
             <Table.Cell>{candidate.info_weighted_tk}</Table.Cell>
           </Table.Row>
         }
+        flowing
         hoverable
         disabled={index !== 0}
         style={{ color: "red" }}
