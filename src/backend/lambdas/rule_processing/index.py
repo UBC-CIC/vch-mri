@@ -13,7 +13,8 @@ INSERT INTO data_request(id, info, p5_flag) VALUES
 (%s, %s, %s)
 ON CONFLICT (id) DO UPDATE
 SET info = excluded.info, 
-p5_flag = excluded.p5_flag;
+p5_flag = excluded.p5_flag
+RETURNING state;
 """
 
 update_ai_priority = """
@@ -24,7 +25,7 @@ WHERE id = %s;
 
 update_cmd = """
 UPDATE data_request
-SET state = 'ai_priority_processed', ai_rule_id = r.id , ai_priority = r.priority, ai_contrast = r.contrast
+SET %s ai_rule_id = r.id , ai_priority = r.priority, ai_contrast = r.contrast, error = NULL
 FROM mri_rules r WHERE r.id = (
 SELECT id
 FROM mri_rules, to_tsquery('ths_search','%s') query 
@@ -133,15 +134,19 @@ def handler(event, context):
         try:
             logger.info(json.dumps(v))
             cur.execute(insert_cmd, (cio_id, json.dumps(v), v["p5"]))
+            insert_response = cur.fetchall()
+            logger.info(insert_response)
+            state = insert_response[0][0]
+            logger.info(state)
             if "anatomy" not in v.keys():
                 # No anatomy found => ai_priority = P99
                 logger.info("No anatomy found for CIO ID: ", cio_id)
-                cur.execute(update_ai_priority, ('P99',cio_id))
+                cur.execute(update_ai_priority, ('P99', cio_id))
                 psql.conn.commit()
                 return {"rule_id": "N/A", 'headers': headers, "priority": "P99"}
             else:
                 # Determine Rule matches
-                anatomy_str  = searchAnatomy(v["anatomy"])
+                anatomy_str = searchAnatomy(v["anatomy"])
                 info_str = searchText(v, "anatomy", "medical_condition", "diagnosis", "symptoms", "phrases",
                                       "other_info")
 
@@ -150,10 +155,17 @@ def handler(event, context):
                 cur.execute(command)
 
                 # Determine and store highest ranking AI rule
-                command = (update_cmd % info_str) + anatomy_str + (update_cmd_end % cio_id)
+                command_state = "state = 'ai_priority_processed',"
+                if state == 'labelled_priority':
+                    command_state = ""      # keep labelled state only
+                # if v["new_request"]:
+                # else:
+                command = (update_cmd % (command_state, info_str)) + anatomy_str + (update_cmd_end % cio_id)
+
                 logger.info(command)
                 cur.execute(command)
-                ret = cur.fetchall() 
+                ret = cur.fetchall()
+
                 if not ret: 
                     cur.execute(update_ai_priority, ('P98', cio_id))
                     psql.conn.commit()

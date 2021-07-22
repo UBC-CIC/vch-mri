@@ -16,6 +16,7 @@ class ResultsHistoryViewRow extends React.Component {
     const history = this.props.history;
     switch (history.history_type) {
       case "request":
+      case "request_rerun":
         return (
           <Table.Cell>
             {history ? (

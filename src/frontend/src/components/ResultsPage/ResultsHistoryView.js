@@ -49,9 +49,10 @@ class ResultsHistoryView extends React.Component {
                 </Table.Row>
               </Table.Header>
               <Table.Body>
-                {this.props.history.map((history, index) => (
-                  <ResultsHistoryViewRow history={history} index={index} />
-                ))}
+                {this.props.history &&
+                  this.props.history.map((history, index) => (
+                    <ResultsHistoryViewRow history={history} index={index} />
+                  ))}
               </Table.Body>
             </Table>
           </Container>

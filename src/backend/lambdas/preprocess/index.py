@@ -22,6 +22,7 @@ compr_m = boto3.client(service_name='comprehendmedical')
 lambda_client = boto3.client('lambda')
 
 RuleProcessingLambdaName = os.getenv('RULE_PROCESSING_LAMBDA')
+DataResultsLambdaName = os.getenv('DATA_RESULTS_LAMBDA')
 
 spell = SpellChecker()
 psql = postgresql.PostgreSQL()
@@ -60,7 +61,7 @@ insert_history_request_cmd = """
     INSERT INTO request_history(id_data_request, history_type, dob, height, weight, exam_requested, reason_for_exam,
         initial_priority, cognito_user_id, cognito_user_fullname)
     VALUES 
-    (%s, 'request', %s, %s, %s, %s, %s, %s, %s, %s)
+    (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
     """
 
 update_request_error_cmd = """
@@ -69,6 +70,41 @@ update_request_error_cmd = """
     WHERE id = %s
     RETURNING id
     """
+
+
+# AND (error IS NULL OR error = '')
+def query_results_id(cur, id):
+    cmd = """
+    SELECT req.id, state, error, request
+    FROM data_request as req
+    WHERE req.id = %s
+    AND state NOT IN ('deleted')
+    """
+    cur.execute(cmd, [id])
+    return cur.fetchall()
+
+
+def parse_response_results(response):
+    resp_list = []
+    for resp_tuple in response:
+        resp = {}
+
+        # Rule - filled in queryAndParseResponseRuleCandidates
+        # rule['rules_id'] = resp_tuple[2]
+        # rule['info'] = resp_tuple[22]
+        # rule['priority'] = resp_tuple[19]
+        # rule['contrast'] = resp_tuple[20]
+        # rule['body_part'] = resp_tuple[16]
+        # rule['bp_tk'] = resp_tuple[17]
+        # rule['info_weighted_tk'] = resp_tuple[18]
+
+        resp['id'] = resp_tuple[0]
+        resp['state'] = resp_tuple[1]
+        resp['error'] = resp_tuple[2]
+        resp['request_json'] = resp_tuple[3]  # Request
+
+        resp_list.append(resp)
+    return resp_list
 
 
 def convert2CM(height):
@@ -275,32 +311,14 @@ def error_handler(cio, message):
             "headers": {"Content-Type": "application/json"}}
 
 
-def handler(event, context):
-    logger.info(event)
-    if 'body' not in event:
-        logger.error('Missing parameters')
-        return {"isBase64Encoded": False, "statusCode": 400, "body": "Missing Body Parameter",
-                "headers": {"Content-Type": "application/json"}}
-
-    data_df = json.loads(event['body'])  # use for postman tests
-    # data_df = event['body'] # use for console tests
+def parse_and_run_rule_processing(data_df, cognito_user_id, cognito_user_fullname, new_request=True):
+    logger.info('parse_and_run_rule_processing')
     logger.info(data_df)
-
     if 'ReqCIO' not in data_df or not data_df['ReqCIO']:
         data_df['CIO_ID'] = str(uuid.uuid4())
     else:
         data_df['CIO_ID'] = (data_df['ReqCIO'])
 
-    ##########################################
-    # TODO: Parameter validation
-    cognito_user_id = ''
-    if 'cognito_user_id' in data_df and data_df['cognito_user_id']:
-        cognito_user_id = data_df["cognito_user_id"]
-        logger.info(cognito_user_id)
-    cognito_user_fullname = ''
-    if 'cognito_user_fullname' in data_df and data_df['cognito_user_fullname']:
-        cognito_user_fullname = data_df["cognito_user_fullname"]
-        logger.info(cognito_user_fullname)
     cio = data_df["CIO_ID"]
     logger.info(cio)
     dob = data_df['DOB']
@@ -328,19 +346,20 @@ def handler(event, context):
     logger.info('Store request in the DB immediately')
     with psql.conn.cursor() as cur:
         try:
-            # Insert new request
-            logger.info("event['body']")
-            logger.info(event['body'])
-            logger.info(data_df)
-            data = (data_df["CIO_ID"], age, height, weight, json.dumps(data_df))
-
-            command = insert_new_request_cmd % data
-            logger.info(command)
-
-            cur.execute(insert_new_request_cmd, data)
-
             # Insert request history
-            data = (data_df["CIO_ID"], dob, req_height, req_weight, exam_requested, reason_for_exam,
+            if new_request:
+                # Insert new request
+                data = (cio, age, height, weight, json.dumps(data_df))
+
+                logger.info(insert_new_request_cmd)
+                logger.info(data)
+
+                cur.execute(insert_new_request_cmd, data)
+
+                request_type = 'request'
+            else:
+                request_type = 'request_rerun'
+            data = (cio, request_type, dob, req_height, req_weight, exam_requested, reason_for_exam,
                     radiologist_priority, cognito_user_id, cognito_user_fullname)
             command = insert_history_request_cmd % data
             logger.info(command)
@@ -367,7 +386,7 @@ def handler(event, context):
     # data_df['Spine'] = preProcessText(data_df['Appropriateness Checklist - Spine'])
     # data_df['Hip & Knee'] = preProcessText(data_df['Appropriateness Checklist - Hip & Knee'])
 
-    # New Dataframe 
+    # New Dataframe
     template = ['CIO_ID', 'height', 'weight', 'Sex', 'age', 'Preferred MRI Site', 'priority']
     formatted_df = recursively_prune_dict_keys(data_df, template)
     formatted_df['medical_condition'] = ''
@@ -377,6 +396,8 @@ def handler(event, context):
     formatted_df['phrases'] = ''
     formatted_df['other_info'] = ''
     formatted_df['p5'] = 'f'
+    if new_request:
+        formatted_df['new_request'] = True
 
     anatomy_list = []
     medical_conditions = []
@@ -398,8 +419,8 @@ def handler(event, context):
         return error_handler(cio, "replace_conjunctions - Exception Type: %s" % type(error))
 
     for obj in anatomy_json:
-        if obj['Category'] == 'ANATOMY' or obj['Category'] == 'TEST_TREATMENT_PROCEDURE' or obj[
-            'Category'] == 'MEDICAL_CONDITION':
+        if obj['Category'] == 'ANATOMY' or obj['Category'] == 'TEST_TREATMENT_PROCEDURE' or \
+                obj['Category'] == 'MEDICAL_CONDITION':
             anatomy_list.append(obj['Text'])
         elif obj['Score'] > 0.4 and obj['Category'] == 'TIME_EXPRESSION' and obj['Type'] == 'TIME_TO_TEST_NAME':
             formatted_df['p5'] = 't'
@@ -465,3 +486,118 @@ def handler(event, context):
         return response
     except Exception as error:
         return error_handler(cio, "RuleProcessingLambda - Exception Type: %s" % type(error))
+
+
+def rerun_rule_processing_single(cio_id, cognito_user_id, cognito_user_fullname):
+    logger.info('rerun_rule_processing_single')
+    logger.info(cio_id)
+
+    with psql.conn.cursor() as cur:
+        if cio_id is None:
+            logger.info('GET ALL - cio_id is None')
+        else:
+            response = parse_response_results(query_results_id(cur, cio_id))
+            logger.info(response)
+            if len(response) > 0:
+                logger.info('calling parse_and_run_rule_processing')
+                return parse_and_run_rule_processing(response[0]['request_json'],
+                                                     cognito_user_id, cognito_user_fullname, False)
+            else:
+                error_msg = 'NO results from CIO ID: %s' % cio_id
+                return {"isBase64Encoded": False, "statusCode": 400, "body": error_msg,
+                        "headers": {"Content-Type": "application/json"}}
+
+            # LET UI retrieve new history
+            # 
+            # data = {
+            #     'operation': 'GET',
+            #     'id': cio_id
+            # }
+            # logger.info('DataResultsLambdaName')
+            # logger.info(DataResultsLambdaName)
+            # try:
+            #     debug = os.getenv('LOCAL_DEBUG')
+            #     if debug is not None:
+            #         logger.info('LOCAL_DEBUG')
+            #         # “generated Lambdas are suffixed with an ID to keep them unique between multiple
+            #         # deployments (e.g. FunctionB-123ABC4DE5F6A), so a Lambda named "FunctionB" doesn't exist”
+            #         # https://stackoverflow.com/questions/60181387/how-to-invoke-aws-lambda-from-another-lambda-within-sam-local
+            #         lambda_client_local = boto3.client('lambda',
+            #                                            endpoint_url="http://host.docker.internal:5002",
+            #                                            use_ssl=False,
+            #                                            verify=False,
+            #                                            config=Config(signature_version=UNSIGNED,
+            #                                                          read_timeout=10000,
+            #                                                          retries={'max_attempts': 0}))
+            #         rules_response = lambda_client_local.invoke(
+            #             FunctionName=DataResultsLambdaName,
+            #             InvocationType='RequestResponse',
+            #             Payload=json.dumps(data)
+            #         )
+            #     else:
+            #         rules_response = lambda_client.invoke(
+            #             FunctionName=DataResultsLambdaName,
+            #             InvocationType='RequestResponse',
+            #             Payload=json.dumps(data)
+            #         )
+            #
+            #     logger.info(rules_response)
+            #     if rules_response['ResponseMetadata']['HTTPStatusCode'] != 200:
+            #         return rules_response
+            #
+            #     data_response = json.loads(rules_response['Payload'].read())
+            #     return {
+            #         'result': data_response,
+            #         'context': data,
+            #         'headers': {
+            #             'Access-Control-Allow-Headers': 'Content-Type',
+            #             'Access-Control-Allow-Origin': 'http://localhost:3000',
+            #             'Access-Control-Allow-Methods': 'OPTIONS,POST,GET'
+            #         }
+            #     }
+            # except Exception as error:
+            #     logger.error(error)
+            #     return error_handler(cio_id, "QueryRulesLambdaName - Exception Type: %s" % type(error))
+
+
+def handler(event, context):
+    logger.info(event)
+    param_error = {"isBase64Encoded": False, "statusCode": 400, "body": "Missing Body Parameter",
+                   "headers": {"Content-Type": "application/json"}}
+    if 'body' not in event:
+        logger.error(param_error["body"])
+        return param_error
+
+    data_df = json.loads(event['body'])  # use for postman tests
+    # data_df = event['body'] # use for console tests
+    logger.info(data_df)
+
+    ##########################################
+    # TODO: Parameter validation
+    cognito_user_id = ''
+    if 'cognito_user_id' in data_df and data_df['cognito_user_id']:
+        cognito_user_id = data_df["cognito_user_id"]
+        logger.info(cognito_user_id)
+    cognito_user_fullname = ''
+    if 'cognito_user_fullname' in data_df and data_df['cognito_user_fullname']:
+        cognito_user_fullname = data_df["cognito_user_fullname"]
+        logger.info(cognito_user_fullname)
+
+    if 'operation' in data_df:
+        rest_cmd = data_df['operation']
+        logger.info('------- REST: ' + rest_cmd)
+
+        if rest_cmd == 'RERUN_ALL':
+            logger.info('RERUN_ALL')
+        elif rest_cmd == 'RERUN_ONE':
+            logger.info('RERUN_ONE')
+            if 'CIO_ID' not in data_df:
+                param_error["body"] = "Missing Body Parameter: CIO_ID"
+                logger.error(param_error["body"])
+                return param_error
+            cio_id = data_df['CIO_ID']
+            return rerun_rule_processing_single(cio_id, cognito_user_id, cognito_user_fullname)
+    else:
+        logger.info('------- REST: new request')
+        return parse_and_run_rule_processing(data_df, cognito_user_id, cognito_user_fullname)
+

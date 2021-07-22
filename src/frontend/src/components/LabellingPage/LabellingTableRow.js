@@ -10,7 +10,7 @@ import {
   Grid,
   Header,
 } from "semantic-ui-react";
-import { modifyResult } from "../../actions/ResultActions";
+import { modifyResult, rerunAI } from "../../actions/ResultActions";
 import ResultsHistoryView from "../ResultsPage/ResultsHistoryView";
 import ResultsTableRowExpansion from "./ResultsRowExpansion/ResultsTableRowExpansion";
 import {
@@ -97,17 +97,8 @@ class LabellingTableRow extends React.Component {
   handleRerunAI(reqId) {
     console.log("handleRerunAI");
     console.log(reqId);
-    // this.setState(
-    //   {
-    //     labelled_rule_id: "e",
-    //     labelled_priority: "e",
-    //     labelled_contrast: "e",
-    //     labelled_notes: NOTE_CONFIRM_AI,
-    //   },
-    //   () => {
-    //     this.props.modifyResult(this.preparePayloadModifyResult(reqId));
-    //   }
-    // );
+
+    this.props.rerunAI(reqId);
   }
 
   handleSelectChange(e, { name, value }) {
@@ -565,4 +556,6 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, { modifyResult })(LabellingTableRow);
+export default connect(mapStateToProps, { modifyResult, rerunAI })(
+  LabellingTableRow
+);

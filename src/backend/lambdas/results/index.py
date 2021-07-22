@@ -24,15 +24,6 @@ def queryResults(cur, page):
     return cur.fetchall()
 
 
-def queryPageCount(cur):
-    cmd = """
-    SELECT CEIL(CAST(COUNT(id) AS float)/50)
-    FROM data_request
-    """
-    cur.execute(cmd)
-    return cur.fetchall()[0][0]
-
-
 def queryResultsID(cur, id):
     cmd = """
     SELECT req.id, state, error, request, age, height, weight, req.info, created_at, updated_at,
@@ -45,6 +36,16 @@ def queryResultsID(cur, id):
     """
     cur.execute(cmd, [id])
     return cur.fetchall()
+
+
+def queryPageCount(cur):
+    cmd = """
+    SELECT CEIL(CAST(COUNT(id) AS float)/50)
+    FROM data_request
+    """
+    cur.execute(cmd)
+    return cur.fetchall()[0][0]
+
 
 def queryResultsByDate(cur, start_date, end_date):
     cmd = """
@@ -541,7 +542,7 @@ def handler(event, context):
                 monthly = getResultCount(cur, 'MONTHLY')
                 response = [{'daily': daily, 'weekly': weekly, 'monthly': monthly}]
             psql.commit()
-            logger.info(response)
+            # logger.info(response)
             resp_dict['data'] = response
             return resp_dict
 

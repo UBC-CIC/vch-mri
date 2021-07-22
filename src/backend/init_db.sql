@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS data_request (
     weight VARCHAR,
     request JSON,   -- original request JSON
     info JSON,     -- processed current request data prior sending to Rules engine
-    ai_rule_candidates INT[]        -- AI determined
+    ai_rule_candidates INT[],        -- AI determined
     ai_rule_id INT,
     ai_priority VARCHAR(3),
     ai_contrast BOOLEAN,
@@ -58,10 +58,10 @@ CREATE TABLE IF NOT EXISTS data_request (
     labelled_notes VARCHAR,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    FOREIGN KEY (rules_id) REFERENCES mri_rules(id)
+    FOREIGN KEY (ai_rule_id) REFERENCES mri_rules(id)
 );
 
-CREATE TYPE enum_history_type AS ENUM ('request', 'modification', 'delete');
+CREATE TYPE enum_history_type AS ENUM ('request', 'request_rerun', 'ai_result', 'modification', 'delete');
 
 CREATE TABLE IF NOT EXISTS request_history ( 
     id SERIAL PRIMARY KEY,

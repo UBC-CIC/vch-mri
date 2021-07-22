@@ -14,6 +14,9 @@ import {
   MODIFY_RESULT_FAILURE,
   MODIFY_RESULT_STARTED,
   MODIFY_RESULT_SUCCESS,
+  AI_RERUN_STARTED,
+  AI_RERUN_SUCCESS,
+  AI_RERUN_FAILURE,
   CHANGE_RESULT_SORT,
 } from "../constants/resultConstants";
 import axios from "axios";
@@ -119,6 +122,27 @@ export const modifyResultSuccess = (response) => {
 export const modifyResultFailure = (error) => {
   return {
     type: MODIFY_RESULT_FAILURE,
+    error,
+  };
+};
+
+// AI_RERUN
+export const aiRerunStarted = () => {
+  return {
+    type: AI_RERUN_STARTED,
+  };
+};
+
+export const aiRerunSuccess = (response) => {
+  return {
+    type: AI_RERUN_SUCCESS,
+    response,
+  };
+};
+
+export const aiRerunFailure = (error) => {
+  return {
+    type: AI_RERUN_FAILURE,
     error,
   };
 };
@@ -234,5 +258,46 @@ export const modifyResult = (state) => {
       .catch((e) => {
         dispatch(modifyResultFailure(e));
       });
+  };
+};
+
+export const rerunAI = (reqId) => {
+  return async (dispatch) => {
+    dispatch(aiRerunStarted());
+    console.log("rerunAI");
+    console.log(reqId);
+
+    try {
+      // Re-run AI for one result
+      await axios.post(`${process.env.REACT_APP_HTTP_API_URL}/parser`, {
+        operation: "RERUN_ONE",
+        CIO_ID: reqId,
+      });
+
+      // Get latest info for result - history and new AI result
+      const response = await axios.post(
+        `${process.env.REACT_APP_HTTP_API_URL}/results`,
+        {
+          operation: "GET",
+          id: reqId,
+        }
+      );
+      console.log("rerunAI 2");
+      console.log(response.data);
+      dispatch(aiRerunSuccess(response.data));
+    } catch (ex) {
+      dispatch(aiRerunFailure(ex));
+    }
+    // axios
+    //   .post(`${process.env.REACT_APP_HTTP_API_URL}/parser`, {
+    //     operation: "RERUN_ONE",
+    //     CIO_ID: reqId
+    //   })
+    //   .then((response) => {
+    //     dispatch(modifyResultSuccess(response.data));
+    //   })
+    //   .catch((e) => {
+    //     dispatch(modifyResultFailure(e));
+    //   });
   };
 };

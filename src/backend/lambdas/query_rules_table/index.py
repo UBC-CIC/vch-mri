@@ -57,8 +57,8 @@ def addRule(cur, values):
     cmd = cmd[:-1]
     cmd += " RETURNING id, body_part, contrast, priority, info, active"
 
-    command = cmd % param_values
-    logger.info(command)
+    logger.info(cmd)
+    logger.info(param_values)
 
     cur.execute(cmd, param_values)
     ret = cur.fetchall()

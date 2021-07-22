@@ -14,6 +14,9 @@ import {
   MODIFY_RESULT_FAILURE,
   MODIFY_RESULT_STARTED,
   MODIFY_RESULT_SUCCESS,
+  AI_RERUN_STARTED,
+  AI_RERUN_SUCCESS,
+  AI_RERUN_FAILURE,
   CHANGE_RESULT_SORT,
   REQUEST_STATES,
 } from "../constants/resultConstants";
@@ -41,6 +44,7 @@ export const results = (state = initialState, action) => {
     case GET_RESULT_DATA_STARTED:
     case GET_STATISTICS_STARTED:
     case MODIFY_RESULT_STARTED:
+    case AI_RERUN_STARTED:
       return {
         ...state,
         loading: true,
@@ -78,15 +82,23 @@ export const results = (state = initialState, action) => {
       };
     case MODIFY_RESULT_SUCCESS:
       const updResult = action.response.data[0];
+      console.log("MODIFY_RESULT_SUCCESS");
+      console.log(updResult);
       return {
         ...state,
         resultsList: state.resultsList.map((result) => {
           let ret = result;
           if (result.id === updResult.id) {
             result.state = updResult.state;
+            if (updResult.history && updResult.history.length > 0)
+              result.history = updResult.history;
             if (updResult.state === REQUEST_STATES.STATE_ReceivedLabelled)
               result.state = REQUEST_STATES.STATE_ReceivedNewlyLabelled;
-            if (result.history && result.history.length > 0) {
+            if (
+              updResult.history_type &&
+              result.history &&
+              result.history.length > 0
+            ) {
               const history = {
                 history_type: updResult.history_type,
                 description: updResult.description,
@@ -96,6 +108,7 @@ export const results = (state = initialState, action) => {
               };
               result.history.unshift(history);
             }
+
             ret = {
               ...result,
               labelled_rule_id: updResult.labelled_rule_id,
@@ -103,17 +116,38 @@ export const results = (state = initialState, action) => {
               labelled_contrast: updResult.labelled_contrast,
               labelled_notes: updResult.labelled_notes,
             };
+            console.log(ret);
           }
           return ret;
         }),
         loading: false,
         success: "MRI Result values have been successfully modified!",
       };
+    case AI_RERUN_SUCCESS:
+      const rerunResult = action.response.data[0];
+      console.log("AI_RERUN_SUCCESS");
+      console.log(rerunResult);
+      return {
+        ...state,
+        resultsList: state.resultsList.map((result) => {
+          let ret = result;
+          if (result.id === rerunResult.id) {
+            if (rerunResult.state === REQUEST_STATES.STATE_ReceivedLabelled)
+              rerunResult.state = REQUEST_STATES.STATE_ReceivedNewlyLabelled;
+            ret = rerunResult;
+            console.log(ret);
+          }
+          return ret;
+        }),
+        loading: false,
+        success: "MRI AI Re-run has successfully completed!",
+      };
     case GET_RESULT_BY_ID_FAILURE:
     case GET_RESULTS_BY_PAGE_FAILURE:
     case GET_RESULT_DATA_FAILURE:
     case GET_STATISTICS_FAILURE:
     case MODIFY_RESULT_FAILURE:
+    case AI_RERUN_FAILURE:
       return {
         ...state,
         error: action.error,
