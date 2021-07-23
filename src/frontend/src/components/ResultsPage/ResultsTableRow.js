@@ -75,6 +75,10 @@ class ResultsTableRow extends React.Component {
     //  error state
     if (result.error && result.error !== "") error = true;
 
+    let aiPriorityString = result.ai_priority ? result.ai_priority : " - ";
+    if (result.ai_priority === "P98" || result.ai_priority === "P99")
+      aiPriorityString = "No match";
+
     switch (resState) {
       case REQUEST_STATES.STATE_Received:
         state = "Received";
@@ -140,9 +144,7 @@ class ResultsTableRow extends React.Component {
           <Table.Cell>
             {result.ai_rule_id ? result.ai_rule_id : " - "}
           </Table.Cell>
-          <Table.Cell>
-            {result.ai_priority ? result.ai_priority : " - "}
-          </Table.Cell>
+          <Table.Cell>{aiPriorityString}</Table.Cell>
           <Table.Cell>
             {result.ai_contrast !== null
               ? result.ai_contrast.toString()

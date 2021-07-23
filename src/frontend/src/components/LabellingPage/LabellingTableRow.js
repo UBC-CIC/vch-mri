@@ -304,6 +304,10 @@ class LabellingTableRow extends React.Component {
     //  error state
     if (result.error && result.error !== "") error = true;
 
+    let aiPriorityString = result.ai_priority ? result.ai_priority : " - ";
+    if (result.ai_priority === "P98" || result.ai_priority === "P99")
+      aiPriorityString = "No match";
+
     let disableAIConfirmPopup = true;
 
     switch (resState) {
@@ -411,11 +415,7 @@ class LabellingTableRow extends React.Component {
           />
           <Popup
             content={this.popupButtonAIConfirm(result.id, resState)}
-            trigger={
-              <Table.Cell>
-                {result.ai_priority ? result.ai_priority : " - "}
-              </Table.Cell>
-            }
+            trigger={<Table.Cell>{aiPriorityString}</Table.Cell>}
             flowing
             hoverable
             disabled={disableAIConfirmPopup}
