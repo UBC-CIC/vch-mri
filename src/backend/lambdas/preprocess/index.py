@@ -329,24 +329,24 @@ def parse_and_run_rule_processing(data_df, cognito_user_id, cognito_user_fullnam
         data_df['CIO_ID'] = (data_df['ReqCIO'])
 
     cio = data_df["CIO_ID"]
-    logger.info(cio)
+    # logger.info(cio)
     dob = data_df['DOB']
-    logger.info(dob)
+    # logger.info(dob)
     req_height = data_df['Height'] + ' ' + data_df['inch-cm']
-    logger.info(req_height)
+    # logger.info(req_height)
     req_weight = data_df['Weight'] + ' ' + data_df['kg-lbs']
-    logger.info(req_weight)
+    # logger.info(req_weight)
     exam_requested = data_df['Exam Requested']
-    logger.info(exam_requested)
+    # logger.info(exam_requested)
     reason_for_exam = data_df['Reason for Exam']
-    logger.info(reason_for_exam)
+    # logger.info(reason_for_exam)
     radiologist_priority = data_df['Radiologist Priority']
-    logger.info(radiologist_priority)
+    # logger.info(radiologist_priority)
 
     # Convert these easy fields first
     data_df['age'] = dob2age(dob)
     age = data_df['age']
-    logger.info(age)
+    # logger.info(age)
     data_df['height'] = convert2CM(req_height)
     height = data_df['height']
     data_df['weight'] = convert2KG(req_weight)
@@ -508,6 +508,7 @@ def rerun_rule_processing_all(cognito_user_id, cognito_user_fullname):
         total = len(results)
         processed = 0
         for result in results:
+            logger.info('rerun_all: #%s of %s' % (processed, total))
             logger.info(result)
 
             # if processed > 0:
@@ -635,6 +636,8 @@ def handler(event, context):
             logger.info('RERUN_ALL')
 
             results = rerun_rule_processing_all(cognito_user_id, cognito_user_fullname)
+            logger.info('RERUN_ALL FINAL result:')
+            logger.info(results)
             return {**results, 'headers': headers}
 
         elif rest_cmd == 'RERUN_ONE':
