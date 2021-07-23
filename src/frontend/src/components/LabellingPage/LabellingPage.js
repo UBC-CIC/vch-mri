@@ -14,8 +14,8 @@ class LabellingPage extends React.Component {
       showRules: true,
     };
   }
-  async componentWillMount() {
-    console.log("componentWillMount");
+  async componentDidMount() {
+    console.log("LabellingPage componentDidMount");
     await this.props.getMRIRules();
   }
 
@@ -25,8 +25,8 @@ class LabellingPage extends React.Component {
   };
 
   render() {
-    if (this.props.loading)
-      return <div className="page-container">Loading...</div>;
+    // if (this.props.loading)
+    //   return <div className="page-container">Loading...</div>;
 
     let labellingClassname = "fieldsLabellingRules";
     let labellingWidth = 10;

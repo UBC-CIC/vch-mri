@@ -16,6 +16,7 @@ import {
   MODIFY_RESULT_SUCCESS,
   AI_RERUN_STARTED,
   AI_RERUN_SUCCESS,
+  AI_RERUN_ALL_SUCCESS,
   AI_RERUN_FAILURE,
   CHANGE_RESULT_SORT,
 } from "../constants/resultConstants";
@@ -140,6 +141,13 @@ export const aiRerunSuccess = (response) => {
   };
 };
 
+export const aiRerunAllSuccess = (response) => {
+  return {
+    type: AI_RERUN_ALL_SUCCESS,
+    response,
+  };
+};
+
 export const aiRerunFailure = (error) => {
   return {
     type: AI_RERUN_FAILURE,
@@ -258,6 +266,41 @@ export const modifyResult = (state) => {
       .catch((e) => {
         dispatch(modifyResultFailure(e));
       });
+  };
+};
+
+export const rerunAIAll = (pageIndex) => {
+  return async (dispatch) => {
+    dispatch(aiRerunStarted());
+    console.log("rerunAIAll");
+    console.log(pageIndex);
+
+    try {
+      // Re-run AI for ALL results
+      let responseRerun = await axios.post(
+        `${process.env.REACT_APP_HTTP_API_URL}/parser`,
+        {
+          operation: "RERUN_ALL",
+        }
+      );
+      console.log("responseRerun");
+      console.log(responseRerun);
+
+      // Get latest info for result - history and new AI result
+      let response = await axios.post(
+        `${process.env.REACT_APP_HTTP_API_URL}/results`,
+        {
+          operation: "GET",
+          page: pageIndex,
+        }
+      );
+      console.log("rerunAIAll 2");
+      console.log(response.data);
+      dispatch(getResultsByPageSuccess(response.data));
+      dispatch(aiRerunAllSuccess(responseRerun.data));
+    } catch (ex) {
+      dispatch(aiRerunFailure(ex));
+    }
   };
 };
 

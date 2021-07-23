@@ -1,9 +1,11 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Table, Pagination } from "semantic-ui-react";
+import { Table, Pagination, Confirm } from "semantic-ui-react";
 import {
   changeResultSort,
   getResultsByPage,
+  rerunAI,
+  rerunAIAll,
 } from "../../actions/ResultActions";
 import { sendSuccessToast, sendErrorToast } from "../../helpers";
 import LabellingTableRow from "./LabellingTableRow";
@@ -18,6 +20,7 @@ class LabellingTable extends React.Component {
       showPhysicianResults: false,
       showAll: false,
       showLabelled: false,
+      showConfirmRerunAll: false,
     };
 
     this.handlePaginationChange = this.handlePaginationChange.bind(this);
@@ -25,6 +28,7 @@ class LabellingTable extends React.Component {
   }
 
   async componentDidMount() {
+    console.log("LabellingTable componentDidMount");
     this.props.getResultsByPage(this.state.activePage);
   }
 
@@ -63,9 +67,43 @@ class LabellingTable extends React.Component {
     this.setState({ showLabelled: !this.state.showLabelled });
   };
 
+  handleClickRerunAll = () => {
+    console.log("handleClickRerunAll");
+
+    this.setState({ showConfirmRerunAll: true });
+  };
+
+  rerunAll = () => {
+    console.log("rerunAll");
+
+    this.setState({ showConfirmRerunAll: false });
+    this.props.rerunAIAll(this.state.activePage);
+  };
+
   render() {
     return (
       <>
+        <Confirm
+          header="Re-Run AI?"
+          content="Clicking 'Confirm' will re-run the AI processing on ALL results in the system.  This could take several minutes."
+          open={this.state.showConfirmRerunAll}
+          onCancel={() => this.setState({ showConfirmRerunAll: false })}
+          onConfirm={this.rerunAll}
+          confirmButton="Confirm"
+          //   size="large"
+        />
+        <Button
+          style={{ margin: "1em 0em 1em 0em" }}
+          floated="left"
+          color="blue"
+          //   size="large"
+          onClick={this.handleClickRerunAll}
+          icon
+          disabled={this.props.loading}
+          labelPosition="right"
+        >
+          <Icon name="arrow circle right" /> Re-run AI for ALL
+        </Button>
         <Button
           style={{ margin: "1em 0em 1em 1em" }}
           floated="right"
@@ -387,6 +425,9 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, { changeResultSort, getResultsByPage })(
-  LabellingTable
-);
+export default connect(mapStateToProps, {
+  changeResultSort,
+  getResultsByPage,
+  rerunAI,
+  rerunAIAll,
+})(LabellingTable);

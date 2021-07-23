@@ -78,11 +78,20 @@ def query_results_id(cur, id):
     SELECT req.id, state, error, request
     FROM data_request as req
     WHERE req.id = %s
-    AND state NOT IN ('deleted')
+    AND state NOT IN ('deleted');
     """
     cur.execute(cmd, [id])
     return cur.fetchall()
 
+
+def query_results_all(cur):
+    cmd = """
+    SELECT req.id, state, error, request
+    FROM data_request as req
+    WHERE state NOT IN ('deleted');
+    """
+    cur.execute(cmd)
+    return cur.fetchall()
 
 def parse_response_results(response):
     resp_list = []
@@ -488,6 +497,35 @@ def parse_and_run_rule_processing(data_df, cognito_user_id, cognito_user_fullnam
         return error_handler(cio, "RuleProcessingLambda - Exception Type: %s" % type(error))
 
 
+def rerun_rule_processing_all(cognito_user_id, cognito_user_fullname):
+    logger.info('rerun_rule_processing_all')
+
+    with psql.conn.cursor() as cur:
+        response = query_results_all(cur)
+        results = parse_response_results(response)
+
+        # logger.info(results)
+        total = len(results)
+        processed = 0
+        for result in results:
+            logger.info(result)
+
+            # if processed > 0:
+            #     break
+            try:
+                parse_response = parse_and_run_rule_processing(result['request_json'],
+                                                               cognito_user_id, cognito_user_fullname, False)
+                processed += 1
+            except Exception as error:
+                logger.info('rerun_rule_processing_all')
+                logger.info(error)
+
+        return {
+            'processed': processed,
+            'total': total
+        }
+
+
 def rerun_rule_processing_single(cio_id, cognito_user_id, cognito_user_fullname):
     logger.info('rerun_rule_processing_single')
     logger.info(cio_id)
@@ -572,6 +610,12 @@ def handler(event, context):
     # data_df = event['body'] # use for console tests
     logger.info(data_df)
 
+    headers = {
+        'Access-Control-Allow-Headers': 'Content-Type',
+        'Access-Control-Allow-Origin': 'http://localhost:3000',
+        'Access-Control-Allow-Methods': 'OPTIONS,POST,GET'
+    }
+
     ##########################################
     # TODO: Parameter validation
     cognito_user_id = ''
@@ -589,6 +633,10 @@ def handler(event, context):
 
         if rest_cmd == 'RERUN_ALL':
             logger.info('RERUN_ALL')
+
+            results = rerun_rule_processing_all(cognito_user_id, cognito_user_fullname)
+            return {**results, 'headers': headers}
+
         elif rest_cmd == 'RERUN_ONE':
             logger.info('RERUN_ONE')
             if 'CIO_ID' not in data_df:

@@ -16,6 +16,7 @@ import {
   MODIFY_RESULT_SUCCESS,
   AI_RERUN_STARTED,
   AI_RERUN_SUCCESS,
+  AI_RERUN_ALL_SUCCESS,
   AI_RERUN_FAILURE,
   CHANGE_RESULT_SORT,
   REQUEST_STATES,
@@ -141,6 +142,15 @@ export const results = (state = initialState, action) => {
         }),
         loading: false,
         success: "MRI AI Re-run has successfully completed!",
+      };
+    case AI_RERUN_ALL_SUCCESS:
+      console.log("AI_RERUN_ALL_SUCCESS");
+      console.log(action.response);
+      //   console.log(action.response.data[0]);
+      return {
+        ...state,
+        loading: false,
+        success: `MRI AI Re-run ALL has completed!  ${action.response.processed} of ${action.response.total} succeeded`,
       };
     case GET_RESULT_BY_ID_FAILURE:
     case GET_RESULTS_BY_PAGE_FAILURE:

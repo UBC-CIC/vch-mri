@@ -7,7 +7,7 @@ import {
 } from "../../actions/ResultActions";
 import { sendSuccessToast, sendErrorToast } from "../../helpers";
 import ResultsTableRow from "./ResultsTableRow";
-import { Icon, Button } from "semantic-ui-react";
+// import { Icon, Button } from "semantic-ui-react";
 
 class ResultsTable extends React.Component {
   constructor(props) {
@@ -23,6 +23,7 @@ class ResultsTable extends React.Component {
   }
 
   async componentDidMount() {
+    console.log("ResultsTable componentDidMount");
     this.props.getResultsByPage(this.state.activePage);
   }
 

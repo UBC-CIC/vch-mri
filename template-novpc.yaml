@@ -273,6 +273,7 @@ Resources:
   Preprocess:
     Type: AWS::Serverless::Function
     Properties:
+      Timeout: 300 # 5 mins
       CodeUri: ./src/backend/lambdas/preprocess
       Events:
         ExplicitApi: # warning: creates a public endpoint
@@ -281,7 +282,7 @@ Resources:
             ApiId: !Ref HttpApi
             Method: Post
             Path: /parser
-            TimeoutInMillis: 29000
+            # TimeoutInMillis: 290000
             PayloadFormatVersion: "2.0"
             RouteSettings:
               ThrottlingBurstLimit: 100
@@ -297,6 +298,7 @@ Resources:
             ParameterName: "mri*"
         - LambdaInvokePolicy:
             FunctionName: !Ref RuleProcessing
+            # FunctionName: !Ref DataResults
       VpcConfig:
         SecurityGroupIds:
           - !Ref DataSecurityGroup
@@ -306,6 +308,7 @@ Resources:
       Environment:
         Variables:
           RULE_PROCESSING_LAMBDA: !Ref RuleProcessing
+          # DATA_RESULTS_LAMBDA: !Ref DataResults
           LOCAL_DEBUG: None
 
   RuleProcessing:
