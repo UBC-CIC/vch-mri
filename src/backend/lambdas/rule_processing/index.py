@@ -19,7 +19,12 @@ RETURNING state;
 
 update_ai_priority = """
 UPDATE data_request
-SET ai_priority = %s
+SET ai_priority = %s, ai_rule_id = NULL, ai_contrast = NULL,
+    state = 
+        CASE
+            WHEN state != 'labelled_priority' THEN 'ai_priority_processed'
+            ELSE state
+        END
 WHERE id = %s; 
 """
 
@@ -142,6 +147,15 @@ def handler(event, context):
                 # No anatomy found => ai_priority = P99
                 logger.info("No anatomy found for CIO ID: ", cio_id)
                 cur.execute(update_ai_priority, ('P99', cio_id))
+                result = {
+                    "rule_id": 'P98',
+                    "anatomy": '',
+                    "priority": '',
+                    "contrast": '',
+                    "p5_flag": '',
+                    "specialty_exams": ''
+                }
+                save_result_history(cur, cio_id, result)
                 psql.conn.commit()
                 return {"rule_id": "N/A", 'headers': headers, "priority": "P99"}
             else:
@@ -168,6 +182,15 @@ def handler(event, context):
 
                 if not ret: 
                     cur.execute(update_ai_priority, ('P98', cio_id))
+                    result = {
+                        "rule_id": 'P98',
+                        "anatomy": '',
+                        "priority": '',
+                        "contrast": '',
+                        "p5_flag": '',
+                        "specialty_exams": ''
+                    }
+                    save_result_history(cur, cio_id, result)
                     psql.conn.commit()
                     return {"rule_id": "N/A", 'headers': headers, "priority": "P98"}
 
