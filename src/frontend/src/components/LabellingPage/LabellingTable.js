@@ -99,7 +99,8 @@ class LabellingTable extends React.Component {
           //   size="large"
           onClick={this.handleClickRerunAll}
           icon
-          disabled={this.props.loading}
+          //   disabled={this.props.loading}
+          disabled={true}
           labelPosition="right"
         >
           <Icon name="arrow circle right" /> Re-run AI for ALL
