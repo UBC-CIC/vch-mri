@@ -86,13 +86,6 @@ class ResultsTableRowExpansion extends React.Component {
                       <p>{`Phrases: ${info.phrases.join(", ")}`}</p>
                     )}
                     <hr />
-                    {info.replace_conjunctions &&
-                      info.replace_conjunctions.length > 0 && (
-                        <p>
-                          <b>replace_conjunctions(Reason for Exam) RESULT: </b>
-                          {info.replace_conjunctions}
-                        </p>
-                      )}
                     <p>
                       <b>replace_conjunctions(Reason for Exam) RESULT: </b>
                       {info.anatomy_json && info.anatomy_json.length > 0
