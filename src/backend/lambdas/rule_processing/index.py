@@ -185,34 +185,34 @@ def handler(event, context):
 
                 # NO rule match found
                 if not ret:
-                    # Try UNION command
-                    logger.info('Try UNION command')
-                    anatomy_str = searchAnatomy(v["anatomy"], True)
-
-                    # Get all rankings first and store array
-                    command = (set_rule_candidates_cmd % (info_str, anatomy_str, cio_id))
-                    logger.info(command)
-                    cur.execute(command)
-
-                    command = (update_cmd % (command_state, info_str)) + anatomy_str + (update_cmd_end % cio_id)
-
-                    logger.info(command)
-                    cur.execute(command)
-                    ret = cur.fetchall()
-
-                    if not ret:
-                        cur.execute(update_ai_priority, ('P98', cio_id))
-                        result = {
-                            "rule_id": 'P98',
-                            "anatomy": '',
-                            "priority": '',
-                            "contrast": '',
-                            "p5_flag": '',
-                            "specialty_exams": ''
-                        }
-                        save_result_history(cur, cio_id, result)
-                        psql.conn.commit()
-                        return {"rule_id": "N/A", 'headers': headers, "priority": "P98"}
+                    # # Try UNION command
+                    # logger.info('Try UNION command')
+                    # anatomy_str = searchAnatomy(v["anatomy"], True)
+                    #
+                    # # Get all rankings first and store array
+                    # command = (set_rule_candidates_cmd % (info_str, anatomy_str, cio_id))
+                    # logger.info(command)
+                    # cur.execute(command)
+                    #
+                    # command = (update_cmd % (command_state, info_str)) + anatomy_str + (update_cmd_end % cio_id)
+                    #
+                    # logger.info(command)
+                    # cur.execute(command)
+                    # ret = cur.fetchall()
+                    #
+                    # if not ret:
+                    cur.execute(update_ai_priority, ('P98', cio_id))
+                    result = {
+                        "rule_id": 'P98',
+                        "anatomy": '',
+                        "priority": '',
+                        "contrast": '',
+                        "p5_flag": '',
+                        "specialty_exams": ''
+                    }
+                    save_result_history(cur, cio_id, result)
+                    psql.conn.commit()
+                    return {"rule_id": "N/A", 'headers': headers, "priority": "P98"}
 
                 logger.info(ret)
                 # Specialty Tags
