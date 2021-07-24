@@ -215,9 +215,11 @@ def infer_icd10_cm(data: str, med_cond, diagnosis, symptoms):
     :symptoms type: List[]
     """
     if not data:
-        return
+        return ''
     try:
         icd10_result = compr_m.infer_icd10_cm(Text=data)
+        # logger.info('icd10_result')
+        # logger.info(icd10_result)
         for resp in icd10_result['Entities']:
             if resp['Score'] > 0.4:
                 resp_str = resp['Text']
@@ -248,6 +250,8 @@ def infer_icd10_cm(data: str, med_cond, diagnosis, symptoms):
                 elif category == 'DIAGN':
                     resp_str = checkSpelling(resp_str)
                     diagnosis.append(resp_str)
+
+        return icd10_result
     except Exception as ex:
         template = "An exception of type {0} occurred. Arguments:\n{1!r}"
         message = template.format(type(ex).__name__, ex.args)
@@ -418,12 +422,16 @@ def parse_and_run_rule_processing(data_df, cognito_user_id, cognito_user_fullnam
     # Parse the Exam Requested Column into Comprehend Medical to find Anatomy Entities
     try:
         anatomy_json = find_all_entities(checkSpelling(f'{data_df["Exam Requested"]}'))
+        # logger.info('anatomy_json - find_all_entities(checkSpelling')
+        # logger.info(anatomy_json)
     except Exception as error:
         return error_handler(cio, "find_all_entities - Exception Type: %s" % type(error))
 
     try:
         preprocessed_text = replace_conjunctions(conj_list, f'{data_df["Reason for Exam/Relevant Clinical History"]}',
                                                  other_info)
+        # logger.info('preprocessed_text - replace_conjunctions')
+        # logger.info(preprocessed_text)
     except Exception as error:
         return error_handler(cio, "replace_conjunctions - Exception Type: %s" % type(error))
 
@@ -439,8 +447,12 @@ def parse_and_run_rule_processing(data_df, cognito_user_id, cognito_user_fullnam
         # elif(contains_word('spine',anatomy)):
         #     # apply comprehend to spine column
         #     formatted_df['Spine'][row] = find_entities(f'{data_df["Appropriateness Checklist - Spine"][row]}')
-    infer_icd10_cm(preprocessed_text, medical_conditions, diagnosis, symptoms)
+    icd10_result = infer_icd10_cm(preprocessed_text, medical_conditions, diagnosis, symptoms)
     find_key_phrases(preprocessed_text, key_phrases, medical_conditions + diagnosis + symptoms, anatomy_list)
+
+    formatted_df['anatomy_json'] = anatomy_json
+    formatted_df['replace_conjunctions'] = preprocessed_text
+    formatted_df['icd10_result'] = icd10_result['Entities']
 
     formatted_df['anatomy'] = anatomy_list
     formatted_df['medical_condition'] = medical_conditions

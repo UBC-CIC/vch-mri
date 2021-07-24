@@ -10,6 +10,7 @@ class ResultsTableRowExpansion extends React.Component {
     const ruleCandidates = result.ai_rule_candidates;
     // console.log(result);
 
+    console.log(info.icd10_result);
     return (
       <>
         <Table celled compact striped>
@@ -31,10 +32,22 @@ class ResultsTableRowExpansion extends React.Component {
                       <b>DOB: </b>
                       {request.DOB}
                     </p>
-                    <p>{`Height: ${request.Height} ${request["inch-cm"]}`}</p>
-                    <p>{`Weight: ${request.weight} ${request["kg-lbs"]}`}</p>
-                    <p>{`Reason for Exam: ${request["Reason for Exam"]}`}</p>
-                    <p>{`Exam Requested: ${request["Exam Requested"]}`}</p>
+                    <p>
+                      <b>Height: </b>
+                      {`${request.Height} ${request["inch-cm"]}`}
+                    </p>
+                    <p>
+                      <b>Weight: </b>
+                      {`${request.weight} ${request["kg-lbs"]}`}
+                    </p>
+                    <p>
+                      <b>Reason for Exam: </b>
+                      {request["Reason for Exam"]}
+                    </p>
+                    <p>
+                      <b>Exam Requested: </b>
+                      {request["Exam Requested"]}
+                    </p>
                   </>
                 ) : (
                   <p>Request error.</p>
@@ -58,9 +71,11 @@ class ResultsTableRowExpansion extends React.Component {
                         ? info.medical_condition.join(", ")
                         : "none"
                     }`}</p>
-                    {info.diagnosis && info.diagnosis.length > 0 && (
-                      <p>{`Diagnosis: ${info.diagnosis.join(", ")}`}</p>
-                    )}
+                    <p>{`Diagnosis: ${
+                      info.diagnosis.length > 0
+                        ? info.diagnosis.join(", ")
+                        : "none"
+                    }`}</p>
                     {info.anatomy && info.anatomy.length > 0 && (
                       <p>{`Anatomy: ${info.anatomy.join(", ")}`}</p>
                     )}
@@ -70,6 +85,32 @@ class ResultsTableRowExpansion extends React.Component {
                     {info.phrases && info.phrases.length > 0 && (
                       <p>{`Phrases: ${info.phrases.join(", ")}`}</p>
                     )}
+                    <hr />
+                    {info.replace_conjunctions &&
+                      info.replace_conjunctions.length > 0 && (
+                        <p>
+                          <b>replace_conjunctions(Reason for Exam) RESULT: </b>
+                          {info.replace_conjunctions}
+                        </p>
+                      )}
+                    <p>
+                      <b>replace_conjunctions(Reason for Exam) RESULT: </b>
+                      {info.anatomy_json && info.anatomy_json.length > 0
+                        ? info.replace_conjunctions
+                        : "none"}
+                    </p>
+                    <p>
+                      <b>compr_m.detect_entities_v2(Exam Requested) RESULT: </b>
+                      {info.anatomy_json && info.anatomy_json.length > 0
+                        ? JSON.stringify(info.anatomy_json, null, " ")
+                        : "none"}
+                    </p>
+                    <p>
+                      <b>compr_m.infer_icd10_cm(ALL) RESULT: </b>
+                      {info.icd10_result && info.icd10_result.length > 0
+                        ? JSON.stringify(info.icd10_result, null, " ")
+                        : "none"}
+                    </p>
                   </>
                 ) : (
                   <p> - </p>
