@@ -7,10 +7,10 @@ class ResultsTableRowExpansion extends React.Component {
     const result = this.props.result;
     const request = result.request_json;
     const info = result.info_json;
+    const icd10_result = info ? info.icd10_result : null;
     const ruleCandidates = result.ai_rule_candidates;
     // console.log(result);
-
-    console.log(info.icd10_result);
+    // console.log(icd10_result);
     return (
       <>
         <Table celled compact striped>
@@ -100,8 +100,8 @@ class ResultsTableRowExpansion extends React.Component {
                     </p>
                     <p>
                       <b>compr_m.infer_icd10_cm(ALL) RESULT: </b>
-                      {info.icd10_result && info.icd10_result.length > 0
-                        ? JSON.stringify(info.icd10_result, null, " ")
+                      {icd10_result && icd10_result.length > 0
+                        ? JSON.stringify(icd10_result, null, " ")
                         : "none"}
                     </p>
                   </>
