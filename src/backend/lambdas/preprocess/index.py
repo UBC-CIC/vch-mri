@@ -215,7 +215,7 @@ def infer_icd10_cm(data: str, med_cond, diagnosis, symptoms):
     :symptoms type: List[]
     """
     if not data:
-        return ''
+        return None
     try:
         icd10_result = compr_m.infer_icd10_cm(Text=data)
         # logger.info('icd10_result')
@@ -452,7 +452,9 @@ def parse_and_run_rule_processing(data_df, cognito_user_id, cognito_user_fullnam
 
     formatted_df['anatomy_json'] = anatomy_json
     formatted_df['replace_conjunctions'] = preprocessed_text
-    formatted_df['icd10_result'] = icd10_result['Entities']
+
+    if icd10_result is not None:
+        formatted_df['icd10_result'] = icd10_result['Entities']
 
     formatted_df['anatomy'] = anatomy_list
     formatted_df['medical_condition'] = medical_conditions
