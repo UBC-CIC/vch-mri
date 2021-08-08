@@ -30,24 +30,28 @@ class RulesTableRow extends React.Component {
   render() {
     return (
       <Table.Row disabled={this.props.loading} error={!this.state.active}>
-        <Table.Cell collapsing>
-          <Checkbox
-            toggle
-            disabled={this.props.labelling}
-            checked={this.state.active}
-            onChange={this.handleToggle}
-            style={{
-              zIndex: 0,
-            }}
-          />
-        </Table.Cell>
-        <Table.Cell collapsing>{this.props.id}</Table.Cell>
-        <Table.Cell collapsing>{this.props.body_part}</Table.Cell>
-        <Table.Cell collapsing>{this.props.contrast.toString()}</Table.Cell>
-        <Table.Cell collapsing>{this.props.priority}</Table.Cell>
-        <Table.Cell>{this.props.info}</Table.Cell>
         {!this.props.labelling && (
-          <Table.Cell collapsing>
+          <>
+            <Table.Cell>
+              <Checkbox
+                toggle
+                disabled={this.props.labelling}
+                checked={this.state.active}
+                onChange={this.handleToggle}
+                style={{
+                  zIndex: 0,
+                }}
+              />
+            </Table.Cell>
+          </>
+        )}
+        <Table.Cell>{this.props.id}</Table.Cell>
+        <Table.Cell>{this.props.body_part}</Table.Cell>
+        <Table.Cell>{this.props.info}</Table.Cell>
+        <Table.Cell>{this.props.priority}</Table.Cell>
+        <Table.Cell>{this.props.contrast.toString()}</Table.Cell>
+        {!this.props.labelling && (
+          <Table.Cell>
             <ModifyRuleForm
               id={this.props.id}
               body_part={this.props.body_part}

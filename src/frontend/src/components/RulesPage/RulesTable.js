@@ -28,19 +28,23 @@ class RulesTable extends React.Component {
       <Table celled compact sortable>
         <Table.Header fullWidth>
           <Table.Row>
-            <Table.HeaderCell
-              collapsing
-              sorted={
-                this.props.sortedColumn === "active"
-                  ? this.props.sortDirection
-                  : null
-              }
-              onClick={() => {
-                this.props.changeRuleSort("active");
-              }}
-            >
-              Active
-            </Table.HeaderCell>
+            {!this.props.labelling && (
+              <>
+                <Table.HeaderCell
+                  collapsing
+                  sorted={
+                    this.props.sortedColumn === "active"
+                      ? this.props.sortDirection
+                      : null
+                  }
+                  onClick={() => {
+                    this.props.changeRuleSort("active");
+                  }}
+                >
+                  Active
+                </Table.HeaderCell>
+              </>
+            )}
             <Table.HeaderCell
               collapsing
               sorted={
@@ -68,17 +72,16 @@ class RulesTable extends React.Component {
               Body Part
             </Table.HeaderCell>
             <Table.HeaderCell
-              collapsing
               sorted={
-                this.props.sortedColumn === "contrast"
+                this.props.sortedColumn === "info"
                   ? this.props.sortDirection
                   : null
               }
               onClick={() => {
-                this.props.changeRuleSort("contrast");
+                this.props.changeRuleSort("info");
               }}
             >
-              Contrast
+              Information
             </Table.HeaderCell>
             <Table.HeaderCell
               collapsing
@@ -94,16 +97,17 @@ class RulesTable extends React.Component {
               Priority
             </Table.HeaderCell>
             <Table.HeaderCell
+              collapsing
               sorted={
-                this.props.sortedColumn === "info"
+                this.props.sortedColumn === "contrast"
                   ? this.props.sortDirection
                   : null
               }
               onClick={() => {
-                this.props.changeRuleSort("info");
+                this.props.changeRuleSort("contrast");
               }}
             >
-              Information
+              Contrast
             </Table.HeaderCell>
             {!this.props.labelling && (
               <Table.HeaderCell collapsing>
@@ -114,7 +118,7 @@ class RulesTable extends React.Component {
         </Table.Header>
 
         <Table.Body>
-          {this.props.rules.map((rule, index) => (
+          {/* {this.props.rules.map((rule, index) => (
             <RulesTableRow
               active={rule.active}
               id={rule.id}
@@ -125,7 +129,23 @@ class RulesTable extends React.Component {
               index={index}
               labelling={this.props.labelling}
             />
-          ))}
+          ))} */}
+          {this.props.rules.map((rule, index) => {
+            if (rule.active || (!rule.active && this.props.showInactive))
+              return (
+                <RulesTableRow
+                  active={rule.active}
+                  id={rule.id}
+                  body_part={rule.body_part}
+                  contrast={rule.contrast}
+                  priority={rule.priority}
+                  info={rule.info}
+                  index={index}
+                  labelling={this.props.labelling}
+                />
+              );
+            else return <></>;
+          })}
         </Table.Body>
 
         <Table.Footer fullWidth>

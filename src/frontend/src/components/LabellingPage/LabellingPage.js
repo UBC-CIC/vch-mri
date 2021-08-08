@@ -2,7 +2,8 @@ import React from "react";
 import LabellingTable from "./LabellingTable";
 import LabellingSearchBar from "./LabellingSearchBar";
 import { Grid, Header } from "semantic-ui-react";
-import RulesTable from "../RulesPage/RulesTable";
+// import RulesTable from "../RulesPage/RulesTable";
+import RulesPage from "../RulesPage/RulesPage";
 import { connect } from "react-redux";
 import { getMRIRules } from "../../actions/RuleActions";
 import "../../styles/LabellingRules.css";
@@ -93,7 +94,8 @@ class LabellingPage extends React.Component {
                 }}
               >
                 <div className="fieldsRules">
-                  <RulesTable labelling={true} rulesLoaded={true} />
+                  {/* <RulesTable labelling={true} rulesLoaded={true} /> */}
+                  <RulesPage labelling={true} rulesLoaded={true} />
                 </div>
               </Grid.Column>
             )}
