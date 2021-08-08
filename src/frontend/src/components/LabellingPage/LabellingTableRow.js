@@ -369,6 +369,8 @@ class LabellingTableRow extends React.Component {
                 {result.id}
               </Table.Cell>
             }
+            mouseEnterDelay={500}
+            mouseLeaveDelay={500}
             flowing
             hoverable
             disabled={disableAIConfirmPopup}
@@ -379,6 +381,8 @@ class LabellingTableRow extends React.Component {
             content={result.error}
             trigger={error && <Table.Cell>ERROR</Table.Cell>}
             hoverable
+            mouseEnterDelay={500}
+            mouseLeaveDelay={500}
             style={{ color: "red" }}
           />
           {resState === REQUEST_STATES.STATE_ReceivedNewlyLabelled && (
@@ -387,6 +391,8 @@ class LabellingTableRow extends React.Component {
               trigger={!error && <Table.Cell>{state}</Table.Cell>}
               flowing
               hoverable
+              mouseEnterDelay={500}
+              mouseLeaveDelay={500}
               disabled={disableAIConfirmPopup}
               style={{ color: "green" }}
             />
@@ -397,6 +403,8 @@ class LabellingTableRow extends React.Component {
               trigger={!error && <Table.Cell>{state}</Table.Cell>}
               flowing
               hoverable
+              mouseEnterDelay={500}
+              mouseLeaveDelay={500}
               disabled={disableAIConfirmPopup}
               style={{ color: "red" }}
             />
@@ -408,6 +416,8 @@ class LabellingTableRow extends React.Component {
                 {result.ai_rule_id ? result.ai_rule_id : " - "}
               </Table.Cell>
             }
+            mouseEnterDelay={500}
+            mouseLeaveDelay={500}
             flowing
             disabled={disableAIConfirmPopup}
             hoverable
@@ -418,6 +428,8 @@ class LabellingTableRow extends React.Component {
             trigger={<Table.Cell>{aiPriorityString}</Table.Cell>}
             flowing
             hoverable
+            mouseEnterDelay={500}
+            mouseLeaveDelay={500}
             disabled={disableAIConfirmPopup}
             style={{ color: "red" }}
           />
@@ -430,6 +442,8 @@ class LabellingTableRow extends React.Component {
                   : " - "}
               </Table.Cell>
             }
+            mouseEnterDelay={500}
+            mouseLeaveDelay={500}
             flowing
             hoverable
             disabled={disableAIConfirmPopup}

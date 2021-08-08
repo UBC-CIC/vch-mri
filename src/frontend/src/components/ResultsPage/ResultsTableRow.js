@@ -124,6 +124,8 @@ class ResultsTableRow extends React.Component {
               content={result.error}
               trigger={<Table.Cell>ERROR</Table.Cell>}
               hoverable
+              mouseEnterDelay={500}
+              mouseLeaveDelay={500}
               style={{ color: "red" }}
             />
           )}

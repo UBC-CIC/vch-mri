@@ -32,6 +32,8 @@ class RuleCandidatesRow extends React.Component {
             <Table.Cell>{candidate.info_weighted_tk}</Table.Cell>
           </Table.Row>
         }
+        mouseEnterDelay={500}
+        mouseLeaveDelay={500}
         flowing
         hoverable
         disabled={index !== 0}
