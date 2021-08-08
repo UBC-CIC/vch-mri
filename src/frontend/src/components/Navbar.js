@@ -65,6 +65,11 @@ class Navbar extends React.Component {
                 as={NavLink}
                 to="/dashboard/weights"
               />
+              <Dropdown.Item
+                text="Specialty Exams"
+                as={NavLink}
+                to="/dashboard/specialtyexams"
+              />
             </Dropdown.Menu>
           </Dropdown>
           <Dropdown item text="Word Management">
@@ -83,11 +88,6 @@ class Navbar extends React.Component {
                 text="Synonyms"
                 as={NavLink}
                 to="/dashboard/synonyms"
-              />
-              <Dropdown.Item
-                text="Specialty Exams"
-                as={NavLink}
-                to="/dashboard/specialtyexams"
               />
             </Dropdown.Menu>
           </Dropdown>
