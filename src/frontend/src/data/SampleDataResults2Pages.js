@@ -1,5 +1,5 @@
 const SampleData = {
-  total_pgs: 1.0,
+  total_pgs: 5.0,
   data: [
     {
       id: "1",

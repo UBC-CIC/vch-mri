@@ -125,7 +125,8 @@ class LabellingTable extends React.Component {
           icon
           labelPosition="right"
         >
-          <Icon name="arrow circle right" /> Toggle Expand All
+          <Icon name="arrow circle right" />
+          Expand All
         </Button>
         <Button
           style={{ margin: "1em 0em 1em 1em" }}
@@ -136,9 +137,23 @@ class LabellingTable extends React.Component {
           icon
           labelPosition="right"
         >
-          <Icon name="arrow circle right" /> Toggle Show Labelled
+          <Icon name="arrow circle right" /> Toggle Labelled
         </Button>
         <Table celled compact sortable striped>
+          <Table.Header fullWidth>
+            <Table.Row key={"row-footer"}>
+              <Table.HeaderCell colSpan="10">
+                {this.props.totalPages && (
+                  <Pagination
+                    floated="right"
+                    defaultActivePage={this.state.activePage}
+                    onPageChange={this.handlePaginationChange}
+                    totalPages={this.props.totalPages}
+                  />
+                )}
+              </Table.HeaderCell>
+            </Table.Row>
+          </Table.Header>
           <Table.Header fullWidth>
             <Table.Row key={"row-header1"}>
               <Table.HeaderCell colSpan="2" />

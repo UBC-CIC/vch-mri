@@ -4,7 +4,7 @@ body {
 
 .fieldsLabellingRules {
   position: fixed;
-  height: 85vh;
+  height: 80vh;
   width: 63vw;
   padding: 10px;
   overflow-x: auto;
@@ -13,7 +13,7 @@ body {
 
 .fieldsLabelling {
   position: fixed;
-  height: 85vh;
+  height: 80vh;
   width: 99vw;
   padding: 10px;
   overflow-x: auto;
@@ -21,7 +21,7 @@ body {
 }
 .fieldsRules {
   position: fixed;
-  height: 85vh;
+  height: 80vh;
   width: 36vw;
   padding: 10px;
   overflow-x: auto;
