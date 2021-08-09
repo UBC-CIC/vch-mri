@@ -318,13 +318,14 @@ class LabellingTableRow extends React.Component {
   };
 
   render() {
-    // console.log("expanded");
+    // console.log("render");
     // console.log(this.props.expanded);
     // // console.log(ResultsTableRow);
     // console.log(this.props.result.error);
 
     const index = this.props.index;
     const result = this.props.result;
+    // console.log(result);
 
     const resState = result.state;
     let state = result.state;
@@ -530,12 +531,12 @@ class LabellingTableRow extends React.Component {
             />
           </Table.Cell>
           <Table.Cell>
-            <Checkbox
+            <Form.Checkbox
               //   toggle
               disabled={this.props.loading}
               name="labelled_p5_flag"
-              value={result.labelled_p5_flag}
-              checked={result.labelled_p5_flag}
+              //   value={result.labelled_p5_flag}
+              checked={result.labelled_p5_flag || false}
               //   onChange={this.handleSelectChange}
               onChange={this.handleToggle}
               style={{
@@ -572,7 +573,7 @@ class LabellingTableRow extends React.Component {
                 <TextArea
                   disabled={this.props.loading}
                   placeholder="Labelling notes"
-                  value={this.state.labelled_notes}
+                  value={this.state.labelled_notes || ""}
                   onChange={this.handleChangeNote}
                 />
               </Table.Cell>
