@@ -78,7 +78,7 @@ class ResultsHistoryViewRow extends React.Component {
                 </p>
                 <p>
                   <b>specialty_exams: </b>
-                  {info.labelled_tags ? result.labelled_tags : " - "}
+                  {info.labelled_tags ? info.labelled_tags : " - "}
                 </p>
                 <p>
                   <b>Notes: </b>
