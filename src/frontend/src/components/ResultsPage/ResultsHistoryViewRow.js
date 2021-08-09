@@ -65,10 +65,20 @@ class ResultsHistoryViewRow extends React.Component {
                   {info.labelled_priority ? info.labelled_priority : " - "}
                 </p>
                 <p>
+                  <b>P5: </b>
+                  {info.labelled_p5_flag !== null
+                    ? info.labelled_p5_flag
+                    : " - "}
+                </p>
+                <p>
                   <b>Contrast: </b>
                   {info.labelled_contrast !== null
                     ? info.labelled_contrast.toString()
                     : " - "}
+                </p>
+                <p>
+                  <b>specialty_exams: </b>
+                  {info.labelled_tags ? result.labelled_tags : " - "}
                 </p>
                 <p>
                   <b>Notes: </b>
@@ -111,7 +121,7 @@ class ResultsHistoryViewRow extends React.Component {
                 </p>
                 <p>
                   <b>p5_flag: </b>
-                  {result.p5_flag ? result.p5_flag : " - "}
+                  {result.ai_p5_flag !== null ? result.ai_p5_flag : " - "}
                 </p>
                 <p>
                   <b>specialty_exams: </b>
