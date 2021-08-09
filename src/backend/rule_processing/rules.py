@@ -6,11 +6,11 @@ import boto3
 from postgresql import connect 
 
 insert_cmd = """
-INSERT INTO data_request(id, info, p5_flag, phys_priority) VALUES 
+INSERT INTO data_request(id, info, ai_p5_flag, phys_priority) VALUES 
 (%s, %s, %s, %s)
 ON CONFLICT (id) DO UPDATE
 SET info = excluded.info,
-p5_flag = excluded.p5_flag,
+ai_p5_flag = excluded.ai_p5_flag,
 phys_priority = excluded.phys_priority;
 """
 

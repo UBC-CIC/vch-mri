@@ -12,7 +12,7 @@ logger.setLevel(logging.INFO)
 def queryResults(cur, page):
     cmd = """
     SELECT req.id, state, error, request, age, height, weight, req.info, created_at, updated_at,
-        ai_rule_candidates, ai_rule_id, ai_priority, ai_contrast, p5_flag, ai_tags,
+        ai_rule_candidates, ai_rule_id, ai_priority, ai_contrast, ai_p5_flag, ai_tags,
         final_priority, final_contrast,
         labelled_rule_id, labelled_priority, labelled_contrast, labelled_notes
     FROM data_request as req
@@ -27,7 +27,7 @@ def queryResults(cur, page):
 def queryResultsID(cur, id):
     cmd = """
     SELECT req.id, state, error, request, age, height, weight, req.info, created_at, updated_at,
-        ai_rule_candidates, ai_rule_id, ai_priority, ai_contrast, p5_flag, ai_tags,
+        ai_rule_candidates, ai_rule_id, ai_priority, ai_contrast, ai_p5_flag, ai_tags,
         final_priority, final_contrast,
         labelled_rule_id, labelled_priority, labelled_contrast, labelled_notes
     FROM data_request as req
@@ -381,7 +381,7 @@ def parseResponse(response):
         resp['ai_rule_id'] = resp_tuple[11]
         resp['ai_priority'] = resp_tuple[12]
         resp['ai_contrast'] = resp_tuple[13]
-        resp['p5_flag'] = resp_tuple[14]
+        resp['ai_p5_flag'] = resp_tuple[14]
         resp['ai_tags'] = resp_tuple[15]
 
         resp['final_priority'] = resp_tuple[16]

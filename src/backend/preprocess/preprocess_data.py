@@ -65,14 +65,16 @@ DO UPDATE SET
     state='received_duplicate',
     error='',
     info=null,
-    p5_flag=null,
+    ai_p5_flag=null,
     rules_id=null,
     phys_priority='',
     ai_priority='',
     final_priority='',
     contrast=null,
     tags=null,
-    phys_contrast=null;
+    phys_contrast=null,
+    labelled_p5_flag=null,
+    labelled_tags=null;
 """
 
 insert_history_request_cmd = """

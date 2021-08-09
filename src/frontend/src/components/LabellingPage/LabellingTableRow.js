@@ -9,6 +9,7 @@ import {
   Button,
   Grid,
   Header,
+  Checkbox,
 } from "semantic-ui-react";
 import { modifyResult, rerunAI } from "../../actions/ResultActions";
 import ResultsHistoryView from "../ResultsPage/ResultsHistoryView";
@@ -449,6 +450,9 @@ class LabellingTableRow extends React.Component {
             disabled={disableAIConfirmPopup}
             style={{ color: "red" }}
           />
+          <Table.Cell>
+            {result.ai_tags ? result.ai_tags.join(", ") : "none"}
+          </Table.Cell>
           {this.props.showPhysicianResults && (
             <>
               <Table.Cell>
@@ -492,9 +496,20 @@ class LabellingTableRow extends React.Component {
                 { key: "P2", text: "P2", value: "P2" },
                 { key: "P3", text: "P3", value: "P3" },
                 { key: "P4", text: "P4", value: "P4" },
-                { key: "P5", text: "P5", value: "P5" },
+                // { key: "P5", text: "P5", value: "P5" },
               ]}
               onChange={this.handleSelectChange}
+            />
+          </Table.Cell>
+          <Table.Cell>
+            <Checkbox
+              //   toggle
+              disabled={this.props.loading}
+              checked={result.labelled_p5_flag}
+              onChange={this.handleToggleP5}
+              style={{
+                zIndex: 0,
+              }}
             />
           </Table.Cell>
           <Table.Cell>
@@ -517,22 +532,19 @@ class LabellingTableRow extends React.Component {
               onChange={this.handleSelectChange}
             />
           </Table.Cell>
-          <Table.Cell>
-            <TextArea
-              disabled={this.props.loading}
-              placeholder="Labelling notes"
-              value={this.state.labelled_notes}
-              onChange={this.handleChangeNote}
-            />
-          </Table.Cell>
           {/* <Table.Cell>
             {result.p5_flag !== null ? result.p5_flag.toString() : "none"}
           </Table.Cell> */}
-          {/* <Table.Cell>
-            {result.ai_tags ? result.ai_tags.join(", ") : "none"}
-          </Table.Cell> */}
           {!this.props.showRules && (
             <>
+              <Table.Cell>
+                <TextArea
+                  disabled={this.props.loading}
+                  placeholder="Labelling notes"
+                  value={this.state.labelled_notes}
+                  onChange={this.handleChangeNote}
+                />
+              </Table.Cell>
               <Table.Cell>{result.date_created}</Table.Cell>
               <Table.Cell>{result.date_updated}</Table.Cell>
               <Table.Cell textAlign="right" collapsing>

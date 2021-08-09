@@ -47,14 +47,16 @@ CREATE TABLE IF NOT EXISTS data_request (
     ai_rule_candidates INT[],        -- AI determined
     ai_rule_id INT,
     ai_priority VARCHAR(3),
+    ai_p5_flag BOOLEAN,
     ai_contrast BOOLEAN,
     ai_tags VARCHAR[],              -- Matches specialty_tags table
-    p5_flag BOOLEAN,
     final_priority VARCHAR(3),      -- Final priority from hospital site (LMMI)
     final_contrast BOOLEAN,
     labelled_rule_id INT,           -- Final overrides by SapienML
     labelled_priority VARCHAR(3),   
+    labelled_p5_flag BOOLEAN,
     labelled_contrast BOOLEAN,
+    labelled_tags VARCHAR[],
     labelled_notes VARCHAR,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),

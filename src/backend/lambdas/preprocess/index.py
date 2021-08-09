@@ -48,13 +48,15 @@ insert_new_request_cmd = """
         ai_priority='',
         ai_contrast=null,
         ai_tags=null,
-        p5_flag=null,
+        ai_p5_flag=null,
         final_priority = '',
         final_contrast = null,
         labelled_rule_id = null,
         labelled_priority = '',
+        labelled_p5_flag=null,
         labelled_contrast = null,
-        labelled_notes = ''
+        labelled_notes = '',
+        labelled_tags=null
     """
 
 insert_history_request_cmd = """
@@ -180,6 +182,8 @@ def preProcessText(col):
 
 def checkSpelling(text: str):
     words = text.split()
+    logger.info('checkSpelling - words')
+    logger.info(words)
     return ' '.join([spell.correction(word) for word in words])
 
 
@@ -250,6 +254,9 @@ def infer_icd10_cm(data: str, med_cond, diagnosis, symptoms):
                 elif category == 'DIAGN':
                     resp_str = checkSpelling(resp_str)
                     diagnosis.append(resp_str)
+
+                    logger.info('infer_icd10_cm - DIAGN')
+                    logger.info(resp_str)
 
         return icd10_result
     except Exception as ex:
@@ -430,8 +437,8 @@ def parse_and_run_rule_processing(data_df, cognito_user_id, cognito_user_fullnam
     try:
         preprocessed_text = replace_conjunctions(conj_list, f'{data_df["Reason for Exam/Relevant Clinical History"]}',
                                                  other_info)
-        # logger.info('preprocessed_text - replace_conjunctions')
-        # logger.info(preprocessed_text)
+        logger.info('preprocessed_text - replace_conjunctions')
+        logger.info(preprocessed_text)
     except Exception as error:
         return error_handler(cio, "replace_conjunctions - Exception Type: %s" % type(error))
 

@@ -142,7 +142,7 @@ class LabellingTable extends React.Component {
           <Table.Header fullWidth>
             <Table.Row key={"row-header1"}>
               <Table.HeaderCell colSpan="2" />
-              <Table.HeaderCell colSpan="3">AI Results</Table.HeaderCell>
+              <Table.HeaderCell colSpan="4">AI Results</Table.HeaderCell>
               {this.state.showPhysicianResults && (
                 <>
                   <Table.HeaderCell colSpan="2">
@@ -150,7 +150,7 @@ class LabellingTable extends React.Component {
                   </Table.HeaderCell>
                 </>
               )}
-              <Table.HeaderCell colSpan="4">Labelled Override</Table.HeaderCell>
+              <Table.HeaderCell colSpan="5">Labelled Override</Table.HeaderCell>
             </Table.Row>
             <Table.Row key={"row-header2"}>
               <Table.HeaderCell
@@ -258,6 +258,7 @@ class LabellingTable extends React.Component {
               >
                 Contrast
               </Table.HeaderCell>
+              <Table.HeaderCell>Sp. Exams</Table.HeaderCell>
               {this.state.showPhysicianResults && (
                 <>
                   <Table.HeaderCell
@@ -317,6 +318,19 @@ class LabellingTable extends React.Component {
               <Table.HeaderCell
                 collapsing
                 sorted={
+                  this.props.sortedColumn === "labelled_p5_flag"
+                    ? this.props.sortDirection
+                    : null
+                }
+                onClick={() => {
+                  this.props.changeResultSort("labelled_p5_flag");
+                }}
+              >
+                P5
+              </Table.HeaderCell>
+              <Table.HeaderCell
+                collapsing
+                sorted={
                   this.props.sortedColumn === "labelled_contrast"
                     ? this.props.sortDirection
                     : null
@@ -327,7 +341,6 @@ class LabellingTable extends React.Component {
               >
                 Contrast
               </Table.HeaderCell>
-              <Table.HeaderCell>Notes (auto-saves after 2s)</Table.HeaderCell>
               {/* <Table.HeaderCell
                 collapsing
                 sorted={
@@ -341,9 +354,11 @@ class LabellingTable extends React.Component {
               >
                 P5 Flag
               </Table.HeaderCell> */}
-              {/* <Table.HeaderCell>Sp. Exams</Table.HeaderCell> */}
               {!this.props.showRules && (
                 <>
+                  <Table.HeaderCell>
+                    Notes (auto-saves after 2s)
+                  </Table.HeaderCell>
                   <Table.HeaderCell
                     sorted={
                       this.props.sortedColumn === "created_at"
