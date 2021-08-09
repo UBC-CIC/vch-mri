@@ -14,7 +14,7 @@ def queryResults(cur, page):
     SELECT req.id, state, error, request, age, height, weight, req.info, created_at, updated_at,
         ai_rule_candidates, ai_rule_id, ai_priority, ai_contrast, ai_p5_flag, ai_tags,
         final_priority, final_contrast,
-        labelled_rule_id, labelled_priority, labelled_contrast, labelled_notes
+        labelled_rule_id, labelled_priority, labelled_contrast, labelled_notes, labelled_p5_flag, labelled_tags
     FROM data_request as req
     ORDER BY req.updated_at DESC
     LIMIT 50 OFFSET %s
@@ -29,7 +29,7 @@ def queryResultsID(cur, id):
     SELECT req.id, state, error, request, age, height, weight, req.info, created_at, updated_at,
         ai_rule_candidates, ai_rule_id, ai_priority, ai_contrast, ai_p5_flag, ai_tags,
         final_priority, final_contrast,
-        labelled_rule_id, labelled_priority, labelled_contrast, labelled_notes
+        labelled_rule_id, labelled_priority, labelled_contrast, labelled_notes, labelled_p5_flag, labelled_tags
     FROM data_request as req
     WHERE req.id = %s
     ORDER BY req.updated_at DESC
@@ -74,15 +74,19 @@ def updateFinalResults(cur, id, priority, contrast):
     return cur.fetchall()
 
 
-def updateLabelledResults(cur, id, rule_id, priority, contrast, notes):
+def updateLabelledResults(cur, id, rule_id, priority, contrast, notes, p5, tags):
     cmd = """
     UPDATE data_request 
     SET labelled_rule_id = %s,  labelled_priority = %s, labelled_contrast = %s, labelled_notes = %s,
+        labelled_p5_flag = %s, labelled_tags = %s,
         state = 'labelled_priority'
     WHERE id = %s
-    RETURNING id, labelled_rule_id, labelled_priority, labelled_contrast, labelled_notes, state
+    RETURNING id, labelled_rule_id, labelled_priority, labelled_contrast, labelled_notes,
+        labelled_p5_flag, labelled_tags, state
     """
-    params = (rule_id, priority, contrast, notes, id)
+    if tags is None:
+        tags = []
+    params = (rule_id, priority, contrast, notes, p5, tags, id)
     command = cmd % params
     logger.info('updateLabelledResults')
     logger.info(command)
@@ -307,7 +311,9 @@ def update_labelling(cur, data):
         data['labelled_rule_id'],
         data['labelled_priority'],
         data['labelled_contrast'],
-        data['labelled_notes'])
+        data['labelled_notes'],
+        data['labelled_p5_flag'],
+        data['labelled_tags'])
     logger.info(response)
 
     ret_update = {
@@ -316,7 +322,9 @@ def update_labelling(cur, data):
         'labelled_priority': response[0][2],
         'labelled_contrast': response[0][3],
         'labelled_notes': response[0][4],
-        'state': response[0][5]}
+        'labelled_p5_flag': response[0][5],
+        'labelled_tags': response[0][6],
+        'state': response[0][7]}
     logger.info(ret_update)
 
     # Save history event
@@ -391,6 +399,8 @@ def parseResponse(response):
         resp['labelled_priority'] = resp_tuple[19]
         resp['labelled_contrast'] = resp_tuple[20]
         resp['labelled_notes'] = resp_tuple[21]
+        resp['labelled_p5_flag'] = resp_tuple[22]
+        resp['labelled_tags'] = resp_tuple[23]
 
         resp['history'] = {}
 

@@ -116,6 +116,8 @@ export const results = (state = initialState, action) => {
               labelled_priority: updResult.labelled_priority,
               labelled_contrast: updResult.labelled_contrast,
               labelled_notes: updResult.labelled_notes,
+              labelled_p5_flag: updResult.labelled_p5_flag,
+              labelled_tags: updResult.labelled_tags,
             };
             console.log(ret);
           }

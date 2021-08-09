@@ -47,8 +47,12 @@ class LabellingTableRow extends React.Component {
       labelled_contrast:
         result.labelled_contrast !== null ? result.labelled_contrast : "e",
       labelled_notes: result.labelled_notes,
+      labelled_p5_flag:
+        result.labelled_p5_flag !== null ? result.labelled_p5_flag : false,
+      labelled_tags: result.labelled_tags,
     };
 
+    this.handleToggle = this.handleToggle.bind(this);
     this.handleSelectChange = this.handleSelectChange.bind(this);
     this.handleChangeNote = this.handleChangeNote.bind(this);
     this.timerChangeNote = this.timerChangeNote.bind(this);
@@ -62,6 +66,7 @@ class LabellingTableRow extends React.Component {
   }
 
   componentWillReceiveProps(nextProps, nextContext) {
+    console.log("componentWillReceiveProps");
     this.setState({
       labelled_rule_id:
         nextProps.result.labelled_rule_id !== null
@@ -76,6 +81,11 @@ class LabellingTableRow extends React.Component {
           ? nextProps.result.labelled_contrast
           : "e",
       labelled_notes: nextProps.result.labelled_notes,
+      labelled_p5_flag:
+        nextProps.result.labelled_p5_flag !== null
+          ? nextProps.result.labelled_p5_flag
+          : false,
+      labelled_tags: nextProps.result.labelled_tags,
     });
   }
 
@@ -88,6 +98,9 @@ class LabellingTableRow extends React.Component {
         labelled_priority: "e",
         labelled_contrast: "e",
         labelled_notes: NOTE_CONFIRM_AI,
+        // Don't wipe flag and tags
+        labelled_p5_flag: this.state.labelled_p5_flag,
+        labelled_tags: this.state.labelled_tags,
       },
       () => {
         this.props.modifyResult(this.preparePayloadModifyResult(reqId));
@@ -102,13 +115,21 @@ class LabellingTableRow extends React.Component {
     this.props.rerunAI(reqId);
   }
 
+  handleToggle(e) {
+    this.setState({ labelled_p5_flag: !this.state.labelled_p5_flag }, () =>
+      this.handleSelectChange(e, {})
+    );
+  }
+
   handleSelectChange(e, { name, value }) {
-    // console.log("handleSelectChange");
-    // console.log(name);
-    // console.log(value);
+    console.log("handleSelectChange");
+    console.log(name);
+    console.log(value);
     let labelled_priority = this.state.labelled_priority;
     let labelled_contrast = this.state.labelled_contrast;
     let labelled_notes = this.state.labelled_notes;
+    let labelled_p5_flag = this.state.labelled_p5_flag;
+    let labelled_tags = this.state.labelled_tags;
 
     if (name === "labelled_rule_id") {
       const foundRule = this.props.rulesListDropdown.find(
@@ -128,6 +149,8 @@ class LabellingTableRow extends React.Component {
         labelled_priority: labelled_priority,
         labelled_contrast: labelled_contrast,
         labelled_notes: labelled_notes,
+        labelled_p5_flag: labelled_p5_flag,
+        labelled_tags: labelled_tags,
         [name]: value,
       },
       () => {
@@ -161,8 +184,11 @@ class LabellingTableRow extends React.Component {
   preparePayloadModifyResult(index) {
     const storedUser = jwt_decode(Cache.getItem(AUTH_USER_ID_TOKEN_KEY));
     // console.log(storedUser);
+    console.log("preparePayloadModifyResult");
     console.log(this.state.labelled_rule_id);
     console.log(this.state.labelled_priority);
+    console.log(this.state.labelled_p5_flag);
+    console.log(this.state.labelled_tags);
 
     return {
       id: index,
@@ -178,6 +204,8 @@ class LabellingTableRow extends React.Component {
         this.state.labelled_contrast === "e"
           ? null
           : this.state.labelled_contrast,
+      labelled_p5_flag: this.state.labelled_p5_flag,
+      labelled_tags: this.state.labelled_tags,
       labelled_notes: this.state.labelled_notes,
       cognito_user_id: storedUser.sub,
       cognito_user_fullname: storedUser.name.trim(),
@@ -505,8 +533,11 @@ class LabellingTableRow extends React.Component {
             <Checkbox
               //   toggle
               disabled={this.props.loading}
+              name="labelled_p5_flag"
+              value={result.labelled_p5_flag}
               checked={result.labelled_p5_flag}
-              onChange={this.handleToggleP5}
+              //   onChange={this.handleSelectChange}
+              onChange={this.handleToggle}
               style={{
                 zIndex: 0,
               }}
