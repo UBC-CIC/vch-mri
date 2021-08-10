@@ -115,7 +115,7 @@ UPDATE data_request
 SET ai_tags = array_tag FROM (
 SELECT array_agg(tag) AS array_tag FROM (
 SELECT tag from specialty_tags
-WHERE %s ~* tag) AS x) AS y
+WHERE LOWER(%s) ~* LOWER(tag)) AS x) AS y
 where id = %s
 RETURNING ai_tags;
 """
@@ -294,8 +294,15 @@ def handler(event, context):
                         return {"rule_id": "N/A", 'headers': headers, "priority": "P98"}
 
                 logger.info(ret)
+
                 # Specialty Tags
-                cur.execute(update_tags, (ret[0][5], cio_id))
+                # logger.info('Specialty Tags')
+                cmd = update_tags
+                params = (ret[0][5], cio_id)
+                # logger.info(cmd)
+                # logger.info(params)
+
+                cur.execute(cmd, params)
                 tags = cur.fetchall()
 
             rule_id = ret[0][0]
