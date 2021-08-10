@@ -46,15 +46,17 @@ class LabellingTableRow extends React.Component {
         result.labelled_priority !== null ? result.labelled_priority : "e",
       labelled_contrast:
         result.labelled_contrast !== null ? result.labelled_contrast : "e",
-      labelled_notes: result.labelled_notes,
       labelled_p5_flag:
         result.labelled_p5_flag !== null ? result.labelled_p5_flag : false,
-      labelled_tags: result.labelled_tags,
+      labelled_tags: result.labelled_tags
+        ? result.labelled_tags.toString()
+        : "",
+      labelled_notes: result.labelled_notes ? result.labelled_notes : "",
     };
 
     this.handleToggle = this.handleToggle.bind(this);
     this.handleSelectChange = this.handleSelectChange.bind(this);
-    this.handleChangeNote = this.handleChangeNote.bind(this);
+    this.handleChangeTextArea = this.handleChangeTextArea.bind(this);
     this.timerChangeNote = this.timerChangeNote.bind(this);
     this.handleAIConfirm = this.handleAIConfirm.bind(this);
     this.handleRerunAI = this.handleRerunAI.bind(this);
@@ -85,7 +87,9 @@ class LabellingTableRow extends React.Component {
         nextProps.result.labelled_p5_flag !== null
           ? nextProps.result.labelled_p5_flag
           : false,
-      labelled_tags: nextProps.result.labelled_tags,
+      labelled_tags: nextProps.result.labelled_tags
+        ? nextProps.result.labelled_tags.toString()
+        : "",
     });
   }
 
@@ -100,7 +104,7 @@ class LabellingTableRow extends React.Component {
         labelled_notes: NOTE_CONFIRM_AI,
         // Don't wipe flag and tags
         labelled_p5_flag: false,
-        labelled_tags: [NOTE_CONFIRM_AI],
+        labelled_tags: NOTE_CONFIRM_AI,
       },
       () => {
         this.props.modifyResult(this.preparePayloadModifyResult(reqId));
@@ -112,7 +116,8 @@ class LabellingTableRow extends React.Component {
     console.log("handleRerunAI");
     console.log(reqId);
 
-    this.props.rerunAI(reqId);
+    const storedUser = jwt_decode(Cache.getItem(AUTH_USER_ID_TOKEN_KEY));
+    this.props.rerunAI(reqId, storedUser.sub, storedUser.name.trim());
   }
 
   handleToggle(e) {
@@ -141,10 +146,11 @@ class LabellingTableRow extends React.Component {
       labelled_priority = foundRule.priority;
       labelled_contrast = foundRule.contrast;
     }
+
     // NOT AI confirmed anymore! Wipe the note
     if (labelled_notes === NOTE_CONFIRM_AI) {
       labelled_notes = "";
-      labelled_tags = [];
+      labelled_tags = "";
     }
 
     this.setState(
@@ -164,17 +170,19 @@ class LabellingTableRow extends React.Component {
     );
   }
 
-  handleChangeNote(e) {
-    // console.log("handleChangeNote");
-    // console.log(e.target.value);
+  handleChangeTextArea(e) {
+    console.log("handleChangeTextArea");
+    console.log(e.target.name);
+    console.log(e.target.value);
+    const name = e.target.name;
     const value = e.target.value;
 
     clearTimeout(this.timer);
-    this.setState({ labelled_notes: value, saving: SavingState.NOT_SAVED });
+    this.setState({ [name]: value, saving: SavingState.NOT_SAVED });
 
     this.timer = setTimeout(() => {
       console.log("SAVING note now...");
-      this.setState({ labelled_notes: value, saving: SavingState.SAVING });
+      this.setState({ [name]: value, saving: SavingState.SAVING });
 
       // calls API
       this.props.modifyResult(
@@ -208,8 +216,12 @@ class LabellingTableRow extends React.Component {
           ? null
           : this.state.labelled_contrast,
       labelled_p5_flag: this.state.labelled_p5_flag,
-      labelled_tags: this.state.labelled_tags,
-      labelled_notes: this.state.labelled_notes,
+      labelled_tags:
+        this.state.labelled_tags === ""
+          ? null
+          : this.state.labelled_tags.split(","),
+      labelled_notes:
+        this.state.labelled_notes === "" ? null : this.state.labelled_notes,
       cognito_user_id: storedUser.sub,
       cognito_user_fullname: storedUser.name.trim(),
     };
@@ -606,11 +618,15 @@ class LabellingTableRow extends React.Component {
           <Table.Cell>
             <TextArea
               disabled={this.props.loading}
-              placeholder="Comma separated"
-              value={
-                result.labelled_tags ? result.labelled_tags.join(", ") : ""
-              }
-              onChange={this.handleChangeSpExams}
+              placeholder="Comma separated (auto-saves after 2s)"
+              name="labelled_tags"
+              value={this.state.labelled_tags || ""}
+              //   value={
+              //     this.state.labelled_tags
+              //       ? this.state.labelled_tags.join(", ")
+              //       : ""
+              //   }
+              onChange={this.handleChangeTextArea}
             />
           </Table.Cell>
           {/* <Table.Cell>
@@ -621,9 +637,10 @@ class LabellingTableRow extends React.Component {
               <Table.Cell>
                 <TextArea
                   disabled={this.props.loading}
-                  placeholder="Labelling notes"
+                  placeholder="Labelling notes (auto-saves after 2s)"
+                  name="labelled_notes"
                   value={this.state.labelled_notes || ""}
-                  onChange={this.handleChangeNote}
+                  onChange={this.handleChangeTextArea}
                 />
               </Table.Cell>
               <Table.Cell>{result.date_created}</Table.Cell>
@@ -636,7 +653,7 @@ class LabellingTableRow extends React.Component {
         </Table.Row>
         {this.props.expanded && (
           <Table.Row active key={"row-expanded-" + index}>
-            <Table.Cell colSpan="12">
+            <Table.Cell colSpan="13">
               <div style={{ padding: "1.5em" }}>
                 {/* {this.renderItemDetails(result)} */}
                 <ResultsTableRowExpansion
