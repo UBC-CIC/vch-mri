@@ -74,7 +74,7 @@ get_rule_candidates_cmd = """
 get_rule_candidates_cmd_union = """
     select array (SELECT id
     FROM mri_rules, to_tsquery('ths_search','%s') query 
-    WHERE bp_tk @@ query
+    WHERE info_weighted_tk @@ query
     AND active = 't'
     %s
     ORDER BY priority DESC)
