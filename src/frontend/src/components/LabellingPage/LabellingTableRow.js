@@ -150,6 +150,8 @@ class LabellingTableRow extends React.Component {
     // NOT AI confirmed anymore! Wipe the note
     if (labelled_notes === NOTE_CONFIRM_AI) {
       labelled_notes = "";
+    }
+    if (labelled_tags === NOTE_CONFIRM_AI) {
       labelled_tags = "";
     }
 
