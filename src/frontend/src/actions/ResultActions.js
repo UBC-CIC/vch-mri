@@ -269,7 +269,11 @@ export const modifyResult = (state) => {
   };
 };
 
-export const rerunAIAll = (pageIndex) => {
+export const rerunAIAll = (
+  pageIndex,
+  cognito_user_id = "",
+  cognito_user_fullname = ""
+) => {
   return async (dispatch) => {
     dispatch(aiRerunStarted());
     console.log("rerunAIAll");
@@ -281,6 +285,8 @@ export const rerunAIAll = (pageIndex) => {
         `${process.env.REACT_APP_HTTP_API_URL}/parser`,
         {
           operation: "RERUN_ALL",
+          cognito_user_fullname,
+          cognito_user_id,
         }
       );
       console.log("responseRerun");
@@ -304,7 +310,11 @@ export const rerunAIAll = (pageIndex) => {
   };
 };
 
-export const rerunAI = (reqId) => {
+export const rerunAI = (
+  reqId,
+  cognito_user_id = "",
+  cognito_user_fullname = ""
+) => {
   return async (dispatch) => {
     dispatch(aiRerunStarted());
     console.log("rerunAI");
@@ -315,6 +325,8 @@ export const rerunAI = (reqId) => {
       await axios.post(`${process.env.REACT_APP_HTTP_API_URL}/parser`, {
         operation: "RERUN_ONE",
         CIO_ID: reqId,
+        cognito_user_fullname,
+        cognito_user_id,
       });
 
       // Get latest info for result - history and new AI result
