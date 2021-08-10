@@ -27,6 +27,8 @@ DataResultsLambdaName = os.getenv('DATA_RESULTS_LAMBDA')
 spell = SpellChecker()
 psql = postgresql.PostgreSQL()
 conj_list = psql.queryTable("conjunctions")
+# logger.info('conj_list')
+# logger.info(conj_list)
 spelling_list = [x[0] for x in psql.queryTable('spellchecker')]
 # Add words to spell list
 spell.word_frequency.load_words(spelling_list)
@@ -163,7 +165,7 @@ def dob2age(dob):
 
 
 def contains_word(sample, text):
-    return f' {sample} ' in f' {text} '
+    return f' {sample.lower()} ' in f' {text.lower()} '
 
 
 def preProcessText(col):
@@ -182,18 +184,20 @@ def preProcessText(col):
 
 def checkSpelling(text: str):
     words = text.split()
-    logger.info('checkSpelling - words')
-    logger.info(words)
+    # logger.info('checkSpelling - words')
+    # logger.info(words)
     return ' '.join([spell.correction(word) for word in words])
 
 
 def replace_conjunctions(conj_list, text: str, info_list):
     # raise Exception('replace_conjunctions ex test')
-    temp_text = f' {text} '
+    temp_text = f' {text.lower()} '
     for conj in conj_list:
-        if contains_word(conj[0], text):
-            info_list.append(conj[1])
-            temp_text = temp_text.replace(f' {conj[0]} ', f' {conj[1]} ')
+        abbrev = conj[0].lower()
+        meaning = conj[1]
+        if contains_word(abbrev, text):
+            info_list.append(meaning)
+            temp_text = temp_text.replace(f' {abbrev} ', f' {meaning} ')
     return temp_text[1:len(temp_text) - 1]
 
 
@@ -202,6 +206,7 @@ def find_all_entities(data: str):
     if not data:
         return []
     try:
+        logger.info('--> compr_m.detect_entities_v2')
         result = compr_m.detect_entities_v2(Text=data)
         return result['Entities']
     except Exception as ex:
@@ -221,6 +226,7 @@ def infer_icd10_cm(data: str, med_cond, diagnosis, symptoms):
     if not data:
         return None
     try:
+        logger.info('--> compr_m.infer_icd10_cm')
         icd10_result = compr_m.infer_icd10_cm(Text=data)
         # logger.info('icd10_result')
         # logger.info(icd10_result)
