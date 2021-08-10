@@ -22,7 +22,7 @@ import {
 } from "../constants/resultConstants";
 import axios from "axios";
 // TODO for sample data local testing instead of waiting Lambda containers to load ~5secs
-// import SampleData from "../data/SampleDataResults2Pages";
+import SampleData from "../data/SampleDataResults2Pages";
 // import SampleDataStatistics from "../data/SampleDataStatistics";
 
 export const getResultByIDStarted = () => {
@@ -186,19 +186,19 @@ export const getResultsByPage = (pageIndex) => {
     dispatch(getResultsByPageStarted());
 
     // TODO for sample data local testing instead of waiting Lambda containers to load ~5secs
-    // dispatch(getResultsByPageSuccess(SampleData));
-    axios
-      .post(`${process.env.REACT_APP_HTTP_API_URL}/results`, {
-        operation: "GET",
-        page: pageIndex,
-      })
-      .then((response) => {
-        console.log(response.data);
-        dispatch(getResultsByPageSuccess(response.data));
-      })
-      .catch((e) => {
-        dispatch(getResultsByPageFailure(e));
-      });
+    dispatch(getResultsByPageSuccess(SampleData));
+    // axios
+    //   .post(`${process.env.REACT_APP_HTTP_API_URL}/results`, {
+    //     operation: "GET",
+    //     page: pageIndex,
+    //   })
+    //   .then((response) => {
+    //     console.log(response.data);
+    //     dispatch(getResultsByPageSuccess(response.data));
+    //   })
+    //   .catch((e) => {
+    //     dispatch(getResultsByPageFailure(e));
+    //   });
   };
 };
 

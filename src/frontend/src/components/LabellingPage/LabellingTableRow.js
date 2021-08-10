@@ -99,8 +99,8 @@ class LabellingTableRow extends React.Component {
         labelled_contrast: "e",
         labelled_notes: NOTE_CONFIRM_AI,
         // Don't wipe flag and tags
-        labelled_p5_flag: this.state.labelled_p5_flag,
-        labelled_tags: this.state.labelled_tags,
+        labelled_p5_flag: false,
+        labelled_tags: [NOTE_CONFIRM_AI],
       },
       () => {
         this.props.modifyResult(this.preparePayloadModifyResult(reqId));
@@ -142,7 +142,10 @@ class LabellingTableRow extends React.Component {
       labelled_contrast = foundRule.contrast;
     }
     // NOT AI confirmed anymore! Wipe the note
-    if (labelled_notes === NOTE_CONFIRM_AI) labelled_notes = "";
+    if (labelled_notes === NOTE_CONFIRM_AI) {
+      labelled_notes = "";
+      labelled_tags = [];
+    }
 
     this.setState(
       {
@@ -467,6 +470,31 @@ class LabellingTableRow extends React.Component {
             content={this.popupButtonAIConfirm(result.id, resState)}
             trigger={
               <Table.Cell>
+                <Form.Checkbox
+                  //   toggle
+                  disabled={true}
+                  name="ai_p5_flag"
+                  //   value={result.labelled_p5_flag}
+                  checked={result.ai_p5_flag || false}
+                  //   onChange={this.handleSelectChange}
+                  onChange={this.handleToggle}
+                  style={{
+                    zIndex: 0,
+                  }}
+                />
+              </Table.Cell>
+            }
+            flowing
+            hoverable
+            mouseEnterDelay={500}
+            mouseLeaveDelay={500}
+            disabled={disableAIConfirmPopup}
+            style={{ color: "red" }}
+          />
+          <Popup
+            content={this.popupButtonAIConfirm(result.id, resState)}
+            trigger={
+              <Table.Cell>
                 {result.ai_contrast !== null
                   ? result.ai_contrast.toString()
                   : " - "}
@@ -479,9 +507,20 @@ class LabellingTableRow extends React.Component {
             disabled={disableAIConfirmPopup}
             style={{ color: "red" }}
           />
-          <Table.Cell>
-            {result.ai_tags ? result.ai_tags.join(", ") : "none"}
-          </Table.Cell>
+          <Popup
+            content={this.popupButtonAIConfirm(result.id, resState)}
+            trigger={
+              <Table.Cell>
+                {result.ai_tags ? result.ai_tags.join(", ") : "none"}
+              </Table.Cell>
+            }
+            mouseEnterDelay={500}
+            mouseLeaveDelay={500}
+            flowing
+            hoverable
+            disabled={disableAIConfirmPopup}
+            style={{ color: "red" }}
+          />
           {this.props.showPhysicianResults && (
             <>
               <Table.Cell>
@@ -562,6 +601,16 @@ class LabellingTableRow extends React.Component {
                 { key: false, text: "false", value: false },
               ]}
               onChange={this.handleSelectChange}
+            />
+          </Table.Cell>
+          <Table.Cell>
+            <TextArea
+              disabled={this.props.loading}
+              placeholder="Comma separated"
+              value={
+                result.labelled_tags ? result.labelled_tags.join(", ") : ""
+              }
+              onChange={this.handleChangeSpExams}
             />
           </Table.Cell>
           {/* <Table.Cell>

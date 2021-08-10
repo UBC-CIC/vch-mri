@@ -11,7 +11,7 @@ import { sendSuccessToast, sendErrorToast } from "../../helpers";
 import LabellingTableRow from "./LabellingTableRow";
 import { Icon, Button } from "semantic-ui-react";
 
-const DEFAULT_NUM_COLUMNS = 10;
+const DEFAULT_NUM_COLUMNS = 12;
 
 class LabellingTable extends React.Component {
   constructor(props) {
@@ -31,7 +31,7 @@ class LabellingTable extends React.Component {
   }
 
   async componentDidMount() {
-    console.log("LabellingTable componentDidMount");
+    // console.log("LabellingTable componentDidMount");
     this.props.getResultsByPage(this.state.activePage);
   }
 
@@ -64,7 +64,7 @@ class LabellingTable extends React.Component {
 
   handleClickToggleRules = () => {
     this.setState({
-      numColumns: this.props.showRules ? 14 : DEFAULT_NUM_COLUMNS,
+      numColumns: this.props.showRules ? 16 : DEFAULT_NUM_COLUMNS,
     });
     this.props.handleClickShowRules();
   };
@@ -94,9 +94,9 @@ class LabellingTable extends React.Component {
   };
 
   render() {
-    console.log("render LabellingTable");
-    console.log(this.state.showAll);
-    console.log(this.state.numColumns);
+    // console.log("render LabellingTable");
+    // console.log(this.state.showAll);
+    // console.log(this.state.numColumns);
     return (
       <>
         <Confirm
@@ -173,7 +173,7 @@ class LabellingTable extends React.Component {
           <Table.Header fullWidth>
             <Table.Row key={"row-header1"}>
               <Table.HeaderCell colSpan="2" />
-              <Table.HeaderCell colSpan="4">AI Results</Table.HeaderCell>
+              <Table.HeaderCell colSpan="5">AI Results</Table.HeaderCell>
               {this.state.showPhysicianResults && (
                 <>
                   <Table.HeaderCell colSpan="2">
@@ -181,7 +181,7 @@ class LabellingTable extends React.Component {
                   </Table.HeaderCell>
                 </>
               )}
-              <Table.HeaderCell colSpan="5">Labelled Override</Table.HeaderCell>
+              <Table.HeaderCell colSpan="6">Labelled Override</Table.HeaderCell>
               {/* <Table.HeaderCell colSpan="3" /> */}
               {!this.props.showRules && <Table.HeaderCell colSpan="3" />}
             </Table.Row>
@@ -281,6 +281,19 @@ class LabellingTable extends React.Component {
               <Table.HeaderCell
                 collapsing
                 sorted={
+                  this.props.sortedColumn === "ai_p5_flag"
+                    ? this.props.sortDirection
+                    : null
+                }
+                onClick={() => {
+                  this.props.changeResultSort("ai_p5_flag");
+                }}
+              >
+                P5
+              </Table.HeaderCell>
+              <Table.HeaderCell
+                collapsing
+                sorted={
                   this.props.sortedColumn === "ai_contrast"
                     ? this.props.sortDirection
                     : null
@@ -374,6 +387,7 @@ class LabellingTable extends React.Component {
               >
                 Contrast
               </Table.HeaderCell>
+              <Table.HeaderCell>Sp. Exams</Table.HeaderCell>
               {/* <Table.HeaderCell
                 collapsing
                 sorted={
