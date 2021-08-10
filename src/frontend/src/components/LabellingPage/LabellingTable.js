@@ -10,6 +10,9 @@ import {
 import { sendSuccessToast, sendErrorToast } from "../../helpers";
 import LabellingTableRow from "./LabellingTableRow";
 import { Icon, Button } from "semantic-ui-react";
+import { AUTH_USER_ID_TOKEN_KEY } from "../../constants/userConstant";
+import { Cache } from "aws-amplify";
+import jwt_decode from "jwt-decode";
 
 const DEFAULT_NUM_COLUMNS = 12;
 
@@ -90,7 +93,12 @@ class LabellingTable extends React.Component {
     console.log("rerunAll");
 
     this.setState({ showConfirmRerunAll: false });
-    this.props.rerunAIAll(this.state.activePage);
+    const storedUser = jwt_decode(Cache.getItem(AUTH_USER_ID_TOKEN_KEY));
+    this.props.rerunAIAll(
+      this.state.activePage,
+      storedUser.sub,
+      storedUser.name.trim()
+    );
   };
 
   render() {
@@ -403,9 +411,7 @@ class LabellingTable extends React.Component {
               </Table.HeaderCell> */}
               {!this.props.showRules && (
                 <>
-                  <Table.HeaderCell>
-                    Notes (auto-saves after 2s)
-                  </Table.HeaderCell>
+                  <Table.HeaderCell>Notes</Table.HeaderCell>
                   <Table.HeaderCell
                     sorted={
                       this.props.sortedColumn === "created_at"

@@ -1,5 +1,5 @@
 import React from "react";
-import { Input } from "semantic-ui-react";
+import { Form } from "semantic-ui-react";
 import { connect } from "react-redux";
 import { getResultByID, getResultsByPage } from "../../actions/ResultActions";
 
@@ -23,34 +23,37 @@ class LabellingSearchBar extends React.Component {
     });
   }
 
-  handleSearchClick = () => {
+  handleSearchClick(e) {
+    e.preventDefault();
     if (this.state.id) {
       this.props.getResultByID(this.state.id);
     } else {
       this.props.getResultsByPage(1);
     }
     this.setState(initialState);
-  };
+  }
 
   render() {
     return (
-      <Input
-        action={{
-          color: "blue",
-          labelPosition: "right",
-          icon: "search",
-          content: "Search",
-          onClick: () => this.handleSearchClick(),
-        }}
-        fluid
-        icon="search"
-        iconPosition="left"
-        placeholder="Search result by reqCIO..."
-        name="id"
-        loading={this.props.loading}
-        value={this.state.id}
-        onChange={this.handleChange}
-      />
+      <Form onSubmit={this.handleSearchClick}>
+        <Form.Input
+          action={{
+            color: "blue",
+            labelPosition: "right",
+            icon: "search",
+            content: "Search",
+            onClick: this.handleSearchClick,
+          }}
+          fluid
+          icon="search"
+          iconPosition="left"
+          placeholder="Search result by reqCIO..."
+          name="id"
+          loading={this.props.loading}
+          value={this.state.id}
+          onChange={this.handleChange}
+        />
+      </Form>
     );
   }
 }
