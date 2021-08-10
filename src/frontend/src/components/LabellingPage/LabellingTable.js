@@ -11,12 +11,15 @@ import { sendSuccessToast, sendErrorToast } from "../../helpers";
 import LabellingTableRow from "./LabellingTableRow";
 import { Icon, Button } from "semantic-ui-react";
 
+const DEFAULT_NUM_COLUMNS = 10;
+
 class LabellingTable extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       activePage: 1,
       expandedRows: [],
+      numColumns: DEFAULT_NUM_COLUMNS,
       showPhysicianResults: false,
       showAll: false,
       showLabelled: false,
@@ -59,8 +62,18 @@ class LabellingTable extends React.Component {
     this.setState({ expandedRows: newExpandedRows });
   }
 
+  handleClickToggleRules = () => {
+    this.setState({
+      numColumns: this.props.showRules ? 14 : DEFAULT_NUM_COLUMNS,
+    });
+    this.props.handleClickShowRules();
+  };
+
   handleClickCollapseAll = () => {
-    this.setState({ showAll: !this.state.showAll });
+    this.setState({
+      showAll: !this.state.showAll,
+      numColumns: this.state.showAll ? 14 : DEFAULT_NUM_COLUMNS,
+    });
   };
 
   handleClickShowLabelled = () => {
@@ -81,6 +94,9 @@ class LabellingTable extends React.Component {
   };
 
   render() {
+    console.log("render LabellingTable");
+    console.log(this.state.showAll);
+    console.log(this.state.numColumns);
     return (
       <>
         <Confirm
@@ -110,7 +126,7 @@ class LabellingTable extends React.Component {
           floated="right"
           color="blue"
           //   size="large"
-          onClick={this.props.handleClickShowRules}
+          onClick={this.handleClickToggleRules}
           icon
           labelPosition="right"
         >
@@ -142,11 +158,11 @@ class LabellingTable extends React.Component {
         <Table celled compact sortable striped>
           <Table.Header fullWidth>
             <Table.Row key={"row-footer"}>
-              <Table.HeaderCell colSpan="10">
+              <Table.HeaderCell colSpan={this.state.numColumns}>
                 {this.props.totalPages && (
                   <Pagination
                     floated="right"
-                    defaultActivePage={this.state.activePage}
+                    activePage={this.state.activePage}
                     onPageChange={this.handlePaginationChange}
                     totalPages={this.props.totalPages}
                   />
@@ -166,6 +182,8 @@ class LabellingTable extends React.Component {
                 </>
               )}
               <Table.HeaderCell colSpan="5">Labelled Override</Table.HeaderCell>
+              {/* <Table.HeaderCell colSpan="3" /> */}
+              {!this.props.showRules && <Table.HeaderCell colSpan="3" />}
             </Table.Row>
             <Table.Row key={"row-header2"}>
               <Table.HeaderCell
@@ -426,11 +444,11 @@ class LabellingTable extends React.Component {
 
           <Table.Footer fullWidth>
             <Table.Row key={"row-footer"}>
-              <Table.HeaderCell colSpan="10">
+              <Table.HeaderCell colSpan={this.state.numColumns}>
                 {this.props.totalPages && (
                   <Pagination
                     floated="right"
-                    defaultActivePage={this.state.activePage}
+                    activePage={this.state.activePage}
                     onPageChange={this.handlePaginationChange}
                     totalPages={this.props.totalPages}
                   />

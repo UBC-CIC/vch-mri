@@ -9,6 +9,8 @@ import { sendSuccessToast, sendErrorToast } from "../../helpers";
 import ResultsTableRow from "./ResultsTableRow";
 // import { Icon, Button } from "semantic-ui-react";
 
+const NUM_COLUMNS = 12;
+
 class ResultsTable extends React.Component {
   constructor(props) {
     super(props);
@@ -70,11 +72,26 @@ class ResultsTable extends React.Component {
         </Button> */}
         <Table celled compact sortable striped>
           <Table.Header fullWidth>
+            <Table.Row key={"row-footer"}>
+              <Table.HeaderCell colSpan={NUM_COLUMNS}>
+                {this.props.totalPages && (
+                  <Pagination
+                    floated="right"
+                    activePage={this.state.activePage}
+                    onPageChange={this.handlePaginationChange}
+                    totalPages={this.props.totalPages}
+                  />
+                )}
+              </Table.HeaderCell>
+            </Table.Row>
+          </Table.Header>
+          <Table.Header fullWidth>
             <Table.Row key={"row-header1"}>
               <Table.HeaderCell colSpan="7" />
               <Table.HeaderCell colSpan="4">AI Results</Table.HeaderCell>
               {/* <Table.HeaderCell colSpan="2">Physician Results</Table.HeaderCell>
               <Table.HeaderCell colSpan="3">Labelled Override</Table.HeaderCell> */}
+              <Table.HeaderCell colSpan="1" />
             </Table.Row>
             <Table.Row key={"row-header2"}>
               <Table.HeaderCell
@@ -328,11 +345,11 @@ class ResultsTable extends React.Component {
 
           <Table.Footer fullWidth>
             <Table.Row key={"row-footer"}>
-              <Table.HeaderCell colSpan="10">
+              <Table.HeaderCell colSpan={NUM_COLUMNS}>
                 {this.props.totalPages && (
                   <Pagination
                     floated="right"
-                    defaultActivePage={this.state.activePage}
+                    activePage={this.state.activePage}
                     onPageChange={this.handlePaginationChange}
                     totalPages={this.props.totalPages}
                   />
