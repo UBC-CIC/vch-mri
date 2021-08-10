@@ -316,6 +316,10 @@ def update_labelling(cur, data):
         data['labelled_tags'])
     logger.info(response)
 
+    tags = response[0][6]
+    if tags is None or len(tags) <= 0:
+        tags = ''
+
     ret_update = {
         'id': response[0][0],
         'labelled_rule_id': response[0][1],
@@ -323,7 +327,7 @@ def update_labelling(cur, data):
         'labelled_contrast': response[0][3],
         'labelled_notes': response[0][4],
         'labelled_p5_flag': response[0][5],
-        'labelled_tags': response[0][6],
+        'labelled_tags': tags,
         'state': response[0][7]}
     logger.info(ret_update)
 
@@ -400,7 +404,11 @@ def parseResponse(response):
         resp['labelled_contrast'] = resp_tuple[20]
         resp['labelled_notes'] = resp_tuple[21]
         resp['labelled_p5_flag'] = resp_tuple[22]
-        resp['labelled_tags'] = resp_tuple[23]
+
+        tags = resp_tuple[23]
+        if tags is None or len(tags) <= 0:
+            tags = ''
+        resp['labelled_tags'] = tags
 
         resp['history'] = {}
 
