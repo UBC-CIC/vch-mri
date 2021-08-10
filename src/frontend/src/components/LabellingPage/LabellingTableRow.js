@@ -183,7 +183,20 @@ class LabellingTableRow extends React.Component {
     this.setState({ [name]: value, saving: SavingState.NOT_SAVED });
 
     this.timer = setTimeout(() => {
-      console.log("SAVING note now...");
+      console.log("SAVING textarea now...");
+
+      if (
+        name === "labelled_notes" &&
+        this.state.labelled_tags === NOTE_CONFIRM_AI
+      )
+        this.setState({ labelled_tags: "" });
+
+      if (
+        name === "labelled_tags" &&
+        this.state.labelled_notes === NOTE_CONFIRM_AI
+      )
+        this.setState({ labelled_notes: "" });
+
       this.setState({ [name]: value, saving: SavingState.SAVING });
 
       // calls API
