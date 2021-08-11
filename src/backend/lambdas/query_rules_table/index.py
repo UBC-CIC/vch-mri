@@ -53,7 +53,7 @@ def addRule(cur, values):
     param_values = []
     for value in values:
         cmd += "(%s, %s, %s, %s),"
-        param_values.extend([value['body_part'], value['info'], value['priority'], value['contrast']])
+        param_values.extend([add_whitespace_spec_chars(value['body_part']), add_whitespace_spec_chars(value['info']), value['priority'], value['contrast']])
     cmd = cmd[:-1]
     cmd += " RETURNING id, body_part, contrast, priority, info, active"
 
@@ -75,7 +75,7 @@ def updateRule(cur, values):
     param_values = []
     for value in values:
         cmd += "(%s, %s, %s, %s, %s),"
-        param_values.extend([value['id'], value['body_part'], value['info'], value['priority'], value['contrast']])
+        param_values.extend([value['id'], add_whitespace_spec_chars(value['body_part']), add_whitespace_spec_chars(value['info']), value['priority'], value['contrast']])
     cmd = cmd[:-1]
     cmd += " ) as tmp(id, new_body_part, new_info, new_priority, new_contrast) " \
            "WHERE CAST(tmp.id AS INTEGER) = mri_rules.id " \
@@ -144,6 +144,18 @@ def parseResponse(response):
         resp['active'] = resp_tuple[5]
         resp_list.append(resp)
     return resp_list
+
+
+def add_whitespace_spec_chars(value):
+    # Add whitespace around special chars
+    special_char = "@_!#$%^&*()<>?/\|}{~:;[].,"
+    # special_char = "/.,"
+    for i in special_char:
+        value = value.replace(i, f' {i} ')
+
+    # processed = value.replace("/", " / ")
+    # processed = processed.replace("\\", " \\ ")
+    return value
 
 
 def handler(event, context):
