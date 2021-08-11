@@ -24,14 +24,11 @@ lambda_client = boto3.client('lambda')
 RuleProcessingLambdaName = os.getenv('RULE_PROCESSING_LAMBDA')
 DataResultsLambdaName = os.getenv('DATA_RESULTS_LAMBDA')
 
-spell = SpellChecker()
+# Conj and spelllist loaded in load_db_data()
+conj_list = []
+spell = None
+
 psql = postgresql.PostgreSQL()
-conj_list = psql.queryTable("conjunctions")
-# logger.info('conj_list')
-# logger.info(conj_list)
-spelling_list = [x[0] for x in psql.queryTable('spellchecker')]
-# Add words to spell list
-spell.word_frequency.load_words(spelling_list)
 
 insert_new_request_cmd = """
     INSERT INTO data_request(id, state, age, height, weight, request) VALUES 
@@ -172,10 +169,11 @@ def preProcessText(col):
     """
     Takes in a pandas.Series and preprocesses the text
     """
-    reponct = string.punctuation.replace("?", "").replace("/", "")
+    # DO NOT want to replace punc with empty string cause it will converge into one word!
+    # reponct = string.punctuation.replace("?", "").replace("/", "")
     extr = col.strip()
     extr = re.sub('<.*>', '', extr)
-    extr = extr.translate(str.maketrans('', '', reponct))
+    # extr = extr.translate(str.maketrans('', '', reponct))
     extr = re.sub('[^0-9a-zA-Z?/ ]+', ' ', extr)
     extr = re.sub('\s+', ' ', extr)
     extr = extr.lower()
@@ -184,12 +182,13 @@ def preProcessText(col):
 
 def checkSpelling(text: str):
     words = text.split()
-    # logger.info('checkSpelling - words')
+    logger.info('checkSpelling - words')
     # logger.info(words)
     return ' '.join([spell.correction(word) for word in words])
 
 
 def replace_conjunctions(conj_list, text: str, info_list):
+    # logger.info(conj_list)
     # raise Exception('replace_conjunctions ex test')
     temp_text = f' {text.lower()} '
     for conj in conj_list:
@@ -337,6 +336,18 @@ def error_handler(cio, message):
             "headers": {"Content-Type": "application/json"}}
 
 
+def add_whitespace_spec_chars(value):
+    # Add whitespace around special chars
+    special_char = "@_!#$%^&*()<>?/\|}{~:;[].,"
+    # special_char = "/.,"
+    for i in special_char:
+        value = value.replace(i, f' {i} ')
+
+    # processed = value.replace("/", " / ")
+    # processed = processed.replace("\\", " \\ ")
+    return value
+
+
 def parse_and_run_rule_processing(data_df, cognito_user_id, cognito_user_fullname, new_request=True):
     logger.info('parse_and_run_rule_processing')
     logger.info(data_df)
@@ -407,8 +418,18 @@ def parse_and_run_rule_processing(data_df, cognito_user_id, cognito_user_fullnam
         data_df['priority'] = data_df['Radiologist Priority']
 
     # Format columns that don't need comprehend medical and preprocess the text
-    data_df['Exam Requested'] = preProcessText(exam_requested)
-    data_df['Reason for Exam/Relevant Clinical History'] = preProcessText(reason_for_exam)
+    logger.info(reason_for_exam)
+    reason_for_exam = preProcessText(reason_for_exam)
+    data_df['Reason for Exam/Relevant Clinical History'] = reason_for_exam
+    logger.info('POST preprocessed_text - Reason for Exam')
+    logger.info(reason_for_exam)
+
+    logger.info(exam_requested)
+    exam_requested = preProcessText(exam_requested)
+    data_df['Exam Requested'] = exam_requested
+    logger.info('POST preprocessed_text - Exam Requested')
+    logger.info(exam_requested)
+
     # data_df['Spine'] = preProcessText(data_df['Appropriateness Checklist - Spine'])
     # data_df['Hip & Knee'] = preProcessText(data_df['Appropriateness Checklist - Hip & Knee'])
 
@@ -434,19 +455,26 @@ def parse_and_run_rule_processing(data_df, cognito_user_id, cognito_user_fullnam
 
     # Parse the Exam Requested Column into Comprehend Medical to find Anatomy Entities
     try:
-        anatomy_json = find_all_entities(checkSpelling(f'{data_df["Exam Requested"]}'))
-        # logger.info('anatomy_json - find_all_entities(checkSpelling')
-        # logger.info(anatomy_json)
-    except Exception as error:
-        return error_handler(cio, "find_all_entities - Exception Type: %s" % type(error))
-
-    try:
-        preprocessed_text = replace_conjunctions(conj_list, f'{data_df["Reason for Exam/Relevant Clinical History"]}',
-                                                 other_info)
-        logger.info('preprocessed_text - replace_conjunctions')
+        logger.info('Reason for Exam - replace_conjunctions')
+        conj = replace_conjunctions(conj_list, f'{data_df["Reason for Exam/Relevant Clinical History"]}', other_info)
+        logger.info(conj)
+        # whitespc after conj - for ex r/o -> rule out; if a space added it won't match conj
+        whitespc = add_whitespace_spec_chars(conj)
+        preprocessed_text = checkSpelling(whitespc)
         logger.info(preprocessed_text)
     except Exception as error:
         return error_handler(cio, "replace_conjunctions - Exception Type: %s" % type(error))
+
+    try:
+        logger.info('Exam Requested - anatomy_json - find_all_entities(checkSpelling')
+        whitespc = add_whitespace_spec_chars(data_df["Exam Requested"])
+        logger.info(whitespc)
+        spelling = checkSpelling(whitespc)
+        logger.info(spelling)
+        anatomy_json = find_all_entities(spelling)
+        logger.info(anatomy_json)
+    except Exception as error:
+        return error_handler(cio, "find_all_entities - Exception Type: %s" % type(error))
 
     for obj in anatomy_json:
         if obj['Category'] == 'ANATOMY' or obj['Category'] == 'TEST_TREATMENT_PROCEDURE' or \
@@ -626,6 +654,23 @@ def rerun_rule_processing_single(cio_id, cognito_user_id, cognito_user_fullname)
             #     return error_handler(cio_id, "QueryRulesLambdaName - Exception Type: %s" % type(error))
 
 
+def load_db_data():
+    logger.info('load_db_data')
+
+    # Load conj
+    global conj_list
+    conj_list = psql.queryTable("conjunctions")
+    logger.info(conj_list)
+
+    # Add words to spell list
+    global spell
+    spell = SpellChecker()
+    spelling_list = [x[0] for x in psql.queryTable('spellchecker')]
+    logger.info(spelling_list)
+    spell.word_frequency.load_words(spelling_list)
+    return
+
+
 def handler(event, context):
     logger.info(event)
     param_error = {"isBase64Encoded": False, "statusCode": 400, "body": "Missing Body Parameter",
@@ -654,6 +699,8 @@ def handler(event, context):
     if 'cognito_user_fullname' in data_df and data_df['cognito_user_fullname']:
         cognito_user_fullname = data_df["cognito_user_fullname"]
         logger.info(cognito_user_fullname)
+
+    load_db_data()
 
     if 'operation' in data_df:
         rest_cmd = data_df['operation']
