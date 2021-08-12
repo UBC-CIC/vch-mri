@@ -183,7 +183,7 @@ def preProcessText(col):
 
 def checkSpelling(text: str):
     words = text.split()
-    logger.info('checkSpelling - words')
+    # logger.info('checkSpelling - words')
     # logger.info(words)
     return ' '.join([spell.correction(word) for word in words])
 
@@ -242,11 +242,12 @@ def infer_icd10_cm(data: str, med_cond, diagnosis, symptoms):
     if not data:
         return None
     try:
-        logger.info('--> compr_m.infer_icd10_cm')
+        logger.info('--> compr_m.infer_icd10_cm - icd10_result[Entities]')
         icd10_result = compr_m.infer_icd10_cm(Text=data)
         # logger.info('icd10_result')
         # logger.info(icd10_result)
         for resp in icd10_result['Entities']:
+            logger.info(resp)
             if resp['Score'] > 0.4:
                 resp_str = resp['Text']
                 category = ''
@@ -276,9 +277,8 @@ def infer_icd10_cm(data: str, med_cond, diagnosis, symptoms):
                 elif category == 'DIAGN':
                     resp_str = checkSpelling(resp_str)
                     diagnosis.append(resp_str)
-
-                    logger.info('infer_icd10_cm - DIAGN')
-                    logger.info(resp_str)
+                    # logger.info('infer_icd10_cm - DIAGN')
+                    # logger.info(resp_str)
 
         return icd10_result
     except Exception as ex:
@@ -479,6 +479,7 @@ def parse_and_run_rule_processing(data_df, cognito_user_id, cognito_user_fullnam
         # whitespc after conj - for ex r/o -> rule out; if a space added it won't match conj
         whitespc = add_whitespace_spec_chars(conj)
         syn = apply_synonyms(synonyms_list, whitespc, syn_info)
+        # logger.info(syn)
         # preprocessed_text = checkSpelling(whitespc)
         preprocessed_text = checkSpelling(syn)
         logger.info(preprocessed_text)
@@ -486,7 +487,7 @@ def parse_and_run_rule_processing(data_df, cognito_user_id, cognito_user_fullnam
         return error_handler(cio, "replace_conjunctions - Exception Type: %s" % type(error))
 
     try:
-        logger.info('Exam Requested - anatomy_json - find_all_entities(checkSpelling')
+        logger.info('Exam Requested - anatomy_json - find_all_entities(checkSpelling)')
         whitespc = add_whitespace_spec_chars(data_df["Exam Requested"])
         logger.info(whitespc)
         syn = apply_synonyms(synonyms_list, whitespc, syn_info)
@@ -510,6 +511,10 @@ def parse_and_run_rule_processing(data_df, cognito_user_id, cognito_user_fullnam
         #     # apply comprehend to spine column
         #     formatted_df['Spine'][row] = find_entities(f'{data_df["Appropriateness Checklist - Spine"][row]}')
     icd10_result = infer_icd10_cm(preprocessed_text, medical_conditions, diagnosis, symptoms)
+    logger.info('<-- POST infer_icd10_cm')
+    logger.info(f'medical_conditions: {medical_conditions}')
+    logger.info(f'diagnosis: {diagnosis}')
+    logger.info(f'symptoms: {symptoms}')
     find_key_phrases(preprocessed_text, key_phrases, medical_conditions + diagnosis + symptoms, anatomy_list)
 
     formatted_df['anatomy_json'] = anatomy_json
@@ -681,18 +686,18 @@ def load_db_data():
     # Load conj
     global conj_list
     conj_list = psql.queryTable("conjunctions")
-    logger.info(conj_list)
+    # logger.info(conj_list)
 
     # Load synonyms
     global synonyms_list
     synonyms_list = psql.queryTable("synonyms")
-    logger.info(synonyms_list)
+    # logger.info(synonyms_list)
 
     # Add words to spell list
     global spell
     spell = SpellChecker()
     spelling_list = [x[0] for x in psql.queryTable('spellchecker')]
-    logger.info(spelling_list)
+    # logger.info(spelling_list)
     spell.word_frequency.load_words(spelling_list)
     return
 
