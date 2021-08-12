@@ -24,8 +24,9 @@ lambda_client = boto3.client('lambda')
 RuleProcessingLambdaName = os.getenv('RULE_PROCESSING_LAMBDA')
 DataResultsLambdaName = os.getenv('DATA_RESULTS_LAMBDA')
 
-# Conj and spelllist loaded in load_db_data()
+# Syn, Conj and spelllist loaded in load_db_data()
 conj_list = []
+synonyms_list = []
 spell = None
 
 psql = postgresql.PostgreSQL()
@@ -197,6 +198,22 @@ def replace_conjunctions(conj_list, text: str, info_list):
         if contains_word(abbrev, text):
             info_list.append(meaning)
             temp_text = temp_text.replace(f' {abbrev} ', f' {meaning} ')
+    return temp_text[1:len(temp_text) - 1]
+
+
+def apply_synonyms(syn_list, text: str, info_list):
+    logger.info('apply_synonyms')
+    # logger.info(synonyms_list)
+    # raise Exception('apply_synonyms ex test')
+    temp_text = f' {text.lower()} '
+    for syn in syn_list:
+        abbrev = syn[0].lower()
+        meanings = syn[1].split(" / ")
+        meaning = ' * '.join(meanings)
+        # logger.info(meaning)
+        if contains_word(abbrev, text):
+            info_list.append(meaning)
+            temp_text = temp_text.replace(f' {abbrev} ', f' {abbrev} * {meaning} ')
     return temp_text[1:len(temp_text) - 1]
 
 
@@ -452,6 +469,7 @@ def parse_and_run_rule_processing(data_df, cognito_user_id, cognito_user_fullnam
     symptoms = []
     key_phrases = []
     other_info = []
+    syn_info = []
 
     # Parse the Exam Requested Column into Comprehend Medical to find Anatomy Entities
     try:
@@ -460,7 +478,9 @@ def parse_and_run_rule_processing(data_df, cognito_user_id, cognito_user_fullnam
         logger.info(conj)
         # whitespc after conj - for ex r/o -> rule out; if a space added it won't match conj
         whitespc = add_whitespace_spec_chars(conj)
-        preprocessed_text = checkSpelling(whitespc)
+        syn = apply_synonyms(synonyms_list, whitespc, syn_info)
+        # preprocessed_text = checkSpelling(whitespc)
+        preprocessed_text = checkSpelling(syn)
         logger.info(preprocessed_text)
     except Exception as error:
         return error_handler(cio, "replace_conjunctions - Exception Type: %s" % type(error))
@@ -469,7 +489,8 @@ def parse_and_run_rule_processing(data_df, cognito_user_id, cognito_user_fullnam
         logger.info('Exam Requested - anatomy_json - find_all_entities(checkSpelling')
         whitespc = add_whitespace_spec_chars(data_df["Exam Requested"])
         logger.info(whitespc)
-        spelling = checkSpelling(whitespc)
+        syn = apply_synonyms(synonyms_list, whitespc, syn_info)
+        spelling = checkSpelling(syn)
         logger.info(spelling)
         anatomy_json = find_all_entities(spelling)
         logger.info(anatomy_json)
@@ -661,6 +682,11 @@ def load_db_data():
     global conj_list
     conj_list = psql.queryTable("conjunctions")
     logger.info(conj_list)
+
+    # Load synonyms
+    global synonyms_list
+    synonyms_list = psql.queryTable("synonyms")
+    logger.info(synonyms_list)
 
     # Add words to spell list
     global spell
