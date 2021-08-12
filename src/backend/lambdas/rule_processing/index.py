@@ -95,6 +95,12 @@ set_rule_candidates_cmd = """
     WHERE data_request.id = '%s'
     """
 
+clear_rule_candidates_cmd = """
+    UPDATE data_request
+    SET ai_rule_candidates = Null
+    WHERE data_request.id = '%s'
+    """
+
 update_rule_priority_cmd = """
 UPDATE data_request
 SET state = 'ai_priority_processed', ai_rule_id = r.id , ai_priority = r.priority, ai_contrast = r.contrast
@@ -195,7 +201,10 @@ def set_rule_candidates(cur, info_str, anatomy_str, cio_id, union = False):
     arr_rule_candidates = ret[0][0]
 
     if len(arr_rule_candidates) <= 0:
-        return
+        if not union:
+            return
+        else:
+            cur.execute(clear_rule_candidates_cmd % (cio_id))
 
     # Pare list down to max 10
     arr_rule_candidates = arr_rule_candidates[0:max_candidates]
