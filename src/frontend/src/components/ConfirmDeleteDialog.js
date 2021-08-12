@@ -48,6 +48,7 @@ class ConfirmDeleteDialog extends React.Component {
       default:
         this.setState({ open: false });
     }
+    this.setState({ open: false });
   }
 
   render() {
