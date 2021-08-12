@@ -52,10 +52,10 @@ class ModifySynonymForm extends React.Component {
   handleSubmit(e) {
     e.preventDefault();
     this.props.modifySynonym({
-      synonym: {
-        word: this.state.word.trim(),
-        synonymList: this.state.synonyms,
-      },
+      //   synonym: {
+      key: this.state.word.trim(),
+      value: this.state.synonyms.join(" / ").trim(),
+      //   },
       index: this.props.id,
     });
     this.setState(initialState);

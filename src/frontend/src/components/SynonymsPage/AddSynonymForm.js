@@ -40,8 +40,8 @@ class AddSynonymForm extends React.Component {
   handleSubmit(e) {
     e.preventDefault();
     this.props.addSynonym({
-      word: this.state.word.trim(),
-      synonymList: this.state.synonyms,
+      key: this.state.word.trim(),
+      value: this.state.synonyms.join(" / ").trim(),
     });
     this.setState(initialState);
   }
