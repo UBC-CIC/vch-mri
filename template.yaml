@@ -518,6 +518,37 @@ Resources:
         Variables:
           LOCAL_DEBUG: None
 
+  QuerySynonyms:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./src/backend/lambdas/query_synonyms
+      Events:
+        ExplicitApi: # warning: creates a public endpoint
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref HttpApi
+            Method: Post
+            Path: /synonyms
+            TimeoutInMillis: 29000
+            PayloadFormatVersion: "2.0"
+            RouteSettings:
+              ThrottlingBurstLimit: 100
+      Layers:
+        - !Ref Psycopg2Layer
+        - !Ref PostgresLayer
+      Policies:
+        - SSMParameterReadPolicy:
+            ParameterName: "mri*"
+      VpcConfig:
+        SecurityGroupIds:
+          - !Ref DataSecurityGroup
+          - !Ref AdicionalSecurityGroup
+        SubnetIds:
+          - !Ref PrivateSubnetA
+      Environment:
+        Variables:
+          LOCAL_DEBUG: None
+
   QueryWeights:
     Type: AWS::Serverless::Function
     Properties:
@@ -698,6 +729,8 @@ Outputs:
     Value: !GetAtt QuerySpellchecker.Arn
   QueryConjunctions:
     Value: !GetAtt QueryConjunctions.Arn
+  QuerySynonyms:
+    Value: !GetAtt QuerySynonyms.Arn
   QueryWeights:
     Value: !GetAtt QueryWeights.Arn
   UpdateWeights:

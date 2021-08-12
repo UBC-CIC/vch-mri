@@ -6,6 +6,7 @@ DROP TABLE IF EXISTS data_request;
 DROP TABLE IF EXISTS mri_rules; 
 DROP TABLE IF EXISTS word_weights; 
 DROP TABLE IF EXISTS conjunctions; 
+DROP TABLE IF EXISTS synonyms;
 DROP TABLE IF EXISTS spellchecker; 
 DROP TABLE IF EXISTS specialty_tags; 
 DROP TYPE enum_requests_state;
@@ -99,6 +100,11 @@ CREATE TABLE IF NOT EXISTS conjunctions (
     val VARCHAR(32)
 );
 
+CREATE TABLE IF NOT EXISTS synonyms (
+    key VARCHAR(64) PRIMARY KEY, 
+    val VARCHAR(256)
+);
+
 CREATE TABLE IF NOT EXISTS spellchecker(
     word VARCHAR(32) PRIMARY KEY
 );
@@ -134,6 +140,7 @@ UPDATE spellchecker
 SET word = TRIM(word);
 
 \copy conjunctions FROM './src/backend/csv/conjunctions.csv' DELIMITER ',' CSV;
+\copy synonyms FROM './src/backend/csv/synonyms.csv' DELIMITER ',' CSV;
 
 CREATE TEXT SEARCH DICTIONARY ths_med (
 TEMPLATE = thesaurus, 

@@ -39,12 +39,20 @@ https://www.psycopg.org/docs/install.html
     row is : 204
     row is : 205
     ---533.6206860542297---
-- then lastly rules.py: sample_output.json -> updates the Pvalues in data_results table
+- then lastly rules.py: sample_output.json -> updates the Pvalues in data_request table
   - should complete within 1 mins:
     ...
     For CIO ID: 124186, With return of: [(98, 'P3', True, 'Characterization soft tissue mass likely benign (lipoma)')]
     ---28.142488718032837---
-  - check data_results/sys_priority has updated
+  - check data_request/ai_priority has updated
+
+### Batch proccesing the curl SHELL request data:
+
+- example for local script, you can duplicate and change URL for any server in the .sh file:
+  cd /GitHub/SapienMachineLearning/vch-mri/src/backend/csv
+  mkdir localshlogs
+  cd localshlogs
+  sh ../requisition_data_200_LOCAL.sh
 
 ## AWS SAM - Serverless Application Model
 
