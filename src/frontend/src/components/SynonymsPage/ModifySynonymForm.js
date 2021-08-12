@@ -103,6 +103,7 @@ class ModifySynonymForm extends React.Component {
             control={Input}
             name="word"
             label="Word / Phrase"
+            disabled={true}
             value={this.state.word}
             onChange={this.handleChange}
           />
