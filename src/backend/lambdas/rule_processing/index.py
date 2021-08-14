@@ -31,30 +31,38 @@ WHERE id = %s;
 update_cmd = """
 UPDATE data_request
 SET %s ai_rule_id = r.id , ai_priority = r.priority, ai_contrast = r.contrast, error = NULL
-FROM mri_rules r WHERE r.id = (
-SELECT id
-FROM mri_rules, to_tsquery('ths_search','%s') query 
-WHERE info_weighted_tk @@ query
-AND active = 't'
-"""
-
-update_cmd_end = """
-ORDER BY ts_rank_cd('{0.1, 0.2, 0.4, 1.0}',info_weighted_tk, query, 1) DESC LIMIT 1)
+FROM mri_rules2 r WHERE r.id = %s
 AND data_request.id = '%s'
 RETURNING r.id, r.body_part, r.priority, r.contrast, data_request.ai_p5_flag, r.info;
 """
 
-update_cmd_end_union = """
-ORDER BY priority DESC LIMIT 1)
-AND data_request.id = '%s'
-RETURNING r.id, r.body_part, r.priority, r.contrast, data_request.ai_p5_flag, r.info;
-"""
+# update_cmd = """
+# UPDATE data_request
+# SET %s ai_rule_id = r.id , ai_priority = r.priority, ai_contrast = r.contrast, error = NULL
+# FROM mri_rules2 r WHERE r.id = (
+# SELECT id
+# FROM mri_rules2, to_tsquery('ths_search','%s') query
+# WHERE info_weighted_tk @@ query
+# AND active = 't'
+# """
+#
+# update_cmd_end = """
+# ORDER BY ts_rank_cd('{0.1, 0.2, 0.4, 1.0}',info_weighted_tk, query, 1) DESC LIMIT 1)
+# AND data_request.id = '%s'
+# RETURNING r.id, r.body_part, r.priority, r.contrast, data_request.ai_p5_flag, r.info;
+# """
+#
+# update_cmd_end_union = """
+# ORDER BY priority DESC LIMIT 1)
+# AND data_request.id = '%s'
+# RETURNING r.id, r.body_part, r.priority, r.contrast, data_request.ai_p5_flag, r.info;
+# """
 
 # set_rule_candidates_cmd2 = """
 #     UPDATE data_request
 #     SET ai_rule_candidates =
 #     (select array (SELECT id
-#     FROM mri_rules, to_tsquery('ths_search','%s') query
+#     FROM mri_rules2, to_tsquery('ths_search','%s') query
 #     WHERE info_weighted_tk @@ query
 #     AND active = 't'
 #     %s
@@ -64,7 +72,7 @@ RETURNING r.id, r.body_part, r.priority, r.contrast, data_request.ai_p5_flag, r.
 
 get_rule_candidates_cmd = """
     select array (SELECT id
-    FROM mri_rules, to_tsquery('ths_search','%s') query 
+    FROM mri_rules2, to_tsquery('ths_search','%s') query 
     WHERE info_weighted_tk @@ query
     AND active = 't'
     %s
@@ -73,7 +81,7 @@ get_rule_candidates_cmd = """
 
 get_rule_candidates_cmd_union = """
     select array (SELECT id
-    FROM mri_rules, to_tsquery('ths_search','%s') query 
+    FROM mri_rules2, to_tsquery('ths_search','%s') query 
     WHERE info_weighted_tk @@ query
     AND active = 't'
     %s
@@ -82,7 +90,7 @@ get_rule_candidates_cmd_union = """
 
 # get_rule_candidates_cmd_union = """
 #     SELECT id, priority, contrast, ts_rank_cd('{0.1, 0.2, 0.4, 1.0}',bp_tk, query, 1)
-#     FROM mri_rules, to_tsquery('ths_search','%s') query
+#     FROM mri_rules2, to_tsquery('ths_search','%s') query
 #     WHERE bp_tk @@ query
 #     AND active = 't'
 #     %s
@@ -101,21 +109,16 @@ clear_rule_candidates_cmd = """
     WHERE data_request.id = '%s'
     """
 
-update_rule_priority_cmd = """
-UPDATE data_request
-SET state = 'ai_priority_processed', ai_rule_id = r.id , ai_priority = r.priority, ai_contrast = r.contrast
-FROM mri_rules r WHERE r.id = (
-SELECT id
-FROM mri_rules, to_tsquery('ths_search','%s') query 
-WHERE info_weighted_tk @@ query
-AND active = 't'
-"""
+# update_rule_priority_cmd = """
+# UPDATE data_request
+# SET state = 'ai_priority_processed', ai_rule_id = r.id , ai_priority = r.priority, ai_contrast = r.contrast
+# FROM mri_rules2 r WHERE r.id = (
+# SELECT id
+# FROM mri_rules2, to_tsquery('ths_search','%s') query
+# WHERE info_weighted_tk @@ query
+# AND active = 't'
+# """
 
-update_cmd_end = """
-ORDER BY ts_rank_cd('{0.1, 0.2, 0.4, 1.0}',info_weighted_tk, query, 1) DESC LIMIT 1)
-AND data_request.id = '%s'
-RETURNING r.id, r.body_part, r.priority, r.contrast, data_request.ai_p5_flag, r.info;
-"""
 update_tags = """
 UPDATE data_request
 SET ai_tags = array_tag FROM (
@@ -201,17 +204,20 @@ def set_rule_candidates(cur, info_str, anatomy_str, cio_id, union = False):
     arr_rule_candidates = ret[0][0]
 
     if len(arr_rule_candidates) <= 0:
-        if not union:
-            return
-        else:
-            cur.execute(clear_rule_candidates_cmd % (cio_id))
+        if union:
+            cur.execute(clear_rule_candidates_cmd % cio_id)
+        return []
 
     # Pare list down to max 10
     arr_rule_candidates = arr_rule_candidates[0:max_candidates]
     logger.info(arr_rule_candidates)
+
     command = set_rule_candidates_cmd % (arr_rule_candidates, cio_id)
     logger.info(command)
+
     cur.execute(command)
+
+    return arr_rule_candidates
 
 
 def handler(event, context):
@@ -229,7 +235,7 @@ def handler(event, context):
     cio_id = v["CIO_ID"]
     with psql.conn.cursor() as cur: 
         # insert into data_request one by one
-        logger.info("insert into data_request one by one")
+        logger.info("Insert into data_request one by one")
         try:
             logger.info(json.dumps(v))
             cur.execute(insert_cmd, (cio_id, json.dumps(v), v["p5"]))
@@ -251,44 +257,49 @@ def handler(event, context):
                 }
                 save_result_history(cur, cio_id, result)
                 psql.conn.commit()
+
                 return {"rule_id": "N/A", 'headers': headers, "priority": "P99"}
             else:
                 # Determine Rule matches
+                command_state = "state = 'ai_priority_processed',"
+                if state == 'labelled_priority':
+                    command_state = ""      # keep labelled state only
+
                 anatomy_str = searchAnatomy(v["anatomy"])
                 info_str = searchText(v, "anatomy", "medical_condition", "diagnosis", "symptoms", "phrases",
                                       "other_info")
 
                 # Get all rankings first and store array
-                set_rule_candidates(cur, info_str, anatomy_str, cio_id)
+                arr_rule_candidates = set_rule_candidates(cur, info_str, anatomy_str, cio_id)
 
-                # Determine and store highest ranking AI rule
-                command_state = "state = 'ai_priority_processed',"
-                if state == 'labelled_priority':
-                    command_state = ""      # keep labelled state only
-                # if v["new_request"]:
-                # else:
-                command = (update_cmd % (command_state, info_str)) + anatomy_str + (update_cmd_end % cio_id)
+                if len(arr_rule_candidates) > 0:
+                    # Determine and store highest ranking AI rule
 
-                logger.info(command)
-                cur.execute(command)
-                ret = cur.fetchall()
-
-                # NO rule match found
-                if not ret:
-                    # Try UNION command
-                    logger.info('NO rule match found -- Try UNION command')
-                    anatomy_str = searchAnatomy(v["anatomy"], True)
-
-                    # Get all rankings first and store array
-                    set_rule_candidates(cur, info_str, anatomy_str, cio_id, True)
-
-                    command = (update_cmd % (command_state, info_str)) + anatomy_str + (update_cmd_end_union % cio_id)
+                    # if v["new_request"]:
+                    # else:
+                    command = update_cmd % (command_state, arr_rule_candidates[0], cio_id)
 
                     logger.info(command)
                     cur.execute(command)
                     ret = cur.fetchall()
 
-                    if not ret:
+                else:
+                    # NO rule match found
+                    # Try UNION command
+                    logger.info('--NO rule match found -- Try UNION command')
+                    anatomy_str = searchAnatomy(v["anatomy"], True)
+
+                    # Get all rankings first and store array
+                    arr_rule_candidates = set_rule_candidates(cur, info_str, anatomy_str, cio_id, True)
+
+                    if len(arr_rule_candidates) > 0:
+                        command = update_cmd % (command_state, arr_rule_candidates[0], cio_id)
+
+                        logger.info(command)
+                        cur.execute(command)
+                        ret = cur.fetchall()
+                    else:
+                        logger.info('--NO UNION rule match found -- P98')
                         cur.execute(update_ai_priority, ('P98', cio_id))
                         result = {
                             "rule_id": 'P98',
