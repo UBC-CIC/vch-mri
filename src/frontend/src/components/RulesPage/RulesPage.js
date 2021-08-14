@@ -32,7 +32,8 @@ class RulesPage extends React.Component {
           <Icon name="arrow circle right" /> Toggle Inactive
         </Button>
         <RulesTable
-          labelling={this.props.labelling}
+          //   labelling={this.props.labelling}
+          labelling={false}
           showInactive={this.state.showInactive}
           rulesLoaded={this.props.rulesLoaded}
         />
