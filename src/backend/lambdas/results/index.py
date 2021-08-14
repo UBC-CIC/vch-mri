@@ -266,7 +266,7 @@ def queryRequestRule(cur, id_data_request):
     cmd = """
     SELECT rules.id, rules.body_part, rules.bp_tk, rules.info_weighted_tk, rules.priority,
     rules.contrast as rules_contrast, rules.info
-    FROM mri_rules as rules
+    FROM mri_rules2 as rules
     WHERE rules.id = %s
     """
     # cur.execute(cmd, id_data_request)

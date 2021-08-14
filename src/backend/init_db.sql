@@ -3,7 +3,8 @@
 
 DROP TABLE IF EXISTS request_history;
 DROP TABLE IF EXISTS data_request;
-DROP TABLE IF EXISTS mri_rules; 
+DROP TABLE IF EXISTS mri_rules;
+DROP TABLE IF EXISTS mri_rules2;
 DROP TABLE IF EXISTS word_weights; 
 DROP TABLE IF EXISTS conjunctions; 
 DROP TABLE IF EXISTS synonyms;
@@ -30,7 +31,19 @@ CREATE TABLE IF NOT EXISTS mri_rules (
     info_weighted_tk TSVECTOR, 
     priority VARCHAR(3),
     active BOOLEAN DEFAULT TRUE
-); 
+);
+
+CREATE TABLE IF NOT EXISTS mri_rules2 ( 
+    id SERIAL PRIMARY KEY, 
+    body_part VARCHAR(32) NOT NULL, 
+    bp_tk TSVECTOR, 
+    contrast BOOLEAN,
+    info TEXT, 
+    info_weighted_tk TSVECTOR, 
+    priority VARCHAR(3),
+    specialty_tags VARCHAR(256),
+    active BOOLEAN DEFAULT TRUE
+);
 
 -- Error state is when error string exists, then we can know *when* the error occurred eg during ai priority processing etc
 CREATE TYPE enum_requests_state AS ENUM ('received', 'received_duplicate', 'deleted', 'ai_priority_processed', 'final_priority_received', 'labelled_priority');
@@ -61,7 +74,7 @@ CREATE TABLE IF NOT EXISTS data_request (
     labelled_notes VARCHAR,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    FOREIGN KEY (ai_rule_id) REFERENCES mri_rules(id)
+    FOREIGN KEY (ai_rule_id) REFERENCES mri_rules2(id)
 );
 
 CREATE TYPE enum_history_type AS ENUM ('request', 'request_rerun', 'ai_result', 'modification', 'delete');
@@ -113,14 +126,21 @@ CREATE TABLE IF NOT EXISTS specialty_tags (
     tag VARCHAR(32) PRIMARY KEY
 );
 
--- SELECT * FROM mri_rules; 
-\copy mri_rules(body_part, info, contrast, priority) FROM './src/backend/csv/rules.csv' DELIMITER ',' CSV HEADER;
+-- SELECT * FROM mri_rules2; 
+\copy mri_rules2(body_part, info, contrast, priority) FROM './src/backend/csv/rules.csv' DELIMITER ',' CSV HEADER;
 
 UPDATE mri_rules 
 SET bp_tk = to_tsvector(body_part);
 
+UPDATE mri_rules2
+SET bp_tk = to_tsvector(body_part);
+
 CREATE INDEX info_weighted_idx 
 ON mri_rules 
+USING GIN (info_weighted_tk);
+
+CREATE INDEX info_weighted_idx2
+ON mri_rules2
 USING GIN (info_weighted_tk);
 
 CREATE INDEX tags_idx

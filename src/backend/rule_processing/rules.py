@@ -23,9 +23,9 @@ WHERE id = %s;
 update_cmd = """
 UPDATE data_request 
 SET rules_id = r.id , ai_priority = r.priority, contrast = r.contrast
-FROM mri_rules r WHERE r.id = (
+FROM mri_rules2 r WHERE r.id = (
 SELECT id
-FROM mri_rules, to_tsquery('ths_search','%s') query 
+FROM mri_rules2, to_tsquery('ths_search','%s') query 
 WHERE info_weighted_tk @@ query
 AND active = 't'
 """
@@ -94,7 +94,11 @@ def compare_rules(data):
                     else:
                         print("For CIO ID: %s, With return of: %s" % (v["CIO_ID"], ret))
                         # See if there are any tags and set tags
-                        cur.execute(update_tags, (ret[0][3], v["CIO_ID"]))
+                        cmd = update_tags
+                        params = (ret[0][3], v["CIO_ID"])
+                        print(cmd)
+                        print(params)
+                        cur.execute(cmd, params)
             except psycopg2.IntegrityError:
                 print("Exception: ", err)
         # close communication with the PostgreSQL database server

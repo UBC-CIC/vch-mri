@@ -67,7 +67,7 @@ def runUpdateWeights():
         setweight_c = create_setWeight('to_tsvector(info)', 'C', lemex_c)
         setweight_d = create_setWeight('to_tsvector(info)', 'D', lemex_d)
         list_weights = [setweight_a, setweight_b, setweight_c, setweight_d]
-        updateWeights(cur, 'mri_rules', 'info_weighted_tk', list_weights)
+        updateWeights(cur, 'mri_rules2', 'info_weighted_tk', list_weights)
         # close communication with the PostgreSQL database server
         cur.close()
         # commit the changes

@@ -15,7 +15,7 @@ UpdateWeightLambdaName = os.getenv('UPDATE_WEIGHTS_LAMBDA')
 
 def update_bodypart_tokens(cur):
     cmd = """
-    UPDATE mri_rules 
+    UPDATE mri_rules2 
     SET bp_tk = to_tsvector(body_part);
     """
     cur.execute(cmd)
@@ -24,7 +24,7 @@ def update_bodypart_tokens(cur):
 def queryRules(cur, count):
     cmd = """
     SELECT id, body_part, contrast, priority, info, active 
-    FROM mri_rules
+    FROM mri_rules2
     ORDER BY id
     """
     cur.execute(cmd)
@@ -37,7 +37,7 @@ def queryRules(cur, count):
 def queryRulesID(cur, id):
     cmd = """
     SELECT id, body_part, contrast, priority, info, active 
-    FROM mri_rules
+    FROM mri_rules2
     WHERE id = %s
     """
     logger.info("Getting Rule ID: " + id)
@@ -48,7 +48,7 @@ def queryRulesID(cur, id):
 
 def addRule(cur, values):
     cmd = """
-    INSERT INTO mri_rules(body_part, info, priority, contrast) 
+    INSERT INTO mri_rules2(body_part, info, priority, contrast) 
     VALUES """
     param_values = []
     for value in values:
@@ -69,7 +69,7 @@ def addRule(cur, values):
 def updateRule(cur, values):
     logger.info('updateRule')
     cmd = """
-    UPDATE mri_rules SET body_part = new_body_part, info = new_info, priority = new_priority,
+    UPDATE mri_rules2 SET body_part = new_body_part, info = new_info, priority = new_priority,
         contrast = CAST(new_contrast AS BOOLEAN)
     FROM (VALUES """
     param_values = []
@@ -78,8 +78,8 @@ def updateRule(cur, values):
         param_values.extend([value['id'], add_whitespace_spec_chars(value['body_part']), add_whitespace_spec_chars(value['info']), value['priority'], value['contrast']])
     cmd = cmd[:-1]
     cmd += " ) as tmp(id, new_body_part, new_info, new_priority, new_contrast) " \
-           "WHERE CAST(tmp.id AS INTEGER) = mri_rules.id " \
-           "RETURNING mri_rules.id, body_part, contrast, priority, info, active"
+           "WHERE CAST(tmp.id AS INTEGER) = mri_rules2.id " \
+           "RETURNING mri_rules2.id, body_part, contrast, priority, info, active"
 
     # FAILS so just print separately; "not enough arguments for format string"
     # command = cmd % param_values
@@ -95,7 +95,7 @@ def updateRule(cur, values):
 
 def setRuleActivity(cur, id, active):
     cmd = """
-    UPDATE mri_rules SET active = %s
+    UPDATE mri_rules2 SET active = %s
     WHERE id = %s"""
     cur.execute(cmd, (active, id))
 

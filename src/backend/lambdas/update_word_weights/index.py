@@ -76,7 +76,7 @@ def handler(event, context):
             setweight_c = create_setWeight('to_tsvector(info)', 'C', lemex_c)
             setweight_d = create_setWeight('to_tsvector(info)', 'D', lemex_d)
             list_weights = [setweight_a, setweight_b, setweight_c, setweight_d]
-            updateWeights(cur, 'mri_rules', 'info_weighted_tk', list_weights)
+            updateWeights(cur, 'mri_rules2', 'info_weighted_tk', list_weights)
             # commit the changes
             psql.commit()
             logger.info("Weights Finished Updating")
