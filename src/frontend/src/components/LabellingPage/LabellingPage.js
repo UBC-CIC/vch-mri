@@ -30,7 +30,7 @@ class LabellingPage extends React.Component {
     //   return <div className="page-container">Loading...</div>;
 
     let labellingClassname = "fieldsLabellingRules";
-    let labellingWidth = 10;
+    let labellingWidth = 9;
     if (!this.state.showRules) {
       labellingClassname = "fieldsLabelling";
       labellingWidth = 12;

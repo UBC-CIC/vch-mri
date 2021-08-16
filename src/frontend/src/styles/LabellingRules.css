@@ -2,15 +2,6 @@ body {
   font-size: 16px;
 }
 
-.fieldsLabellingRules {
-  position: fixed;
-  height: 80vh;
-  width: 63vw;
-  padding: 10px;
-  overflow-x: auto;
-  margin-bottom: 15px;
-}
-
 .fieldsLabelling {
   position: fixed;
   height: 80vh;
@@ -19,10 +10,20 @@ body {
   overflow-x: auto;
   margin-bottom: 15px;
 }
+
+.fieldsLabellingRules {
+  position: fixed;
+  height: 80vh;
+  width: 60vw;
+  padding: 10px;
+  overflow-x: auto;
+  margin-bottom: 15px;
+}
+
 .fieldsRules {
   position: fixed;
   height: 80vh;
-  width: 36vw;
+  width: 40vw;
   padding: 10px;
   overflow-x: auto;
   margin-bottom: 15px;

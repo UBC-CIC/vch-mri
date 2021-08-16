@@ -15,6 +15,7 @@ import { Cache } from "aws-amplify";
 import jwt_decode from "jwt-decode";
 
 const DEFAULT_NUM_COLUMNS = 12;
+const DEFAULT_EXPANDED_NUM_COLUMNS = 12;
 
 class LabellingTable extends React.Component {
   constructor(props) {
@@ -75,7 +76,7 @@ class LabellingTable extends React.Component {
   handleClickCollapseAll = () => {
     this.setState({
       showAll: !this.state.showAll,
-      numColumns: this.state.showAll ? 14 : DEFAULT_NUM_COLUMNS,
+      //   numColumns: this.state.showAll ? 16 : DEFAULT_NUM_COLUMNS,
     });
   };
 
