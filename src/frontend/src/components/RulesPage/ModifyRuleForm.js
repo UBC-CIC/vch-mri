@@ -27,6 +27,8 @@ const initialState = {
 class ModifyRuleForm extends React.Component {
   constructor(props) {
     super(props);
+    console.log("ModifyRuleForm const");
+    console.log(this.props.specialty_tags);
     this.state = {
       addRuleMode:
         this.props.addRuleMode !== undefined ? this.props.addRuleMode : false,
@@ -35,7 +37,9 @@ class ModifyRuleForm extends React.Component {
       body_part: this.props.body_part,
       info: this.props.info,
       priority: this.props.mriPriority,
-      specialty_tags: this.props.specialty_tags,
+      specialty_tags: this.props.specialty_tags
+        ? this.props.specialty_tags
+        : "",
       contrast: this.props.contrast ? "t" : "f",
     };
 
@@ -51,7 +55,7 @@ class ModifyRuleForm extends React.Component {
       body_part: nextProps.body_part,
       info: nextProps.info,
       priority: nextProps.mriPriority,
-      specialty_tags: nextProps.specialty_tags,
+      specialty_tags: nextProps.specialty_tags ? nextProps.specialty_tags : "",
       contrast: nextProps.contrast ? "t" : "f",
     });
   }
@@ -88,6 +92,7 @@ class ModifyRuleForm extends React.Component {
         contrast: this.state.contrast,
         specialty_tags: this.state.specialty_tags,
       });
+      this.setState(initialState);
     } else {
       this.props.modifyMRIRule({
         id: this.state.id,
@@ -97,11 +102,15 @@ class ModifyRuleForm extends React.Component {
         contrast: this.state.contrast,
         specialty_tags: this.state.specialty_tags,
       });
+      this.setState({ open: false });
     }
-    this.setState(initialState);
   }
 
   render() {
+    const modalTitleText = this.state.addRuleMode
+      ? "Add a new MRI Rule"
+      : "Modify an Existing MRI Rule";
+    const modalBtnText = this.state.addRuleMode ? "Add Rule" : "Modify Rule";
     return (
       <Modal
         as={Form}
@@ -130,7 +139,7 @@ class ModifyRuleForm extends React.Component {
         }
       >
         <Header as="h2" color="blue" textAlign="center">
-          Modify an Existing MRI Rule
+          {modalTitleText}
         </Header>
         <Modal.Content>
           <Form.Field
@@ -212,7 +221,7 @@ class ModifyRuleForm extends React.Component {
           />
           <Button
             type="submit"
-            content="Modify Rule"
+            content={modalBtnText}
             color="blue"
             disabled={
               !this.state.body_part ||
