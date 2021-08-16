@@ -121,13 +121,22 @@ clear_rule_candidates_cmd = """
 
 update_tags = """
 UPDATE data_request
-SET ai_tags = array_tag FROM (
-SELECT array_agg(tag) AS array_tag FROM (
-SELECT tag from specialty_tags
-WHERE LOWER(%s) ~* LOWER(tag)) AS x) AS y
-where id = %s
+SET ai_tags = (SELECT specialty_tags
+FROM mri_rules2
+WHERE id=%s)
+WHERE id=%s
 RETURNING ai_tags;
 """
+
+# update_tags = """
+# UPDATE data_request
+# SET ai_tags = array_tag FROM (
+# SELECT array_agg(tag) AS array_tag FROM (
+# SELECT tag from specialty_tags
+# WHERE LOWER(%s) ~* LOWER(tag)) AS x) AS y
+# where id = %s
+# RETURNING ai_tags;
+# """
 
 insert_history_cmd = """
    INSERT INTO request_history(id_data_request, history_type, description, mod_info)
@@ -318,7 +327,7 @@ def handler(event, context):
                 # Specialty Tags
                 # logger.info('Specialty Tags')
                 cmd = update_tags
-                params = (ret[0][5], cio_id)
+                params = (arr_rule_candidates[0], cio_id)
                 # logger.info(cmd)
                 # logger.info(params)
 

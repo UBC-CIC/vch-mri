@@ -1,9 +1,11 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Button, Checkbox, Icon, Table } from "semantic-ui-react";
+// import { Button, Checkbox, Icon, Table } from "semantic-ui-react";
+import { Table } from "semantic-ui-react";
 import { getMRIRules, changeRuleSort } from "../../actions/RuleActions";
-import Loader from "../Loader";
-import AddRuleForm from "./AddRuleForm";
+import { getSpecialtyExams } from "../../actions/SpecialtyExamActions";
+// import Loader from "../Loader";
+import ModifyRuleForm from "./ModifyRuleForm";
 import RulesTableRow from "./RulesTableRow";
 import { sendErrorToast, sendSuccessToast } from "../../helpers";
 
@@ -12,6 +14,7 @@ class RulesTable extends React.Component {
     // true - already loaded by parent
     if (!this.props.rulesLoaded) {
       this.props.getMRIRules();
+      this.props.getSpecialtyExams();
     }
   }
 
@@ -24,6 +27,8 @@ class RulesTable extends React.Component {
   }
 
   render() {
+    console.log("RulesTable render");
+    console.log(this.props.specialtyExam);
     return (
       <Table celled compact sortable>
         <Table.Header fullWidth>
@@ -109,9 +114,13 @@ class RulesTable extends React.Component {
             >
               Contrast
             </Table.HeaderCell>
+            <Table.HeaderCell>Sp. Exams</Table.HeaderCell>
             {!this.props.labelling && (
               <Table.HeaderCell collapsing>
-                <AddRuleForm />
+                <ModifyRuleForm
+                  addRuleMode={true}
+                  specialtyExamList={this.props.specialtyExam}
+                />
               </Table.HeaderCell>
             )}
           </Table.Row>
@@ -133,18 +142,22 @@ class RulesTable extends React.Component {
           {this.props.rules.map((rule, index) => {
             if (rule.active || (!rule.active && this.props.showInactive))
               return (
-                <RulesTableRow
-                  active={rule.active}
-                  id={rule.id}
-                  body_part={rule.body_part}
-                  contrast={rule.contrast}
-                  priority={rule.priority}
-                  info={rule.info}
-                  index={index}
-                  labelling={this.props.labelling}
-                />
+                <React.Fragment key={"row-rule-" + index}>
+                  <RulesTableRow
+                    active={rule.active}
+                    id={rule.id}
+                    body_part={rule.body_part}
+                    contrast={rule.contrast}
+                    priority={rule.priority}
+                    specialty_tags={rule.specialty_tags}
+                    info={rule.info}
+                    index={index}
+                    labelling={this.props.labelling}
+                    specialtyExamList={this.props.specialtyExam}
+                  />
+                </React.Fragment>
               );
-            else return <></>;
+            else return <React.Fragment key={"row-rule-" + index} />;
           })}
         </Table.Body>
 
@@ -166,7 +179,8 @@ class RulesTable extends React.Component {
 const mapStateToProps = (state) => {
   return {
     rules: state.rules.rulesList,
-    loading: state.rules.loading,
+    specialtyExam: state.specialtyExam.specialtyExamList,
+    loading: state.rules.loading && state.specialtyExam.loading,
     error: state.rules.error,
     success: state.rules.success,
     sortedColumn: state.rules.column,
@@ -174,6 +188,8 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, { getMRIRules, changeRuleSort })(
-  RulesTable
-);
+export default connect(mapStateToProps, {
+  getMRIRules,
+  changeRuleSort,
+  getSpecialtyExams,
+})(RulesTable);

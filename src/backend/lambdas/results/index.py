@@ -265,7 +265,7 @@ def queryRequestHistory(cur, id_data_request):
 def queryRequestRule(cur, id_data_request):
     cmd = """
     SELECT rules.id, rules.body_part, rules.bp_tk, rules.info_weighted_tk, rules.priority,
-    rules.contrast as rules_contrast, rules.info
+    rules.contrast as rules_contrast, rules.info, rules.specialty_tags
     FROM mri_rules2 as rules
     WHERE rules.id = %s
     """
@@ -465,6 +465,7 @@ def queryAndParseResponseRuleCandidates(cur, rule_candidates):
             rule['priority'] = ret_rule[4]
             rule['contrast'] = ret_rule[5]
             rule['info'] = ret_rule[6]
+            rule['specialty_tags'] = ret_rule[7]
 
             rule_list.append(rule)
 

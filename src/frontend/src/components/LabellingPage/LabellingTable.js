@@ -447,19 +447,21 @@ class LabellingTable extends React.Component {
           <Table.Body>
             {this.props.results &&
               this.props.results.map((result, index) => (
-                <LabellingTableRow
-                  result={result}
-                  rulesListDropdown={this.props.rulesListDropdown}
-                  showRules={this.props.showRules}
-                  showPhysicianResults={this.state.showPhysicianResults}
-                  showLabelled={this.state.showLabelled}
-                  index={index}
-                  handleRowClick={this.handleRowClick}
-                  expanded={
-                    this.state.showAll ||
-                    this.state.expandedRows.includes(index)
-                  }
-                />
+                <React.Fragment key={"row-labelling-" + index}>
+                  <LabellingTableRow
+                    result={result}
+                    rulesListDropdown={this.props.rulesListDropdown}
+                    showRules={this.props.showRules}
+                    showPhysicianResults={this.state.showPhysicianResults}
+                    showLabelled={this.state.showLabelled}
+                    index={index}
+                    handleRowClick={this.handleRowClick}
+                    expanded={
+                      this.state.showAll ||
+                      this.state.expandedRows.includes(index)
+                    }
+                  />
+                </React.Fragment>
               ))}
           </Table.Body>
 

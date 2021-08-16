@@ -23,7 +23,7 @@ def update_bodypart_tokens(cur):
 
 def queryRules(cur, count):
     cmd = """
-    SELECT id, body_part, contrast, priority, info, active 
+    SELECT id, body_part, contrast, priority, info, active, specialty_tags
     FROM mri_rules2
     ORDER BY id
     """
@@ -36,7 +36,7 @@ def queryRules(cur, count):
 
 def queryRulesID(cur, id):
     cmd = """
-    SELECT id, body_part, contrast, priority, info, active 
+    SELECT id, body_part, contrast, priority, info, active, specialty_tags
     FROM mri_rules2
     WHERE id = %s
     """
@@ -48,14 +48,18 @@ def queryRulesID(cur, id):
 
 def addRule(cur, values):
     cmd = """
-    INSERT INTO mri_rules2(body_part, info, priority, contrast) 
+    INSERT INTO mri_rules2(body_part, info, priority, contrast, specialty_tags) 
     VALUES """
     param_values = []
     for value in values:
-        cmd += "(%s, %s, %s, %s),"
-        param_values.extend([add_whitespace_spec_chars(value['body_part']), add_whitespace_spec_chars(value['info']), value['priority'], value['contrast']])
+        cmd += "(%s, %s, %s, %s, %s),"
+        param_values.extend([add_whitespace_spec_chars(value['body_part']),
+                             add_whitespace_spec_chars(value['info']),
+                             value['priority'],
+                             value['contrast'],
+                             value['specialty_tags']])
     cmd = cmd[:-1]
-    cmd += " RETURNING id, body_part, contrast, priority, info, active"
+    cmd += " RETURNING id, body_part, contrast, priority, info, active, specialty_tags"
 
     logger.info(cmd)
     logger.info(param_values)
@@ -70,16 +74,21 @@ def updateRule(cur, values):
     logger.info('updateRule')
     cmd = """
     UPDATE mri_rules2 SET body_part = new_body_part, info = new_info, priority = new_priority,
-        contrast = CAST(new_contrast AS BOOLEAN)
+        contrast = CAST(new_contrast AS BOOLEAN), specialty_tags = new_specialty_tags
     FROM (VALUES """
     param_values = []
     for value in values:
-        cmd += "(%s, %s, %s, %s, %s),"
-        param_values.extend([value['id'], add_whitespace_spec_chars(value['body_part']), add_whitespace_spec_chars(value['info']), value['priority'], value['contrast']])
+        cmd += "(%s, %s, %s, %s, %s, %s),"
+        param_values.extend([value['id'],
+                             add_whitespace_spec_chars(value['body_part']),
+                             add_whitespace_spec_chars(value['info']),
+                             value['priority'],
+                             value['contrast'],
+                             value['specialty_tags']])
     cmd = cmd[:-1]
-    cmd += " ) as tmp(id, new_body_part, new_info, new_priority, new_contrast) " \
+    cmd += " ) as tmp(id, new_body_part, new_info, new_priority, new_contrast, new_specialty_tags) " \
            "WHERE CAST(tmp.id AS INTEGER) = mri_rules2.id " \
-           "RETURNING mri_rules2.id, body_part, contrast, priority, info, active"
+           "RETURNING mri_rules2.id, body_part, contrast, priority, info, active, specialty_tags"
 
     # FAILS so just print separately; "not enough arguments for format string"
     # command = cmd % param_values
@@ -142,6 +151,7 @@ def parseResponse(response):
         resp['priority'] = resp_tuple[3]
         resp['info'] = resp_tuple[4]
         resp['active'] = resp_tuple[5]
+        resp['specialty_tags'] = resp_tuple[6]
         resp_list.append(resp)
     return resp_list
 

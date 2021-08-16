@@ -13,9 +13,8 @@ class ResultsHistoryViewRow extends React.Component {
   }
 
   HistoryCell() {
-    console.log("HistoryCell");
-    console.log(this.props.history);
-
+    // console.log("HistoryCell");
+    // console.log(this.props.history);
     const history = this.props.history;
     switch (history.history_type) {
       case "request":
@@ -128,8 +127,8 @@ class ResultsHistoryViewRow extends React.Component {
                   {result.ai_p5_flag !== null ? result.ai_p5_flag : " - "}
                 </p>
                 <p>
-                  <b>specialty_exams: </b>
-                  {result.specialty_exams ? result.specialty_exams : " - "}
+                  <b>specialty_tags: </b>
+                  {result.specialty_tags ? result.specialty_tags : " - "}
                 </p>
               </>
             ) : (

@@ -12,11 +12,13 @@ import { addMRIRule, getMRIRules } from "../../actions/RuleActions";
 import { connect } from "react-redux";
 
 const initialState = {
+  addRuleMode: true,
   open: false,
   body_part: "",
   info: "",
   priority: "",
   contrast: "",
+  specialty_tags: "",
 };
 
 class AddRuleForm extends React.Component {
@@ -27,6 +29,7 @@ class AddRuleForm extends React.Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleSelectChange = this.handleSelectChange.bind(this);
+    this.handleSelectChangeTags = this.handleSelectChangeTags.bind(this);
   }
 
   handleChange(e) {
@@ -40,6 +43,17 @@ class AddRuleForm extends React.Component {
     this.setState({ [name]: value });
   }
 
+  handleSelectChangeTags(e, { name, value }) {
+    console.log("handleSelectChangeTag");
+    console.log(e);
+    console.log(name);
+    console.log(value);
+    const tags = value.join(" / ").trim();
+    console.log(tags);
+
+    this.setState({ [name]: tags });
+  }
+
   handleSubmit(e) {
     e.preventDefault();
     this.props.addMRIRule({
@@ -47,11 +61,14 @@ class AddRuleForm extends React.Component {
       info: this.state.info.trim(),
       priority: this.state.priority,
       contrast: this.state.contrast,
+      specialty_tags: this.state.specialty_tags,
     });
     this.setState(initialState);
   }
 
   render() {
+    console.log("AddRuleForm render");
+    console.log(this.props.specialtyExamList);
     return (
       <Modal
         as={Form}
@@ -95,18 +112,6 @@ class AddRuleForm extends React.Component {
           <Form.Dropdown
             fluid
             selection
-            name="contrast"
-            label="Contrast"
-            options={[
-              { key: "e", text: "", value: "" },
-              { key: "t", text: "true", value: "t" },
-              { key: "f", text: "false", value: "f" },
-            ]}
-            onChange={this.handleSelectChange}
-          />
-          <Form.Dropdown
-            fluid
-            selection
             name="priority"
             label="Priority"
             options={[
@@ -123,6 +128,33 @@ class AddRuleForm extends React.Component {
               },
             ]}
             onChange={this.handleSelectChange}
+          />
+          <Form.Dropdown
+            fluid
+            selection
+            name="contrast"
+            label="Contrast"
+            options={[
+              { key: "e", text: "", value: "" },
+              { key: "t", text: "true", value: "t" },
+              { key: "f", text: "false", value: "f" },
+            ]}
+            onChange={this.handleSelectChange}
+          />
+          <Form.Dropdown
+            name="specialty_tags"
+            label="Specialty Exam Tags"
+            placeholder="Tags"
+            fluid
+            multiple
+            search
+            selection
+            onChange={this.handleSelectChangeTags}
+            options={this.props.specialtyExamList.map((exam, index) => ({
+              key: `row-exam-${index}`,
+              text: exam,
+              value: exam,
+            }))}
           />
         </Modal.Content>
         <Modal.Actions>

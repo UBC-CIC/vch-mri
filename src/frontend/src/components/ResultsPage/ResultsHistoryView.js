@@ -51,7 +51,9 @@ class ResultsHistoryView extends React.Component {
               <Table.Body>
                 {this.props.history &&
                   this.props.history.map((history, index) => (
-                    <ResultsHistoryViewRow history={history} index={index} />
+                    <React.Fragment key={"row-history-" + index}>
+                      <ResultsHistoryViewRow history={history} index={index} />
+                    </React.Fragment>
                   ))}
               </Table.Body>
             </Table>

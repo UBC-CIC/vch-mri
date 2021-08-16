@@ -29,7 +29,11 @@ class RulesTableRow extends React.Component {
 
   render() {
     return (
-      <Table.Row disabled={this.props.loading} error={!this.state.active}>
+      <Table.Row
+        disabled={this.props.loading}
+        error={!this.state.active}
+        // key={"row-RulesTableRow-" + this.props.index}    // had to add key to fragment above
+      >
         {!this.props.labelling && (
           <>
             <Table.Cell>
@@ -50,6 +54,9 @@ class RulesTableRow extends React.Component {
         <Table.Cell>{this.props.info}</Table.Cell>
         <Table.Cell>{this.props.priority}</Table.Cell>
         <Table.Cell>{this.props.contrast.toString()}</Table.Cell>
+        <Table.Cell>
+          {this.props.specialty_tags ? this.props.specialty_tags : " - "}
+        </Table.Cell>
         {!this.props.labelling && (
           <Table.Cell>
             <ModifyRuleForm
@@ -58,6 +65,8 @@ class RulesTableRow extends React.Component {
               info={this.props.info}
               contrast={this.props.contrast}
               mriPriority={this.props.priority}
+              specialty_tags={this.props.specialty_tags}
+              specialtyExamList={this.props.specialtyExamList}
             />
           </Table.Cell>
         )}

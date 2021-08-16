@@ -8,7 +8,11 @@ import {
   Input,
   Modal,
 } from "semantic-ui-react";
-import { modifyMRIRule, getMRIRules } from "../../actions/RuleActions";
+import {
+  addMRIRule,
+  modifyMRIRule,
+  getMRIRules,
+} from "../../actions/RuleActions";
 import { connect } from "react-redux";
 
 const initialState = {
@@ -17,23 +21,28 @@ const initialState = {
   info: "",
   priority: "",
   contrast: "",
+  specialty_tags: "",
 };
 
 class ModifyRuleForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      addRuleMode:
+        this.props.addRuleMode !== undefined ? this.props.addRuleMode : false,
       open: false,
       id: this.props.id,
       body_part: this.props.body_part,
       info: this.props.info,
       priority: this.props.mriPriority,
+      specialty_tags: this.props.specialty_tags,
       contrast: this.props.contrast ? "t" : "f",
     };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleSelectChange = this.handleSelectChange.bind(this);
+    this.handleSelectChangeTags = this.handleSelectChangeTags.bind(this);
   }
 
   componentWillReceiveProps(nextProps, nextContext) {
@@ -42,6 +51,7 @@ class ModifyRuleForm extends React.Component {
       body_part: nextProps.body_part,
       info: nextProps.info,
       priority: nextProps.mriPriority,
+      specialty_tags: nextProps.specialty_tags,
       contrast: nextProps.contrast ? "t" : "f",
     });
   }
@@ -57,15 +67,37 @@ class ModifyRuleForm extends React.Component {
     this.setState({ [name]: value });
   }
 
+  handleSelectChangeTags(e, { name, value }) {
+    console.log("handleSelectChangeTag");
+    console.log(e);
+    console.log(name);
+    console.log(value);
+    const tags = value.join(" / ").trim();
+    console.log(tags);
+
+    this.setState({ [name]: tags });
+  }
+
   handleSubmit(e) {
     e.preventDefault();
-    this.props.modifyMRIRule({
-      id: this.state.id,
-      body_part: this.state.body_part.trim(),
-      info: this.state.info.trim(),
-      priority: this.state.priority,
-      contrast: this.state.contrast,
-    });
+    if (this.state.addRuleMode) {
+      this.props.addMRIRule({
+        body_part: this.state.body_part.trim(),
+        info: this.state.info.trim(),
+        priority: this.state.priority,
+        contrast: this.state.contrast,
+        specialty_tags: this.state.specialty_tags,
+      });
+    } else {
+      this.props.modifyMRIRule({
+        id: this.state.id,
+        body_part: this.state.body_part.trim(),
+        info: this.state.info.trim(),
+        priority: this.state.priority,
+        contrast: this.state.contrast,
+        specialty_tags: this.state.specialty_tags,
+      });
+    }
     this.setState(initialState);
   }
 
@@ -79,10 +111,22 @@ class ModifyRuleForm extends React.Component {
         onOpen={() => this.setState({ open: true })}
         open={this.state.open}
         trigger={
-          <Button icon size="tiny" labelPosition="left">
-            <Icon name="edit" />
-            Modify
-          </Button>
+          this.state.addRuleMode ? (
+            <Button
+              floated="right"
+              icon
+              labelPosition="left"
+              primary
+              size="small"
+            >
+              <Icon name="add circle" /> Add Rule
+            </Button>
+          ) : (
+            <Button icon size="tiny" labelPosition="left">
+              <Icon name="edit" />
+              Modify
+            </Button>
+          )
         }
       >
         <Header as="h2" color="blue" textAlign="center">
@@ -108,19 +152,6 @@ class ModifyRuleForm extends React.Component {
           <Form.Dropdown
             fluid
             selection
-            name="contrast"
-            label="Contrast"
-            value={this.state.contrast}
-            options={[
-              { key: "e", text: "", value: "" },
-              { key: "t", text: "true", value: "t" },
-              { key: "f", text: "false", value: "f" },
-            ]}
-            onChange={this.handleSelectChange}
-          />
-          <Form.Dropdown
-            fluid
-            selection
             name="priority"
             label="Priority"
             value={this.state.priority}
@@ -138,6 +169,39 @@ class ModifyRuleForm extends React.Component {
               },
             ]}
             onChange={this.handleSelectChange}
+          />
+          <Form.Dropdown
+            fluid
+            selection
+            name="contrast"
+            label="Contrast"
+            value={this.state.contrast}
+            options={[
+              { key: "e", text: "", value: "" },
+              { key: "t", text: "true", value: "t" },
+              { key: "f", text: "false", value: "f" },
+            ]}
+            onChange={this.handleSelectChange}
+          />
+          <Form.Dropdown
+            name="specialty_tags"
+            label="Specialty Exam Tags"
+            placeholder="Tags"
+            fluid
+            multiple
+            search
+            selection
+            onChange={this.handleSelectChangeTags}
+            value={
+              this.state.specialty_tags
+                ? this.state.specialty_tags.split(" / ")
+                : []
+            }
+            options={this.props.specialtyExamList.map((exam, index) => ({
+              key: `row-exam-${index}`,
+              text: exam,
+              value: exam,
+            }))}
           />
         </Modal.Content>
         <Modal.Actions>
@@ -173,6 +237,8 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, { modifyMRIRule, getMRIRules })(
-  ModifyRuleForm
-);
+export default connect(mapStateToProps, {
+  addMRIRule,
+  modifyMRIRule,
+  getMRIRules,
+})(ModifyRuleForm);

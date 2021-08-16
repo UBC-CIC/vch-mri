@@ -6,6 +6,7 @@ import { Grid, Header } from "semantic-ui-react";
 import RulesPage from "../RulesPage/RulesPage";
 import { connect } from "react-redux";
 import { getMRIRules } from "../../actions/RuleActions";
+import { getSpecialtyExams } from "../../actions/SpecialtyExamActions";
 import "../../styles/LabellingRules.css";
 
 class LabellingPage extends React.Component {
@@ -18,6 +19,7 @@ class LabellingPage extends React.Component {
   async componentDidMount() {
     console.log("LabellingPage componentDidMount");
     await this.props.getMRIRules();
+    await this.props.getSpecialtyExams();
   }
 
   handleClickShowRules = () => {
@@ -118,7 +120,7 @@ const mapStateToProps = (state) => {
   return {
     rulesListDropdown: state.rules.rulesListDropdown,
     rules: state.rules.rulesList,
-    loading: state.rules.loading,
+    loading: state.rules.loading && state.specialtyExam.loading,
     error: state.rules.error,
     success: state.rules.success,
     sortedColumn: state.rules.column,
@@ -128,4 +130,5 @@ const mapStateToProps = (state) => {
 
 export default connect(mapStateToProps, {
   getMRIRules,
+  getSpecialtyExams,
 })(LabellingPage);

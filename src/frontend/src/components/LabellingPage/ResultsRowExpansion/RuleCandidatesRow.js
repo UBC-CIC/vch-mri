@@ -27,6 +27,9 @@ class RuleCandidatesRow extends React.Component {
                 ? candidate.contrast.toString()
                 : "none"}
             </Table.Cell>
+            <Table.Cell>
+              {candidate.specialty_tags ? candidate.specialty_tags : " - "}
+            </Table.Cell>
             <Table.Cell>{candidate.info}</Table.Cell>
             <Table.Cell>{candidate.bp_tk}</Table.Cell>
             <Table.Cell>{candidate.info_weighted_tk}</Table.Cell>

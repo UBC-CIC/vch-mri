@@ -332,14 +332,17 @@ class ResultsTable extends React.Component {
           {/* <Table.Body>{allItemRows}</Table.Body> */}
           <Table.Body>
             {this.props.results.map((result, index) => (
-              <ResultsTableRow
-                result={result}
-                index={index}
-                handleRowClick={this.handleRowClick}
-                expanded={
-                  this.state.showAll || this.state.expandedRows.includes(index)
-                }
-              />
+              <React.Fragment key={"row-results-" + index}>
+                <ResultsTableRow
+                  result={result}
+                  index={index}
+                  handleRowClick={this.handleRowClick}
+                  expanded={
+                    this.state.showAll ||
+                    this.state.expandedRows.includes(index)
+                  }
+                />
+              </React.Fragment>
             ))}
           </Table.Body>
 

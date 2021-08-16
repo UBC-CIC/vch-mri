@@ -537,9 +537,7 @@ class LabellingTableRow extends React.Component {
           <Popup
             content={this.popupButtonAIConfirm(result.id, resState)}
             trigger={
-              <Table.Cell>
-                {result.ai_tags ? result.ai_tags.join(", ") : "none"}
-              </Table.Cell>
+              <Table.Cell>{result.ai_tags ? result.ai_tags : " - "}</Table.Cell>
             }
             mouseEnterDelay={500}
             mouseLeaveDelay={500}
