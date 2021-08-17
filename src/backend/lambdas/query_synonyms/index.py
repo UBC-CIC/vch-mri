@@ -8,33 +8,90 @@ logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 
-def addSynonym(cur, values):
+def addSynonym(cur, data):
+    if 'key' not in data:
+        raise TypeError("Missing 'key'")
+    key = data['key']
+
     cmd = """
     INSERT INTO synonyms
     VALUES """
     param_values = []
-    for value in values:
-        cmd += "(%s, %s),"
-        param_values.extend([value['key'], value['value']])
-    cmd = cmd[:-1]
+    cmd += "(%s, %s)"
+    param_values.extend([key, data['value']])
     cmd += " RETURNING key, val"
     cur.execute(cmd, param_values)
+
     return cur.fetchall()
 
 
-def updateSynonym(cur, values):
+def update_synonym(cur, data):
+    if 'key' not in data:
+        raise TypeError("Missing 'key'")
+    key = data['key']
+
+    # Delete old one first if necessary
+    if 'old_key' in data:
+        old_key = data['old_key']
+
+        # NOTE: FALLTHROUGH and just do an update below if keys are the unchanged
+        if key != old_key:
+            # Delete first
+            deleteSynonym(cur, old_key)
+            response = parseResponse(addSynonym(cur, data))
+            logger.info(response)
+            response[0]['old_key'] = old_key
+            logger.info(response)
+            return response
+
+    # Update only
     cmd = """
     UPDATE synonyms set key = new_key, val = new_val
     FROM (VALUES """
     param_values = []
-    for value in values:
-        cmd += " (%s, %s),"
-        param_values.extend([value['key'], value['value']])
-    cmd = cmd[:-1]
+    cmd += " (%s, %s)"
+    param_values.extend([key, data['value']])
     cmd += " ) as tmp(new_key, new_val) WHERE tmp.new_key = synonyms.key RETURNING key, val"
     cur.execute(cmd, param_values)
-    return cur.fetchall()
 
+    return parseResponse(cur.fetchall())
+
+# Meh dont bother supprting multiple values at a time
+#
+# def addSynonym(cur, values):
+#     cmd = """
+#     INSERT INTO synonyms
+#     VALUES """
+#     param_values = []
+#     for value in values:
+#         cmd += "(%s, %s),"
+#         param_values.extend([value['key'], value['value']])
+#     cmd = cmd[:-1]
+#     cmd += " RETURNING key, val"
+#     cur.execute(cmd, param_values)
+#     return cur.fetchall()
+
+# def update_synonym(cur, values):
+#     key = value['key']
+#     old_key = value['old_key']
+#
+#     # Delete old one first if they necessary
+#     if old_key is not None and key != old_key:
+#         deleteSynonym(cur, old_key)
+#         addSynonym(cur, values)
+#     else:
+#         cmd = """
+#         UPDATE synonyms set key = new_key, val = new_val
+#         FROM (VALUES """
+#         param_values = []
+#         for value in values:
+#             cmd += " (%s, %s),"
+#             param_values.extend([value['key'], value['value']])
+#         cmd = cmd[:-1]
+#         cmd += " ) as tmp(new_key, new_val) WHERE tmp.new_key = synonyms.key RETURNING key, val"
+#         cur.execute(cmd, param_values)
+#
+#     return cur.fetchall()
 
 def deleteSynonym(cur, id):
     cmd = """
@@ -82,11 +139,9 @@ def handler(event, context):
                 resp_dict['data'] = resp_list
                 return resp_dict
             elif data['operation'] == 'ADD':
-                response = addSynonym(cur, data['values'])
-                resp_list = parseResponse(response)
+                resp_list = addSynonym(cur, data)
             elif data['operation'] == 'UPDATE':
-                response = updateSynonym(cur, data['values'])
-                resp_list = parseResponse(response)
+                resp_list = update_synonym(cur, data)
             elif data['operation'] == 'DELETE':
                 deleteSynonym(cur, data['id'])
             psql.commit()

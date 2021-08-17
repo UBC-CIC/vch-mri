@@ -119,7 +119,7 @@ export const addSynonym = (state) => {
     axios
       .post(`${process.env.REACT_APP_HTTP_API_URL}/synonyms`, {
         operation: "ADD",
-        values: [state],
+        ...state,
       })
       .then((response) => {
         dispatch(addSynonymSuccess(response.data));
@@ -137,7 +137,7 @@ export const modifySynonym = (state) => {
     axios
       .post(`${process.env.REACT_APP_HTTP_API_URL}/synonyms`, {
         operation: "UPDATE",
-        values: [state],
+        ...state,
       })
       .then((response) => {
         dispatch(modifySynonymSuccess(response.data));

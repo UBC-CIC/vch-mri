@@ -15,6 +15,7 @@ import { connect } from "react-redux";
 const initialState = {
   open: false,
   word: "",
+  word_orig: "",
   synonyms: [],
   synonym: "",
 };
@@ -25,6 +26,7 @@ class ModifySynonymForm extends React.Component {
     this.state = {
       open: false,
       word: this.props.word,
+      word_orig: this.props.word,
       synonyms: this.props.synonymList,
       synonym: "",
     };
@@ -54,6 +56,7 @@ class ModifySynonymForm extends React.Component {
     this.props.modifySynonym({
       //   synonym: {
       key: this.state.word.trim(),
+      old_key: this.state.word_orig.trim(),
       value: this.state.synonyms.join(" / ").trim(),
       //   },
       index: this.props.id,
@@ -85,7 +88,7 @@ class ModifySynonymForm extends React.Component {
         onSubmit={this.handleSubmit}
         style={{ maxWidth: 500 }}
         onClose={() => this.setState({ open: false })}
-        onOpen={() => this.setState({ open: true })}
+        onOpen={() => this.setState({ open: true, word_orig: this.state.word })}
         open={this.state.open}
         trigger={
           <Button icon size="tiny" labelPosition="left">
@@ -103,7 +106,7 @@ class ModifySynonymForm extends React.Component {
             control={Input}
             name="word"
             label="Word / Phrase"
-            disabled={true}
+            // disabled={true}
             value={this.state.word}
             onChange={this.handleChange}
           />
