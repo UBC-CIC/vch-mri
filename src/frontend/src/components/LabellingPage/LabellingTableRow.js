@@ -48,9 +48,7 @@ class LabellingTableRow extends React.Component {
         result.labelled_contrast !== null ? result.labelled_contrast : "e",
       labelled_p5_flag:
         result.labelled_p5_flag !== null ? result.labelled_p5_flag : false,
-      labelled_tags: result.labelled_tags
-        ? result.labelled_tags.toString()
-        : "",
+      labelled_tags: result.labelled_tags ? result.labelled_tags : "",
       labelled_notes: result.labelled_notes ? result.labelled_notes : "",
     };
 
@@ -88,7 +86,7 @@ class LabellingTableRow extends React.Component {
           ? nextProps.result.labelled_p5_flag
           : false,
       labelled_tags: nextProps.result.labelled_tags
-        ? nextProps.result.labelled_tags.toString()
+        ? nextProps.result.labelled_tags
         : "",
     });
   }
@@ -232,9 +230,7 @@ class LabellingTableRow extends React.Component {
           : this.state.labelled_contrast,
       labelled_p5_flag: this.state.labelled_p5_flag,
       labelled_tags:
-        this.state.labelled_tags === ""
-          ? null
-          : this.state.labelled_tags.split(","),
+        this.state.labelled_tags === "" ? null : this.state.labelled_tags,
       labelled_notes:
         this.state.labelled_notes === "" ? null : this.state.labelled_notes,
       cognito_user_id: storedUser.sub,
@@ -631,7 +627,7 @@ class LabellingTableRow extends React.Component {
           <Table.Cell>
             <TextArea
               disabled={this.props.loading}
-              placeholder="Comma separated (auto-saves after 2s)"
+              placeholder="Tags separated by ' / ' (auto-saves after 2s)"
               name="labelled_tags"
               value={this.state.labelled_tags || ""}
               //   value={
