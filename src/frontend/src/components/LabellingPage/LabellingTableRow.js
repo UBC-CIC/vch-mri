@@ -11,7 +11,11 @@ import {
   Header,
   Checkbox,
 } from "semantic-ui-react";
-import { modifyResult, rerunAI } from "../../actions/ResultActions";
+import {
+  modifyResult,
+  rerunAI,
+  removeRequest,
+} from "../../actions/ResultActions";
 import ResultsHistoryView from "../ResultsPage/ResultsHistoryView";
 import ResultsTableRowExpansion from "./ResultsRowExpansion/ResultsTableRowExpansion";
 import {
@@ -116,6 +120,14 @@ class LabellingTableRow extends React.Component {
 
     const storedUser = jwt_decode(Cache.getItem(AUTH_USER_ID_TOKEN_KEY));
     this.props.rerunAI(reqId, storedUser.sub, storedUser.name.trim());
+  }
+
+  handleRemove(reqId) {
+    console.log("handleRemove");
+    console.log(reqId);
+
+    const storedUser = jwt_decode(Cache.getItem(AUTH_USER_ID_TOKEN_KEY));
+    this.props.removeRequest(reqId, storedUser.sub, storedUser.name.trim());
   }
 
   handleToggle(e) {
@@ -294,7 +306,7 @@ class LabellingTableRow extends React.Component {
     resState = REQUEST_STATES.STATE_AIProcessed
   ) => {
     let showOnlyRerun = false;
-    let gridColumns = 2;
+    let gridColumns = 3;
 
     switch (resState) {
       case REQUEST_STATES.STATE_Received:
@@ -302,6 +314,9 @@ class LabellingTableRow extends React.Component {
         showOnlyRerun = true;
         gridColumns = 1;
         break;
+      case REQUEST_STATES.STATE_Deleted:
+      case REQUEST_STATES.STATE_NewlyDeleted:
+        return null;
 
       default:
         break;
@@ -337,6 +352,19 @@ class LabellingTableRow extends React.Component {
                 // style={{ marginTop: "10px" }}
               />
             </Grid.Column>
+            {!showOnlyRerun && (
+              <Grid.Column textAlign="center">
+                <Header as="h4">Remove from AI Training</Header>
+                <p>Request will still be viewable in Results</p>
+                <Button
+                  // fluid
+                  color="red"
+                  content={"Remove"}
+                  onClick={() => this.handleRemove(reqId)}
+                  // style={{ marginTop: "10px" }}
+                />
+              </Grid.Column>
+            )}
           </Grid.Row>
         </Grid>
       </>
@@ -367,6 +395,12 @@ class LabellingTableRow extends React.Component {
     let disableAIConfirmPopup = true;
 
     switch (resState) {
+      //   Do NOT show deleted for now - see STATE_NewlyDeleted
+      case REQUEST_STATES.STATE_Deleted:
+      case REQUEST_STATES.STATE_NewlyDeleted:
+        state = "*Removed from AI Training";
+        return null;
+
       case REQUEST_STATES.STATE_Received:
         state = "Received";
         disableAIConfirmPopup = false;
@@ -625,6 +659,25 @@ class LabellingTableRow extends React.Component {
             />
           </Table.Cell>
           <Table.Cell>
+            {/* <Form.Dropdown
+            name="specialty_tags"
+            placeholder="Tags"
+            fluid
+            multiple
+            search
+            selection
+            onChange={this.handleSelectChangeTags}
+            value={
+              this.state.specialty_tags
+                ? this.state.specialty_tags.split(" / ")
+                : []
+            }
+            options={this.props.specialtyExamList.map((exam, index) => ({
+              key: `row-exam-${index}`,
+              text: exam,
+              value: exam,
+            }))}
+          /> */}
             <TextArea
               disabled={this.props.loading}
               placeholder="Tags separated by ' / ' (auto-saves after 2s)"
@@ -692,6 +745,8 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, { modifyResult, rerunAI })(
-  LabellingTableRow
-);
+export default connect(mapStateToProps, {
+  modifyResult,
+  rerunAI,
+  removeRequest,
+})(LabellingTableRow);

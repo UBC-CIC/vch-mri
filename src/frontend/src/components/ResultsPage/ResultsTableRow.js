@@ -80,6 +80,9 @@ class ResultsTableRow extends React.Component {
       aiPriorityString = "No match";
 
     switch (resState) {
+      case REQUEST_STATES.STATE_Deleted:
+        state = "Removed from AI Training";
+        break;
       case REQUEST_STATES.STATE_Received:
         state = "Received";
         break;
@@ -155,9 +158,7 @@ class ResultsTableRow extends React.Component {
           {/* <Table.Cell>
             {result.p5_flag !== null ? result.p5_flag.toString() : "none"}
           </Table.Cell> */}
-          <Table.Cell>
-            {result.ai_tags ? result.ai_tags.join(", ") : "none"}
-          </Table.Cell>
+          <Table.Cell>{result.ai_tags ? result.ai_tags : " - "}</Table.Cell>
           {/* <Table.Cell>
             {result.final_priority ? result.final_priority : " - "}
           </Table.Cell>

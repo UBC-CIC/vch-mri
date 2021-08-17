@@ -139,7 +139,7 @@ class ResultsHistoryViewRow extends React.Component {
       case "delete":
         return (
           <Table.Cell>
-            <p>{`DELETED:`}</p>
+            <p>{`REMOVED`}</p>
           </Table.Cell>
         );
       default:

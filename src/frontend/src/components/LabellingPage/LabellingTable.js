@@ -15,7 +15,7 @@ import { Cache } from "aws-amplify";
 import jwt_decode from "jwt-decode";
 
 const DEFAULT_NUM_COLUMNS = 12;
-const DEFAULT_EXPANDED_NUM_COLUMNS = 12;
+// const DEFAULT_EXPANDED_NUM_COLUMNS = 12;
 
 class LabellingTable extends React.Component {
   constructor(props) {

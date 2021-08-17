@@ -14,6 +14,9 @@ import {
   MODIFY_RESULT_FAILURE,
   MODIFY_RESULT_STARTED,
   MODIFY_RESULT_SUCCESS,
+  REMOVE_FAILURE,
+  REMOVE_SUCCESS,
+  REMOVE_STARTED,
   AI_RERUN_STARTED,
   AI_RERUN_SUCCESS,
   AI_RERUN_ALL_SUCCESS,
@@ -46,6 +49,7 @@ export const results = (state = initialState, action) => {
     case GET_STATISTICS_STARTED:
     case MODIFY_RESULT_STARTED:
     case AI_RERUN_STARTED:
+    case REMOVE_STARTED:
       return {
         ...state,
         loading: true,
@@ -126,6 +130,23 @@ export const results = (state = initialState, action) => {
         loading: false,
         success: "MRI Result values have been successfully modified!",
       };
+    case REMOVE_SUCCESS:
+      const removeResult = action.response.data[0];
+      console.log("REMOVE_SUCCESS");
+      console.log(removeResult);
+      return {
+        ...state,
+        resultsList: state.resultsList.map((result) => {
+          if (result.id === removeResult.id) {
+            if (removeResult.state === REQUEST_STATES.STATE_Deleted)
+              result.state = REQUEST_STATES.STATE_NewlyDeleted;
+            console.log(result);
+          }
+          return result;
+        }),
+        loading: false,
+        success: "MRI request has successfully been removed!",
+      };
     case AI_RERUN_SUCCESS:
       const rerunResult = action.response.data[0];
       console.log("AI_RERUN_SUCCESS");
@@ -160,6 +181,7 @@ export const results = (state = initialState, action) => {
     case GET_STATISTICS_FAILURE:
     case MODIFY_RESULT_FAILURE:
     case AI_RERUN_FAILURE:
+    case REMOVE_FAILURE:
       return {
         ...state,
         error: action.error,

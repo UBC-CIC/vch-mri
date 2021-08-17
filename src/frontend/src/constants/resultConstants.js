@@ -1,6 +1,7 @@
 export const REQUEST_STATES = {
   STATE_Received: "received",
   STATE_Deleted: "deleted",
+  STATE_NewlyDeleted: "newly_deleted",
   STATE_ReceivedDupe: "received_duplicate",
   STATE_AIProcessed: "ai_priority_processed",
   STATE_ReceivedFinal: "final_priority_received",
@@ -27,6 +28,9 @@ export const GET_STATISTICS_FAILURE = "GET_STATISTICS_FAILURE";
 export const MODIFY_RESULT_STARTED = "MODIFY_RESULT_STARTED";
 export const MODIFY_RESULT_SUCCESS = "MODIFY_RESULT_SUCCESS";
 export const MODIFY_RESULT_FAILURE = "MODIFY_RESULT_FAILURE";
+export const REMOVE_STARTED = "REMOVE_STARTED";
+export const REMOVE_SUCCESS = "REMOVE_SUCCESS";
+export const REMOVE_FAILURE = "REMOVE_FAILURE";
 export const AI_RERUN_STARTED = "AI_RERUN_STARTED";
 export const AI_RERUN_SUCCESS = "AI_RERUN_SUCCESS";
 export const AI_RERUN_ALL_SUCCESS = "AI_RERUN_ALL_SUCCESS";

@@ -27,8 +27,6 @@ const initialState = {
 class ModifyRuleForm extends React.Component {
   constructor(props) {
     super(props);
-    console.log("ModifyRuleForm const");
-    console.log(this.props.specialty_tags);
     this.state = {
       addRuleMode:
         this.props.addRuleMode !== undefined ? this.props.addRuleMode : false,

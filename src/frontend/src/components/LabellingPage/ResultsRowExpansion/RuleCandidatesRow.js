@@ -10,7 +10,10 @@ class RuleCandidatesRow extends React.Component {
 
     return (
       <Popup
-        content={this.props.popupButtonAIConfirm(this.props.reqCio)}
+        content={this.props.popupButtonAIConfirm(
+          this.props.reqCio,
+          this.props.reqState
+        )}
         trigger={
           <Table.Row
             key={"row-data-" + index}

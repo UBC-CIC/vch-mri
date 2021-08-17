@@ -14,6 +14,9 @@ import {
   MODIFY_RESULT_FAILURE,
   MODIFY_RESULT_STARTED,
   MODIFY_RESULT_SUCCESS,
+  REMOVE_FAILURE,
+  REMOVE_SUCCESS,
+  REMOVE_STARTED,
   AI_RERUN_STARTED,
   AI_RERUN_SUCCESS,
   AI_RERUN_ALL_SUCCESS,
@@ -123,6 +126,27 @@ export const modifyResultSuccess = (response) => {
 export const modifyResultFailure = (error) => {
   return {
     type: MODIFY_RESULT_FAILURE,
+    error,
+  };
+};
+
+// REMOVE
+export const removeStarted = () => {
+  return {
+    type: REMOVE_STARTED,
+  };
+};
+
+export const removeSuccess = (response) => {
+  return {
+    type: REMOVE_SUCCESS,
+    response,
+  };
+};
+
+export const removeFailure = (error) => {
+  return {
+    type: REMOVE_FAILURE,
     error,
   };
 };
@@ -266,6 +290,47 @@ export const modifyResult = (state) => {
       .catch((e) => {
         dispatch(modifyResultFailure(e));
       });
+  };
+};
+
+export const removeRequest = (
+  reqId,
+  cognito_user_id = "",
+  cognito_user_fullname = ""
+) => {
+  return async (dispatch) => {
+    dispatch(removeStarted());
+    console.log("removeRequest");
+    console.log(reqId);
+
+    try {
+      // Re-run AI for one result
+      const response = await axios.post(
+        `${process.env.REACT_APP_HTTP_API_URL}/results`,
+        {
+          operation: "REMOVE",
+          id: reqId,
+          cognito_user_fullname,
+          cognito_user_id,
+        }
+      );
+      console.log("REMOVE response");
+      console.log(response.data);
+      dispatch(removeSuccess(response.data));
+    } catch (ex) {
+      dispatch(removeFailure(ex));
+    }
+    // axios
+    //   .post(`${process.env.REACT_APP_HTTP_API_URL}/parser`, {
+    //     operation: "RERUN_ONE",
+    //     CIO_ID: reqId
+    //   })
+    //   .then((response) => {
+    //     dispatch(modifyResultSuccess(response.data));
+    //   })
+    //   .catch((e) => {
+    //     dispatch(modifyResultFailure(e));
+    //   });
   };
 };
 

@@ -138,6 +138,7 @@ class ResultsTableRowExpansion extends React.Component {
                 <RuleCandidatesRow
                   candidate={candidate}
                   reqCio={this.props.reqCio}
+                  reqState={result.state}
                   index={index}
                   popupButtonAIConfirm={this.props.popupButtonAIConfirm}
                   handleAIConfirm={this.props.handleAIConfirm}

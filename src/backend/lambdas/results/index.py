@@ -63,6 +63,7 @@ def queryResultsByDate(cur, start_date, end_date):
     cur.execute(cmd, (start_date, end_date))
     return cur.fetchall()
 
+
 def updateFinalResults(cur, id, priority, contrast):
     cmd = """
     UPDATE data_request 
@@ -74,7 +75,7 @@ def updateFinalResults(cur, id, priority, contrast):
     return cur.fetchall()
 
 
-def updateLabelledResults(cur, id, rule_id, priority, contrast, notes, p5, tags):
+def db_update_labelled_results(cur, id, rule_id, priority, contrast, notes, p5, tags):
     cmd = """
     UPDATE data_request 
     SET labelled_rule_id = %s,  labelled_priority = %s, labelled_contrast = %s, labelled_notes = %s,
@@ -84,15 +85,25 @@ def updateLabelledResults(cur, id, rule_id, priority, contrast, notes, p5, tags)
     RETURNING id, labelled_rule_id, labelled_priority, labelled_contrast, labelled_notes,
         labelled_p5_flag, labelled_tags, state
     """
-    if tags is None:
-        tags = []
+    # if tags is None:
+    #     tags = []
     params = (rule_id, priority, contrast, notes, p5, tags, id)
     command = cmd % params
-    logger.info('updateLabelledResults')
+    logger.info('db_update_labelled_results')
     logger.info(command)
 
     cur.execute(cmd, params)
     return cur.fetchall()
+
+
+def db_set_state(cur, id, state):
+    cmd = """
+    UPDATE data_request 
+    SET state = %s
+    WHERE id = %s
+    """
+    cur.execute(cmd, (state, id))
+    return
 
 
 def get_statistics(cur, data):
@@ -287,56 +298,71 @@ def queryRequestRule(cur, id_data_request):
 insert_history_cmd = """
    INSERT INTO request_history(id_data_request, history_type, description, mod_info,
        cognito_user_id, cognito_user_fullname)
-   VALUES (%s, 'modification', %s, %s, %s, %s)
+   VALUES (%s, %s, %s, %s, %s, %s)
    RETURNING history_type, description, mod_info, cognito_user_fullname, created_at
    """
 
 
-def update_labelling(cur, data):
-    logger.info('--update_labelling()')
+def update_request(request, cur, data):
+    logger.info(f'--update_request({request})')
     cognito_user_id = ''
     if 'cognito_user_id' in data and data['cognito_user_id']:
         cognito_user_id = data["cognito_user_id"]
-        # logger.info(cognito_user_id)
     cognito_user_fullname = ''
     if 'cognito_user_fullname' in data and data['cognito_user_fullname']:
         cognito_user_fullname = data["cognito_user_fullname"]
-        # logger.info(cognito_user_fullname)
 
-    # Save labelling fields
     id = data['id']
-    response = updateLabelledResults(
-        cur,
-        id,
-        data['labelled_rule_id'],
-        data['labelled_priority'],
-        data['labelled_contrast'],
-        data['labelled_notes'],
-        data['labelled_p5_flag'],
-        data['labelled_tags'])
-    logger.info(response)
+    if request == 'label':
+        # Save labelling fields
+        history_type = 'modification'
+        description = 'Labelling Updated'
 
-    tags = response[0][6]
-    if tags is None or len(tags) <= 0:
-        tags = ''
+        response = db_update_labelled_results(
+            cur,
+            id,
+            data['labelled_rule_id'],
+            data['labelled_priority'],
+            data['labelled_contrast'],
+            data['labelled_notes'],
+            data['labelled_p5_flag'],
+            data['labelled_tags'])
+        logger.info(response)
 
-    ret_update = {
-        'id': response[0][0],
-        'labelled_rule_id': response[0][1],
-        'labelled_priority': response[0][2],
-        'labelled_contrast': response[0][3],
-        'labelled_notes': response[0][4],
-        'labelled_p5_flag': response[0][5],
-        'labelled_tags': tags,
-        'state': response[0][7]}
-    logger.info(ret_update)
+        tags = response[0][6]
+        if tags is None or len(tags) <= 0:
+            tags = ''
+
+        ret_update = {
+            'id': response[0][0],
+            'labelled_rule_id': response[0][1],
+            'labelled_priority': response[0][2],
+            'labelled_contrast': response[0][3],
+            'labelled_notes': response[0][4],
+            'labelled_p5_flag': response[0][5],
+            'labelled_tags': tags,
+            'state': response[0][7]}
+        logger.info(ret_update)
+
+    elif request == 'remove':
+        history_type = 'delete'
+        description = 'Remove from AI Training'
+        state = 'deleted'
+
+        ret_update = {
+            'id': id,
+            'state': state}
+        db_set_state(cur, id, state)
+
+    else:
+        raise TypeError("Unknown update_request command")
 
     # Save history event
-    data = (id, 'Labelling Updated', json.dumps(ret_update), cognito_user_id, cognito_user_fullname)
+    data = (id, history_type, description, json.dumps(ret_update), cognito_user_id, cognito_user_fullname)
 
-    command = insert_history_cmd % data
     logger.info('insert_history_cmd')
-    logger.info(command)
+    logger.info(insert_history_cmd)
+    logger.info(data)
 
     cur.execute(insert_history_cmd, data)
     ret_insert = cur.fetchall()
@@ -354,6 +380,47 @@ def update_labelling(cur, data):
     logger.info(ret)
 
     return ret
+
+
+# def remove_request(cur, data):
+#     logger.info('--remove_request()')
+#     cognito_user_id = ''
+#     if 'cognito_user_id' in data and data['cognito_user_id']:
+#         cognito_user_id = data["cognito_user_id"]
+#     cognito_user_fullname = ''
+#     if 'cognito_user_fullname' in data and data['cognito_user_fullname']:
+#         cognito_user_fullname = data["cognito_user_fullname"]
+#
+#     id = data['id']
+#     state = 'deleted'
+#     ret_update = {
+#         'id': id,
+#         'state': state}
+#     db_set_state(id, state)
+#
+#     # Save history event
+#     data = (id, 'delete', 'Remove from AI Training', json.dumps(ret_update), cognito_user_id, cognito_user_fullname)
+#
+#     logger.info('insert_history_cmd')
+#     logger.info(insert_history_cmd)
+#     logger.info(data)
+#
+#     cur.execute(insert_history_cmd, data)
+#     ret_insert = cur.fetchall()
+#     logger.info('ret_insert ret')
+#     logger.info(ret_insert)
+#
+#     ret = [{
+#         **ret_update,
+#         'history_type': ret_insert[0][0],
+#         'description': ret_insert[0][1],
+#         'mod_info': ret_insert[0][2],
+#         'cognito_user_fullname': ret_insert[0][3],
+#         'date_created': datetime_to_json(ret_insert[0][4])}]
+#     logger.info('update_labelling ret')
+#     logger.info(ret)
+#
+#     return ret
 
 
 def datetime_to_json(obj):
@@ -550,7 +617,10 @@ def handler(event, context):
                 response = [{'id': response[0][0], 'final_priority': response[0][1], 'final_contrast': response[0][2]}]
 
             elif rest_cmd == 'UPDATE_LABELLING':
-                response = update_labelling(cur, data)
+                response = update_request('label', cur, data)
+
+            elif rest_cmd == 'REMOVE':
+                response = update_request('remove', cur, data)
 
             elif rest_cmd == 'GET_STATISTICS':
                 response = get_statistics(cur, data)
