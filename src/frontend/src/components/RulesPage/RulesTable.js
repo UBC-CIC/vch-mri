@@ -27,8 +27,8 @@ class RulesTable extends React.Component {
   }
 
   render() {
-    console.log("RulesTable render");
-    console.log(this.props.specialtyExam);
+    // console.log("RulesTable render");
+    // console.log(this.props.specialtyExam);
     return (
       <Table celled compact sortable>
         <Table.Header fullWidth>

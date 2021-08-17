@@ -116,7 +116,7 @@ class ResultsTableRowExpansion extends React.Component {
         <Table celled compact striped>
           <Table.Header>
             <Table.Row>
-              <Table.HeaderCell colSpan="8">
+              <Table.HeaderCell colSpan="9">
                 AI Rule candidates in order of highest (topmost) to lowest rank
                 (bottom)
               </Table.HeaderCell>
@@ -128,6 +128,7 @@ class ResultsTableRowExpansion extends React.Component {
               <Table.HeaderCell>Contrast</Table.HeaderCell>
               <Table.HeaderCell>Sp. Exams</Table.HeaderCell>
               <Table.HeaderCell>Info</Table.HeaderCell>
+              <Table.HeaderCell>Match %</Table.HeaderCell>
               <Table.HeaderCell>bp_tk</Table.HeaderCell>
               <Table.HeaderCell>info_weighted_tk</Table.HeaderCell>
             </Table.Row>

@@ -59,6 +59,7 @@ CREATE TABLE IF NOT EXISTS data_request (
     request JSON,   -- original request JSON
     info JSON,     -- processed current request data prior sending to Rules engine
     ai_rule_candidates INT[],        -- AI determined
+    ai_rule_cand_ranks REAL[],        -- AI determined
     ai_rule_id INT,
     ai_priority VARCHAR(3),
     ai_p5_flag BOOLEAN,

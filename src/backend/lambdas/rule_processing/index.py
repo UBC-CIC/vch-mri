@@ -70,36 +70,45 @@ RETURNING r.id, r.body_part, r.priority, r.contrast, data_request.ai_p5_flag, r.
 #     WHERE data_request.id = '%s'
 #     """
 
-get_rule_candidates_cmd = """
-    select array (SELECT id
-    FROM mri_rules2, to_tsquery('ths_search','%s') query 
-    WHERE info_weighted_tk @@ query
-    AND active = 't'
-    %s
-    ORDER BY ts_rank_cd('{0.1, 0.2, 0.4, 1.0}',info_weighted_tk, query, 1) DESC)
-    """
+# get_rule_candidates_cmd = """
+#     select array (SELECT id
+#     FROM mri_rules2, to_tsquery('ths_search','%s') query
+#     WHERE info_weighted_tk @@ query
+#     AND active = 't'
+#     %s
+#     ORDER BY ts_rank_cd('{0.1, 0.2, 0.4, 1.0}',info_weighted_tk, query, 1) DESC)
+#     """
 
-get_rule_candidates_cmd_union = """
-    select array (SELECT id
+get_rule_candidates_cmd = """
+    SELECT id, ts_rank_cd('{0.1, 0.2, 0.4, 1.0}',info_weighted_tk, query, 1)
     FROM mri_rules2, to_tsquery('ths_search','%s') query 
     WHERE info_weighted_tk @@ query
     AND active = 't'
     %s
-    ORDER BY priority DESC)
+    ORDER BY ts_rank_cd('{0.1, 0.2, 0.4, 1.0}',info_weighted_tk, query, 1) DESC
     """
 
 # get_rule_candidates_cmd_union = """
-#     SELECT id, priority, contrast, ts_rank_cd('{0.1, 0.2, 0.4, 1.0}',bp_tk, query, 1)
+#     select array (SELECT id
 #     FROM mri_rules2, to_tsquery('ths_search','%s') query
-#     WHERE bp_tk @@ query
+#     WHERE info_weighted_tk @@ query
 #     AND active = 't'
 #     %s
-#     ORDER BY priority DESC
+#     ORDER BY priority DESC)
 #     """
+
+get_rule_candidates_cmd_union = """
+    SELECT id, ts_rank_cd('{0.1, 0.2, 0.4, 1.0}',bp_tk, query, 1)
+    FROM mri_rules2, to_tsquery('ths_search','%s') query
+    WHERE bp_tk @@ query
+    AND active = 't'
+    %s
+    ORDER BY priority DESC
+    """
 
 set_rule_candidates_cmd = """
     UPDATE data_request
-    SET ai_rule_candidates = ARRAY%s
+    SET ai_rule_candidates = ARRAY%s, ai_rule_cand_ranks = ARRAY%s
     WHERE data_request.id = '%s'
     """
 
@@ -206,22 +215,30 @@ def set_rule_candidates(cur, info_str, anatomy_str, cio_id, union = False):
         #         if pri == 'P5'
         #     arr_rule_candidates.append(candidate.id)
 
-    logger.info(command)
     cur.execute(command)
+    logger.info(command)
+
     ret = cur.fetchall()
     logger.info(ret)
-    arr_rule_candidates = ret[0][0]
 
-    if len(arr_rule_candidates) <= 0:
+    if len(ret) <= 0:
         if union:
             cur.execute(clear_rule_candidates_cmd % cio_id)
         return []
 
+    arr_rule_candidates = []
+    arr_rule_cand_ranks = []
+
+    for candidates in ret:
+        arr_rule_candidates.append(candidates[0])
+        arr_rule_cand_ranks.append(candidates[1])
+
     # Pare list down to max 10
     arr_rule_candidates = arr_rule_candidates[0:max_candidates]
+    arr_rule_cand_ranks = arr_rule_cand_ranks[0:max_candidates]
     logger.info(arr_rule_candidates)
 
-    command = set_rule_candidates_cmd % (arr_rule_candidates, cio_id)
+    command = set_rule_candidates_cmd % (arr_rule_candidates, arr_rule_cand_ranks, cio_id)
     logger.info(command)
 
     cur.execute(command)

@@ -34,6 +34,11 @@ class RuleCandidatesRow extends React.Component {
               {candidate.specialty_tags ? candidate.specialty_tags : " - "}
             </Table.Cell>
             <Table.Cell>{candidate.info}</Table.Cell>
+            <Table.Cell>
+              {candidate.match_percent
+                ? `${candidate.match_percent.toFixed(2)}%`
+                : "N/A"}
+            </Table.Cell>
             <Table.Cell>{candidate.bp_tk}</Table.Cell>
             <Table.Cell>{candidate.info_weighted_tk}</Table.Cell>
           </Table.Row>

@@ -145,7 +145,7 @@ export const results = (state = initialState, action) => {
           return result;
         }),
         loading: false,
-        success: "MRI request has successfully been removed!",
+        success: "MRI request has been successfully removed!",
       };
     case AI_RERUN_SUCCESS:
       const rerunResult = action.response.data[0];

@@ -14,7 +14,8 @@ def queryResults(cur, page):
     SELECT req.id, state, error, request, age, height, weight, req.info, created_at, updated_at,
         ai_rule_candidates, ai_rule_id, ai_priority, ai_contrast, ai_p5_flag, ai_tags,
         final_priority, final_contrast,
-        labelled_rule_id, labelled_priority, labelled_contrast, labelled_notes, labelled_p5_flag, labelled_tags
+        labelled_rule_id, labelled_priority, labelled_contrast, labelled_notes, labelled_p5_flag, labelled_tags,
+        ai_rule_cand_ranks
     FROM data_request as req
     ORDER BY req.updated_at DESC
     LIMIT 50 OFFSET %s
@@ -29,7 +30,8 @@ def queryResultsID(cur, id):
     SELECT req.id, state, error, request, age, height, weight, req.info, created_at, updated_at,
         ai_rule_candidates, ai_rule_id, ai_priority, ai_contrast, ai_p5_flag, ai_tags,
         final_priority, final_contrast,
-        labelled_rule_id, labelled_priority, labelled_contrast, labelled_notes, labelled_p5_flag, labelled_tags
+        labelled_rule_id, labelled_priority, labelled_contrast, labelled_notes, labelled_p5_flag, labelled_tags,
+        ai_rule_cand_ranks
     FROM data_request as req
     WHERE req.id = %s
     ORDER BY req.updated_at DESC
@@ -435,7 +437,7 @@ def parseResponse(response):
     for resp_tuple in response:
         resp = {}
 
-        # Rule - filled in queryAndParseResponseRuleCandidates
+        # Rule - filled in query_parse_resp_rule_candidates
         # rule['rules_id'] = resp_tuple[2]
         # rule['info'] = resp_tuple[22]
         # rule['priority'] = resp_tuple[19]
@@ -457,6 +459,8 @@ def parseResponse(response):
 
         resp['rule_candidates_array'] = resp_tuple[10]  # array of rule id's
         resp['ai_rule_candidates'] = {}  # Filled later
+        resp['rule_candidates_array_ranks'] = resp_tuple[24]
+
         resp['ai_rule_id'] = resp_tuple[11]
         resp['ai_priority'] = resp_tuple[12]
         resp['ai_contrast'] = resp_tuple[13]
@@ -508,15 +512,19 @@ def parseResponseHistory(history):
     return history_list
 
 
-def queryAndParseResponseRuleCandidates(cur, rule_candidates):
-    # logger.info('queryAndParseResponseRuleCandidates')
+def query_parse_resp_rule_candidates(cur, rule_candidates, rule_candidate_ranks):
+    # logger.info('query_parse_resp_rule_candidates')
     # logger.info(rule_candidates)
 
     rule_list = []
     if rule_candidates is None:
         return rule_list
 
-    for rule_candidate in rule_candidates:
+    len_rule_candidate_ranks = 0
+    if rule_candidate_ranks is not None:
+        len_rule_candidate_ranks = len(rule_candidate_ranks)
+
+    for index, rule_candidate in enumerate(rule_candidates):
         ret_rules = queryRequestRule(cur, rule_candidate)
         if len(ret_rules) > 0:
             ret_rule = ret_rules[0]
@@ -533,6 +541,8 @@ def queryAndParseResponseRuleCandidates(cur, rule_candidates):
             rule['contrast'] = ret_rule[5]
             rule['info'] = ret_rule[6]
             rule['specialty_tags'] = ret_rule[7]
+            if len_rule_candidate_ranks > index:
+                rule['match_percent'] = rule_candidate_ranks[index] * 100
 
             rule_list.append(rule)
 
@@ -610,7 +620,8 @@ def handler(event, context):
                     # resp['history'] = json.dumps(history, default=datetime_handler)
                     # logger.info('resp history')
                     # logger.info(resp['history'])
-                    resp['ai_rule_candidates'] = queryAndParseResponseRuleCandidates(cur, resp['rule_candidates_array'])
+                    resp['ai_rule_candidates'] = query_parse_resp_rule_candidates(cur, resp['rule_candidates_array'],
+                                                                                  resp['rule_candidates_array_ranks'])
 
             elif rest_cmd == 'UPDATE_FINAL':
                 response = updateFinalResults(cur, data['id'], data['final_priority'], data['final_contrast'])
