@@ -11,16 +11,17 @@ logger.setLevel(logging.INFO)
 def addSynonym(cur, data):
     if 'key' not in data:
         raise TypeError("Missing 'key'")
-    key = data['key']
+
+    params = (data['key'], data['value'])
 
     cmd = """
     INSERT INTO synonyms
-    VALUES """
-    param_values = []
-    cmd += "(%s, %s)"
-    param_values.extend([key, data['value']])
-    cmd += " RETURNING key, val"
-    cur.execute(cmd, param_values)
+    VALUES (%s, %s) RETURNING key, val
+    """
+
+    logger.info(cmd)
+    logger.info(params)
+    cur.execute(cmd, params)
 
     return cur.fetchall()
 
@@ -29,16 +30,20 @@ def update_synonym(cur, data):
     if 'key' not in data:
         raise TypeError("Missing 'key'")
     key = data['key']
+    logger.info(key)
 
     # Delete old one first if necessary
     if 'old_key' in data:
         old_key = data['old_key']
+        logger.info(old_key)
 
         # NOTE: FALLTHROUGH and just do an update below if keys are the unchanged
         if key != old_key:
             # Delete first
             deleteSynonym(cur, old_key)
+            logger.info('deleteSynonym')
             response = parseResponse(addSynonym(cur, data))
+            logger.info('parseResponse(addSynonym')
             logger.info(response)
             response[0]['old_key'] = old_key
             logger.info(response)
@@ -97,7 +102,11 @@ def deleteSynonym(cur, id):
     cmd = """
     DELETE FROM synonyms
     WHERE key = %s"""
+
     cur.execute(cmd, (id,))
+    # NOTE: There must be a comma after lines[0] to make that a tuple
+    # Since the execute method is expecting a sequence (or a mapping) it iterates over the string you provided
+    # surrounded by parenthesis. So it is necessary to explicitly make that a tuple.
 
 
 def parseResponse(response):
@@ -139,7 +148,7 @@ def handler(event, context):
                 resp_dict['data'] = resp_list
                 return resp_dict
             elif data['operation'] == 'ADD':
-                resp_list = addSynonym(cur, data)
+                resp_list = parseResponse(addSynonym(cur, data))
             elif data['operation'] == 'UPDATE':
                 resp_list = update_synonym(cur, data)
             elif data['operation'] == 'DELETE':

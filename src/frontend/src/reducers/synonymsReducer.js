@@ -45,15 +45,18 @@ export const synonyms = (state = initialState, action) => {
         direction: null,
       };
     case ADD_SYNONYM_SUCCESS:
+      console.log("ADD_SYNONYM_SUCCESS");
+      const addConj = action.response.data[0];
+      console.log(addConj);
       return {
         ...state,
-        synonymsList: state.synonymsList.concat(action.response.data[0]),
+        synonymsList: state.synonymsList.concat(addConj),
         loading: false,
         success: "Synonym successfully added!",
       };
     case MODIFY_SYNONYM_SUCCESS:
-      const updConj = action.response.data[0];
       console.log("MODIFY_SYNONYM_SUCCESS");
+      const updConj = action.response.data[0];
       console.log(updConj);
       return {
         ...state,
