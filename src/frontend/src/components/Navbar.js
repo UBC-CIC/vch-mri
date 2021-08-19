@@ -1,4 +1,5 @@
 import React from "react";
+import logo from "../SapienML_Watermark-03-142pxX60px.png";
 import { Menu, Segment, Dropdown } from "semantic-ui-react";
 import { Auth } from "aws-amplify";
 import { NavLink, withRouter } from "react-router-dom";
@@ -34,6 +35,7 @@ class Navbar extends React.Component {
     return (
       <Segment inverted color="blue">
         <Menu inverted secondary color="blue">
+          <img src={logo} alt="logo" height="60px" width="142px" />
           <Menu.Item
             icon="home"
             name="home"
