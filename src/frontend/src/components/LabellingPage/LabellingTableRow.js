@@ -9,7 +9,6 @@ import {
   Button,
   Grid,
   Header,
-  Checkbox,
 } from "semantic-ui-react";
 import {
   modifyResult,
@@ -24,9 +23,7 @@ import {
   BtnTextConfirm,
   PopupTextNewlyLabel,
 } from "../../constants/resultConstants";
-import { AUTH_USER_ID_TOKEN_KEY } from "../../constants/userConstant";
-import { Cache } from "aws-amplify";
-import jwt_decode from "jwt-decode";
+import { getCognitoUser } from "../../helpers/Cognito";
 
 import "../../styles/TableLabelling.css";
 
@@ -118,16 +115,16 @@ class LabellingTableRow extends React.Component {
     console.log("handleRerunAI");
     console.log(reqId);
 
-    const storedUser = jwt_decode(Cache.getItem(AUTH_USER_ID_TOKEN_KEY));
-    this.props.rerunAI(reqId, storedUser.sub, storedUser.name.trim());
+    const storedUser = getCognitoUser();
+    this.props.rerunAI(reqId, storedUser.userID, storedUser.userName);
   }
 
   handleRemove(reqId) {
     console.log("handleRemove");
     console.log(reqId);
 
-    const storedUser = jwt_decode(Cache.getItem(AUTH_USER_ID_TOKEN_KEY));
-    this.props.removeRequest(reqId, storedUser.sub, storedUser.name.trim());
+    const storedUser = getCognitoUser();
+    this.props.removeRequest(reqId, storedUser.userID, storedUser.userName);
   }
 
   handleToggle(e) {
@@ -218,7 +215,7 @@ class LabellingTableRow extends React.Component {
   }
 
   preparePayloadModifyResult(index) {
-    const storedUser = jwt_decode(Cache.getItem(AUTH_USER_ID_TOKEN_KEY));
+    const storedUser = getCognitoUser();
     // console.log(storedUser);
     console.log("preparePayloadModifyResult");
     console.log(this.state.labelled_rule_id);
@@ -246,7 +243,7 @@ class LabellingTableRow extends React.Component {
       labelled_notes:
         this.state.labelled_notes === "" ? null : this.state.labelled_notes,
       cognito_user_id: storedUser.sub,
-      cognito_user_fullname: storedUser.name.trim(),
+      cognito_user_fullname: storedUser.userName,
     };
   }
 

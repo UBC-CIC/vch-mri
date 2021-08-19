@@ -10,9 +10,7 @@ import {
 import { sendSuccessToast, sendErrorToast } from "../../helpers";
 import LabellingTableRow from "./LabellingTableRow";
 import { Icon, Button } from "semantic-ui-react";
-import { AUTH_USER_ID_TOKEN_KEY } from "../../constants/userConstant";
-import { Cache } from "aws-amplify";
-import jwt_decode from "jwt-decode";
+import { getCognitoUser } from "../../helpers/Cognito";
 
 const DEFAULT_NUM_COLUMNS = 12;
 // const DEFAULT_EXPANDED_NUM_COLUMNS = 12;
@@ -94,12 +92,12 @@ class LabellingTable extends React.Component {
     console.log("rerunAll");
 
     this.setState({ showConfirmRerunAll: false });
-    const storedUser = jwt_decode(Cache.getItem(AUTH_USER_ID_TOKEN_KEY));
+    const storedUser = getCognitoUser();
     this.props.rerunAIAll(
       this.state.activePage,
       0,
-      storedUser.sub,
-      storedUser.name.trim()
+      storedUser.userID,
+      storedUser.userName
     );
   };
 
