@@ -116,23 +116,27 @@ def handler(event, context):
         'Access-Control-Allow-Methods': 'OPTIONS,POST,GET'
     }
 
+    rest_cmd = data['operation']
+    logger.info('------- REST: ' + rest_cmd)
+
+    # raise TypeError("what version this code updated!")
     with psql.conn.cursor() as cur:
         try: 
-            if data['operation'] == 'GET':
+            if rest_cmd == 'GET':
                 response = psql.queryTable('conjunctions')
                 resp_dict = {'result': True, 'headers': headers }
                 logger.info(response)
                 resp_list = parseResponse(response)
                 resp_dict['data'] = resp_list
                 return resp_dict
-            elif data['operation'] == 'ADD':
+            elif rest_cmd == 'ADD':
                 resp_list = parseResponse(add_conjunction(cur, data))
-            elif data['operation'] == 'UPDATE': 
+            elif rest_cmd == 'UPDATE':
                 resp_list = update_conjunction(cur, data)
-            elif data['operation'] == 'DELETE':
+            elif rest_cmd == 'DELETE':
                 deleteConjunction(cur, data['id'])
             psql.commit() 
-            if data['operation'] == 'ADD' or data['operation'] == 'UPDATE':
+            if rest_cmd == 'ADD' or rest_cmd == 'UPDATE':
                 return {'result': True, 'headers': headers , 'data': resp_list}
         except Exception as error:
             logger.error(error)

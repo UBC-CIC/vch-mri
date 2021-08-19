@@ -74,7 +74,7 @@ class ModifyConjunctionForm extends React.Component {
             fluid
             control={Input}
             name="abbrev"
-            label="Abbreviation"
+            label="Medical Abbreviation"
             value={this.state.abbrev}
             onChange={this.handleChange}
           />
