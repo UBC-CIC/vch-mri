@@ -76,14 +76,15 @@ update_request_error_cmd = """
 
 
 # AND (error IS NULL OR error = '')
-def query_results_id(cur, id):
+def query_results_id(cur, id_array):
     cmd = """
     SELECT req.id, state, error, request
     FROM data_request as req
-    WHERE req.id = %s
-    AND state NOT IN ('deleted');
+    WHERE req.id = ANY (%s)
+    AND state NOT IN ('deleted')
+    ORDER BY updated_at ASC;
     """
-    cur.execute(cmd, [id])
+    cur.execute(cmd, (id_array, ))
     return cur.fetchall()
 
 
@@ -160,15 +161,16 @@ set_state_rerun_ai = """
     WHERE id = %s
     """
 
-def query_rerun_ai_latest(cur):
+
+def query_rerun_ai(cur, id):
     cmd = """
     SELECT id, state, description, cognito_user_id, cognito_user_fullname, cio_current, cio_list_all,
         cio_list_processed, cio_list_failed, time_elapsed_ms, created_at, updated_at
     FROM rerun_ai_history
-    WHERE 
+    WHERE id = %s
     ORDER BY id DESC LIMIT 1
     """
-    cur.execute(cmd)
+    cur.execute(cmd, (id,))
     return cur.fetchall()
 
 
@@ -700,11 +702,30 @@ def rerun_rule_processing_all(cognito_user_id, cognito_user_fullname, rerun_all_
             psql.commit()
         else:
             # Continue
-            rerun_ai_latest = query_rerun_ai_latest(cur)
-            logger.info(rerun_ai_latest)
-            rerun_ai_latest = parse_rerun_ai_results(rerun_ai_latest)
-            logger.info(rerun_ai_latest)
-            ai_row_id = rerun_ai_latest['id']
+            rerun_ai = query_rerun_ai(cur, rerun_all_id)
+            rerun_ai = parse_rerun_ai_results(rerun_ai)
+            logger.info(rerun_ai)
+
+            rerun_ai_row = rerun_ai[0]
+            cio_list_all = rerun_ai_row['cio_list_all']
+            logger.info(cio_list_all)
+            cio_list_processed = rerun_ai_row['cio_list_processed']
+            logger.info(cio_list_processed)
+            # cio_list_remaining = list(set(cio_list_all) - set(cio_list_processed)) # doesnt preserve order
+            cio_list_remaining = [i for i in cio_list_all if i not in cio_list_processed or cio_list_processed.remove(i)]
+            logger.info(cio_list_remaining)
+            ai_row_id = rerun_ai_row['id']
+
+            try:
+                remaining_reqs = query_results_id(cur, cio_list_remaining)
+            except Exception as error:
+                logger.info('query_results_id')
+                logger.info(error)
+            logger.info(remaining_reqs)
+            results = parse_response_results(remaining_reqs)
+            logger.info(results)
+            cur.execute(set_state_rerun_ai, ('running', ai_row_id))
+            return
 
         # logger.info(results)
         total = len(results)
@@ -763,7 +784,7 @@ def rerun_rule_processing_single(cio_id, cognito_user_id, cognito_user_fullname)
         if cio_id is None:
             logger.info('GET ALL - cio_id is None')
         else:
-            response = parse_response_results(query_results_id(cur, cio_id))
+            response = parse_response_results(query_results_id(cur, [cio_id]))
             logger.info(response)
             if len(response) > 0:
                 logger.info('calling parse_and_run_rule_processing')

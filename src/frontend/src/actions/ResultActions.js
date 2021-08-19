@@ -296,45 +296,6 @@ export const getStatistics = (startDate, endDate) => {
   };
 };
 
-export const getRerunAIHistory = () => {
-  return async (dispatch) => {
-    dispatch(aiStatusStarted());
-
-    // dispatch(getStatisticsSuccess(SampleDataStatistics));
-    let url = `${process.env.REACT_APP_HTTP_API_URL}/parser`;
-    axios
-      .post(url, {
-        operation: "GET_RERUN_HISTORY",
-      })
-      .then((response) => {
-        dispatch(aiStatusSuccess(response.data));
-      })
-      .catch((e) => {
-        dispatch(aiStatusFailure(e));
-      });
-  };
-};
-
-export const stopRerunAI = (id) => {
-  return async (dispatch) => {
-    dispatch(aiStatusStarted());
-
-    // dispatch(getStatisticsSuccess(SampleDataStatistics));
-    let url = `${process.env.REACT_APP_HTTP_API_URL}/parser`;
-    axios
-      .post(url, {
-        operation: "STOP_RERUN_AI",
-        id: id,
-      })
-      .then((response) => {
-        dispatch(aiStatusSuccess(response.data));
-      })
-      .catch((e) => {
-        dispatch(aiStatusFailure(e));
-      });
-  };
-};
-
 export const modifyResult = (state) => {
   return (dispatch) => {
     dispatch(modifyResultStarted());
@@ -484,5 +445,44 @@ export const rerunAI = (
     //   .catch((e) => {
     //     dispatch(modifyResultFailure(e));
     //   });
+  };
+};
+
+export const getRerunAIHistory = () => {
+  return async (dispatch) => {
+    dispatch(aiStatusStarted());
+
+    // dispatch(getStatisticsSuccess(SampleDataStatistics));
+    let url = `${process.env.REACT_APP_HTTP_API_URL}/parser`;
+    axios
+      .post(url, {
+        operation: "GET_RERUN_HISTORY",
+      })
+      .then((response) => {
+        dispatch(aiStatusSuccess(response.data));
+      })
+      .catch((e) => {
+        dispatch(aiStatusFailure(e));
+      });
+  };
+};
+
+export const stopRerunAI = (id) => {
+  return async (dispatch) => {
+    dispatch(aiStatusStarted());
+
+    // dispatch(getStatisticsSuccess(SampleDataStatistics));
+    let url = `${process.env.REACT_APP_HTTP_API_URL}/parser`;
+    axios
+      .post(url, {
+        operation: "STOP_RERUN_AI",
+        id: id,
+      })
+      .then((response) => {
+        dispatch(aiStatusSuccess(response.data));
+      })
+      .catch((e) => {
+        dispatch(aiStatusFailure(e));
+      });
   };
 };

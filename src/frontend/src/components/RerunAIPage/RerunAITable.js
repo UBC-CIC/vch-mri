@@ -1,8 +1,13 @@
 import React from "react";
 import { connect } from "react-redux";
 import { Table, Grid, Header, Button, Popup } from "semantic-ui-react";
-import { getRerunAIHistory, stopRerunAI } from "../../actions/ResultActions";
+import {
+  getRerunAIHistory,
+  stopRerunAI,
+  rerunAIAll,
+} from "../../actions/ResultActions";
 import { sendErrorToast, sendSuccessToast } from "../../helpers";
+import { getCognitoUser } from "../../helpers/Cognito";
 
 class RerunAITable extends React.Component {
   componentDidMount() {
@@ -20,6 +25,10 @@ class RerunAITable extends React.Component {
   handleRerunAIContinue(reqId) {
     console.log(`handleRerunAI: ${reqId}`);
     // this.props.rerunAI(reqId, storedUser.sub, storedUser.name.trim());
+
+    this.setState({ showConfirmRerunAll: false });
+    const storedUser = getCognitoUser();
+    this.props.rerunAIAll(0, reqId, storedUser.userID, storedUser.userName);
   }
 
   handleStopAI(reqId) {
@@ -141,7 +150,7 @@ class RerunAITable extends React.Component {
                   flowing
                   hoverable
                   position="bottom center"
-                  disabled={result.state !== "running"}
+                  disabled={result.state === "done"}
                   // size="tiny"
                   style={{ color: "red" }}
                 ></Popup>
@@ -174,6 +183,8 @@ const mapStatetoProps = (state) => {
   };
 };
 
-export default connect(mapStatetoProps, { getRerunAIHistory, stopRerunAI })(
-  RerunAITable
-);
+export default connect(mapStatetoProps, {
+  getRerunAIHistory,
+  stopRerunAI,
+  rerunAIAll,
+})(RerunAITable);
