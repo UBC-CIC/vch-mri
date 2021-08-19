@@ -7,7 +7,10 @@ class RerunAIPage extends React.Component {
     return (
       <div className="page-container">
         <Header as="h1" textAlign="left">
-          Re-run AI on ALL Labelled
+          Re-run AI on ALL Labelled - Status and History
+        </Header>
+        <Header as="h3" textAlign="left" inverted color="orange">
+          Refresh page (F5) to see updated status
         </Header>
         <RerunAITable />
       </div>
