@@ -55,6 +55,11 @@ class Navbar extends React.Component {
                 as={NavLink}
                 to="/dashboard/statistics"
               />
+              <Dropdown.Item
+                text="Re-run AI Status"
+                as={NavLink}
+                to="/dashboard/rerunstatus"
+              />
             </Dropdown.Menu>
           </Dropdown>
           <Dropdown item text="Rules">

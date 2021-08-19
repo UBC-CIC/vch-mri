@@ -5,6 +5,7 @@ DROP TABLE IF EXISTS request_history;
 DROP TABLE IF EXISTS data_request;
 DROP TABLE IF EXISTS mri_rules;
 DROP TABLE IF EXISTS mri_rules2;
+DROP TABLE IF EXISTS rerun_ai;
 DROP TABLE IF EXISTS word_weights; 
 DROP TABLE IF EXISTS conjunctions; 
 DROP TABLE IF EXISTS synonyms;
@@ -12,6 +13,7 @@ DROP TABLE IF EXISTS spellchecker;
 DROP TABLE IF EXISTS specialty_tags; 
 DROP TYPE enum_requests_state;
 DROP TYPE enum_history_type;
+DROP TYPE rerun_ai_state;
 
 --timestamp function
 CREATE OR REPLACE FUNCTION trigger_set_timestamp()
@@ -103,6 +105,30 @@ CREATE TRIGGER set_timestamp
 BEFORE UPDATE ON data_request
 FOR EACH ROW
 EXECUTE PROCEDURE trigger_set_timestamp();
+
+CREATE TYPE rerun_ai_state AS ENUM ('running', 'done', 'stopped');
+
+CREATE TABLE IF NOT EXISTS rerun_ai_history ( 
+    id SERIAL PRIMARY KEY,
+    state rerun_ai_state,
+    description VARCHAR,
+    cognito_user_id VARCHAR,
+    cognito_user_fullname VARCHAR,
+    cio_current VARCHAR,            -- Empty means done
+    cio_list_all VARCHAR[],
+    cio_list_processed VARCHAR[],
+    cio_list_failed VARCHAR[],      -- For now, don't save error
+    time_elapsed_ms INT,            -- Cumulative running time spend processing only
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- Trigger for data_request
+CREATE TRIGGER set_timestamp
+BEFORE UPDATE ON rerun_ai_history
+FOR EACH ROW
+EXECUTE PROCEDURE trigger_set_timestamp();
+
 
 CREATE TABLE IF NOT EXISTS word_weights (
     word VARCHAR(32) PRIMARY KEY, 

@@ -97,6 +97,7 @@ class LabellingTable extends React.Component {
     const storedUser = jwt_decode(Cache.getItem(AUTH_USER_ID_TOKEN_KEY));
     this.props.rerunAIAll(
       this.state.activePage,
+      0,
       storedUser.sub,
       storedUser.name.trim()
     );
@@ -109,8 +110,17 @@ class LabellingTable extends React.Component {
     return (
       <>
         <Confirm
-          header="Re-Run AI?"
-          content="Clicking 'Confirm' will re-run the AI processing on ALL results in the system.  This could take several minutes."
+          header="Re-Run AI on all Labelled requests?"
+          //   content={
+          //     <>
+          //       Clicking 'Confirm' will re-run the AI processing on ALL Labelled
+          //       results in the system.
+          //       <br />
+          //       This could take several minutes - check status in 'Re-run AI
+          //       status' page
+          //     </>
+          //   }
+          content="Clicking 'Confirm' will re-run the AI processing on ALL Labelled results in the system.&#xa;This could take several minutes - check status in 'Re-run AI status' page."
           open={this.state.showConfirmRerunAll}
           onCancel={() => this.setState({ showConfirmRerunAll: false })}
           onConfirm={this.rerunAll}
@@ -124,11 +134,11 @@ class LabellingTable extends React.Component {
           //   size="large"
           onClick={this.handleClickRerunAll}
           icon
-          //   disabled={this.props.loading}
-          disabled={true}
+          disabled={this.props.loading}
+          //   disabled={true}
           labelPosition="right"
         >
-          <Icon name="arrow circle right" /> Re-run AI for ALL
+          <Icon name="arrow circle right" /> Re-run AI for ALL Labelled
         </Button>
         <Button
           style={{ margin: "1em 0em 1em 1em" }}

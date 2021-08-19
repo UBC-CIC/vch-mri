@@ -13,6 +13,7 @@ from datetime import datetime, date
 from spellchecker import SpellChecker
 import psycopg2
 from psycopg2 import sql
+import time
 import postgresql
 
 logger = logging.getLogger()
@@ -86,16 +87,18 @@ def query_results_id(cur, id):
     return cur.fetchall()
 
 
-def query_results_all(cur):
+def query_results_all(cur, array_states):
     cmd = """
     SELECT req.id, state, error, request
     FROM data_request as req
-    WHERE state NOT IN ('deleted');
+    WHERE state IN (%s)
+    ORDER BY updated_at ASC;
     """
-    cur.execute(cmd)
+    cur.execute(cmd, array_states)
     return cur.fetchall()
 
-def parse_response_results(response):
+
+def parse_response_results(response, resp_array_ids=[]):
     resp_list = []
     for resp_tuple in response:
         resp = {}
@@ -110,12 +113,103 @@ def parse_response_results(response):
         # rule['info_weighted_tk'] = resp_tuple[18]
 
         resp['id'] = resp_tuple[0]
+        resp_array_ids.append(resp_tuple[0])
+
         resp['state'] = resp_tuple[1]
         resp['error'] = resp_tuple[2]
         resp['request_json'] = resp_tuple[3]  # Request
 
         resp_list.append(resp)
     return resp_list
+
+
+# rerun_ai
+add_rerun_ai_cmd = """
+    INSERT INTO rerun_ai_history(state, description, cognito_user_id, cognito_user_fullname,
+        cio_current, cio_list_all, cio_list_processed, cio_list_failed, time_elapsed_ms)
+    VALUES 
+    ('running', %s, %s, %s, %s, %s, %s, %s, 0)
+    RETURNING id
+    """
+
+
+end_all_rerun_ai_cmd = """
+    UPDATE rerun_ai_history 
+    SET state = 'stopped'
+    WHERE state = 'running'
+    RETURNING id
+    """
+
+update_cio_current_rerun_ai = """
+    UPDATE rerun_ai_history 
+    SET cio_current = %s
+    WHERE id = %s
+    RETURNING id, state
+    """
+
+addto_timer_rerun_ai = """
+    UPDATE rerun_ai_history 
+    SET time_elapsed_ms = time_elapsed_ms + %s, cio_list_processed = array_append(cio_list_processed, %s)
+    WHERE id = %s
+    """
+
+
+set_state_rerun_ai = """
+    UPDATE rerun_ai_history 
+    SET state = %s
+    WHERE id = %s
+    """
+
+def query_rerun_ai_latest(cur):
+    cmd = """
+    SELECT id, state, description, cognito_user_id, cognito_user_fullname, cio_current, cio_list_all,
+        cio_list_processed, cio_list_failed, time_elapsed_ms, created_at, updated_at
+    FROM rerun_ai_history
+    WHERE 
+    ORDER BY id DESC LIMIT 1
+    """
+    cur.execute(cmd)
+    return cur.fetchall()
+
+
+def parse_rerun_ai_results(response):
+    resp_list = []
+    for resp_tuple in response:
+        resp = {}
+
+        resp['id'] = resp_tuple[0]
+        resp['state'] = resp_tuple[1]
+        resp['description'] = resp_tuple[2]
+        resp['cognito_user_id'] = resp_tuple[3]
+        resp['cognito_user_fullname'] = resp_tuple[4]
+        resp['cio_current'] = resp_tuple[5]
+        resp['cio_list_all'] = resp_tuple[6]
+        resp['cio_list_processed'] = resp_tuple[7]
+        resp['cio_list_failed'] = resp_tuple[8]
+        resp['time_elapsed_ms'] = resp_tuple[9]
+        resp['created_at'] = datetime_to_json(resp_tuple[10])
+        resp['updated_at'] = datetime_to_json(resp_tuple[11])
+
+        resp_list.append(resp)
+    return resp_list
+
+
+def datetime_to_json(obj):
+    if isinstance(obj, (datetime, date)):
+        return obj.strftime("%Y-%m-%d %H:%M:%S")
+    else:
+        return obj
+
+
+def query_rerun_ai_history(cur):
+    cmd = """
+    SELECT id, state, description, cognito_user_id, cognito_user_fullname, cio_current, cio_list_all, cio_list_processed,
+        cio_list_failed, time_elapsed_ms, created_at, updated_at
+    FROM rerun_ai_history
+    ORDER BY id DESC
+    """
+    cur.execute(cmd)
+    return cur.fetchall()
 
 
 def convert2CM(height):
@@ -578,29 +672,82 @@ def parse_and_run_rule_processing(data_df, cognito_user_id, cognito_user_fullnam
         return error_handler(cio, "RuleProcessingLambda - Exception Type: %s" % type(error))
 
 
-def rerun_rule_processing_all(cognito_user_id, cognito_user_fullname):
-    logger.info('rerun_rule_processing_all')
+def rerun_rule_processing_all(cognito_user_id, cognito_user_fullname, rerun_all_id=0):
+    logger.info(f'rerun_rule_processing_all: {rerun_all_id}')
 
+    results = []
+    ai_row_id = 0
     with psql.conn.cursor() as cur:
-        response = query_results_all(cur)
-        results = parse_response_results(response)
+        if rerun_all_id == 0:
+            # NEW
+            resp_array_ids = []
+            response = query_results_all(cur, ['labelled_priority'])
+            logger.info(response)
+            results = parse_response_results(response, resp_array_ids)
+            logger.info(results)
+
+            cur_cio = ''
+            if len(resp_array_ids):
+                cur_cio = resp_array_ids[0]
+
+            # First, end all other sessions
+            cur.execute(end_all_rerun_ai_cmd)
+
+            add_params = ('', cognito_user_id, cognito_user_fullname, cur_cio, resp_array_ids, [], [])
+            cur.execute(add_rerun_ai_cmd, add_params)
+            add_resp = cur.fetchall()
+            ai_row_id = add_resp[0][0]
+            psql.commit()
+        else:
+            # Continue
+            rerun_ai_latest = query_rerun_ai_latest(cur)
+            logger.info(rerun_ai_latest)
+            rerun_ai_latest = parse_rerun_ai_results(rerun_ai_latest)
+            logger.info(rerun_ai_latest)
+            ai_row_id = rerun_ai_latest['id']
 
         # logger.info(results)
         total = len(results)
         processed = 0
+        stopped = False
         for result in results:
-            logger.info('rerun_all: #%s of %s' % (processed, total))
-            logger.info(result)
+            start = time.time_ns()
 
-            # if processed > 0:
-            #     break
+            logger.info(result)
+            cio_id = result['id']
+            logger.info('rerun_all: #%s of %s - cio: %s' % (processed, total, cio_id))
+
+            logger.info(ai_row_id)
+            cur.execute(update_cio_current_rerun_ai, (cio_id, ai_row_id))
+            psql.commit()
+            update_resp = cur.fetchall()
+            logger.info(update_resp)
+            cur_state = update_resp[0][1]
+            if cur_state == 'stopped':
+                logger.info('-------rerun_all: stopped!!')
+                stopped = True
+                break
+
             try:
-                parse_response = parse_and_run_rule_processing(result['request_json'],
-                                                               cognito_user_id, cognito_user_fullname, False)
-                processed += 1
+                parse_and_run_rule_processing(result['request_json'], cognito_user_id, cognito_user_fullname, False)
             except Exception as error:
                 logger.info('rerun_rule_processing_all')
                 logger.info(error)
+
+            processed += 1
+            end = time.time_ns()
+            elapsed_ms = (end - start) / 1000000
+            logger.info(elapsed_ms)
+
+            cur.execute(addto_timer_rerun_ai, (elapsed_ms, cio_id, ai_row_id))
+            psql.commit()
+            #
+            # processed += 1
+
+        if stopped is False:
+            cur.execute(set_state_rerun_ai, ('done', ai_row_id))
+            cur.execute(update_cio_current_rerun_ai, ('', ai_row_id))
+            psql.commit()
 
         return {
             'processed': processed,
@@ -680,6 +827,18 @@ def rerun_rule_processing_single(cio_id, cognito_user_id, cognito_user_fullname)
             #     return error_handler(cio_id, "QueryRulesLambdaName - Exception Type: %s" % type(error))
 
 
+def get_rerun_history():
+    with psql.conn.cursor() as cur:
+        return parse_rerun_ai_results(query_rerun_ai_history(cur))
+    return []
+
+
+def stop_rerun_ai():
+    with psql.conn.cursor() as cur:
+        cur.execute(end_all_rerun_ai_cmd)
+        psql.commit()
+    return
+
 def load_db_data():
     logger.info('load_db_data')
 
@@ -733,6 +892,10 @@ def handler(event, context):
 
     load_db_data()
 
+    resp_dict = {'result': True,
+                 'headers': headers,
+                 'data': []}
+
     if 'operation' in data_df:
         rest_cmd = data_df['operation']
         logger.info('------- REST: ' + rest_cmd)
@@ -740,7 +903,12 @@ def handler(event, context):
         if rest_cmd == 'RERUN_ALL':
             logger.info('RERUN_ALL')
 
-            results = rerun_rule_processing_all(cognito_user_id, cognito_user_fullname)
+            rerun_all_id = 0
+            if 'rerun_all_id' in data_df and data_df['rerun_all_id']:
+                rerun_all_id = data_df["rerun_all_id"]
+            logger.info(rerun_all_id)
+
+            results = rerun_rule_processing_all(cognito_user_id, cognito_user_fullname, rerun_all_id)
             logger.info('RERUN_ALL FINAL result:')
             logger.info(results)
             return {**results, 'headers': headers}
@@ -753,6 +921,18 @@ def handler(event, context):
                 return param_error
             cio_id = data_df['CIO_ID']
             return rerun_rule_processing_single(cio_id, cognito_user_id, cognito_user_fullname)
+        elif rest_cmd == 'GET_RERUN_STATUS':
+            logger.info('GET_RERUN_STATUS')
+            return []
+        elif rest_cmd == 'GET_RERUN_HISTORY':
+            logger.info('GET_RERUN_HISTORY')
+            resp_dict['data'] = get_rerun_history()
+            return resp_dict
+        elif rest_cmd == 'STOP_RERUN_AI':
+            logger.info('STOP_RERUN_AI')
+            stop_rerun_ai()
+            resp_dict['data'] = get_rerun_history()
+            return resp_dict
     else:
         logger.info('------- REST: new request')
         return parse_and_run_rule_processing(data_df, cognito_user_id, cognito_user_fullname)

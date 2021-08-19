@@ -17,6 +17,9 @@ import {
   REMOVE_FAILURE,
   REMOVE_SUCCESS,
   REMOVE_STARTED,
+  AI_RERUN_STATUS_STARTED,
+  AI_RERUN_STATUS_FAILURE,
+  AI_RERUN_STATUS_SUCCESS,
   AI_RERUN_STARTED,
   AI_RERUN_SUCCESS,
   AI_RERUN_ALL_SUCCESS,
@@ -152,6 +155,26 @@ export const removeFailure = (error) => {
 };
 
 // AI_RERUN
+export const aiStatusStarted = () => {
+  return {
+    type: AI_RERUN_STATUS_STARTED,
+  };
+};
+
+export const aiStatusSuccess = (response) => {
+  return {
+    type: AI_RERUN_STATUS_SUCCESS,
+    response,
+  };
+};
+
+export const aiStatusFailure = (error) => {
+  return {
+    type: AI_RERUN_STATUS_FAILURE,
+    error,
+  };
+};
+
 export const aiRerunStarted = () => {
   return {
     type: AI_RERUN_STARTED,
@@ -273,6 +296,45 @@ export const getStatistics = (startDate, endDate) => {
   };
 };
 
+export const getRerunAIHistory = () => {
+  return async (dispatch) => {
+    dispatch(aiStatusStarted());
+
+    // dispatch(getStatisticsSuccess(SampleDataStatistics));
+    let url = `${process.env.REACT_APP_HTTP_API_URL}/parser`;
+    axios
+      .post(url, {
+        operation: "GET_RERUN_HISTORY",
+      })
+      .then((response) => {
+        dispatch(aiStatusSuccess(response.data));
+      })
+      .catch((e) => {
+        dispatch(aiStatusFailure(e));
+      });
+  };
+};
+
+export const stopRerunAI = (id) => {
+  return async (dispatch) => {
+    dispatch(aiStatusStarted());
+
+    // dispatch(getStatisticsSuccess(SampleDataStatistics));
+    let url = `${process.env.REACT_APP_HTTP_API_URL}/parser`;
+    axios
+      .post(url, {
+        operation: "STOP_RERUN_AI",
+        id: id,
+      })
+      .then((response) => {
+        dispatch(aiStatusSuccess(response.data));
+      })
+      .catch((e) => {
+        dispatch(aiStatusFailure(e));
+      });
+  };
+};
+
 export const modifyResult = (state) => {
   return (dispatch) => {
     dispatch(modifyResultStarted());
@@ -336,6 +398,7 @@ export const removeRequest = (
 
 export const rerunAIAll = (
   pageIndex,
+  rerunAISessionID,
   cognito_user_id = "",
   cognito_user_fullname = ""
 ) => {
@@ -343,6 +406,7 @@ export const rerunAIAll = (
     dispatch(aiRerunStarted());
     console.log("rerunAIAll");
     console.log(pageIndex);
+    console.log(rerunAISessionID);
 
     try {
       // Re-run AI for ALL results
@@ -350,6 +414,7 @@ export const rerunAIAll = (
         `${process.env.REACT_APP_HTTP_API_URL}/parser`,
         {
           operation: "RERUN_ALL",
+          rerun_all_id: rerunAISessionID,
           cognito_user_fullname,
           cognito_user_id,
         }

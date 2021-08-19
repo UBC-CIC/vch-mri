@@ -17,6 +17,9 @@ import {
   REMOVE_FAILURE,
   REMOVE_SUCCESS,
   REMOVE_STARTED,
+  AI_RERUN_STATUS_STARTED,
+  AI_RERUN_STATUS_FAILURE,
+  AI_RERUN_STATUS_SUCCESS,
   AI_RERUN_STARTED,
   AI_RERUN_SUCCESS,
   AI_RERUN_ALL_SUCCESS,
@@ -50,6 +53,7 @@ export const results = (state = initialState, action) => {
     case MODIFY_RESULT_STARTED:
     case AI_RERUN_STARTED:
     case REMOVE_STARTED:
+    case AI_RERUN_STATUS_STARTED:
       return {
         ...state,
         loading: true,
@@ -83,6 +87,12 @@ export const results = (state = initialState, action) => {
       return {
         ...state,
         statistics: action.response.data,
+        loading: false,
+      };
+    case AI_RERUN_STATUS_SUCCESS:
+      return {
+        ...state,
+        rerunAIHistory: action.response.data,
         loading: false,
       };
     case MODIFY_RESULT_SUCCESS:
@@ -182,6 +192,7 @@ export const results = (state = initialState, action) => {
     case MODIFY_RESULT_FAILURE:
     case AI_RERUN_FAILURE:
     case REMOVE_FAILURE:
+    case AI_RERUN_STATUS_FAILURE:
       return {
         ...state,
         error: action.error,
