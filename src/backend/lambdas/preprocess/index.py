@@ -725,7 +725,6 @@ def rerun_rule_processing_all(cognito_user_id, cognito_user_fullname, rerun_all_
             results = parse_response_results(remaining_reqs)
             logger.info(results)
             cur.execute(set_state_rerun_ai, ('running', ai_row_id))
-            return
 
         # logger.info(results)
         total = len(results)

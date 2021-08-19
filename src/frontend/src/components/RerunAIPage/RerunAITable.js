@@ -102,7 +102,7 @@ class RerunAITable extends React.Component {
             <Table.HeaderCell>List</Table.HeaderCell>
             <Table.HeaderCell>Desc</Table.HeaderCell>
             <Table.HeaderCell>User</Table.HeaderCell>
-            <Table.HeaderCell>Elapsed Time (ms)</Table.HeaderCell>
+            <Table.HeaderCell>Total Time (ms)</Table.HeaderCell>
             <Table.HeaderCell>Created</Table.HeaderCell>
             <Table.HeaderCell>Modified </Table.HeaderCell>
           </Table.Row>
