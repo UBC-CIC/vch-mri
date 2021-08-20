@@ -2,6 +2,7 @@
 \c rules
 
 DROP TABLE IF EXISTS request_history;
+DROP TABLE IF EXISTS rule_history;
 DROP TABLE IF EXISTS data_request;
 DROP TABLE IF EXISTS mri_rules;
 DROP TABLE IF EXISTS mri_rules2;
@@ -98,6 +99,22 @@ CREATE TABLE IF NOT EXISTS request_history (
     mod_info JSON,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     FOREIGN KEY (id_data_request) REFERENCES data_request(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS rule_history ( 
+    id SERIAL PRIMARY KEY,
+    id_rule INT,
+    description VARCHAR,
+    cognito_user_id VARCHAR,
+    cognito_user_fullname VARCHAR,
+    active BOOLEAN DEFAULT TRUE
+    body_part VARCHAR(32) NOT NULL,
+    info TEXT,
+    priority VARCHAR(3),
+    contrast BOOLEAN,
+    specialty_tags VARCHAR(256),
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    FOREIGN KEY (id_rule) REFERENCES mri_rules2(id) ON DELETE CASCADE
 );
 
 -- Trigger for data_request

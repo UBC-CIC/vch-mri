@@ -2,6 +2,9 @@ import {
   GET_MRI_RULES_FAILURE,
   GET_MRI_RULES_STARTED,
   GET_MRI_RULES_SUCCESS,
+  GET_MRI_RULES_HISTORY_FAILURE,
+  GET_MRI_RULES_HISTORY_STARTED,
+  GET_MRI_RULES_HISTORY_SUCCESS,
   ADD_MRI_RULE_FAILURE,
   ADD_MRI_RULE_STARTED,
   ADD_MRI_RULE_SUCCESS,
@@ -20,6 +23,7 @@ import _ from "lodash";
 
 let initialState = {
   rulesList: [],
+  rulesHistoryList: [],
   rulesListDropdown: [],
   loading: false,
   success: "",
@@ -35,6 +39,7 @@ export const rules = (state = initialState, action) => {
     case MODIFY_MRI_RULE_STARTED:
     case TOGGLE_ACTIVE_RULE_STARTED:
     case DELETE_MRI_RULE_STARTED:
+    case GET_MRI_RULES_HISTORY_STARTED:
       return {
         ...state,
         loading: true,
@@ -60,6 +65,15 @@ export const rules = (state = initialState, action) => {
         ...state,
         rulesListDropdown: rulesListDropdown,
         rulesList: action.response.data,
+        loading: false,
+        column: null,
+        direction: null,
+      };
+    case GET_MRI_RULES_HISTORY_SUCCESS:
+      const rulesHistoryList = action.response.data;
+      return {
+        ...state,
+        rulesHistoryList: rulesHistoryList,
         loading: false,
         column: null,
         direction: null,
@@ -107,6 +121,7 @@ export const rules = (state = initialState, action) => {
     case MODIFY_MRI_RULE_FAILURE:
     case TOGGLE_ACTIVE_RULE_FAILURE:
     case DELETE_MRI_RULE_FAILURE:
+    case GET_MRI_RULES_HISTORY_FAILURE:
       return {
         ...state,
         error: action.error,

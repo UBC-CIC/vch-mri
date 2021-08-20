@@ -1,6 +1,7 @@
 import React from "react";
 import RulesTable from "./RulesTable";
 import { Header, Button, Icon } from "semantic-ui-react";
+import RulesHistoryView from "./RulesHistoryView";
 
 class RulesPage extends React.Component {
   constructor(props) {
@@ -20,6 +21,7 @@ class RulesPage extends React.Component {
         <Header as="h1" textAlign="left" style={{ fontSize: "2em" }}>
           Rules
         </Header>
+        <RulesHistoryView />
         <Button
           style={{ margin: "1em 0em 1em 1em" }}
           floated="right"

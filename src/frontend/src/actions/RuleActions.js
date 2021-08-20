@@ -3,6 +3,9 @@ import {
   GET_MRI_RULES_FAILURE,
   GET_MRI_RULES_STARTED,
   GET_MRI_RULES_SUCCESS,
+  GET_MRI_RULES_HISTORY_FAILURE,
+  GET_MRI_RULES_HISTORY_STARTED,
+  GET_MRI_RULES_HISTORY_SUCCESS,
   ADD_MRI_RULE_FAILURE,
   ADD_MRI_RULE_STARTED,
   ADD_MRI_RULE_SUCCESS,
@@ -33,6 +36,26 @@ export const getMRIRulesSuccess = (response) => {
 export const getMRIRulesFailure = (error) => {
   return {
     type: GET_MRI_RULES_FAILURE,
+    error,
+  };
+};
+
+export const getMRIRulesHistoryStarted = () => {
+  return {
+    type: GET_MRI_RULES_HISTORY_STARTED,
+  };
+};
+
+export const getMRIRulesHistorySuccess = (response) => {
+  return {
+    type: GET_MRI_RULES_HISTORY_SUCCESS,
+    response,
+  };
+};
+
+export const getMRIRulesHistoryFailure = (error) => {
+  return {
+    type: GET_MRI_RULES_HISTORY_FAILURE,
     error,
   };
 };
@@ -118,7 +141,32 @@ export const getMRIRules = () => {
   };
 };
 
-export const addMRIRule = (state) => {
+export const getMRIRulesHistory = () => {
+  return (dispatch) => {
+    console.log("getMRIRulesHistory");
+    dispatch(getMRIRulesHistoryStarted());
+
+    // TODO for sample data local testing instead of waiting Lambda containers to load ~5secs
+    // dispatch(getMRIRulesSuccess(SampleData));
+    axios
+      .post(`${process.env.REACT_APP_HTTP_API_URL}/rules`, {
+        operation: "GET_HISTORY",
+        count: -1,
+      })
+      .then((response) => {
+        dispatch(getMRIRulesHistorySuccess(response.data));
+      })
+      .catch((e) => {
+        dispatch(getMRIRulesHistoryFailure(e));
+      });
+  };
+};
+
+export const addMRIRule = (
+  state,
+  cognito_user_id = "",
+  cognito_user_fullname = ""
+) => {
   return (dispatch) => {
     dispatch(addMRIRuleStarted());
 
@@ -126,6 +174,8 @@ export const addMRIRule = (state) => {
       .post(`${process.env.REACT_APP_HTTP_API_URL}/rules`, {
         operation: "ADD",
         values: [state],
+        cognito_user_fullname,
+        cognito_user_id,
       })
       .then((response) => {
         dispatch(addMRIRuleSuccess(response.data));
@@ -136,7 +186,11 @@ export const addMRIRule = (state) => {
   };
 };
 
-export const modifyMRIRule = (state) => {
+export const modifyMRIRule = (
+  state,
+  cognito_user_id = "",
+  cognito_user_fullname = ""
+) => {
   return (dispatch) => {
     dispatch(modifyMRIRuleStarted());
 
@@ -144,6 +198,8 @@ export const modifyMRIRule = (state) => {
       .post(`${process.env.REACT_APP_HTTP_API_URL}/rules`, {
         operation: "UPDATE",
         values: [state],
+        cognito_user_fullname,
+        cognito_user_id,
       })
       .then((response) => {
         dispatch(modifyMRIRuleSuccess(response.data));
@@ -154,7 +210,11 @@ export const modifyMRIRule = (state) => {
   };
 };
 
-export const toggleMRIRule = (state) => {
+export const toggleMRIRule = (
+  state,
+  cognito_user_id = "",
+  cognito_user_fullname = ""
+) => {
   return (dispatch) => {
     dispatch(toggleActiveRuleStarted());
 
@@ -162,6 +222,8 @@ export const toggleMRIRule = (state) => {
       .post(`${process.env.REACT_APP_HTTP_API_URL}/rules`, {
         operation: state.active ? "ACTIVATE" : "DEACTIVATE",
         id: state.id,
+        cognito_user_fullname,
+        cognito_user_id,
       })
       .then((response) => {
         dispatch(toggleActiveRuleSuccess(state));

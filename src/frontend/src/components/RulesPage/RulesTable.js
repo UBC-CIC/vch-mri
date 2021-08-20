@@ -2,7 +2,11 @@ import React from "react";
 import { connect } from "react-redux";
 // import { Button, Checkbox, Icon, Table } from "semantic-ui-react";
 import { Table } from "semantic-ui-react";
-import { getMRIRules, changeRuleSort } from "../../actions/RuleActions";
+import {
+  getMRIRules,
+  getMRIRulesHistory,
+  changeRuleSort,
+} from "../../actions/RuleActions";
 import { getSpecialtyExams } from "../../actions/SpecialtyExamActions";
 // import Loader from "../Loader";
 import ModifyRuleForm from "./ModifyRuleForm";
@@ -14,6 +18,7 @@ class RulesTable extends React.Component {
     // true - already loaded by parent
     if (!this.props.rulesLoaded) {
       this.props.getMRIRules();
+      this.props.getMRIRulesHistory();
       this.props.getSpecialtyExams();
     }
   }
@@ -27,8 +32,10 @@ class RulesTable extends React.Component {
   }
 
   render() {
-    // console.log("RulesTable render");
-    // console.log(this.props.specialtyExam);
+    console.log("RulesTable render");
+    console.log(this.props.rules);
+    console.log(this.props.rulesHistoryList);
+    console.log(this.props.specialtyExam);
     return (
       <Table celled compact sortable>
         <Table.Header fullWidth>
@@ -179,6 +186,7 @@ class RulesTable extends React.Component {
 const mapStateToProps = (state) => {
   return {
     rules: state.rules.rulesList,
+    rulesHistoryList: state.rules.rulesHistoryList,
     specialtyExam: state.specialtyExam.specialtyExamList,
     loading: state.rules.loading && state.specialtyExam.loading,
     error: state.rules.error,
@@ -190,6 +198,7 @@ const mapStateToProps = (state) => {
 
 export default connect(mapStateToProps, {
   getMRIRules,
+  getMRIRulesHistory,
   changeRuleSort,
   getSpecialtyExams,
 })(RulesTable);

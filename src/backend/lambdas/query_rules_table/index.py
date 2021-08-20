@@ -5,6 +5,7 @@ from botocore import UNSIGNED
 import logging
 import json
 import os
+from datetime import date, datetime, timedelta
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
@@ -21,7 +22,7 @@ def update_bodypart_tokens(cur):
     cur.execute(cmd)
 
 
-def queryRules(cur, count):
+def queryRules(cur, count=-1):
     cmd = """
     SELECT id, body_part, contrast, priority, info, active, specialty_tags
     FROM mri_rules2
@@ -40,7 +41,7 @@ def queryRulesID(cur, id):
     FROM mri_rules2
     WHERE id = %s
     """
-    logger.info("Getting Rule ID: " + id)
+    logger.info("Getting Rule ID: %s", id)
     cur.execute(cmd, [id])
     logger.info(id)
     return cur.fetchall()
@@ -70,7 +71,39 @@ def addRule(cur, values):
     return ret
 
 
-def updateRule(cur, values):
+def update_rule(cur, values, changed_array):
+    # Get current rule
+    value = values[0]
+    id = value['id']
+    response = queryRulesID(cur, id)
+    rule_list = parseResponse(response)
+    logger.info(rule_list)
+    rule = rule_list[0]
+
+    logger.info(rule)
+
+    logger.info(value)
+    if value['contrast'] == 't':
+        value['contrast'] = True
+    if value['contrast'] == 'f':
+        value['contrast'] = False
+
+    if rule['body_part'] != value['body_part']:
+        changed_array.append('body_part')
+    if rule['info'] != value['info']:
+        changed_array.append('info')
+    if rule['priority'] != value['priority']:
+        changed_array.append('priority')
+    if rule['contrast'] != value['contrast']:
+        changed_array.append('contrast')
+    if rule['specialty_tags'] != value['specialty_tags']:
+        changed_array.append('specialty_tags')
+    logger.info(changed_array)
+
+    return update_rule_db(cur, values)
+
+
+def update_rule_db(cur, values):
     logger.info('updateRule')
     cmd = """
     UPDATE mri_rules2 SET body_part = new_body_part, info = new_info, priority = new_priority,
@@ -99,14 +132,83 @@ def updateRule(cur, values):
     cur.execute(cmd, param_values)
     ret = cur.fetchall()
     update_bodypart_tokens(cur)
+
     return ret
 
 
-def setRuleActivity(cur, id, active):
+def set_rule_active(cur, id, active):
     cmd = """
     UPDATE mri_rules2 SET active = %s
-    WHERE id = %s"""
+    WHERE id = %s
+    RETURNING mri_rules2.id, body_part, contrast, priority, info, active, specialty_tags
+    """
     cur.execute(cmd, (active, id))
+    ret = cur.fetchall()
+    return ret
+
+
+def query_rules_history_db(cur, count=-1):
+    # logger.info('query_rules_history_db')
+    cmd = """
+    SELECT id_rule, description, cognito_user_id, cognito_user_fullname,
+        active, body_part, info, priority, contrast, specialty_tags, created_at
+    FROM rule_history
+    ORDER BY created_at DESC
+    """
+    cur.execute(cmd)
+    if count == -1:
+        return parse_db_rules_history(cur.fetchall())
+    else:
+        return parse_db_rules_history(cur.fetchmany(count))
+
+
+def query_rule_id_history_db(cur, rule_id):
+    # logger.info('query_rule_id_history_db')
+    cmd = """
+    SELECT id_rule, description, cognito_user_id, cognito_user_fullname,
+        active, body_part, info, priority, contrast, specialty_tags, created_at
+    FROM rule_history
+    WHERE id = %s
+    ORDER BY created_at DESC
+    """
+    logger.info("Getting History for Rule ID: %s", rule_id)
+    cur.execute(cmd, [rule_id])
+    logger.info(id)
+    return parse_db_rules_history(cur.fetchall())
+
+
+def parse_db_rules_history(response):
+    # logger.info('parse_db_rules_history')
+    # logger.info(response)
+    resp_list = []
+    for resp_tuple in response:
+        resp = {}
+        resp['id_rule'] = resp_tuple[0]
+        resp['description'] = resp_tuple[1]
+        resp['cognito_user_id'] = resp_tuple[2]
+        resp['cognito_user_fullname'] = resp_tuple[3]
+        resp['active'] = resp_tuple[4]
+        resp['body_part'] = resp_tuple[5]
+        resp['info'] = resp_tuple[6]
+        resp['priority'] = resp_tuple[7]
+        resp['contrast'] = resp_tuple[8]
+        resp['specialty_tags'] = resp_tuple[9]
+        resp['created_at'] = datetime_to_json(resp_tuple[10])
+        resp_list.append(resp)
+    return resp_list
+
+
+def insert_rule_history(cur, data, description, cognito_user_id, cognito_user_fullname):
+    logger.info('insert_rule_history')
+    cmd = """
+    INSERT INTO rule_history(id_rule, description, cognito_user_id, cognito_user_fullname,
+        active, body_part, info, priority, contrast, specialty_tags)
+    VALUES 
+    (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+    """
+    cur.execute(cmd, (data['id'], description, cognito_user_id, cognito_user_fullname,
+                data['active'], data['body_part'], data['info'], data['priority'], data['contrast'], data['specialty_tags']))
+    return
 
 
 def applyWeight():
@@ -167,6 +269,11 @@ def add_whitespace_spec_chars(value):
     # processed = processed.replace("\\", " \\ ")
     return value
 
+def datetime_to_json(obj):
+    if isinstance(obj, (datetime, date)):
+        return obj.strftime("%Y-%m-%d %H:%M:%S")
+    else:
+        return obj
 
 def handler(event, context):
     logger.info(event)
@@ -186,8 +293,21 @@ def handler(event, context):
         'Access-Control-Allow-Origin': 'http://localhost:3000',
         'Access-Control-Allow-Methods': 'OPTIONS,POST,GET'
     }
+
+    ##########################################
+    # TODO: Parameter validation
+    cognito_user_id = ''
+    if 'cognito_user_id' in data and data['cognito_user_id']:
+        cognito_user_id = data["cognito_user_id"]
+        logger.info(cognito_user_id)
+    cognito_user_fullname = ''
+    if 'cognito_user_fullname' in data and data['cognito_user_fullname']:
+        cognito_user_fullname = data["cognito_user_fullname"]
+        logger.info(cognito_user_fullname)
+
     rest_cmd = data['operation']
     logger.info('------- REST: ' + rest_cmd)
+    description = rest_cmd
     with psql.conn.cursor() as cur:
         try:
             if rest_cmd == 'GET':
@@ -202,17 +322,31 @@ def handler(event, context):
                 resp_dict['data'] = resp_list
                 return resp_dict
 
+            if rest_cmd == 'GET_HISTORY':
+                if 'id' in data.keys():
+                    resp_list = query_rule_id_history_db(cur, data['id'])
+                else:
+                    resp_list = query_rules_history_db(cur, data['count'])
+
+                resp_dict = {'result': True, 'headers': headers, 'data': []}
+                resp_dict['data'] = resp_list
+                return resp_dict
+
             elif rest_cmd == 'ADD':
                 response = addRule(cur, data['values'])
-                resp_list = parseResponse(response)
             elif rest_cmd == 'UPDATE':
-                response = updateRule(cur, data['values'])
-                resp_list = parseResponse(response)
+                changed_array = []
+                response = update_rule(cur, data['values'], changed_array)
+                description += 'D: ' + ', '.join(changed_array)
             elif rest_cmd == 'DEACTIVATE':
-                setRuleActivity(cur, data['id'], 'f')
+                response = set_rule_active(cur, data['id'], 'f')
             elif rest_cmd == 'ACTIVATE':
-                setRuleActivity(cur, data['id'], 't')
+                response = set_rule_active(cur, data['id'], 't')
+
+            resp_list = parseResponse(response)
+            insert_rule_history(cur, resp_list[0], description, cognito_user_id, cognito_user_fullname)
             psql.commit()
+
             if rest_cmd == 'ADD' or rest_cmd == 'UPDATE':
                 logger.info("Applying weight")
                 applyWeight()

@@ -3,11 +3,13 @@ import { connect } from "react-redux";
 import { Table, Checkbox } from "semantic-ui-react";
 import ModifyRuleForm from "./ModifyRuleForm";
 import { toggleMRIRule, getMRIRules } from "../../actions/RuleActions";
+import { getCognitoUser } from "../../helpers/Cognito";
 
 class RulesTableRow extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { active: this.props.active };
+    let storedUser = getCognitoUser();
+    this.state = { active: this.props.active, storedUser: storedUser };
 
     this.handleToggle = this.handleToggle.bind(this);
   }
@@ -20,10 +22,14 @@ class RulesTableRow extends React.Component {
     this.setState(
       (prevState) => ({ active: !prevState.active }),
       () =>
-        this.props.toggleMRIRule({
-          id: this.props.id,
-          active: this.state.active,
-        })
+        this.props.toggleMRIRule(
+          {
+            id: this.props.id,
+            active: this.state.active,
+          },
+          this.state.storedUser.userID,
+          this.state.storedUser.userName
+        )
     );
   }
 

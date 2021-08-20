@@ -14,6 +14,7 @@ import {
   getMRIRules,
 } from "../../actions/RuleActions";
 import { connect } from "react-redux";
+import { getCognitoUser } from "../../helpers/Cognito";
 
 const initialState = {
   open: false,
@@ -70,10 +71,10 @@ class ModifyRuleForm extends React.Component {
   }
 
   handleSelectChangeTags(e, { name, value }) {
-    console.log("handleSelectChangeTag");
-    console.log(e);
-    console.log(name);
-    console.log(value);
+    // console.log("handleSelectChangeTag");
+    // console.log(e);
+    // console.log(name);
+    // console.log(value);
     const tags = value.join(" / ").trim();
     console.log(tags);
 
@@ -82,24 +83,29 @@ class ModifyRuleForm extends React.Component {
 
   handleSubmit(e) {
     e.preventDefault();
+
+    const storedUser = getCognitoUser();
+    const state_param = {
+      id: this.state.id,
+      body_part: this.state.body_part.trim(),
+      info: this.state.info.trim(),
+      priority: this.state.priority,
+      contrast: this.state.contrast,
+      specialty_tags: this.state.specialty_tags,
+    };
     if (this.state.addRuleMode) {
-      this.props.addMRIRule({
-        body_part: this.state.body_part.trim(),
-        info: this.state.info.trim(),
-        priority: this.state.priority,
-        contrast: this.state.contrast,
-        specialty_tags: this.state.specialty_tags,
-      });
+      this.props.addMRIRule(
+        state_param,
+        storedUser.userID,
+        storedUser.userName
+      );
       this.setState(initialState);
     } else {
-      this.props.modifyMRIRule({
-        id: this.state.id,
-        body_part: this.state.body_part.trim(),
-        info: this.state.info.trim(),
-        priority: this.state.priority,
-        contrast: this.state.contrast,
-        specialty_tags: this.state.specialty_tags,
-      });
+      this.props.modifyMRIRule(
+        state_param,
+        storedUser.userID,
+        storedUser.userName
+      );
       this.setState({ open: false });
     }
   }

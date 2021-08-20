@@ -10,6 +10,7 @@ import {
 } from "semantic-ui-react";
 import { addMRIRule, getMRIRules } from "../../actions/RuleActions";
 import { connect } from "react-redux";
+import { getCognitoUser } from "../../helpers/Cognito";
 
 const initialState = {
   addRuleMode: true,
@@ -44,10 +45,10 @@ class AddRuleForm extends React.Component {
   }
 
   handleSelectChangeTags(e, { name, value }) {
-    console.log("handleSelectChangeTag");
-    console.log(e);
-    console.log(name);
-    console.log(value);
+    // console.log("handleSelectChangeTag");
+    // console.log(e);
+    // console.log(name);
+    // console.log(value);
     const tags = value.join(" / ").trim();
     console.log(tags);
 
@@ -56,13 +57,18 @@ class AddRuleForm extends React.Component {
 
   handleSubmit(e) {
     e.preventDefault();
-    this.props.addMRIRule({
-      body_part: this.state.body_part.trim(),
-      info: this.state.info.trim(),
-      priority: this.state.priority,
-      contrast: this.state.contrast,
-      specialty_tags: this.state.specialty_tags,
-    });
+    const storedUser = getCognitoUser();
+    this.props.addMRIRule(
+      {
+        body_part: this.state.body_part.trim(),
+        info: this.state.info.trim(),
+        priority: this.state.priority,
+        contrast: this.state.contrast,
+        specialty_tags: this.state.specialty_tags,
+      },
+      storedUser.userID,
+      storedUser.userName
+    );
     this.setState(initialState);
   }
 
