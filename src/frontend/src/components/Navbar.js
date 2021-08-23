@@ -1,5 +1,5 @@
 import React from "react";
-import logo from "../SapienML_Watermark-03-142pxX60px.png";
+import logo from "../SapienML_Watermark-03.png";
 import { Menu, Segment, Dropdown } from "semantic-ui-react";
 import { Auth } from "aws-amplify";
 import { NavLink, withRouter } from "react-router-dom";
