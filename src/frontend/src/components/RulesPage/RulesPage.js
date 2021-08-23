@@ -21,7 +21,6 @@ class RulesPage extends React.Component {
         <Header as="h1" textAlign="left" style={{ fontSize: "2em" }}>
           Rules
         </Header>
-        <RulesHistoryView />
         <Button
           style={{ margin: "1em 0em 1em 1em" }}
           floated="right"
@@ -33,6 +32,7 @@ class RulesPage extends React.Component {
         >
           <Icon name="arrow circle right" /> Toggle Inactive
         </Button>
+        <RulesHistoryView />
         <RulesTable
           //   labelling={this.props.labelling}
           labelling={false}

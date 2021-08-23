@@ -2,11 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 // import { Button, Checkbox, Icon, Table } from "semantic-ui-react";
 import { Table } from "semantic-ui-react";
-import {
-  getMRIRules,
-  getMRIRulesHistory,
-  changeRuleSort,
-} from "../../actions/RuleActions";
+import { getMRIRules, changeRuleSort } from "../../actions/RuleActions";
 import { getSpecialtyExams } from "../../actions/SpecialtyExamActions";
 // import Loader from "../Loader";
 import ModifyRuleForm from "./ModifyRuleForm";
@@ -18,7 +14,6 @@ class RulesTable extends React.Component {
     // true - already loaded by parent
     if (!this.props.rulesLoaded) {
       this.props.getMRIRules();
-      this.props.getMRIRulesHistory();
       this.props.getSpecialtyExams();
     }
   }
@@ -198,7 +193,6 @@ const mapStateToProps = (state) => {
 
 export default connect(mapStateToProps, {
   getMRIRules,
-  getMRIRulesHistory,
   changeRuleSort,
   getSpecialtyExams,
 })(RulesTable);

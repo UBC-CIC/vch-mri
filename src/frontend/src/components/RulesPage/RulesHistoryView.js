@@ -9,6 +9,7 @@ import {
 } from "semantic-ui-react";
 import { connect } from "react-redux";
 import RulesHistoryViewRow from "./RulesHistoryViewRow";
+import { getMRIRulesHistory } from "../../actions/RuleActions";
 
 class ResultsHistoryView extends React.Component {
   constructor(props) {
@@ -17,7 +18,15 @@ class ResultsHistoryView extends React.Component {
     this.state = {
       open: false,
     };
+
+    this.onOpen = this.onOpen.bind(this);
   }
+
+  onOpen = () => {
+    console.log("RulesHistoryViewRow onOpen");
+    this.props.getMRIRulesHistory();
+    this.setState({ open: true });
+  };
 
   render() {
     console.log("RulesHistoryViewRow render");
@@ -29,16 +38,27 @@ class ResultsHistoryView extends React.Component {
         // style={{ maxWidth: "100%" }}
         size="large"
         onClose={() => this.setState({ open: false })}
-        onOpen={() => this.setState({ open: true })}
+        onOpen={this.onOpen}
         open={this.state.open}
         trigger={
-          <Button icon>
+          <Button
+            style={{ margin: "1em 0em 1em 1em" }}
+            floated="right"
+            color="blue"
+            //   size="large"
+            // onClick={this.handleClickToggleInactive}
+            icon
+            labelPosition="right"
+          >
+            <Icon name="window restore outline" /> History
+            {/* <Button icon>
             History <Icon name="info circle" />
+          </Button> */}
           </Button>
         }
       >
         <Header as="h2" color="blue" textAlign="center">
-          History
+          Rules History
         </Header>
         <Modal.Content>
           <Container textAlign="left">
@@ -88,4 +108,6 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps)(ResultsHistoryView);
+export default connect(mapStateToProps, { getMRIRulesHistory })(
+  ResultsHistoryView
+);
