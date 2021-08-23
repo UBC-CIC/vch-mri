@@ -35,7 +35,7 @@ class Navbar extends React.Component {
     return (
       <Segment inverted color="blue">
         <Menu inverted secondary color="blue">
-          <img src={logo} alt="logo" height="60px" width="142px" />
+          <img src={logo} alt="logo" height="auto" width="200px" />
           <Menu.Item
             icon="home"
             name="home"
