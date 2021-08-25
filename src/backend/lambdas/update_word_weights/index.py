@@ -41,7 +41,8 @@ def create_setWeight(col: str, weight: str, lemex: str):
     """
     return """setweight(%s, '%s', '%s')""" % (col, weight, lemex)
 
-def updateWeights(cur, table: str, column: str, list_setweight): 
+def updateWeights(cur, table: str, column: str, list_setweight):
+    logger.info('updateWeights')
     """
     :cur: cursor for postgresql connection\n
     :table str: table to update\n
@@ -53,7 +54,10 @@ def updateWeights(cur, table: str, column: str, list_setweight):
     SET %s = %s;
     """
     set_weight = ' || '.join(list_setweight)
+
     command = command % (table, column, set_weight)
+    logger.info(command)
+
     cur.execute(command)
 
 def handler(event, context):

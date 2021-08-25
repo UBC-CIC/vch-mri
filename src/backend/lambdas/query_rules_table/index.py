@@ -81,30 +81,29 @@ def update_rule(cur, values, changed_array):
     rule = rule_list[0]
 
     logger.info(rule)
-
     logger.info(value)
     if value['contrast'] == 't':
         value['contrast'] = True
     if value['contrast'] == 'f':
         value['contrast'] = False
 
-    if rule['body_part'] != value['body_part']:
-        changed_array.append('body_part')
-    if rule['info'] != value['info']:
-        changed_array.append('info')
-    if rule['priority'] != value['priority']:
-        changed_array.append('priority')
-    if rule['contrast'] != value['contrast']:
-        changed_array.append('contrast')
-    if rule['specialty_tags'] != value['specialty_tags']:
-        changed_array.append('specialty_tags')
-    logger.info(changed_array)
+    changed_rule_history = value.copy()
+    changed_rule_history['active'] = rule['active']
 
-    return update_rule_db(cur, values)
+    fields = ['body_part', 'info', 'priority', 'contrast', 'specialty_tags']
+    for field in fields:
+        if rule[field] != value[field]:
+            changed_array.append(field)
+            if isinstance(rule[field], str):
+                changed_rule_history[field] = f"{rule[field]}  --->  {value[field]}"
+    logger.info(changed_array)
+    logger.info(changed_rule_history)
+
+    return update_rule_db(cur, values), changed_rule_history
 
 
 def update_rule_db(cur, values):
-    logger.info('updateRule')
+    logger.info('update_rule_db')
     cmd = """
     UPDATE mri_rules2 SET body_part = new_body_part, info = new_info, priority = new_priority,
         contrast = CAST(new_contrast AS BOOLEAN), specialty_tags = new_specialty_tags
@@ -336,15 +335,24 @@ def handler(event, context):
                 response = addRule(cur, data['values'])
             elif rest_cmd == 'UPDATE':
                 changed_array = []
-                response = update_rule(cur, data['values'], changed_array)
+                response, history_entry = update_rule(cur, data['values'], changed_array)
                 description += 'D: ' + ', '.join(changed_array)
+
+                logger.info(history_entry)
+                # changed_array_history_list = []
+                # changed_array_history_list = [changed_rule_history]
+                # logger.info(changed_array_history_list)
+                # history_list = parseResponse(changed_array_history_list)
+                # logger.info(history_list)
             elif rest_cmd == 'DEACTIVATE':
                 response = set_rule_active(cur, data['id'], 'f')
             elif rest_cmd == 'ACTIVATE':
                 response = set_rule_active(cur, data['id'], 't')
 
             resp_list = parseResponse(response)
-            insert_rule_history(cur, resp_list[0], description, cognito_user_id, cognito_user_fullname)
+            if rest_cmd != 'UPDATE':
+                history_entry = resp_list[0]
+            insert_rule_history(cur, history_entry, description, cognito_user_id, cognito_user_fullname)
             psql.commit()
 
             if rest_cmd == 'ADD' or rest_cmd == 'UPDATE':
