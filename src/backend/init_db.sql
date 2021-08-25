@@ -108,9 +108,9 @@ CREATE TABLE IF NOT EXISTS rule_history (
     cognito_user_id VARCHAR,
     cognito_user_fullname VARCHAR,
     active BOOLEAN DEFAULT TRUE
-    body_part VARCHAR(70) NOT NULL,
+    body_part VARCHAR(72) NOT NULL,
     info TEXT,
-    priority VARCHAR(10),
+    priority VARCHAR(16),
     contrast BOOLEAN,
     specialty_tags VARCHAR(600),
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
