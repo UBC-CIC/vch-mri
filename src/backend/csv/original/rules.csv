@@ -1,0 +1,251 @@
+body_part,info,contrast,priority
+abdomen,Abscesses,t,P2
+abdomen,Adrenal mass,t,P3
+abdomen,Aneurysm (Brain and Angio),t,P4
+abdomen,Appendix,f,P2
+abdomen,Bowel ischemia (SBFT),t,P2
+abdomen,"Characterization soft tissue mass, likely benign (lipoma)",t,P3
+abdomen,Hepatic mass (likely hemangioma FNH),t,P3
+abdomen,Lesions,t,P3
+abdomen,Liver Cancer staging of new (Followup timed or RT),t,P3
+abdomen,Lymphoma query,t,P3
+abdomen,Metastatic workup rad to decide,t,P3
+abdomen,"MRCP (query ca P3, NYD pain 4)",t,P3
+abdomen,MRCP known,t,P4
+abdomen,Pancreas Cancer (rad review),t,P3
+abdomen,Portal vein Thrombosis,t,P2
+abdomen,Renal Cancer followup,t,P4
+abdomen,Renal Artery Stenosis,t,P3
+abdomen,Renal Cancer Query is semi,t,P3
+abdomen,SBFT  Chrohns (unless clinically Warrants sooner),t,P4
+abdomen,Staging of new cancer,f,P3
+abdomen,Vascular abnormalities (medical history needed),t,P3
+angio,Acute carotid or aortic dissection (CT equivocal),t,P1
+angio,Critical / high grade ICA stenosis symptom,t,P2
+angio,Glomus Tumour Carotids,t,P3
+angio,"MRA vascular rest pain, Claudication",t,P2
+angio,MRA vascular gangrene,t,P1
+angio,Preoperative assessment of renal vascular invasion by renal cell carcinoma if ultrasound or CT is inconclusive,t,P2
+angio,Suspected intracranial vascular lesion,t,P2
+angio,Renal artery stenosis,t,P3
+angio,Screen Circle of Willis,f,P4
+aortic arch and branches,"Aneurysm (confirmed, enlarging, Preop) Followup Routine)",t,P3
+aortic arch and branches,Aneurysm,t,P3
+aortic arch and branches,Coarctation,t,P3
+aortic arch and branches,Vascular Abnormalities,t,P3
+brain / head,Acoustic neuroma Known,t,P4
+brain / head,Acoustic neuroma Query ,f,P3
+brain / head,Acute stroke (CT preferred as initial investigation),f,P1
+brain / head,Aneurysm (Initial),f,P3
+brain / head,Aneurysm (followup or screening),f,P4
+brain / head,Any acute hydrocephalus if MRI needed for RX planning (i.e. ventriculostomy),f,P1
+brain / head,Arachnoid cyst ,f,P4
+brain / head,Arachnoiditis,t,P3
+brain / head,Arteriovenous malformation,t,P3
+brain / head,Arteriovenous malformation (followup),t,P4
+brain / head,Asymmetric sensorineural hearing loss,f,P4
+brain / head,Ataxic gait,f,P4
+brain / head,Cavernous Malformations (Screen or followup),f,P4
+brain / head,Characterization soft tissue mass likely benign (lipoma),t,P3
+brain / head,Cognitive change,f,P4
+brain / head,Congenital brain/spine abnormality which is symptomatic,f,P3
+brain / head,Demyelination (like MS),f,P3
+brain / head,"Demyelination (like MS, diagnosis)",f,P3
+brain / head,"Grand Mal Seizures, History of",f,P4
+brain / head,"Grand Mal Seizures, New ",f,P3
+brain / head,Head venogram query new clot benign intracranial hypertention (Tech or Rad review),t,P2
+brain / head,Increased Prolactin level PIT),t,P3
+brain / head,Intracranial hemorrhage assessment of underlying lesion,f,P1
+brain / head,"Intracranial neoplasm further delineation of lesion seen on CT, or exclusion of additional metastatic lesion when surgery not immediately contemplated",t,P2
+brain / head,Ischemic optic Neuropathy,f,P3
+brain / head,Know Chiari malformations,f,P4
+brain / head,Know Chiari malformations with surgical decompressions (surgical work up P3),f,P3
+brain / head,Meningioma Followup,t,P4
+brain / head,Meningioma initial workup,t,P3
+brain / head,Metastatic workup,t,P3
+brain / head,"MS Followup known, Query new lesion",f,P4
+brain / head,MS Rule out PML,f,P3
+brain / head,MS Initial diagnosis,f,P3
+brain / head,Neurodegenerative / dementia,f,P4
+brain / head,Neurofibroma ,t,P3
+brain / head,Optic Atrophy,f,P3
+brain / head,Optic Neuritis or Neuropathy,f,P3
+brain / head,Orbital Lesion,t,P3
+brain / head,Pituitary adenoma suspected,t,P3
+brain / head,Post concussion syndrome,f,P4
+brain / head,"Preoperative evaluation of posterior fossa neoplasm, deep supratentorial neoplam, or exclusion of additional metastatic lesions, if CT does not answer these questions.",t,P1
+brain / head,Pulsatile tinnitus or tinnitus ,f,P3
+brain / head,Retrocochlear disease,f,P3
+brain / head,Seizures (followup),f,P4
+brain / head,Seizures NEW symptoms,f,P3
+brain / head,Skull base and nasopharyngeal tumours for further localizaton and surgical planning,t,P3
+brain / head,Skull base and nasopharyngeal tumours for further localizaton and surgical planning (if tumour invading ASAP Priority 2),t,P2
+brain / head,Space occupying lesion (SOL) Known,t,P3
+brain / head,Staging of new cancer,f,P3
+brain / head,Stealth (coordinated with OR date),t,P5
+brain / head,Suspected encephalitis or abscess,t,P1
+brain / head,Suspected intracranial lesion (medical history),f,P3
+brain / head,Suspected intracranial lesion,f,P3
+brain / head,Suspected intracranial venous thrombosis if CTA unavailable or unable to be performed,t,P2
+brain / head,TMJ RJH only,f,P4
+brain / head,TMJ (locked then semi urgent P3) RJH only,f,P3
+breast,Breast implants Usually looking for a leak,t,P4
+breast,Breast residual / recurrent disease post Tx,t,P3
+breast,Characterization soft tissue mass likely benign (lipoma),t,P3
+breast,Metastatic workup,t,P3
+breast,Workup of new breast carcinoma,t,P2
+cardiac,cardiac ARVD,t,P3
+cardiac,cardiac viability assessment or mass,t,P2
+chest,Characterization soft tissue mass likely benign (lipoma),t,P3
+chest,Metastatic workup,t,P3
+chest,Pancoast tumour,t,P2
+chest,"Preoperative assessment of possible mediastinal or chest wall invasion by tumour, CT is inconclusive",t,P2
+chest,Preoperative assessment of possible mediastinal or chest wall invasion by tumour,t,P2
+chest,Staging of new cancer,t,P3
+neck,Characterization soft tissue masslikely benign (lipoma),t,P3
+neck,Metastatic workup,t,P3
+neck,"Skull base and nasopharyngeal tumours, for further localization and surgical planning",t,P2
+neck,Staging of new cancer (thyroid),t,P3
+neck / spine,Sciatica / radiculopathy,f,P3
+pelvis,Anal Fistula,f,P3
+pelvis,Cervical cancer followup,t,P4
+pelvis,Cervix Cancer staging,f,P3
+pelvis,Fetal abnormality,f,P2
+pelvis,Fibroids,f,P4
+pelvis,Inguinal Hernia,f,P2
+pelvis,Metastatic workup,t,P3
+pelvis,Post UAE (uterine Artery Emblization),t,P4
+pelvis,Prostate Cancer,t,P3
+pelvis,Rectal carcinoma new diagnosis,t,P2
+pelvis,Rectal carcinoma staging,f,P2
+pelvis,Rule out Seminoma (metastasis),t,P3
+pelvis,Staging of new cancer,t,P3
+spine,Acute osteomyelitis,f,P1
+spine,Characterization soft tissue mass likely benign (lipoma),t,P3
+spine,Chronic osteomyelitis,f,P3
+spine,Chronic spine pain,f,P4
+spine,"Evaluation of spinal cord injury in acute trauma if no bony abnormality is noted, to assess cord injury of compression",f,P1
+spine,Foot Drop,f,P3
+spine,Foot Drop query tumour,t,P2
+spine,Metastatic workup,t,P3
+spine,Myelopathy,f,P2
+spine,Neurofibroma,t,P3
+spine,Neurofibromatosis (followup),t,P4
+spine,Preoperative evaluation of spinal cord neoplasm,t,P1
+spine,Staging of new cancer,t,P3
+spine,Sciatica / radiculopathy,f,P3
+spine,SI joints (rheumatology referral only),f,P2
+spine,"Spinal Stenosis (ordered by ortho, neurosurg, neurology or rehab)",f,P3
+spine,Spinal Stenosis (ordered by GP),f,P4
+spine,spine Lesion,t,P3
+spine,spine Query cord impingement,f,P2
+spine,spine root compression poss mass,t,P3
+spine,Suspicion of spinal osteomyelitis,t,P2
+spine,Syrinx (query),f,P3
+spine,Syrinx (followup),f,P4
+spine,"Urinary / bowel incontinence, HX that goes along with a Lumbar spine",f,P2
+knee,ACL Tear (ortho ordered surgical),f,P2
+knee,ACL Tear (GP),f,P3
+knee,Acute joint injury tendon rupture,f,P2
+knee,Acute osteomyelitis,f,P1
+knee,"Characterization soft tissue mass, likely benign (lipoma)",t,P3
+knee,Chronic joint pain,f,P4
+knee,Chronic Osteomyelitis,t,P2
+knee,"GP knee, acute (new injury)",f,P3
+knee,"GP knee, chronic HX or meniscal tear (not new injury)",f,P4
+knee,Impingement,f,P4
+knee,Joint Injury,f,P4
+knee,Locked knee (GP or specialist),f,P3
+knee,Metastatic workup,t,P3
+knee,"Orthopedic knee, acute",f,P3
+knee,"Orthopedic knee, chronic",f,P3
+knee,Orthopedic knee,t,P3
+knee,Osteochondromas (unless concern clinically),f,P4
+knee,Primary sarcoma of bone or soft tissue,t,P2
+knee,"Strong suspicion of avascular necrosis if plain film, Nuclear Medicine or CT inconclusive",f,P2
+hip,Acute joint injury tendon rupture,f,P2
+hip,Acute osteomyelitis,t,P1
+hip,Brachial plexus,f,P3
+hip,Brachial plexus query tumour,t,P3
+hip,"Characterization soft tissue mass, likely benign (lipoma)",t,P3
+hip,Chronic joint pain,f,P4
+hip,Chronic Osteomyelitis,t,P2
+hip,Hip Query labral tear (arthrogram),f,P3
+hip,Joint Injury,f,P4
+hip,Labral tear query (arthrogram),f,P3
+hip,Metastatic workup,t,P3
+hip,Primary sarcoma of bone or soft tissue,t,P2
+hip,R/O occult fractures from ER: Hip,f,P2
+hip,"Strong suspicion of avascular necrosis if plain film, Nuclear Medicine or CT inconclusive",f,P2
+shoulder,Acute joint injury tendon rupture,f,P3
+shoulder,Acute osteomyelitis,t,P1
+shoulder,Brachial plexus,f,P3
+shoulder,Brachial plexus query tumour,t,P3
+shoulder,"Characterization soft tissue mass, likely benign (lipoma)",t,P3
+shoulder,Chronic joint pain,f,P4
+shoulder,Chronic Osteomyelitis,t,P2
+shoulder,Impingement,f,P4
+shoulder,Joint Injury (ie. labrum),f,P3
+shoulder,Labral tear query (arthrogram),f,P3
+shoulder,Metastatic workup,t,P3
+shoulder,Primary sarcoma of bone or soft tissue,t,P2
+shoulder,Rotator cuff query tear,f,P3
+shoulder,SLAP tear Query (arthrogram),f,P3
+shoulder,Supraspinatus tendon,f,P3
+shoulder,"Strong suspicion of avascular necrosis if plain film, Nuclear Medicine or CT inconclusive",f,P3
+wrist / hand,Acute joint injury tendon rupture,f,P2
+wrist / hand,Acute osteomyelitis,t,P1
+wrist / hand,"Characterization soft tissue mass, likely benign (lipoma)",t,P3
+wrist / hand,Chronic joint pain,f,P4
+wrist / hand,Chronic Osteomyelitis,t,P2
+wrist / hand,Joint Injury,f,P4
+wrist / hand,Metastatic workup,t,P3
+wrist / hand,Primary sarcoma of bone or soft tissue,t,P2
+wrist / hand,R/O occult fractures from ER: scaphoid,f,P2
+wrist / hand,TFCC (Triangular fibrocartilage complex) wrist tear,f,P3
+wrist / hand,"Strong suspicion of avascular necrosis if plain film, Nuclear Medicine or CT inconclusive",f,P2
+foot,Acute joint injury tendon rupture,f,P3
+foot,Acute osteomyelitis,t,P1
+foot,"Characterization soft tissue mass, likely benign (lipoma)",t,P3
+foot,Chronic joint pain,f,P4
+foot,Chronic Osteomyelitis,t,P3
+foot,Foot Query Morton's Neuroma,f,P4
+foot,Joint Injury,f,P3
+foot,Metastatic workup,t,P3
+foot,Primary sarcoma of bone or soft tissue,t,P2
+foot,"Strong suspicion of avascular necrosis if plain film, Nuclear Medicine or CT inconclusive",f,P2
+c-spine,Acute joint injury tendon rupture,f,P2
+c-spine,Acute osteomyelitis,t,P1
+c-spine,"Characterization soft tissue mass, likely benign (lipoma)",t,P3
+c-spine,Chronic joint pain,f,P4
+c-spine,Chronic Osteomyelitis,t,P2
+c-spine,Brachial plexus,f,P3
+c-spine,Brachial plexus query tumour,t,P3
+c-spine,Joint Injury,f,P3
+c-spine,Metastatic workup,t,P3
+c-spine,Primary sarcoma of bone or soft tissue,t,P2
+c-spine,"Strong suspicion of avascular necrosis if plain film, Nuclear Medicine or CT inconclusive",f,P2
+elbow,Acute joint injury tendon rupture,f,P2
+elbow,Acute osteomyelitis,t,P1
+elbow,"Characterization soft tissue mass, likely benign (lipoma)",t,P3
+elbow,Chronic joint pain,f,P4
+elbow,Chronic Osteomyelitis,t,P2
+elbow,Joint Injury,f,P3
+elbow,Metastatic workup,t,P3
+elbow,Primary sarcoma of bone or soft tissue,t,P2
+elbow,"Strong suspicion of avascular necrosis if plain film, Nuclear Medicine or CT inconclusive",f,P2
+ankle,Acute joint injury/tendon rupture,f,P2
+ankle,Acute osteomyelitis,t,P1
+ankle,"Characterization soft tissue mass, likely benign (lipoma)",t,P3
+ankle,Chronic joint pain,f,P4
+ankle,Chronic Osteomyelitis,t,P2
+ankle,Joint Injury,f,P3
+ankle,Metastatic workup,t,P3
+ankle,Primary sarcoma of bone or soft tissue,t,P2
+ankle,"Strong suspicion of avascular necrosis if plain film, Nuclear Medicine or CT inconclusive",f,P2
+knee,Arthrogram Postoperative,f,P3
+elbow,Arthrogram,f,P3
+ankle,Arthrogram,f,P3
+wrist / hand,Arthrogram,f,P3
+spine ,Acute stroke (CT preferred as initial investigation),f,P1
+pelvis / hip,Chronic Joint Pain,f,P4
