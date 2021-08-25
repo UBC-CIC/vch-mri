@@ -368,7 +368,7 @@ Resources:
   Preprocess:
     Type: AWS::Serverless::Function
     Properties:
-      Timeout: 300 # 5 mins
+      Timeout: 900 # 15 mins (max) - required for "rerun AI" functionality
       CodeUri: ./src/backend/lambdas/preprocess
       Events:
         ExplicitApi: # warning: creates a public endpoint
@@ -408,6 +408,7 @@ Resources:
   RuleProcessing:
     Type: AWS::Serverless::Function
     Properties:
+      Timeout: 300 # 5 mins
       CodeUri: ./src/backend/lambdas/rule_processing
       Layers:
         - !Ref Psycopg2Layer
