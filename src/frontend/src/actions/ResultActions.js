@@ -209,7 +209,7 @@ export const changeResultSort = (columnName) => {
   };
 };
 
-export const getResultByID = (id) => {
+export const getResultByID = (id, states = null) => {
   return (dispatch) => {
     dispatch(getResultByIDStarted());
 
@@ -217,6 +217,7 @@ export const getResultByID = (id) => {
       .post(`${process.env.REACT_APP_HTTP_API_URL}/results`, {
         operation: "GET",
         id: id,
+        states: states,
       })
       .then((response) => {
         dispatch(getResultByIDSuccess(response.data));
@@ -227,7 +228,7 @@ export const getResultByID = (id) => {
   };
 };
 
-export const getResultsByPage = (pageIndex) => {
+export const getResultsByPage = (pageIndex, states = null) => {
   return (dispatch) => {
     console.log("getResultsByPage");
     dispatch(getResultsByPageStarted());
@@ -238,6 +239,8 @@ export const getResultsByPage = (pageIndex) => {
       .post(`${process.env.REACT_APP_HTTP_API_URL}/results`, {
         operation: "GET",
         page: pageIndex,
+        states: states,
+        // states: ["labelled_priority", "deleted"]
       })
       .then((response) => {
         console.log(response.data);

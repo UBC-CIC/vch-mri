@@ -30,11 +30,27 @@ class LabellingTable extends React.Component {
 
     this.handlePaginationChange = this.handlePaginationChange.bind(this);
     this.handleRowClick = this.handleRowClick.bind(this);
+    this.getLabelledFilter = this.getLabelledFilter.bind(this);
   }
+
+  getLabelledFilter = () => {
+    return this.state.showLabelled
+      ? null
+      : [
+          "received",
+          "received_duplicate",
+          "deleted",
+          "ai_priority_processed",
+          "final_priority_received",
+        ];
+  };
 
   async componentDidMount() {
     // console.log("LabellingTable componentDidMount");
-    this.props.getResultsByPage(this.state.activePage);
+    this.props.getResultsByPage(
+      this.state.activePage,
+      this.getLabelledFilter()
+    );
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -47,7 +63,7 @@ class LabellingTable extends React.Component {
 
   handlePaginationChange = (e, { activePage }) => {
     this.setState({ activePage }, () => {
-      this.props.getResultsByPage(activePage);
+      this.props.getResultsByPage(activePage, this.getLabelledFilter());
     });
   };
 
@@ -79,7 +95,12 @@ class LabellingTable extends React.Component {
   };
 
   handleClickShowLabelled = () => {
-    this.setState({ showLabelled: !this.state.showLabelled });
+    this.setState({ showLabelled: !this.state.showLabelled }, () => {
+      this.props.getResultsByPage(
+        this.state.activePage,
+        this.getLabelledFilter()
+      );
+    });
   };
 
   handleClickRerunAll = () => {
@@ -170,7 +191,8 @@ class LabellingTable extends React.Component {
           icon
           labelPosition="right"
         >
-          <Icon name="arrow circle right" /> Toggle Labelled
+          <Icon name="arrow circle right" />{" "}
+          {this.state.showLabelled ? "HIDE Labelled" : "SHOW Labelled"}
         </Button>
         <Table celled compact sortable striped>
           <Table.Header fullWidth>

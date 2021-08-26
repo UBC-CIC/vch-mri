@@ -423,7 +423,7 @@ class LabellingTableRow extends React.Component {
         disableAIConfirmPopup = false;
 
         // TODO: check filter but default do NOT show labelled
-        if (!this.props.showLabelled) return null;
+        // if (!this.props.showLabelled) return null;
 
         break;
 

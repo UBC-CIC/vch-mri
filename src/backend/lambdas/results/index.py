@@ -9,7 +9,7 @@ logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 
-def queryResults(cur, page):
+def queryResults(cur, page, states):
     cmd = """
     SELECT req.id, state, error, request, age, height, weight, req.info, created_at, updated_at,
         ai_rule_candidates, ai_rule_id, ai_priority, ai_contrast, ai_p5_flag, ai_tags,
@@ -17,15 +17,16 @@ def queryResults(cur, page):
         labelled_rule_id, labelled_priority, labelled_contrast, labelled_notes, labelled_p5_flag, labelled_tags,
         ai_rule_cand_ranks
     FROM data_request as req
+    WHERE state IN %s
     ORDER BY req.updated_at DESC
     LIMIT 50 OFFSET %s
     """
     offset = (int(page) - 1) * 50
-    cur.execute(cmd, (offset,))
+    cur.execute(cmd, (tuple(states), offset))
     return cur.fetchall()
 
 
-def queryResultsID(cur, id):
+def queryResultsID(cur, id, states):
     cmd = """
     SELECT req.id, state, error, request, age, height, weight, req.info, created_at, updated_at,
         ai_rule_candidates, ai_rule_id, ai_priority, ai_contrast, ai_p5_flag, ai_tags,
@@ -33,19 +34,21 @@ def queryResultsID(cur, id):
         labelled_rule_id, labelled_priority, labelled_contrast, labelled_notes, labelled_p5_flag, labelled_tags,
         ai_rule_cand_ranks
     FROM data_request as req
-    WHERE req.id = %s
+    WHERE req.id = ANY (%s)
+    AND state IN %s
     ORDER BY req.updated_at DESC
     """
-    cur.execute(cmd, [id])
+    cur.execute(cmd, (id, tuple(states)))
     return cur.fetchall()
 
 
-def queryPageCount(cur):
+def queryPageCount(cur, states):
     cmd = """
     SELECT CEIL(CAST(COUNT(id) AS float)/50)
     FROM data_request
+    WHERE state IN %s
     """
-    cur.execute(cmd)
+    cur.execute(cmd, (tuple(states),))
     return cur.fetchall()[0][0]
 
 
@@ -590,17 +593,31 @@ def handler(event, context):
                          'headers': headers,
                          'data': []}
             if rest_cmd == 'GET':
+
+                states = ['received', 'received_duplicate', 'deleted', 'ai_priority_processed',
+                         'final_priority_received', 'labelled_priority']
+                if 'states' in data and data['states'] is not None:
+                    states = data['states']
+                logger.info(states)
+
                 if 'id' in data.keys():
                     # TODO possible bug here as we should pass page here too - actually it only returns 1 max?
                     # Thus searching for 4: only returns exactly matching 4 and not '44', '445 for ex
                     logger.info('------- REST======REST: GET by ID')
-                    response = parseResponse(queryResultsID(cur, data['id']))
+                    response = parseResponse(queryResultsID(cur, [data['id']], states))
                 else:
                     logger.info('------- REST: GET by page')
-                    response = parseResponse(queryResults(cur, data['page']))
+                    page = data['page']
+                    response = parseResponse(queryResults(cur, page, states))
                     # logger.info('parseResponse')
                     # logger.info(response)
-                    resp_dict['total_pgs'] = queryPageCount(cur)
+
+                    total_pgs = int(queryPageCount(cur, states))
+
+                    logger.info(f'Pagination - active: {page}, total_pgs: {total_pgs}')
+                    if page >= total_pgs:
+                        response = parseResponse(queryResults(cur, total_pgs, states))
+                    resp_dict['total_pgs'] = total_pgs
 
                 for resp in response:
                     # logger.info('resp')
