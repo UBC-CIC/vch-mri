@@ -8,6 +8,12 @@ Before you deploy, you must have the following in place:
 - [SAM CLI](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-install.html)
 - [Amplify CLI installed and configured](https://aws-amplify.github.io/docs/cli-toolchain/quickstart#quickstart)
 
+# GITHUB Clone Source
+
+Currently working off a branch:
+
+- sudo git clone --branch feature-jun22 https://github.com/SapienMachineLearning/vch-mri.git
+
 # Step 1: Back-end deployment
 
 1. Store the database username and password at Systems Manager Parameter Store. **Make sure to replace DATABASENAME and DATABASEPWD with the respectives username and password you want to use for the database**.
