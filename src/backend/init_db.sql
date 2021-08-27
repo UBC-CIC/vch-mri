@@ -78,7 +78,7 @@ CREATE TABLE IF NOT EXISTS data_request (
     labelled_notes VARCHAR,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    FOREIGN KEY (ai_rule_id) REFERENCES mri_rules2(id)
+    FOREIGN KEY (ai_rule_id) REFERENCES mri_rules2(id)  -- ON DELETE CASCADE    -- currently without this, RULE deletes will NOT be allowed
 );
 
 CREATE TYPE enum_history_type AS ENUM ('request', 'request_rerun', 'ai_result', 'modification', 'delete');
@@ -170,8 +170,24 @@ CREATE TABLE IF NOT EXISTS specialty_tags (
     tag VARCHAR(32) PRIMARY KEY
 );
 
+\copy word_weights FROM './src/backend/csv/wordweights.csv' DELIMITER ',' CSV;
+
+\copy specialty_tags FROM './src/backend/csv/specialty_exams.csv' DELIMITER ',' CSV;
+
+\copy spellchecker FROM './src/backend/csv/spellchecker.csv' DELIMITER ',' CSV;
+
+UPDATE word_weights
+SET word = TRIM(word); 
+
+UPDATE spellchecker 
+SET word = TRIM(word);
+
+\copy conjunctions FROM './src/backend/csv/conjunctions.csv' DELIMITER ',' CSV;
+
+\copy synonyms FROM './src/backend/csv/synonyms.csv' DELIMITER ',' CSV;
+
 -- SELECT * FROM mri_rules2; 
-\copy mri_rules2(body_part, info, contrast, priority) FROM './src/backend/csv/rules.csv' DELIMITER ',' CSV HEADER;
+\COPY mri_rules2(id,body_part,bp_tk,contrast,info,info_weighted_tk,priority,active,specialty_tags) FROM './src/backend/csv/rules.csv' DELIMITER ',' CSV HEADER;
 
 UPDATE mri_rules 
 SET bp_tk = to_tsvector(body_part);
@@ -191,20 +207,6 @@ CREATE INDEX tags_idx
 ON data_request
 USING GIN(tags);
 
-\copy word_weights FROM './src/backend/csv/wordweights.csv' DELIMITER ',' CSV;
-
-\copy spellchecker FROM './src/backend/csv/spellchecker.csv' DELIMITER ',' CSV;
-
-\copy specialty_tags FROM './src/backend/csv/specialty_exams.csv' DELIMITER ',' CSV;
-
-UPDATE word_weights
-SET word = TRIM(word); 
-
-UPDATE spellchecker 
-SET word = TRIM(word);
-
-\copy conjunctions FROM './src/backend/csv/conjunctions.csv' DELIMITER ',' CSV;
-\copy synonyms FROM './src/backend/csv/synonyms.csv' DELIMITER ',' CSV;
 
 CREATE TEXT SEARCH DICTIONARY ths_med (
 TEMPLATE = thesaurus, 

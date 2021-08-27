@@ -1,5 +1,3 @@
-?,query
-f/u,followup
 history,history
 hx,medical history
 l,left
@@ -9,8 +7,34 @@ R,right
 lt,left
 rt,right
 cn6,cranial nerve
-mra,MRI Arthrogram / MR Angiogram
 stroke,stroke
 syrinx,syrinx
-ms,MS
 rrms,MS
+?,query
+f/u,followup
+abbrev,abberviation
+AVM,Arteriovenous Malformation
+HIV,Infection
+TN,Trigeminal Neuralgia
+art,arthrogram
+LVO,Large Vessel Occlusion
+MS,Multiple Sclerosis
+mra,Magnetic Resonance Angiography
+OCD,Osteochondral Defect
+ATFL,Anterior Talo-fibular Ligament
+PTFL,Posterior Talo-fibular Ligament
+AVN,Avascular Necrosis
+r/o,Rule out
+s/p,status post
+fx,fracture
+PAI,Posterior Ankle Impingement
+GCT,Giant Cell Tumour
+oa,Osteoarthritis
+om,osteomyelitis
+PVNS,Pigmented villonodular synovitis
+#,fracture
+PSP,Progressive Supranuclear Palsy
+SNHL,Sensorineural Hearing Loss
+TKV,total kidney volume
+PCKD,Polycystic Kidney Disease
+PKD,Polycystic Kidney Disease

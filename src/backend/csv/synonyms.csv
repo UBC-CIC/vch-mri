@@ -1,9 +1,8 @@
+calcaneous,foot / ankle
 persistent,chronic
 ongoing,chronic
 sharp,acute
-calcaneous,foot / ankle
 navicular,foot / ankle
-subtalar,foot / ankle
 talus,foot / ankle
 trochante,hip
 cavernoma,cavernous malformation
@@ -21,5 +20,6 @@ venous,venous / arteriovenous
 sellar,pituitary
 ca,cancer / carcinoma
 cranial,intracranial
-met,metastasis
-tumor,tumour
+liver,hepatic
+met,metastasis / metastases / mets
+mets,metastases / metastasis / met
