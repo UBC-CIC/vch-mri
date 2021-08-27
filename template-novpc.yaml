@@ -160,7 +160,7 @@ Resources:
           sudo -u postgres psql -c "alter user $DBUSER with password '$DBPWD';"
           sudo -u postgres psql -c "grant all privileges on database rules to $DBUSER;"                   
 
-          sudo git clone https://github.com/SapienMachineLearning/vch-mri.git
+          sudo git clone --branch feature-jun22 https://github.com/SapienMachineLearning/vch-mri.git
           cd vch-mri
           sudo cp ./src/backend/csv/thesaurus_medical.ths /usr/share/pgsql/tsearch_data/thesaurus_medical.ths
 
