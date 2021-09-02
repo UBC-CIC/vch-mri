@@ -151,7 +151,7 @@ def query_rules_history_db(cur, count=-1):
     cmd = """
     SELECT id_rule, description, cognito_user_id, cognito_user_fullname,
         active, body_part, info, priority, contrast, specialty_tags, created_at
-    FROM rule_history
+    FROM public."rule_history"
     ORDER BY created_at DESC
     """
     cur.execute(cmd)
@@ -166,7 +166,7 @@ def query_rule_id_history_db(cur, rule_id):
     cmd = """
     SELECT id_rule, description, cognito_user_id, cognito_user_fullname,
         active, body_part, info, priority, contrast, specialty_tags, created_at
-    FROM rule_history
+    FROM public."rule_history"
     WHERE id = %s
     ORDER BY created_at DESC
     """
@@ -200,7 +200,7 @@ def parse_db_rules_history(response):
 def insert_rule_history(cur, data, description, cognito_user_id, cognito_user_fullname):
     logger.info('insert_rule_history')
     cmd = """
-    INSERT INTO rule_history(id_rule, description, cognito_user_id, cognito_user_fullname,
+    INSERT INTO FROM public."rule_history"(id_rule, description, cognito_user_id, cognito_user_fullname,
         active, body_part, info, priority, contrast, specialty_tags)
     VALUES 
     (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
