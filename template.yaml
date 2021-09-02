@@ -403,7 +403,6 @@ Resources:
         Variables:
           RULE_PROCESSING_LAMBDA: !Ref RuleProcessing
           # DATA_RESULTS_LAMBDA: !Ref DataResults
-          # LOCAL_DEBUG: None
 
   RuleProcessing:
     Type: AWS::Serverless::Function
@@ -422,9 +421,6 @@ Resources:
           - !Ref DataSecurityGroup
         SubnetIds:
           - !Ref PrivateSubnetA
-      Environment:
-        Variables:
-          # LOCAL_DEBUG: None
 
   QueryRules:
     Type: AWS::Serverless::Function
@@ -457,7 +453,6 @@ Resources:
       Environment:
         Variables:
           UPDATE_WEIGHTS_LAMBDA: !Ref UpdateWeights
-          # LOCAL_DEBUG: None
 
   QuerySpellchecker:
     Type: AWS::Serverless::Function
@@ -485,9 +480,6 @@ Resources:
           - !Ref DataSecurityGroup
         SubnetIds:
           - !Ref PrivateSubnetA
-      Environment:
-        Variables:
-          # LOCAL_DEBUG: None
 
   QueryConjunctions:
     Type: AWS::Serverless::Function
@@ -515,9 +507,6 @@ Resources:
           - !Ref DataSecurityGroup
         SubnetIds:
           - !Ref PrivateSubnetA
-      Environment:
-        Variables:
-          # LOCAL_DEBUG: None
 
   QuerySynonyms:
     Type: AWS::Serverless::Function
@@ -546,9 +535,6 @@ Resources:
           - !Ref AdicionalSecurityGroup
         SubnetIds:
           - !Ref PrivateSubnetA
-      Environment:
-        Variables:
-          # LOCAL_DEBUG: None
 
   QueryWeights:
     Type: AWS::Serverless::Function
@@ -581,7 +567,6 @@ Resources:
       Environment:
         Variables:
           UPDATE_WEIGHTS_LAMBDA: !Ref UpdateWeights
-          # LOCAL_DEBUG: None
 
   QuerySpecialtyTags:
     Type: AWS::Serverless::Function
@@ -609,9 +594,6 @@ Resources:
           - !Ref DataSecurityGroup
         SubnetIds:
           - !Ref PrivateSubnetA
-      Environment:
-        Variables:
-          # LOCAL_DEBUG: None
 
   UpdateWeights:
     Type: AWS::Serverless::Function
@@ -629,9 +611,6 @@ Resources:
           - !Ref DataSecurityGroup
         SubnetIds:
           - !Ref PrivateSubnetA
-      Environment:
-        Variables:
-          # LOCAL_DEBUG: None
 
   DataResults:
     Type: AWS::Serverless::Function
@@ -659,9 +638,6 @@ Resources:
           - !Ref DataSecurityGroup
         SubnetIds:
           - !Ref PrivateSubnetA
-      Environment:
-        Variables:
-          # LOCAL_DEBUG: None
 
   Thesaurus:
     Type: AWS::Serverless::Function
@@ -693,7 +669,6 @@ Resources:
           DEST_PATH: "/usr/share/pgsql/tsearch_data/" # Path to shared postgresql directory
           SEND_COMMAND_NAME: !Ref copyFile
           SSM_PATH: "/mri-sched/ec2"
-          # LOCAL_DEBUG: None
 
   HttpParameter:
     Type: AWS::SSM::Parameter
