@@ -483,6 +483,9 @@ def parse_and_run_rule_processing(data_df, cognito_user_id, cognito_user_fullnam
     # logger.info(reason_for_exam)
     radiologist_priority = data_df['Radiologist Priority']
     # logger.info(radiologist_priority)
+    if len(radiologist_priority) > 3:
+        logger.info('Overriding rad priority: ' + radiologist_priority)
+        radiologist_priority = 'P98'
 
     # Convert these easy fields first
     data_df['age'] = dob2age(dob)
