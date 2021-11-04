@@ -1,0 +1,1 @@
+{"result": {"rule_id": 78, "anatomy": "brain / head", "priority": "P4", "contrast": false, "p5_flag": false, "specialty_exams": null}, "context": {"CIO_ID": "5", "priority": "U/I", "age": 101, "height": 124.0, "weight": 41.0, "medical_condition": [], "diagnosis": [], "anatomy": ["mri angio head", "head"], "symptoms": [], "phrases": [], "other_info": ["followup"], "p5": "f"}}
