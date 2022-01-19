@@ -12,9 +12,10 @@ DROP TABLE IF EXISTS conjunctions;
 DROP TABLE IF EXISTS synonyms;
 DROP TABLE IF EXISTS spellchecker; 
 DROP TABLE IF EXISTS specialty_tags; 
-DROP TYPE enum_requests_state;
-DROP TYPE enum_history_type;
-DROP TYPE rerun_ai_state;
+DROP TABLE IF EXISTS rerun_ai_history; 
+DROP TYPE IF EXISTS enum_requests_state;
+DROP TYPE IF EXISTS enum_history_type;
+DROP TYPE IF EXISTS rerun_ai_state;
 
 --timestamp function
 CREATE OR REPLACE FUNCTION trigger_set_timestamp()
@@ -61,6 +62,7 @@ CREATE TABLE IF NOT EXISTS data_request (
     weight VARCHAR,
     request JSON,   -- original request JSON
     info JSON,     -- processed current request data prior sending to Rules engine
+	tags varchar(256)[],
     ai_rule_candidates INT[],        -- AI determined
     ai_rule_cand_ranks REAL[],        -- AI determined
     ai_rule_id INT,
@@ -107,7 +109,7 @@ CREATE TABLE IF NOT EXISTS rule_history (
     description VARCHAR,
     cognito_user_id VARCHAR,
     cognito_user_fullname VARCHAR,
-    active BOOLEAN DEFAULT TRUE
+    active BOOLEAN DEFAULT TRUE,
     body_part VARCHAR(72) NOT NULL,
     info TEXT,
     priority VARCHAR(16),

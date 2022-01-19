@@ -35,7 +35,7 @@ class HomePage extends React.Component {
           <Grid.Row centered>
             <Container text>
               <Header as="h1" style={{ fontSize: "2em", paddingTop: "0.75em" }}>
-                {`Welcome back, ${
+                {`Welcome back to Denis branch, ${
                   this.props.auth.user.name
                     ? this.props.auth.user.name
                     : user.name
