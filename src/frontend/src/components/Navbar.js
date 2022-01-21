@@ -52,6 +52,11 @@ class Navbar extends React.Component {
                 as={NavLink}
                 to="/dashboard/labelling"
               />
+			  <Dropdown.Item
+                text="Review"
+                as={NavLink}
+                to="/dashboard/Review"
+              />
               <Dropdown.Item
                 text="Results Statistics"
                 as={NavLink}
