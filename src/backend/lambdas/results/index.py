@@ -806,18 +806,18 @@ def handler(event, context):
 
                 logger.info('------- REST: GET Labelled by page')
                 page = data['page']
-                response = parseResponse(queryLabelledResults(cur, page))
+                response2 = parseResponse(queryLabelledResults(cur, page))
                 # logger.info('parseResponse')
                 # logger.info(response)
 
-                total_pgs = int(queryPageCount(cur, states))
+                total_pgs = int(queryPageCount(cur,null))
 
                 logger.info(f'Pagination - active: {page}, total_pgs: {total_pgs}')
                 if page >= total_pgs:
-                    response = parseResponse(queryLabelledResults(cur, total_pgs))
+                    response2 = parseResponse(queryLabelledResults(cur, total_pgs))
                 resp_dict['total_pgs'] = total_pgs
 
-                for resp in response:
+                for resp in response2:
                     # logger.info('resp')
                     # logger.info(resp)
                     resp['history'] = parseResponseHistory(queryRequestHistory(cur, resp['id']))
