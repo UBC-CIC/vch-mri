@@ -801,21 +801,21 @@ def handler(event, context):
                     # logger.info('resp history')
                     # logger.info(resp['history'])
                     resp['ai_rule_candidates'] = query_parse_resp_rule_candidates(cur, resp['rule_candidates_array'],
-                                                                                  resp['rule_candidates_array_ranks'])
+                                                                                    resp['rule_candidates_array_ranks'])
             elif rest_cmd == 'GET_LABELLED':
 
-				logger.info('------- REST: GET Labelled by page')
-				page = data['page']
-				response = parseResponse(queryLabelledResults(cur, page))
-				# logger.info('parseResponse')
-				# logger.info(response)
+                logger.info('------- REST: GET Labelled by page')
+                page = data['page']
+                response = parseResponse(queryLabelledResults(cur, page))
+                # logger.info('parseResponse')
+                # logger.info(response)
 
-				total_pgs = int(queryPageCount(cur, states))
+                total_pgs = int(queryPageCount(cur, states))
 
-				logger.info(f'Pagination - active: {page}, total_pgs: {total_pgs}')
-				if page >= total_pgs:
-					response = parseResponse(queryLabelledResults(cur, total_pgs))
-				resp_dict['total_pgs'] = total_pgs
+                logger.info(f'Pagination - active: {page}, total_pgs: {total_pgs}')
+                if page >= total_pgs:
+                    response = parseResponse(queryLabelledResults(cur, total_pgs))
+                resp_dict['total_pgs'] = total_pgs
 
                 for resp in response:
                     # logger.info('resp')
@@ -851,7 +851,7 @@ def handler(event, context):
             elif rest_cmd == 'GET_STATISTICS':
                 response = get_statistics(cur, data)
 
-			elif rest_cmd == 'GET_STATS':
+            elif rest_cmd == 'GET_STATS':
                 response = get_stats(cur, data)
 
             elif rest_cmd == 'GET_DATA':
