@@ -40,7 +40,7 @@ def queryLabelledResults(cur, page):
     LIMIT 50 OFFSET %s
     """
     offset = (int(page) - 1) * 50
-    cur.execute(cmd, (offset))
+    cur.execute(cmd, (offset,))
     return cur.fetchall()	
 
 
@@ -300,7 +300,7 @@ def get_stats(cur, data):
     logger.info(iso_start_date)
     logger.info(iso_end_date)
 
-    results = queryResultsByDate(cur, iso_start_date, iso_end_date)
+    results = queryAllLabelledResultsByDate(cur, iso_start_date, iso_end_date)
     logger.info(results)
 
     return parse_stats(results)
@@ -313,7 +313,7 @@ def parse_stats(data):
     logger.info(data)
     resp_list = {}
 
-    stat = {'total': 0, 'overridden': 0}
+    stat = {'total': 0, 'failed': 0}
     resp_list['rule'] = stat
     resp_list['priority'] = stat.copy()
     resp_list['contrast'] = stat.copy()
@@ -339,55 +339,53 @@ def parse_stats(data):
         logger.info(resp)
 
         total += 1
-        overridden_any = False
-        overridden_rule = False
-        overridden_pri = False
-        overridden_con = False
+        any_failed = False
+        rule_failed = False
+        pri_failed = False
+        con_failed = False
 
         ai_rule_id = resp['ai_rule_id']
+        labelled_rule_id = resp['labelled_rule_id']
         if ai_rule_id is None:
             continue
-        if resp['labelled_rule_id'] is not None and resp['labelled_rule_id'] != ai_rule_id:
-            logger.info('ai_rule_id is explicitly overridden')
-            overridden_any = True
-            overridden_rule = True
-        if resp['labelled_priority'] is not None and resp['labelled_priority'] != resp['ai_priority']:
-            logger.info('ai_priority is overridden')
-            resp_list['priority']['overridden'] += 1
-            overridden_any = True
-            overridden_pri = True
-        if resp['labelled_contrast'] is not None and resp['labelled_contrast'] != resp['ai_contrast']:
-            logger.info('ai_contrast is overridden')
-            resp_list['contrast']['overridden'] += 1
-            overridden_any = True
-            overridden_con = True
-
-        if overridden_any:
-            logger.info('overridden_any implies rule ID overridden')
-            resp_list['rule']['overridden'] += 1
+        if resp['labelled_rule_id'] is None or resp['labelled_rule_id'] != ai_rule_id:
+            logger.info('ai_rule_id does not match')
+            resp_list['rule']['failed'] += 1
+            any_failed = True
+            rule_failed = True
+        if resp['labelled_priority'] is None or resp['labelled_priority'] != resp['ai_priority']:
+            logger.info('ai_priority does not match')
+            resp_list['priority']['failed'] += 1
+            any_failed = True
+            pri_failed = True
+        if resp['labelled_contrast'] is None or resp['labelled_contrast'] != resp['ai_contrast']:
+            logger.info('ai_contrast does not match')
+            resp_list['contrast']['failed'] += 1
+            any_failed = True
+            con_failed = True          
 
         try:
-            rule_tuple = rules[str(ai_rule_id)]
+            rule_tuple = rules[str(labelled_rule_id)]
         except KeyError as error:
-            rules[str(ai_rule_id)] = {
-                'rule_id': ai_rule_id,
+            rules[str(labelled_rule_id)] = {
+                'rule_id': labelled_rule_id,
                 'total': 0,
-                'total_overridden': 0,
-                'overridden_rule': 0,
-                'overridden_pri': 0,
-                'overridden_con': 0
+                'total_failed': 0,
+                'failed_rule': 0,
+                'failed_pri': 0,
+                'failed_con': 0
             }
-            rule_tuple = rules[str(ai_rule_id)]
+            rule_tuple = rules[str(labelled_rule_id)]
 
         rule_tuple['total'] += 1
-        if overridden_any:
-            rule_tuple['total_overridden'] += 1
-        if overridden_rule:
-            rule_tuple['overridden_rule'] += 1
-        if overridden_pri:
-            rule_tuple['overridden_pri'] += 1
-        if overridden_con:
-            rule_tuple['overridden_con'] += 1
+        if any_failed:
+            rule_tuple['total_failed'] += 1
+        if rule_failed:
+            rule_tuple['failed_rule'] += 1
+        if pri_failed:
+            rule_tuple['failed_pri'] += 1
+        if con_failed:
+            rule_tuple['failed_con'] += 1
 
     logger.info('rules')
     logger.info(rules)
@@ -805,13 +803,21 @@ def handler(event, context):
             elif rest_cmd == 'GET_LABELLED':
 
                 logger.info('------- REST: GET Labelled by page')
+                
+                states = ['received', 'received_duplicate', 'deleted', 'ai_priority_processed',
+                         'final_priority_received', 'labelled_priority']
+                if 'states' in data and data['states'] is not None:
+                    states = data['states']
+                logger.info(states)
+                
                 page = data['page']
                 response2 = parseResponse(queryLabelledResults(cur, page))
+                logger.info("A")
                 # logger.info('parseResponse')
                 # logger.info(response)
 
-                total_pgs = int(queryPageCount(cur,null))
-
+                total_pgs = int(queryPageCount(cur,states))
+                logger.info("B")
                 logger.info(f'Pagination - active: {page}, total_pgs: {total_pgs}')
                 if page >= total_pgs:
                     response2 = parseResponse(queryLabelledResults(cur, total_pgs))

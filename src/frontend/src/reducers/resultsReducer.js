@@ -11,6 +11,9 @@ import {
   GET_STATISTICS_STARTED,
   GET_STATISTICS_SUCCESS,
   GET_STATISTICS_FAILURE,
+  GET_STATS_STARTED,
+  GET_STATS_SUCCESS,
+  GET_STATS_FAILURE,
   MODIFY_RESULT_FAILURE,
   MODIFY_RESULT_STARTED,
   MODIFY_RESULT_SUCCESS,
@@ -26,6 +29,9 @@ import {
   AI_RERUN_FAILURE,
   CHANGE_RESULT_SORT,
   REQUEST_STATES,
+  GET_LABELLED_RESULTS_BY_PAGE_FAILURE,
+  GET_LABELLED_RESULTS_BY_PAGE_STARTED,
+  GET_LABELLED_RESULTS_BY_PAGE_SUCCESS,
 } from "../constants/resultConstants";
 import _ from "lodash";
 
@@ -48,8 +54,10 @@ export const results = (state = initialState, action) => {
   switch (action.type) {
     case GET_RESULT_BY_ID_STARTED:
     case GET_RESULTS_BY_PAGE_STARTED:
+	case GET_LABELLED_RESULTS_BY_PAGE_STARTED:
     case GET_RESULT_DATA_STARTED:
     case GET_STATISTICS_STARTED:
+	case GET_STATS_STARTED:
     case MODIFY_RESULT_STARTED:
     case AI_RERUN_STARTED:
     case REMOVE_STARTED:
@@ -77,6 +85,15 @@ export const results = (state = initialState, action) => {
         column: "updated_at",
         direction: "descending",
       };
+	case GET_LABELLED_RESULTS_BY_PAGE_SUCCESS:
+		return {
+		  ...state,
+		  resultsList: action.response.data,
+		  totalPages: action.response.total_pgs,
+		  loading: false,
+		  column: "updated_at",
+		  direction: "descending",
+		};
     case GET_RESULT_DATA_SUCCESS:
       return {
         ...state,
@@ -84,6 +101,12 @@ export const results = (state = initialState, action) => {
         loading: false,
       };
     case GET_STATISTICS_SUCCESS:
+      return {
+        ...state,
+        statistics: action.response.data,
+        loading: false,
+      };
+	case GET_STATS_SUCCESS:
       return {
         ...state,
         statistics: action.response.data,
@@ -188,7 +211,9 @@ export const results = (state = initialState, action) => {
     case GET_RESULT_BY_ID_FAILURE:
     case GET_RESULTS_BY_PAGE_FAILURE:
     case GET_RESULT_DATA_FAILURE:
+	case GET_LABELLED_RESULTS_BY_PAGE_FAILURE:
     case GET_STATISTICS_FAILURE:
+	case GET_STATS_FAILURE:
     case MODIFY_RESULT_FAILURE:
     case AI_RERUN_FAILURE:
     case REMOVE_FAILURE:

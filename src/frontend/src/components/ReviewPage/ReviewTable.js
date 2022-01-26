@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { Table, Pagination, Confirm } from "semantic-ui-react";
 import {
   changeResultSort,
+  getLabelledResultsByPage,
   getResultsByPage,
   rerunAI,
   rerunAIAll,
@@ -47,10 +48,11 @@ class ReviewTable extends React.Component {
 
   async componentDidMount() {
     // console.log("ReviewTable componentDidMount");
-    this.props.getResultsByPage(
-      this.state.activePage,
-      this.getLabelledFilter()
-    );
+    if( this.state.showLabelled ) {
+		this.props.getLabelledResultsByPage(this.state.activePage);
+	} else {
+		this.props.getResultsByPage(this.state.activePage,null);
+	}
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -63,7 +65,11 @@ class ReviewTable extends React.Component {
 
   handlePaginationChange = (e, { activePage }) => {
     this.setState({ activePage }, () => {
-      this.props.getResultsByPage(activePage, this.getLabelledFilter());
+		if( this.state.showLabelled ) {
+			this.props.getLabelledResultsByPage(this.state.activePage);
+		} else {
+			this.props.getResultsByPage(this.state.activePage,null);
+		}
     });
   };
 
@@ -96,10 +102,11 @@ class ReviewTable extends React.Component {
 
   handleClickShowLabelled = () => {
     this.setState({ showLabelled: !this.state.showLabelled }, () => {
-      this.props.getResultsByPage(
-        this.state.activePage,
-        this.getLabelledFilter()
-      );
+		if( this.state.showLabelled ) {
+			this.props.getLabelledResultsByPage(this.state.activePage);
+		} else {
+			this.props.getResultsByPage(this.state.activePage,null);
+		}
     });
   };
 
@@ -476,6 +483,7 @@ const mapStateToProps = (state) => {
 export default connect(mapStateToProps, {
   changeResultSort,
   getResultsByPage,
+  getLabelledResultsByPage,
   rerunAI,
   rerunAIAll,
 })(ReviewTable);

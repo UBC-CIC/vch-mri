@@ -5,12 +5,18 @@ import {
   GET_RESULTS_BY_PAGE_FAILURE,
   GET_RESULTS_BY_PAGE_STARTED,
   GET_RESULTS_BY_PAGE_SUCCESS,
+  GET_LABELLED_RESULTS_BY_PAGE_FAILURE,
+  GET_LABELLED_RESULTS_BY_PAGE_STARTED,
+  GET_LABELLED_RESULTS_BY_PAGE_SUCCESS,
   GET_RESULT_DATA_FAILURE,
   GET_RESULT_DATA_STARTED,
   GET_RESULT_DATA_SUCCESS,
   GET_STATISTICS_STARTED,
   GET_STATISTICS_SUCCESS,
   GET_STATISTICS_FAILURE,
+  GET_STATS_STARTED,
+  GET_STATS_SUCCESS,
+  GET_STATS_FAILURE,
   MODIFY_RESULT_FAILURE,
   MODIFY_RESULT_STARTED,
   MODIFY_RESULT_SUCCESS,
@@ -71,6 +77,26 @@ export const getResultsByPageFailure = (error) => {
   };
 };
 
+export const getLabelledResultsByPageStarted = () => {
+	return {
+	  type: GET_LABELLED_RESULTS_BY_PAGE_STARTED,
+	};
+  };
+
+export const getLabelledResultsByPageSuccess = (response) => {
+	return {
+	  type: GET_LABELLED_RESULTS_BY_PAGE_SUCCESS,
+	  response,
+	};
+  };
+  
+  export const getLabelledResultsByPageFailure = (error) => {
+	return {
+	  type: GET_LABELLED_RESULTS_BY_PAGE_FAILURE,
+	  error,
+	};
+  };
+
 export const getResultDataStarted = () => {
   return {
     type: GET_RESULT_DATA_STARTED,
@@ -111,6 +137,27 @@ export const getStatisticsFailure = (error) => {
     error,
   };
 };
+
+// GET_STATS
+export const getStatsStarted = () => {
+	return {
+	  type: GET_STATS_STARTED,
+	};
+  };
+  
+  export const getStatsSuccess = (response) => {
+	return {
+	  type: GET_STATS_SUCCESS,
+	  response,
+	};
+  };
+  
+  export const getStatsFailure = (error) => {
+	return {
+	  type: GET_STATS_FAILURE,
+	  error,
+	};
+  };
 
 // MODIFY_RESULT
 export const modifyResultStarted = () => {
@@ -252,6 +299,31 @@ export const getResultsByPage = (pageIndex, states = null) => {
   };
 };
 
+
+export const getLabelledResultsByPage = (pageIndex) => {
+	return (dispatch) => {
+	  console.log("getLabelledResultsByPage");
+	  dispatch(getLabelledResultsByPageStarted());
+  
+	  // TODO for sample data local testing instead of waiting Lambda containers to load ~5secs
+	  // dispatch(getLabelledResultsByPageSuccess(SampleData));
+	  axios
+		.post(`${process.env.REACT_APP_HTTP_API_URL}/results`, {
+		  operation: "GET_LABELLED",
+		  page: pageIndex
+		  // states: ["labelled_priority", "deleted"]
+		})
+		.then((response) => {
+		  console.log(response.data);
+		  dispatch(getLabelledResultsByPageSuccess(response.data));
+		})
+		.catch((e) => {
+		  dispatch(getLabelledResultsByPageFailure(e));
+		});
+	};
+  };
+
+
 export const getResultData = () => {
   return async (dispatch) => {
     dispatch(getResultDataStarted());
@@ -298,6 +370,26 @@ export const getStatistics = (startDate, endDate) => {
       });
   };
 };
+export const getStats = (startDate, endDate) => {
+	return async (dispatch) => {
+	  dispatch(getStatsStarted());
+  
+	  // dispatch(getStatsSuccess(SampleDataStatistics));
+	  let url = `${process.env.REACT_APP_HTTP_API_URL}/results`;
+	  axios
+		.post(url, {
+		  operation: "GET_STATS",
+		  start_date: startDate,
+		  end_date: endDate,
+		})
+		.then((response) => {
+		  dispatch(getStatsSuccess(response.data));
+		})
+		.catch((e) => {
+		  dispatch(getStatsFailure(e));
+		});
+	};
+  };
 
 export const modifyResult = (state) => {
   return (dispatch) => {

@@ -592,6 +592,7 @@ def parse_and_run_rule_processing(data_df, cognito_user_id, cognito_user_fullnam
         syn = apply_synonyms(synonyms_list, whitespc, syn_info)
         spelling = checkSpelling(syn)
         logger.info(spelling)
+		formatted_df['exam_requested'] = spelling
         anatomy_json = find_all_entities(spelling)
         logger.info(anatomy_json)
     except Exception as error:
